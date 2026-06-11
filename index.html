@@ -427,6 +427,21 @@ footer {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Disclaimer */
+.disclaimer {
+  background: rgba(0, 0, 0, 0.5);
+  padding: 20px;
+  text-align: center;
+  font-size: 12px;
+  line-height: 1.6;
+  color: rgba(255, 255, 255, 0.6);
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.disclaimer strong {
+  color: rgba(255, 255, 255, 0.8);
+}
+
 /* Custom Map Markers */
 .city-marker {
   background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
@@ -529,6 +544,11 @@ footer {
 
   #map {
     height: 300px;
+  }
+
+  .disclaimer {
+    font-size: 11px;
+    padding: 15px;
   }
 }
 </style>
@@ -688,6 +708,9 @@ footer {
 
 <footer>
   © 2025 Inspectora – Objektkontrollen & Fotodokumentation für Immobilienunternehmen | NRW
+  <div class="disclaimer">
+    <strong>⚠️ Hinweis:</strong> Inspectora befindet sich derzeit noch im Aufbau. Das Leistungskonzept wird noch entwickelt und getestet. Dies ist eine Vorversion unseres Services.
+  </div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
