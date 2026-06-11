@@ -203,6 +203,7 @@ header p {
   transition: all 0.3s ease;
   border-left: 5px solid var(--primary);
   position: relative;
+  overflow: hidden;
 }
 
 .card:hover {
@@ -220,6 +221,14 @@ header p {
 
 .card:nth-child(4) {
   border-left-color: #8b5cf6;
+}
+
+.card-image {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 10px;
+  margin-bottom: 20px;
 }
 
 .card h3 {
@@ -273,6 +282,56 @@ header p {
   font-weight: bold;
   flex-shrink: 0;
   font-size: 16px;
+}
+
+/* Location Map Grid */
+.location-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 15px;
+  margin-top: 40px;
+}
+
+.location-item {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
+  border: 2px solid transparent;
+  font-weight: 500;
+  color: var(--dark);
+}
+
+.location-item:hover {
+  border-color: var(--primary);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%);
+  transform: translateY(-4px);
+  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.1);
+}
+
+.location-item::before {
+  content: '📍';
+  display: block;
+  font-size: 24px;
+  margin-bottom: 8px;
+}
+
+.location-notice {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(34, 197, 94, 0.05) 100%);
+  border-left: 4px solid var(--accent);
+  padding: 20px;
+  border-radius: 8px;
+  margin-top: 30px;
+  font-size: 15px;
+  color: var(--gray-600);
+  line-height: 1.7;
+}
+
+.location-notice strong {
+  color: var(--accent);
 }
 
 /* Process Steps */
@@ -427,6 +486,10 @@ footer {
     gap: 20px;
   }
 
+  .location-grid {
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  }
+
   .about-content {
     padding: 30px;
   }
@@ -456,6 +519,10 @@ footer {
 
   .about-content {
     padding: 20px;
+  }
+
+  .location-grid {
+    grid-template-columns: 1fr;
   }
 }
 </style>
@@ -494,26 +561,30 @@ footer {
     </div>
   </div>
 
-  <!-- Services Cards -->
+  <!-- Services Cards with Images -->
   <div class="section">
     <h2 class="section-title">Unsere Leistungen</h2>
     <div class="grid">
       <div class="card">
+        <img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&h=200&fit=crop" alt="Fotodokumentation" class="card-image">
         <div class="card-icon">📸</div>
         <h3>Fotodokumentation</h3>
         <p>Strukturierte Bilddokumentation von Wohn- und Gewerbeimmobilien mit professionellen Standards.</p>
       </div>
       <div class="card">
+        <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=200&fit=crop" alt="Objektkontrollen" class="card-image">
         <div class="card-icon">🔍</div>
         <h3>Objektkontrollen</h3>
         <p>Vor-Ort-Prüfung des aktuellen Zustands von Immobilien mit detaillierten Bewertungen.</p>
       </div>
       <div class="card">
+        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=200&fit=crop" alt="Zustandsberichte" class="card-image">
         <div class="card-icon">📋</div>
         <h3>Zustandsberichte</h3>
         <p>Klare, verständliche Berichte mit Fotos, Analysen und professionellen Einschätzungen.</p>
       </div>
       <div class="card">
+        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=200&fit=crop" alt="Leerstandskontrollen" class="card-image">
         <div class="card-icon">🏚️</div>
         <h3>Leerstandskontrollen</h3>
         <p>Überprüfung ungenutzter Immobilien auf Zustand, Schäden und Auffälligkeiten.</p>
@@ -531,6 +602,33 @@ footer {
       <div class="list-item">Bestandshalter</div>
       <div class="list-item">Projektentwickler</div>
       <div class="list-item">Versicherungen</div>
+    </div>
+  </div>
+
+  <!-- Einsatzgebiet Section -->
+  <div class="section">
+    <h2 class="section-title">Einsatzgebiet</h2>
+    <p class="section-intro">
+      Inspectora unterstützt Immobilienunternehmen aktuell im westlichen Ruhrgebiet und am Niederrhein. 
+      Regelmäßige Einsätze erfolgen insbesondere in folgenden Städten:
+    </p>
+    <div class="location-grid">
+      <div class="location-item">Duisburg</div>
+      <div class="location-item">Oberhausen</div>
+      <div class="location-item">Mülheim an der Ruhr</div>
+      <div class="location-item">Essen</div>
+      <div class="location-item">Düsseldorf</div>
+      <div class="location-item">Moers</div>
+      <div class="location-item">Kamp-Lintfort</div>
+      <div class="location-item">Neukirchen-Vluyn</div>
+      <div class="location-item">Rheinberg</div>
+      <div class="location-item">Voerde</div>
+      <div class="location-item">Dinslaken</div>
+      <div class="location-item">Krefeld</div>
+      <div class="location-item">Ratingen</div>
+    </div>
+    <div class="location-notice">
+      <strong>💡 Auch kurzfristige Termine sind</strong> – abhängig von Auslastung und Entfernung – nach Absprache möglich.
     </div>
   </div>
 
