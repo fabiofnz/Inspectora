@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Inspectora - Objektkontrollen & Fotodokumentation</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
 <style>
 * {
   margin: 0;
@@ -284,39 +285,14 @@ header p {
   font-size: 16px;
 }
 
-/* Location Map Grid */
-.location-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-  gap: 15px;
-  margin-top: 40px;
-}
-
-.location-item {
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  text-align: center;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
-  border: 2px solid transparent;
-  font-weight: 500;
-  color: var(--dark);
-}
-
-.location-item:hover {
-  border-color: var(--primary);
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%);
-  transform: translateY(-4px);
-  box-shadow: 0 8px 16px rgba(37, 99, 235, 0.1);
-}
-
-.location-item::before {
-  content: '📍';
-  display: block;
-  font-size: 24px;
-  margin-bottom: 8px;
+/* Map Container */
+#map {
+  width: 100%;
+  height: 500px;
+  border-radius: 15px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.1);
+  margin-top: 30px;
+  margin-bottom: 30px;
 }
 
 .location-notice {
@@ -451,6 +427,36 @@ footer {
   border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
+/* Custom Map Markers */
+.city-marker {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  border: 3px solid white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: bold;
+  font-size: 14px;
+  color: white;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.city-marker:hover {
+  width: 40px;
+  height: 40px;
+  font-size: 16px;
+}
+
+.city-popup {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: var(--dark);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
   header {
@@ -486,8 +492,8 @@ footer {
     gap: 20px;
   }
 
-  .location-grid {
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  #map {
+    height: 400px;
   }
 
   .about-content {
@@ -521,8 +527,8 @@ footer {
     padding: 20px;
   }
 
-  .location-grid {
-    grid-template-columns: 1fr;
+  #map {
+    height: 300px;
   }
 }
 </style>
@@ -605,28 +611,14 @@ footer {
     </div>
   </div>
 
-  <!-- Einsatzgebiet Section -->
+  <!-- Einsatzgebiet Section with Interactive Map -->
   <div class="section">
     <h2 class="section-title">Einsatzgebiet</h2>
     <p class="section-intro">
       Inspectora unterstützt Immobilienunternehmen aktuell im westlichen Ruhrgebiet und am Niederrhein. 
       Regelmäßige Einsätze erfolgen insbesondere in folgenden Städten:
     </p>
-    <div class="location-grid">
-      <div class="location-item">Duisburg</div>
-      <div class="location-item">Oberhausen</div>
-      <div class="location-item">Mülheim an der Ruhr</div>
-      <div class="location-item">Essen</div>
-      <div class="location-item">Düsseldorf</div>
-      <div class="location-item">Moers</div>
-      <div class="location-item">Kamp-Lintfort</div>
-      <div class="location-item">Neukirchen-Vluyn</div>
-      <div class="location-item">Rheinberg</div>
-      <div class="location-item">Voerde</div>
-      <div class="location-item">Dinslaken</div>
-      <div class="location-item">Krefeld</div>
-      <div class="location-item">Ratingen</div>
-    </div>
+    <div id="map"></div>
     <div class="location-notice">
       <strong>💡 Auch kurzfristige Termine sind</strong> – abhängig von Auslastung und Entfernung – nach Absprache möglich.
     </div>
@@ -697,6 +689,55 @@ footer {
 <footer>
   © 2025 Inspectora – Objektkontrollen & Fotodokumentation für Immobilienunternehmen | NRW
 </footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+<script>
+// Initialisiere die Karte - zentriert auf NRW
+const map = L.map('map').setView([51.4, 7.5], 9);
+
+// Tile Layer
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  attribution: '© OpenStreetMap contributors',
+  maxZoom: 19
+}).addTo(map);
+
+// Einsatzgebiete mit Koordinaten
+const cities = [
+  { name: 'Duisburg', lat: 51.4344, lng: 6.7673 },
+  { name: 'Oberhausen', lat: 51.4615, lng: 6.8569 },
+  { name: 'Mülheim an der Ruhr', lat: 51.4301, lng: 6.9789 },
+  { name: 'Essen', lat: 51.4556, lng: 7.0116 },
+  { name: 'Düsseldorf', lat: 51.2277, lng: 6.7735 },
+  { name: 'Moers', lat: 51.4528, lng: 6.6361 },
+  { name: 'Kamp-Lintfort', lat: 51.5000, lng: 6.5247 },
+  { name: 'Neukirchen-Vluyn', lat: 51.4306, lng: 6.3875 },
+  { name: 'Rheinberg', lat: 51.3764, lng: 6.4511 },
+  { name: 'Voerde', lat: 51.5675, lng: 6.7089 },
+  { name: 'Dinslaken', lat: 51.5606, lng: 6.7389 },
+  { name: 'Krefeld', lat: 51.3339, lng: 6.5688 },
+  { name: 'Ratingen', lat: 51.3050, lng: 6.8386 }
+];
+
+// Marker für jede Stadt hinzufügen
+cities.forEach(city => {
+  const marker = L.marker([city.lat, city.lng], {
+    icon: L.divIcon({
+      className: 'city-marker',
+      html: '📍',
+      iconSize: [30, 30],
+      iconAnchor: [15, 15],
+      popupAnchor: [0, -15]
+    })
+  }).addTo(map)
+  .bindPopup(`<div class="city-popup">${city.name}</div>`)
+  .on('mouseover', function() { this.openPopup(); })
+  .on('mouseout', function() { this.closePopup(); });
+});
+
+// Automatische Zoom-Anpassung
+const group = new L.featureGroup(map._layers);
+map.fitBounds(group.getBounds().pad(0.1));
+</script>
 
 </body>
 </html>
