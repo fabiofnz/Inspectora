@@ -144,6 +144,49 @@ header p {
   max-width: 700px;
 }
 
+/* About Section */
+.about-content {
+  background: white;
+  padding: 50px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  border-left: 5px solid var(--primary);
+}
+
+.about-content h2 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 28px;
+  font-weight: 600;
+  margin-bottom: 25px;
+  color: var(--dark);
+}
+
+.about-content p {
+  font-size: 16px;
+  line-height: 1.9;
+  margin-bottom: 20px;
+  color: var(--gray-600);
+}
+
+.about-content p:first-of-type {
+  font-size: 18px;
+  color: var(--primary);
+  font-weight: 600;
+  margin-bottom: 25px;
+}
+
+.about-highlight {
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%);
+  border-left: 4px solid var(--secondary);
+  padding: 20px;
+  border-radius: 8px;
+  margin: 25px 0;
+}
+
+.about-highlight strong {
+  color: var(--secondary);
+}
+
 /* Card Grid */
 .grid {
   display: grid;
@@ -383,6 +426,10 @@ footer {
     grid-template-columns: 1fr;
     gap: 20px;
   }
+
+  .about-content {
+    padding: 30px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -406,24 +453,45 @@ footer {
     width: 100%;
     text-align: center;
   }
+
+  .about-content {
+    padding: 20px;
+  }
 }
 </style>
 </head>
 <body>
 <header>
   <h1>Inspectora</h1>
-  <p>Objektkontrollen, Fotodokumentation & Zustandsberichte für Immobilienunternehmen</p>
+  <p>Objektkontrollen, Fotodokumentation & Zustandsberichte für Immobilienunternehmen in NRW</p>
 </header>
 
 <div class="container">
-  <!-- Intro Section -->
+  <!-- About Section -->
   <div class="section">
-    <h2 class="section-title">Wir sind die Augen vor Ort</h2>
-    <p class="section-intro">
-      Wenn Zeit, Personal oder Entfernung ein Problem sind, übernimmt Inspectora
-      die Durchführung von Vor-Ort-Kontrollen und liefert strukturierte Dokumentationen zurück.
-      Professionell, zuverlässig und schnell.
-    </p>
+    <h2 class="section-title">Über Inspectora</h2>
+    <div class="about-content">
+      <p>Inspectora unterstützt Immobilienunternehmen bei Objektkontrollen, Fotodokumentationen und Zustandsberichten in Nordrhein-Westfalen.</p>
+      
+      <h2>Die Geschichte hinter Inspectora</h2>
+      <p>
+        Hinter Inspectora steht ein angehender Immobilienkaufmann mit praktischem Einblick in die täglichen Herausforderungen der Immobilienbranche.
+      </p>
+      
+      <div class="about-highlight">
+        <p>
+          <strong>Aus eigener Erfahrung weiß ich, wie zeitaufwendig kurzfristige Vor-Ort-Termine, Objektkontrollen und Dokumentationen sein können.</strong>
+        </p>
+      </div>
+      
+      <p>
+        Genau hier setzt Inspectora an. Das Ziel ist es, Immobilienunternehmen durch zuverlässige Vor-Ort-Dokumentation und strukturierte Berichte zu entlasten – damit Sie sich auf Ihr Kerngeschäft konzentrieren können.
+      </p>
+      
+      <p>
+        Mit Inspectora bekommen Sie einen verlässlichen Partner vor Ort, der Ihre Anforderungen versteht und professionell umsetzt.
+      </p>
+    </div>
   </div>
 
   <!-- Services Cards -->
