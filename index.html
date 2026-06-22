@@ -3,9 +3,11 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inspectora - Objektkontrollen & Fotodokumentation</title>
+<title>Inspectora – Immobilienberichte & Vor-Ort-Dokumentation</title>
+
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
+
 <style>
 * {
   margin: 0;
@@ -21,6 +23,7 @@
   --accent: #10b981;
   --dark: #0f172a;
   --light: #f8fafc;
+  --gray-100: #f1f5f9;
   --gray-200: #e2e8f0;
   --gray-400: #cbd5e1;
   --gray-600: #64748b;
@@ -31,7 +34,6 @@ html {
 }
 
 body {
-  margin: 0;
   font-family: 'Inter', sans-serif;
   background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
   color: var(--dark);
@@ -42,7 +44,7 @@ body {
 header {
   background: linear-gradient(135deg, var(--dark) 0%, var(--primary-dark) 100%);
   color: white;
-  padding: 100px 20px;
+  padding: 95px 20px;
   text-align: center;
   position: relative;
   overflow: hidden;
@@ -51,20 +53,16 @@ header {
 header::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: 
-    radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.1) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.1) 0%, transparent 50%);
+  inset: 0;
+  background:
+    radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.18) 0%, transparent 50%),
+    radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.14) 0%, transparent 50%);
   pointer-events: none;
 }
 
 header h1 {
   font-family: 'Poppins', sans-serif;
-  font-size: 56px;
-  margin: 0;
+  font-size: 58px;
   letter-spacing: -1px;
   font-weight: 700;
   position: relative;
@@ -72,46 +70,54 @@ header h1 {
   animation: slideInDown 0.8s ease-out;
 }
 
-header p {
-  font-size: 20px;
-  opacity: 0.9;
-  margin-top: 15px;
+header .tagline {
+  font-size: 22px;
+  opacity: 0.95;
+  margin-top: 18px;
   position: relative;
   z-index: 1;
-  font-weight: 300;
-  animation: slideInUp 0.8s ease-out 0.2s backwards;
+  font-weight: 500;
+  animation: slideInUp 0.8s ease-out 0.15s backwards;
+}
+
+header .hero-subline {
+  max-width: 880px;
+  margin: 18px auto 0;
+  font-size: 17px;
+  line-height: 1.8;
+  opacity: 0.86;
+  position: relative;
+  z-index: 1;
+  animation: slideInUp 0.8s ease-out 0.25s backwards;
+}
+
+.hero-actions {
+  display: flex;
+  justify-content: center;
+  gap: 14px;
+  flex-wrap: wrap;
+  margin-top: 32px;
+  position: relative;
+  z-index: 1;
 }
 
 @keyframes slideInDown {
-  from {
-    opacity: 0;
-    transform: translateY(-30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(-30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 @keyframes slideInUp {
-  from {
-    opacity: 0;
-    transform: translateY(30px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+  from { opacity: 0; transform: translateY(30px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
-/* Container */
+/* Layout */
 .container {
   max-width: 1200px;
   margin: auto;
   padding: 60px 20px;
 }
 
-/* Sections */
 .section {
   margin-bottom: 80px;
 }
@@ -131,7 +137,7 @@ header p {
   position: absolute;
   bottom: 0;
   left: 0;
-  width: 60px;
+  width: 64px;
   height: 4px;
   background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
   border-radius: 2px;
@@ -140,65 +146,82 @@ header p {
 .section-intro {
   font-size: 18px;
   color: var(--gray-600);
-  margin-bottom: 20px;
+  margin-bottom: 24px;
   line-height: 1.8;
-  max-width: 700px;
+  max-width: 800px;
 }
 
-/* About Section */
-.about-content {
+/* Buttons */
+.button {
+  display: inline-block;
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  color: white;
+  padding: 14px 30px;
+  text-decoration: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-family: 'Poppins', sans-serif;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
+  border: none;
+  cursor: pointer;
+  font-size: 15px;
+}
+
+.button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+}
+
+.button.secondary {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255,255,255,0.28);
+  box-shadow: none;
+}
+
+/* Intro */
+.intro-box {
   background: white;
-  padding: 50px;
-  border-radius: 15px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+  padding: 48px;
+  border-radius: 18px;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.08);
   border-left: 5px solid var(--primary);
 }
 
-.about-content h2 {
+.intro-box h2 {
   font-family: 'Poppins', sans-serif;
-  font-size: 28px;
-  font-weight: 600;
-  margin-bottom: 25px;
-  color: var(--dark);
+  font-size: 30px;
+  margin-bottom: 22px;
 }
 
-.about-content p {
-  font-size: 16px;
-  line-height: 1.9;
-  margin-bottom: 20px;
+.intro-box p {
   color: var(--gray-600);
+  font-size: 17px;
+  line-height: 1.9;
+  margin-bottom: 18px;
 }
 
-.about-content p:first-of-type {
-  font-size: 18px;
-  color: var(--primary);
-  font-weight: 600;
-  margin-bottom: 25px;
-}
-
-.about-highlight {
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%);
+.intro-highlight {
+  margin-top: 26px;
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.06) 0%, rgba(245, 158, 11, 0.06) 100%);
   border-left: 4px solid var(--secondary);
   padding: 20px;
-  border-radius: 8px;
-  margin: 25px 0;
+  border-radius: 10px;
+  color: var(--dark);
+  font-weight: 600;
 }
 
-.about-highlight strong {
-  color: var(--secondary);
-}
-
-/* Card Grid */
+/* Cards */
 .grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
   gap: 25px;
   margin-top: 40px;
 }
 
 .card {
   background: white;
-  padding: 35px;
+  padding: 34px;
   border-radius: 15px;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
   transition: all 0.3s ease;
@@ -208,28 +231,27 @@ header p {
 }
 
 .card:hover {
-  transform: translateY(-8px);
+  transform: translateY(-7px);
   box-shadow: 0 12px 24px rgba(37, 99, 235, 0.15);
 }
 
-.card:nth-child(2) {
-  border-left-color: var(--secondary);
-}
-
-.card:nth-child(3) {
-  border-left-color: var(--accent);
-}
-
-.card:nth-child(4) {
-  border-left-color: #8b5cf6;
-}
+.card:nth-child(2) { border-left-color: var(--secondary); }
+.card:nth-child(3) { border-left-color: var(--accent); }
+.card:nth-child(4) { border-left-color: #8b5cf6; }
+.card:nth-child(5) { border-left-color: #ec4899; }
+.card:nth-child(6) { border-left-color: #06b6d4; }
 
 .card-image {
   width: 100%;
-  height: 200px;
+  height: 190px;
   object-fit: cover;
   border-radius: 10px;
   margin-bottom: 20px;
+}
+
+.card-icon {
+  font-size: 32px;
+  margin-bottom: 14px;
 }
 
 .card h3 {
@@ -243,19 +265,55 @@ header p {
 .card p {
   color: var(--gray-600);
   font-size: 15px;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
-/* Icon support for cards */
-.card-icon {
-  font-size: 32px;
-  margin-bottom: 15px;
+/* Split section */
+.split {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 26px;
+  margin-top: 35px;
 }
 
-/* Lists */
+.feature-box {
+  background: white;
+  padding: 34px;
+  border-radius: 15px;
+  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
+}
+
+.feature-box h3 {
+  font-family: 'Poppins', sans-serif;
+  margin-bottom: 18px;
+  font-size: 22px;
+}
+
+.feature-box ul {
+  list-style: none;
+}
+
+.feature-box li {
+  padding: 11px 0;
+  border-bottom: 1px solid var(--gray-200);
+  color: var(--gray-600);
+}
+
+.feature-box li:last-child {
+  border-bottom: none;
+}
+
+.feature-box li::before {
+  content: '✓';
+  color: var(--accent);
+  font-weight: 700;
+  margin-right: 10px;
+}
+
+/* Target clients */
 .list-section {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   gap: 20px;
   margin-top: 30px;
 }
@@ -263,7 +321,7 @@ header p {
 .list-item {
   display: flex;
   align-items: flex-start;
-  padding: 15px;
+  padding: 16px;
   background: white;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
@@ -285,42 +343,16 @@ header p {
   font-size: 16px;
 }
 
-/* Map Container */
-#map {
-  width: 100%;
-  height: 500px;
-  border-radius: 15px;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.1);
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-
-.location-notice {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.05) 0%, rgba(34, 197, 94, 0.05) 100%);
-  border-left: 4px solid var(--accent);
-  padding: 20px;
-  border-radius: 8px;
-  margin-top: 30px;
-  font-size: 15px;
-  color: var(--gray-600);
-  line-height: 1.7;
-}
-
-.location-notice strong {
-  color: var(--accent);
-}
-
-/* Process Steps */
+/* Process */
 .steps {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
   gap: 30px;
   margin-top: 40px;
 }
 
 .step {
   text-align: center;
-  position: relative;
 }
 
 .step-number {
@@ -365,37 +397,54 @@ header p {
   margin-top: 8px;
 }
 
-/* Button */
-.button {
-  display: inline-block;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  color: white;
-  padding: 14px 32px;
-  text-decoration: none;
-  margin-top: 20px;
+/* Map */
+#map {
+  width: 100%;
+  height: 500px;
+  border-radius: 15px;
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.1);
+  margin-top: 30px;
+  margin-bottom: 30px;
+}
+
+.location-notice {
+  background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(34, 197, 94, 0.06) 100%);
+  border-left: 4px solid var(--accent);
+  padding: 20px;
   border-radius: 8px;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-  border: none;
+  margin-top: 30px;
+  font-size: 15px;
+  color: var(--gray-600);
+  line-height: 1.7;
+}
+
+.location-notice strong {
+  color: var(--accent);
+}
+
+.city-marker {
+  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+  border: 3px solid white;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
   cursor: pointer;
-  font-size: 16px;
 }
 
-.button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
+.city-popup {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 600;
+  color: var(--dark);
 }
 
-.button:active {
-  transform: translateY(0);
-}
-
-/* Contact Section */
+/* Contact */
 .contact-section {
   text-align: center;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.05) 0%, rgba(245, 158, 11, 0.05) 100%);
+  background: linear-gradient(135deg, rgba(37, 99, 235, 0.06) 0%, rgba(245, 158, 11, 0.06) 100%);
   padding: 60px 40px;
   border-radius: 20px;
   border: 2px solid rgba(37, 99, 235, 0.1);
@@ -415,118 +464,98 @@ header p {
   margin-bottom: 25px;
 }
 
+.request-buttons {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 14px;
+  margin-top: 28px;
+}
+
+.request-buttons .button {
+  min-width: 220px;
+  text-align: center;
+}
+
 /* Footer */
 footer {
   text-align: center;
-  padding: 40px 20px;
+  padding: 40px 20px 0;
   font-size: 14px;
-  color: var(--gray-600);
-  background: var(--dark);
   color: rgba(255, 255, 255, 0.7);
+  background: var(--dark);
   margin-top: 60px;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* Disclaimer */
 .disclaimer {
   background: rgba(0, 0, 0, 0.5);
   padding: 20px;
   text-align: center;
   font-size: 12px;
   line-height: 1.6;
-  color: rgba(255, 255, 255, 0.6);
+  color: rgba(255, 255, 255, 0.62);
   border-top: 1px solid rgba(255, 255, 255, 0.1);
+  margin-top: 30px;
 }
 
 .disclaimer strong {
-  color: rgba(255, 255, 255, 0.8);
-}
-
-/* Custom Map Markers */
-.city-marker {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  border: 3px solid white;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: bold;
-  font-size: 14px;
-  color: white;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.city-marker:hover {
-  width: 40px;
-  height: 40px;
-  font-size: 16px;
-}
-
-.city-popup {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  color: var(--dark);
+  color: rgba(255, 255, 255, 0.86);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
   header {
-    padding: 60px 20px;
+    padding: 65px 20px;
   }
 
   header h1 {
-    font-size: 36px;
+    font-size: 38px;
   }
 
-  header p {
-    font-size: 16px;
+  header .tagline {
+    font-size: 18px;
   }
 
-  .section-title {
-    font-size: 28px;
+  header .hero-subline {
+    font-size: 15px;
   }
 
   .container {
-    padding: 40px 20px;
+    padding: 42px 20px;
   }
 
   .section {
     margin-bottom: 60px;
   }
 
-  .steps {
-    gap: 20px;
+  .section-title {
+    font-size: 28px;
+  }
+
+  .intro-box {
+    padding: 30px;
+  }
+
+  .split {
+    grid-template-columns: 1fr;
   }
 
   .grid {
     grid-template-columns: 1fr;
-    gap: 20px;
   }
 
   #map {
-    height: 400px;
-  }
-
-  .about-content {
-    padding: 30px;
+    height: 380px;
   }
 }
 
 @media (max-width: 480px) {
   header h1 {
-    font-size: 28px;
-  }
-
-  header p {
-    font-size: 14px;
+    font-size: 30px;
   }
 
   .section-title {
-    font-size: 22px;
+    font-size: 23px;
   }
 
   .card {
@@ -538,8 +567,8 @@ footer {
     text-align: center;
   }
 
-  .about-content {
-    padding: 20px;
+  .request-buttons .button {
+    min-width: 100%;
   }
 
   #map {
@@ -550,203 +579,241 @@ footer {
     font-size: 11px;
     padding: 15px;
   }
-.request-buttons {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: 15px;
-    margin-top: 25px;
-}
-
-.request-buttons .button {
-    margin: 5px;
-}
 }
 </style>
 </head>
+
 <body>
+
 <header>
   <h1>Inspectora</h1>
-  <p>Objektkontrollen, Fotodokumentation & Zustandsberichte für Immobilienunternehmen in NRW</p>
+  <p class="tagline">Immobilienberichte & Vor-Ort-Dokumentation für Immobilienunternehmen</p>
+  <p class="hero-subline">
+    Aus Fotos, Notizen und Objektinformationen entstehen strukturierte Dokumentationen, Zustandsberichte und nachvollziehbare Übersichten – bei Bedarf ergänzt durch Objektbegehungen vor Ort im Ruhrgebiet und am Niederrhein.
+  </p>
+  <div class="hero-actions">
+    <a class="button" href="#kontakt">Anfrage starten</a>
+    <a class="button secondary" href="#leistungen">Leistungen ansehen</a>
+  </div>
 </header>
 
 <div class="container">
-  <!-- About Section -->
-  <div class="section">
-    <h2 class="section-title">Über Inspectora</h2>
-    <div class="about-content">
-      <p>Inspectora unterstützt Immobilienunternehmen bei Objektkontrollen, Fotodokumentationen und Zustandsberichten in Nordrhein-Westfalen.</p>
-      
-      <h2>Die Geschichte hinter Inspectora</h2>
-      <p>
-        Hinter Inspectora steht ein angehender Immobilienkaufmann mit praktischem Einblick in die täglichen Herausforderungen der Immobilienbranche.
-      </p>
-      
-      <div class="about-highlight">
-        <p>
-          <strong>Aus eigener Erfahrung weiß ich, wie zeitaufwendig kurzfristige Vor-Ort-Termine, Objektkontrollen und Dokumentationen sein können.</strong>
-        </p>
-      </div>
-      
-      <p>
-        Genau hier setzt Inspectora an. Das Ziel ist es, Immobilienunternehmen durch zuverlässige Vor-Ort-Dokumentation und strukturierte Berichte zu entlasten – damit Sie sich auf Ihr Kerngeschäft konzentrieren können.
-      </p>
-      
-      <p>
-        Mit Inspectora bekommen Sie einen verlässlichen Partner vor Ort, der Ihre Anforderungen versteht und professionell umsetzt.
-      </p>
-    </div>
-  </div>
 
-  <!-- Services Cards with Images -->
-  <div class="section">
-   <h2 class="section-title">Unsere Leistungen im Überblick</h2>
+  <section class="section">
+    <div class="intro-box">
+      <h2>Strukturierte Immobilieninformationen statt unübersichtlicher Einzelnotizen</h2>
+      <p>
+        In Immobilienunternehmen entstehen täglich Fotos, Stichpunkte, Handwerkerrückmeldungen, Objektinformationen und interne Notizen. Häufig fehlt die Zeit, daraus eine klare und weiterverwendbare Dokumentation zu erstellen.
+      </p>
+      <p>
+        Inspectora unterstützt dabei, diese Informationen sauber zu erfassen, zu ordnen und in verständliche Berichte oder Fotodokumentationen zu übertragen.
+      </p>
+      <div class="intro-highlight">
+        Inspectora ist kein Gutachter und keine Hausverwaltung. Der Fokus liegt auf strukturierter Dokumentation, Sichtprüfung und nachvollziehbarer Aufbereitung von Immobilieninformationen.
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="leistungen">
+    <h2 class="section-title">Leistungen</h2>
+    <p class="section-intro">
+      Inspectora verbindet digitale Dokumentation mit praktischer Unterstützung vor Ort. Dadurch können Immobilienunternehmen Berichte, Objektinformationen und Vor-Ort-Termine effizienter abwickeln.
+    </p>
+
     <div class="grid">
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=200&fit=crop" alt="Immobilienberichte" class="card-image">
+        <div class="card-icon">📄</div>
+        <h3>Immobilienberichte</h3>
+        <p>Strukturierte Berichte aus Fotos, Notizen und Objektinformationen für Eigentümer, Investoren, Verwalter und interne Ablagen.</p>
+      </div>
+
       <div class="card">
         <img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&h=200&fit=crop" alt="Fotodokumentation" class="card-image">
         <div class="card-icon">📸</div>
-        <h3>Fotodokumentation</h3>
-       <p>Umfassende Fotodokumentation von Wohn- und Gewerbeimmobilien zur transparenten Erfassung des aktuellen Zustands.</p>
+        <h3>Fotodokumentationen</h3>
+        <p>Übersichtliche Fotodokumentationen von Wohnungen, Mehrfamilienhäusern, Gewerbeobjekten und Außenbereichen.</p>
       </div>
+
       <div class="card">
-        <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=200&fit=crop" alt="Objektkontrollen" class="card-image">
+        <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=200&fit=crop" alt="Objektbegehung" class="card-image">
         <div class="card-icon">🔍</div>
-        <h3>Objektkontrollen</h3>
-        <p>Regelmäßige Vor-Ort-Kontrollen zur Überwachung von Zustand, Sauberkeit und sichtbaren Auffälligkeiten.</p>
+        <h3>Objektbegehungen</h3>
+        <p>Vor-Ort-Begehungen zur Erfassung sichtbarer Zustände, Auffälligkeiten und objektbezogener Informationen.</p>
       </div>
+
       <div class="card">
-        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=200&fit=crop" alt="Zustandsberichte" class="card-image">
-        <div class="card-icon">📋</div>
-        <h3>Zustandsberichte</h3>
-       <p>Strukturierte Berichte mit Fotos und dokumentierten Beobachtungen für eine nachvollziehbare Übersicht.</p>
-      </div>
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=200&fit=crop" alt="Leerstandskontrollen" class="card-image">
+        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=200&fit=crop" alt="Leerstandskontrolle" class="card-image">
         <div class="card-icon">🏚️</div>
         <h3>Leerstandskontrollen</h3>
-        <p>Regelmäßige Kontrollen leerstehender Immobilien zur Dokumentation des Objektzustands, zur Erkennung sichtbarer Auffälligkeiten sowie zur Überwachung und Fotodokumentation laufender Handwerkerarbeiten.</p>
+        <p>Kontrolle leerstehender Einheiten inklusive Fotodokumentation, Zustandsübersicht und Dokumentation laufender Maßnahmen.</p>
+      </div>
+
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&h=200&fit=crop" alt="Handwerkerkontrolle" class="card-image">
+        <div class="card-icon">🛠️</div>
+        <h3>Handwerkerkontrollen</h3>
+        <p>Dokumentation von Arbeitsfortschritten, erledigten Maßnahmen und sichtbaren Ergebnissen nach Handwerkerterminen.</p>
+      </div>
+
+      <div class="card">
+        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=200&fit=crop" alt="Besichtigung" class="card-image">
+        <div class="card-icon">🚪</div>
+        <h3>Besichtigungen & Termine</h3>
+        <p>Unterstützung bei Besichtigungen, Objektterminen und sonstigen Vor-Ort-Aufgaben nach individueller Absprache.</p>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Target Clients -->
-  <div class="section">
-    <h2 class="section-title">Für wen wir arbeiten</h2>
+  <section class="section">
+    <h2 class="section-title">Digitale Aufbereitung & Vor-Ort-Service</h2>
+    <p class="section-intro">
+      Je nach Bedarf kann Inspectora rein digital unterstützen oder die Informationen direkt vor Ort erfassen.
+    </p>
+
+    <div class="split">
+      <div class="feature-box">
+        <h3>Digitale Dokumentation</h3>
+        <ul>
+          <li>Berichte aus Fotos und Stichpunkten</li>
+          <li>Strukturierung von Objektinformationen</li>
+          <li>Aufbereitung von Fotodokumentationen</li>
+          <li>Zusammenfassungen für Eigentümer oder Investoren</li>
+          <li>Dokumentation von Maßnahmen und Auffälligkeiten</li>
+        </ul>
+      </div>
+
+      <div class="feature-box">
+        <h3>Vor-Ort-Unterstützung</h3>
+        <ul>
+          <li>Objektbegehungen</li>
+          <li>Leerstandskontrollen</li>
+          <li>Fotodokumentationen vor Ort</li>
+          <li>Handwerker- und Fortschrittskontrollen</li>
+          <li>Besichtigungen und Termine nach Absprache</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Für wen Inspectora interessant ist</h2>
     <div class="list-section">
       <div class="list-item">Hausverwaltungen</div>
       <div class="list-item">Immobilienmakler</div>
       <div class="list-item">Investoren & Asset Manager</div>
       <div class="list-item">Bestandshalter</div>
       <div class="list-item">Projektentwickler</div>
-      <div class="list-item">Versicherungen</div>
+      <div class="list-item">Eigentümer mit mehreren Objekten</div>
     </div>
-  </div>
+  </section>
 
-  <!-- Einsatzgebiet Section with Interactive Map -->
-  <div class="section">
-    <h2 class="section-title">Geplante Einsatzgebiete</h2>
+  <section class="section">
+    <h2 class="section-title">Einsatzgebiet</h2>
     <p class="section-intro">
-      Die Einsatzgebiete von Inspectora befinden sich im westlichen Ruhrgebiet und am Niederrhein. 
-      Geplant sind regelmäßige Einsätze insbesondere in folgenden Städten:
+      Vor-Ort-Termine sind im westlichen Ruhrgebiet und am Niederrhein vorgesehen. Digitale Dokumentationen und Berichte können unabhängig vom Objektstandort vorbereitet werden.
     </p>
-    <div id="map"></div>
-    <div class="location-notice">
-      <strong>💡 Auch kurzfristige Termine sind</strong> – abhängig von Auslastung und Entfernung – nach Absprache möglich.
-    </div>
-  </div>
 
-  <!-- Process Steps -->
-  <div class="section">
-    <h2 class="section-title">Unser Ablauf</h2>
+    <div id="map"></div>
+
+    <div class="location-notice">
+      <strong>Ruhrgebiet & Niederrhein:</strong> Duisburg, Oberhausen, Mülheim, Essen, Düsseldorf, Moers, Kamp-Lintfort, Neukirchen-Vluyn, Rheinberg, Voerde, Dinslaken, Krefeld, Ratingen und weitere Orte nach Absprache.
+    </div>
+  </section>
+
+  <section class="section">
+    <h2 class="section-title">Ablauf</h2>
     <div class="steps">
       <div class="step">
         <div class="step-number">1</div>
-        <h3>Anfrage stellen</h3>
-        <p>Kontaktieren Sie uns mit Ihren Anforderungen</p>
+        <h3>Anfrage</h3>
+        <p>Sie schildern kurz, welche Dokumentation oder Unterstützung benötigt wird.</p>
       </div>
+
       <div class="step">
         <div class="step-number">2</div>
-        <h3>Termin abstimmen</h3>
-        <p>Wir finden einen passenden Inspektionstermin</p>
+        <h3>Informationen</h3>
+        <p>Fotos, Notizen, Objektinformationen oder Terminwünsche werden abgestimmt.</p>
       </div>
+
       <div class="step">
         <div class="step-number">3</div>
-        <h3>Vor-Ort-Durchführung</h3>
-        <p>Professionelle Kontrolle und Dokumentation</p>
+        <h3>Aufbereitung</h3>
+        <p>Die Informationen werden strukturiert und in eine nachvollziehbare Form gebracht.</p>
       </div>
+
       <div class="step">
         <div class="step-number">4</div>
-        <h3>Ergebnisse erhalten</h3>
-        <p>Digitale Dokumentation und Bericht</p>
+        <h3>Ergebnis</h3>
+        <p>Sie erhalten eine klare Dokumentation oder einen abgestimmten Bericht.</p>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Why Inspectora -->
-  <div class="section">
+  <section class="section">
     <h2 class="section-title">Warum Inspectora?</h2>
     <div class="grid">
       <div class="card">
-        <div class="card-icon">💰</div>
-        <h3>Kosteneffizienz</h3>
-        <p>Reduzierung interner Aufwandkosten durch externe Spezialisierung.</p>
+        <div class="card-icon">⏱️</div>
+        <h3>Zeitersparnis</h3>
+        <p>Interne Mitarbeiter müssen nicht jede Dokumentation, Sichtprüfung oder Nachbereitung selbst übernehmen.</p>
       </div>
+
       <div class="card">
-        <div class="card-icon">⚡</div>
-        <h3>Schnelle Verfügbarkeit</h3>
-        <p>Schnelle Vor-Ort-Verfügbarkeit in NRW und darüber hinaus.</p>
+        <div class="card-icon">📌</div>
+        <h3>Klare Struktur</h3>
+        <p>Aus einzelnen Fotos, Notizen und Informationen entsteht eine übersichtliche und weiterverwendbare Dokumentation.</p>
       </div>
+
       <div class="card">
-        <div class="card-icon">✓</div>
-        <h3>Standardisiert</h3>
-        <p>Einheitliche und strukturierte Dokumentation nach hohen Standards.</p>
+        <div class="card-icon">📍</div>
+        <h3>Regional vor Ort</h3>
+        <p>Bei Bedarf können Objektinformationen im Ruhrgebiet und am Niederrhein direkt vor Ort erfasst werden.</p>
       </div>
+
       <div class="card">
         <div class="card-icon">⚖️</div>
-        <h3>Unabhängig</h3>
-        <p>Unabhängige und neutrale Objektaufnahme ohne Interessenskonflikte.</p>
+        <h3>Neutral dokumentiert</h3>
+        <p>Der Fokus liegt auf sichtbaren Zuständen, nachvollziehbarer Beschreibung und sauberer Dokumentation.</p>
       </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Contact Section -->
-  <div class="contact-section">
-    <h2>Benötigen Sie Unterstützung vor Ort?</h2>
-<p>Inspectora unterstützt Immobilienunternehmen bei Fotodokumentationen, Objektbegehungen, Leerstandskontrollen, Besichtigungen und weiteren Vor-Ort-Terminen im Ruhrgebiet und am Niederrhein.</<div class="request-buttons">
+  <section class="contact-section" id="kontakt">
+    <h2>Benötigen Sie Unterstützung für Ihre Immobilien?</h2>
+    <p>
+      Wählen Sie die passende Anfrage aus. Ihr E-Mail-Programm öffnet sich anschließend mit dem entsprechenden Betreff.
+    </p>
 
-    <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Fotodokumentation">Fotodokumentation</a>
+    <div class="request-buttons">
+      <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Immobilienbericht">Immobilienbericht</a>
+      <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Fotodokumentation">Fotodokumentation</a>
+      <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Objektbegehung">Objektbegehung</a>
+      <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Leerstandskontrolle">Leerstandskontrolle</a>
+      <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Handwerkerkontrolle">Handwerkerkontrolle</a>
+      <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Allgemeine%20Anfrage%20Inspectora">Sonstige Anfrage</a>
+    </div>
+  </section>
 
-<a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Objektbegehung">Objektbegehung</a>
+</div>
 
-<a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Leerstandskontrolle">Leerstandskontrolle</a>
-
-<a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Besichtigung">Besichtigung</a>
-
-<a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Handwerkerkontrolle">Handwerkerkontrolle</a>
-
-<a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Allgemeine%20Anfrage%20Inspectora">Sonstige Anfrage</a>
-
-  </div>
- </div>
 <footer>
-  © 2025 Inspectora – Objektkontrollen & Fotodokumentation für Immobilienunternehmen | NRW
+  © 2025 Inspectora – Immobilienberichte & Vor-Ort-Dokumentation
   <div class="disclaimer">
-    <strong>⚠️ Hinweis:</strong> Inspectora befindet sich derzeit noch im Aufbau. Das Leistungskonzept wird noch entwickelt und getestet. Dies ist eine Vorversion unseres Services.
+    <strong>Hinweis:</strong> Inspectora befindet sich aktuell im Aufbau. Anfragen dienen zunächst der Abstimmung und Prüfung möglicher Einsatzfälle. Inspectora erstellt keine Gutachten und übernimmt keine Sachverständigentätigkeit. Der Fokus liegt auf Sichtprüfung, Fotodokumentation und strukturierter Berichterstattung.
   </div>
 </footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-<script>
-// Initialisiere die Karte - zentriert auf NRW
-const map = L.map('map').setView([51.4, 7.5], 9);
 
-// Tile Layer
+<script>
+const map = L.map('map').setView([51.43, 6.78], 9);
+
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
   attribution: '© OpenStreetMap contributors',
   maxZoom: 19
 }).addTo(map);
 
-// Einsatzgebiete mit Koordinaten
 const cities = [
   { name: 'Duisburg', lat: 51.4344, lng: 6.7673 },
   { name: 'Oberhausen', lat: 51.4615, lng: 6.8569 },
@@ -763,7 +830,8 @@ const cities = [
   { name: 'Ratingen', lat: 51.3050, lng: 6.8386 }
 ];
 
-// Marker für jede Stadt hinzufügen
+const markers = [];
+
 cities.forEach(city => {
   const marker = L.marker([city.lat, city.lng], {
     icon: L.divIcon({
@@ -774,14 +842,15 @@ cities.forEach(city => {
       popupAnchor: [0, -15]
     })
   }).addTo(map)
-  .bindPopup(`<div class="city-popup">${city.name}</div>`)
-  .on('mouseover', function() { this.openPopup(); })
-  .on('mouseout', function() { this.closePopup(); });
+    .bindPopup(`<div class="city-popup">${city.name}</div>`)
+    .on('mouseover', function() { this.openPopup(); })
+    .on('mouseout', function() { this.closePopup(); });
+
+  markers.push(marker);
 });
 
-// Automatische Zoom-Anpassung
-const group = new L.featureGroup(map._layers);
-map.fitBounds(group.getBounds().pad(0.1));
+const group = L.featureGroup(markers);
+map.fitBounds(group.getBounds().pad(0.15));
 </script>
 
 </body>
