@@ -746,6 +746,158 @@ footer {
   }
 }
 
+/* Dokumentations-Konfigurator */
+
+.doc-tool {
+  display: grid;
+  grid-template-columns: 1fr 1.1fr;
+  gap: 30px;
+  margin-top: 40px;
+}
+
+.doc-panel,
+.doc-result {
+  background: white;
+  border-radius: 18px;
+  padding: 34px;
+  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
+}
+
+.doc-panel {
+  border-left: 5px solid var(--primary);
+}
+
+.doc-panel h3,
+.doc-result h3 {
+  font-family: 'Poppins', sans-serif;
+  font-size: 24px;
+  margin-bottom: 22px;
+}
+
+.doc-panel label {
+  display: block;
+  font-weight: 700;
+  margin: 20px 0 10px;
+  color: var(--dark);
+}
+
+.doc-panel select {
+  width: 100%;
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid var(--gray-400);
+  font-family: 'Inter', sans-serif;
+  font-size: 15px;
+  background: white;
+}
+
+.chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.doc-chip {
+  border: 1px solid var(--gray-300, #cbd5e1);
+  background: #f8fafc;
+  padding: 10px 14px;
+  border-radius: 999px;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.25s ease;
+}
+
+.doc-chip.active {
+  background: linear-gradient(135deg, var(--primary), var(--primary-light));
+  color: white;
+  border-color: transparent;
+  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
+}
+
+.doc-result {
+  background: linear-gradient(135deg, var(--dark), var(--primary-dark));
+  color: white;
+  position: relative;
+  overflow: hidden;
+}
+
+.doc-result::after {
+  content: '';
+  position: absolute;
+  right: -80px;
+  top: -80px;
+  width: 220px;
+  height: 220px;
+  background: rgba(245, 158, 11, 0.16);
+  border-radius: 50%;
+}
+
+.result-badge {
+  display: inline-block;
+  background: rgba(245, 158, 11, 0.18);
+  color: #fbbf24;
+  padding: 7px 12px;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.8px;
+  margin-bottom: 16px;
+}
+
+.doc-result p {
+  color: rgba(255,255,255,0.82);
+  line-height: 1.8;
+  margin-bottom: 24px;
+}
+
+.result-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+  margin: 24px 0;
+}
+
+.result-grid div {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  padding: 16px;
+}
+
+.result-grid span {
+  display: block;
+  font-size: 12px;
+  color: rgba(255,255,255,0.58);
+  margin-bottom: 6px;
+}
+
+.result-grid strong {
+  font-size: 14px;
+}
+
+.doc-next {
+  background: rgba(255,255,255,0.08);
+  border-left: 4px solid var(--secondary);
+  padding: 18px;
+  border-radius: 10px;
+  margin-bottom: 26px;
+}
+
+.doc-next p {
+  margin: 8px 0 0;
+}
+
+@media (max-width: 768px) {
+  .doc-tool {
+    grid-template-columns: 1fr;
+  }
+
+  .result-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
 </style>
 </head>
 
