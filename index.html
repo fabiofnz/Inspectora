@@ -626,6 +626,38 @@ footer {
     display: none;
 }
 
+@media (max-width: 768px) {
+  .top-nav {
+    padding: 14px 20px;
+  }
+
+  .nav-toggle {
+    display: block;
+    background: none;
+    border: none;
+    color: white;
+    font-size: 26px;
+    cursor: pointer;
+  }
+
+  .nav-links {
+    display: none;
+    position: absolute;
+    top: 62px;
+    left: 0;
+    right: 0;
+    background: rgba(15, 23, 42, 0.98);
+    flex-direction: column;
+    padding: 22px;
+    gap: 18px;
+    text-align: center;
+  }
+
+  .nav-links.active {
+    display: flex;
+  }
+}
+
 </style>
 </head>
 
