@@ -1019,6 +1019,73 @@ cities.forEach(city => {
 const group = L.featureGroup(markers);
 map.fitBounds(group.getBounds().pad(0.15));
 
+const serviceType = document.getElementById('serviceType');
+const objectType = document.getElementById('objectType');
+const city = document.getElementById('city');
+const urgency = document.getElementById('urgency');
+const resultType = document.getElementById('resultType');
+const objectCount = document.getElementById('objectCount');
+
+const requestSummary = document.getElementById('requestSummary');
+const configuredMailButton = document.getElementById('configuredMailButton');
+
+function updateRequest() {
+
+    const summary =
+        `${serviceType.value} für ${objectCount.value} (${objectType.value}) in ${city.value}. ` +
+        `Zeitrahmen: ${urgency.value}. ` +
+        `Gewünschtes Ergebnis: ${resultType.value}.`;
+
+    requestSummary.textContent = summary;
+
+    const subject =
+        encodeURIComponent(`Anfrage ${serviceType.value}`);
+
+    const body =
+        encodeURIComponent(
+`Guten Tag,
+
+ich interessiere mich für folgende Unterstützung:
+
+Leistung:
+${serviceType.value}
+
+Objektart:
+${objectType.value}
+
+Umfang:
+${objectCount.value}
+
+Ort:
+${city.value}
+
+Zeitrahmen:
+${urgency.value}
+
+Gewünschtes Ergebnis:
+${resultType.value}
+
+Weitere Informationen:
+
+`);
+
+    configuredMailButton.href =
+        `mailto:kontakt.inspectora@gmail.com?subject=${subject}&body=${body}`;
+}
+
+[
+ serviceType,
+ objectType,
+ city,
+ urgency,
+ resultType,
+ objectCount
+].forEach(element => {
+    element.addEventListener('change', updateRequest);
+});
+
+updateRequest();
+
 function toggleMenu() {
   document.getElementById('navLinks').classList.toggle('active');
 }
