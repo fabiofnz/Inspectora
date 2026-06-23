@@ -796,6 +796,85 @@ footer {
     </div>
   </section>
 
+<section class="section" id="konfigurator">
+  <h2 class="section-title">Dokumentation konfigurieren</h2>
+  <p class="section-intro">
+    Wählen Sie aus, welche Unterlagen oder Informationen vorliegen. Inspectora schlägt daraus eine passende Dokumentationsleistung vor.
+  </p>
+
+  <div class="doc-tool">
+    <div class="doc-panel">
+      <h3>Ausgangslage</h3>
+
+      <label>Was liegt bereits vor?</label>
+      <div class="chip-group">
+        <button type="button" class="doc-chip active" data-value="Fotos">Fotos</button>
+        <button type="button" class="doc-chip" data-value="Notizen">Notizen</button>
+        <button type="button" class="doc-chip" data-value="Handwerkerinfos">Handwerkerinfos</button>
+        <button type="button" class="doc-chip" data-value="Objektdaten">Objektdaten</button>
+        <button type="button" class="doc-chip" data-value="Mängelhinweise">Mängelhinweise</button>
+      </div>
+
+      <label for="docPurpose">Wofür wird die Dokumentation benötigt?</label>
+      <select id="docPurpose">
+        <option value="Eigentümerinformation">Eigentümerinformation</option>
+        <option value="Vermarktung">Vermarktung / Exposé</option>
+        <option value="Mängelübersicht">Mängel- und Maßnahmenübersicht</option>
+        <option value="Interne Ablage">Interne Ablage</option>
+        <option value="Handwerkerstatus">Handwerkerstatus</option>
+      </select>
+
+      <label for="docObject">Objektart</label>
+      <select id="docObject">
+        <option value="Wohnung">Wohnung</option>
+        <option value="Mehrfamilienhaus">Mehrfamilienhaus</option>
+        <option value="Gewerbeobjekt">Gewerbeobjekt</option>
+        <option value="Leerstand">Leerstand</option>
+        <option value="Portfolio / mehrere Objekte">Portfolio / mehrere Objekte</option>
+      </select>
+
+      <label for="docDepth">Gewünschte Tiefe</label>
+      <select id="docDepth">
+        <option value="Kurz">Kurz und übersichtlich</option>
+        <option value="Standard">Standardbericht</option>
+        <option value="Ausführlich">Ausführliche Dokumentation</option>
+      </select>
+    </div>
+
+    <div class="doc-result">
+      <div class="result-badge">Empfehlung</div>
+      <h3 id="docRecommendation">Eigentümerbericht Standard</h3>
+      <p id="docDescription">
+        Strukturierte Zusammenfassung aus Fotos und Objektinformationen für Eigentümer oder Verwaltung.
+      </p>
+
+      <div class="result-grid">
+        <div>
+          <span>Benötigt</span>
+          <strong id="docNeeded">Fotos, Notizen, Objektdaten</strong>
+        </div>
+        <div>
+          <span>Ergebnis</span>
+          <strong id="docOutput">PDF-/Textbericht</strong>
+        </div>
+        <div>
+          <span>Umfang</span>
+          <strong id="docScope">Standard</strong>
+        </div>
+      </div>
+
+      <div class="doc-next">
+        <strong>Nächster Schritt:</strong>
+        <p id="docNextStep">Unterlagen senden und gewünschtes Ergebnis kurz beschreiben.</p>
+      </div>
+
+      <a class="button" id="docMailButton" href="mailto:kontakt.inspectora@gmail.com">
+        Diese Dokumentation anfragen
+      </a>
+    </div>
+  </div>
+</section>
+
   <section class="section" id="leistungen">
     <h2 class="section-title">Leistungen</h2>
     <p class="section-intro">
