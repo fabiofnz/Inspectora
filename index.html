@@ -1517,6 +1517,119 @@ Mit freundlichen Grüßen`
   });
 });
 
+const docChips = document.querySelectorAll('.doc-chip');
+const docPurpose = document.getElementById('docPurpose');
+const docObject = document.getElementById('docObject');
+const docDepth = document.getElementById('docDepth');
+
+const docRecommendation = document.getElementById('docRecommendation');
+const docDescription = document.getElementById('docDescription');
+const docNeeded = document.getElementById('docNeeded');
+const docOutput = document.getElementById('docOutput');
+const docScope = document.getElementById('docScope');
+const docNextStep = document.getElementById('docNextStep');
+const docMailButton = document.getElementById('docMailButton');
+
+docChips.forEach(chip => {
+  chip.addEventListener('click', () => {
+    chip.classList.toggle('active');
+    updateDocTool();
+  });
+});
+
+[docPurpose, docObject, docDepth].forEach(field => {
+  field.addEventListener('change', updateDocTool);
+});
+
+function getSelectedInputs() {
+  return Array.from(document.querySelectorAll('.doc-chip.active'))
+    .map(chip => chip.dataset.value);
+}
+
+function updateDocTool() {
+  const inputs = getSelectedInputs();
+  const purpose = docPurpose.value;
+  const object = docObject.value;
+  const depth = docDepth.value;
+
+  let recommendation = 'Objektbericht Standard';
+  let description = 'Strukturierte Dokumentation aus vorhandenen Informationen, Fotos und Notizen.';
+  let output = 'PDF-/Textbericht';
+
+  if (purpose === 'Vermarktung') {
+    recommendation = 'Exposé-Textpaket';
+    description = 'Objektbeschreibung, Lagebeschreibung und Kurztexte für Immobilienportale oder interne Vermarktung.';
+    output = 'Exposé-Textvorlage';
+  }
+
+  if (purpose === 'Mängelübersicht') {
+    recommendation = 'Mängel- & Maßnahmenliste';
+    description = 'Übersichtliche Aufstellung von Auffälligkeiten, Bereichen, Prioritäten und möglichen nächsten Schritten.';
+    output = 'Maßnahmenübersicht';
+  }
+
+  if (purpose === 'Eigentümerinformation') {
+    recommendation = 'Eigentümerbericht';
+    description = 'Verständliche Zusammenfassung des Objektzustands oder Vorgangs für Eigentümer, Verwaltung oder Investor.';
+    output = 'Eigentümerbericht';
+  }
+
+  if (purpose === 'Handwerkerstatus') {
+    recommendation = 'Statusbericht Handwerkerleistung';
+    description = 'Dokumentation des aktuellen Arbeitsstands, sichtbarer Ergebnisse und offener Punkte.';
+    output = 'Statusbericht';
+  }
+
+  if (object === 'Portfolio / mehrere Objekte') {
+    recommendation = 'Portfolio-Übersicht';
+    description = 'Strukturierte Übersicht mehrerer Objekte oder Einheiten mit einheitlicher Darstellung.';
+    output = 'Objektübersicht';
+  }
+
+  const needed = inputs.length > 0 ? inputs.join(', ') : 'Fotos, Notizen oder Objektdaten';
+
+  docRecommendation.textContent = `${recommendation} ${depth}`;
+  docDescription.textContent = description;
+  docNeeded.textContent = needed;
+  docOutput.textContent = output;
+  docScope.textContent = depth;
+
+  docNextStep.textContent =
+    `Für ${object} mit Ziel "${purpose}" können vorhandene Unterlagen gesammelt und anschließend strukturiert aufbereitet werden.`;
+
+  const subject = encodeURIComponent(`Anfrage ${recommendation}`);
+
+  const body = encodeURIComponent(
+`Guten Tag,
+
+ich interessiere mich für folgende Dokumentationsleistung:
+
+Empfehlung:
+${recommendation} ${depth}
+
+Zweck:
+${purpose}
+
+Objektart:
+${object}
+
+Vorhandene Informationen:
+${needed}
+
+Gewünschtes Ergebnis:
+${output}
+
+Weitere Hinweise / Ausgangslage:
+
+`
+  );
+
+  docMailButton.href =
+    `mailto:kontakt.inspectora@gmail.com?subject=${subject}&body=${body}`;
+}
+
+updateDocTool();
+
 </script>
 
 </body>
