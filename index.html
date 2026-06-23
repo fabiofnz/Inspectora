@@ -1849,6 +1849,119 @@ Weitere Hinweise / Ausgangslage:
 
 updateDocTool();
 
+const resultTabs = document.querySelectorAll('.result-tab');
+const demoTitle = document.getElementById('demoTitle');
+const demoObject = document.getElementById('demoObject');
+const demoScope = document.getElementById('demoScope');
+const demoOutput = document.getElementById('demoOutput');
+const demoHeadline = document.getElementById('demoHeadline');
+const demoText = document.getElementById('demoText');
+const demoList = document.getElementById('demoList');
+const demoMailButton = document.getElementById('demoMailButton');
+
+const demoData = {
+  owner: {
+    title: 'Eigentümerbericht',
+    object: 'Wohnung, Duisburg',
+    scope: '12 Fotos / 4 Notizen',
+    output: 'Berichtsvorlage',
+    headline: 'Zusammenfassung',
+    text: 'Die vorhandenen Fotos und Notizen wurden zu einer übersichtlichen Eigentümerinformation zusammengeführt. Sichtbare Auffälligkeiten, erledigte Punkte und offene Themen sind klar getrennt dargestellt.',
+    items: [
+      'Zustand der Einheit zusammengefasst',
+      'Auffälligkeiten separat aufgeführt',
+      'Nächste Schritte verständlich vorbereitet'
+    ],
+    subject: 'Anfrage Eigentümerbericht'
+  },
+  defects: {
+    title: 'Mängel- & Maßnahmenliste',
+    object: 'Mehrfamilienhaus, Moers',
+    scope: '26 Fotos / 9 Hinweise',
+    output: 'Maßnahmenübersicht',
+    headline: 'Priorisierte Übersicht',
+    text: 'Auffälligkeiten werden nach Bereich, Dringlichkeit und Status geordnet. Dadurch entsteht eine klare Grundlage für interne Abstimmung, Handwerkerbeauftragung oder Eigentümerinformation.',
+    items: [
+      'Mängel nach Bereich sortiert',
+      'Prioritäten und Status sichtbar',
+      'Maßnahmen nachvollziehbar vorbereitet'
+    ],
+    subject: 'Anfrage Mängelliste'
+  },
+  photos: {
+    title: 'Fotodokumentation',
+    object: 'Gewerbeeinheit, Krefeld',
+    scope: '48 Fotos',
+    output: 'Sortierte Fotostrecke',
+    headline: 'Strukturierte Bildübersicht',
+    text: 'Unsortierte Fotos werden nach Räumen, Bereichen oder Themen geordnet und mit kurzen Beschreibungen versehen. So entsteht eine nachvollziehbare Fotodokumentation statt einer unübersichtlichen Bildsammlung.',
+    items: [
+      'Fotos nach Bereichen sortiert',
+      'Bildbeschriftungen vorbereitet',
+      'Übersicht für Verwaltung oder Eigentümer'
+    ],
+    subject: 'Anfrage Fotodokumentation'
+  },
+  craftsmen: {
+    title: 'Handwerkerstatus',
+    object: 'Leerwohnung, Kamp-Lintfort',
+    scope: '15 Fotos / 3 Gewerke',
+    output: 'Statusbericht',
+    headline: 'Fortschritt dokumentiert',
+    text: 'Laufende oder abgeschlossene Arbeiten werden übersichtlich dargestellt. Erledigte Punkte, offene Arbeiten und sichtbare Ergebnisse werden getrennt aufgeführt.',
+    items: [
+      'Arbeitsfortschritt zusammengefasst',
+      'Offene Punkte markiert',
+      'Dokumentation für Eigentümer oder Verwaltung'
+    ],
+    subject: 'Anfrage Handwerkerstatus'
+  }
+};
+
+resultTabs.forEach(tab => {
+  tab.addEventListener('click', () => {
+    resultTabs.forEach(btn => btn.classList.remove('active'));
+    tab.classList.add('active');
+
+    const data = demoData[tab.dataset.demo];
+
+    demoTitle.textContent = data.title;
+    demoObject.textContent = data.object;
+    demoScope.textContent = data.scope;
+    demoOutput.textContent = data.output;
+    demoHeadline.textContent = data.headline;
+    demoText.textContent = data.text;
+
+    demoList.innerHTML = data.items.map(item => `<div>✓ ${item}</div>`).join('');
+
+    const subject = encodeURIComponent(data.subject);
+    const body = encodeURIComponent(
+`Guten Tag,
+
+ich interessiere mich für folgendes Ergebnis:
+
+${data.title}
+
+Beispielhafte gewünschte Leistung:
+${data.output}
+
+Objekt / Ausgangslage:
+Bitte hier kurz beschreiben.
+
+Vorhandene Unterlagen:
+- Fotos:
+- Notizen:
+- Objektinformationen:
+
+Weitere Hinweise:
+
+`
+    );
+
+    demoMailButton.href = `mailto:kontakt.inspectora@gmail.com?subject=${subject}&body=${body}`;
+  });
+});
+
 </script>
 
 </body>
