@@ -191,6 +191,158 @@ const EMAIL_ADDRESS = "kontakt.inspectora@gmail.com";
       URL.revokeObjectURL(url);
       showToast("TXT erstellt");
     });
+const viewOutputButton = document.getElementById("viewOutputButton");
+const viewPortalButton = document.getElementById("viewPortalButton");
+const outputView = document.getElementById("outputView");
+const portalView = document.getElementById("portalView");
+
+function setResultsView(view) {
+const showPortal = view === "portal";
+
+outputView.classList.toggle("is-hidden", showPortal);
+portalView.classList.toggle("is-hidden", !showPortal);
+portalView.setAttribute("aria-hidden", String(!showPortal));
+
+viewOutputButton.classList.toggle("active", !showPortal);
+viewPortalButton.classList.toggle("active", showPortal);
+
+viewOutputButton.setAttribute(
+"aria-pressed",
+String(!showPortal)
+);
+
+viewPortalButton.setAttribute(
+"aria-pressed",
+String(showPortal)
+);
+}
+
+viewOutputButton.addEventListener("click", () => {
+setResultsView("output");
+});
+
+viewPortalButton.addEventListener("click", () => {
+setResultsView("portal");
+});
+
+const portalFileData = {
+owner: {
+title: "Eigentümerbericht",
+text: "Kompakte Zusammenfassung des Objektzustands mit Auffälligkeiten, Maßnahmen und nächsten Schritten.",
+meta: "PDF · 6 Seiten",
+status: "In Bearbeitung · 82%",
+code: "EB-2026-014",
+service: "Eigentümerbericht",
+output: "Eigentümerbericht",
+objectType: "Wohnung"
+},
+
+photos: {
+title: "Fotodokumentation",
+text: "24 Fotos, geordnet nach Bereichen und mit kurzen, nachvollziehbaren Beschriftungen versehen.",
+meta: "PDF · 24 Fotos",
+status: "Bereit zur Übergabe",
+code: "FD-2026-014",
+service: "Fotodokumentation",
+output: "Fotodokumentation",
+objectType: "Wohnung"
+},
+
+actions: {
+title: "Maßnahmenübersicht",
+text: "Drei offene Punkte mit Priorität, Zuständigkeit und empfohlenem nächsten Schritt.",
+meta: "Übersicht · 3 Positionen",
+status: "Prüfung ausstehend",
+code: "MM-2026-014",
+service: "Mängel- & Maßnahmenliste",
+output: "Maßnahmenübersicht",
+objectType: "Wohnung"
+}
+};
+
+const portalFileButtons =
+document.querySelectorAll(".portal-file");
+
+const portalFileTitle =
+document.getElementById("portalFileTitle");
+
+const portalFileText =
+document.getElementById("portalFileText");
+
+const portalFileMeta =
+document.getElementById("portalFileMeta");
+
+const portalFileStatus =
+document.getElementById("portalFileStatus");
+
+const portalDocumentCode =
+document.getElementById("portalDocumentCode");
+
+let currentPortalFile = portalFileData.owner;
+
+function renderPortalFile(key) {
+currentPortalFile = portalFileData[key];
+
+portalFileTitle.textContent =
+currentPortalFile.title;
+
+portalFileText.textContent =
+currentPortalFile.text;
+
+portalFileMeta.textContent =
+currentPortalFile.meta;
+
+portalFileStatus.textContent =
+currentPortalFile.status;
+
+portalDocumentCode.textContent =
+currentPortalFile.code;
+
+portalFileButtons.forEach(button => {
+button.classList.toggle(
+"active",
+button.dataset.portalFile === key
+);
+});
+}
+
+portalFileButtons.forEach(button => {
+button.addEventListener("click", () => {
+renderPortalFile(
+button.dataset.portalFile
+);
+});
+});
+
+document
+.getElementById("applyPortalButton")
+.addEventListener("click", () => {
+applyToProject({
+service: currentPortalFile.service,
+result: currentPortalFile.output,
+object: currentPortalFile.objectType,
+details:
+`Orientierung an der Portal-Demo. ` +
+`Gewünschte Datei: ${currentPortalFile.title}. ` +
+`Projektstatus und Dokumente sollen übersichtlich gebündelt werden.`
+});
+});
+
+document
+.getElementById("copyPortalButton")
+.addEventListener("click", () => {
+copyText(
+`Inspectora Demo-Projekt
+Objekt: Musterstraße 12, Duisburg
+Fortschritt: 82%
+Aktive Datei: ${currentPortalFile.title}
+Status: ${currentPortalFile.status}
+${currentPortalFile.text}`,
+"Projektstatus kopiert"
+);
+});
+
+renderPortalFile("owner");
 
     document.getElementById("resetRequestButton").addEventListener("click", () => {
       localStorage.removeItem(STORAGE_KEY);
