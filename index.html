@@ -1,1968 +1,481 @@
 <!DOCTYPE html>
 <html lang="de">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Inspectora – Immobilienberichte & Vor-Ort-Dokumentation</title>
-
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css" />
-
-<style>
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-:root {
-  --primary: #2563eb;
-  --primary-dark: #1d47ab;
-  --primary-light: #3b82f6;
-  --secondary: #f59e0b;
-  --accent: #10b981;
-  --dark: #0f172a;
-  --light: #f8fafc;
-  --gray-100: #f1f5f9;
-  --gray-200: #e2e8f0;
-  --gray-400: #cbd5e1;
-  --gray-600: #64748b;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-body {
-  font-family: 'Inter', sans-serif;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
-  color: var(--dark);
-  line-height: 1.6;
-  padding-top: 70px;
-}
-
-/* Header */
-header {
-  background: linear-gradient(135deg, var(--dark) 0%, var(--primary-dark) 100%);
-  color: white;
-  padding: 95px 20px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-}
-
-header::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background:
-    radial-gradient(circle at 20% 50%, rgba(37, 99, 235, 0.18) 0%, transparent 50%),
-    radial-gradient(circle at 80% 80%, rgba(245, 158, 11, 0.14) 0%, transparent 50%);
-  pointer-events: none;
-}
-
-header h1 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 58px;
-  letter-spacing: -1px;
-  font-weight: 700;
-  position: relative;
-  z-index: 1;
-  animation: slideInDown 0.8s ease-out;
-}
-
-header .tagline {
-  font-size: 22px;
-  opacity: 0.95;
-  margin-top: 18px;
-  position: relative;
-  z-index: 1;
-  font-weight: 500;
-  animation: slideInUp 0.8s ease-out 0.15s backwards;
-}
-
-header .hero-subline {
-  max-width: 880px;
-  margin: 18px auto 0;
-  font-size: 17px;
-  line-height: 1.8;
-  opacity: 0.86;
-  position: relative;
-  z-index: 1;
-  animation: slideInUp 0.8s ease-out 0.25s backwards;
-}
-
-.hero-actions {
-  display: flex;
-  justify-content: center;
-  gap: 14px;
-  flex-wrap: wrap;
-  margin-top: 32px;
-  position: relative;
-  z-index: 1;
-}
-
-@keyframes slideInDown {
-  from { opacity: 0; transform: translateY(-30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-@keyframes slideInUp {
-  from { opacity: 0; transform: translateY(30px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-
-/* Layout */
-.container {
-  max-width: 1200px;
-  margin: auto;
-  padding: 60px 20px;
-}
-
-.section {
-  margin-bottom: 80px;
-}
-
-.section-title {
-  font-family: 'Poppins', sans-serif;
-  font-size: 36px;
-  font-weight: 700;
-  margin-bottom: 30px;
-  color: var(--dark);
-  position: relative;
-  padding-bottom: 15px;
-}
-
-.section-title::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  width: 64px;
-  height: 4px;
-  background: linear-gradient(90deg, var(--primary) 0%, var(--secondary) 100%);
-  border-radius: 2px;
-}
-
-.section-intro {
-  font-size: 18px;
-  color: var(--gray-600);
-  margin-bottom: 24px;
-  line-height: 1.8;
-  max-width: 800px;
-}
-
-/* Buttons */
-.button {
-  display: inline-block;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  color: white;
-  padding: 14px 30px;
-  text-decoration: none;
-  border-radius: 8px;
-  font-weight: 600;
-  font-family: 'Poppins', sans-serif;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-  border: none;
-  cursor: pointer;
-  font-size: 15px;
-}
-
-.button:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(37, 99, 235, 0.4);
-}
-
-.button.secondary {
-  background: rgba(255, 255, 255, 0.12);
-  border: 1px solid rgba(255,255,255,0.28);
-  box-shadow: none;
-}
-
-/* Intro */
-.intro-box {
-  background: white;
-  padding: 48px;
-  border-radius: 18px;
-  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.08);
-  border-left: 5px solid var(--primary);
-}
-
-.intro-box h2 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 30px;
-  margin-bottom: 22px;
-}
-
-.intro-box p {
-  color: var(--gray-600);
-  font-size: 17px;
-  line-height: 1.9;
-  margin-bottom: 18px;
-}
-
-.intro-highlight {
-  margin-top: 26px;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.06) 0%, rgba(245, 158, 11, 0.06) 100%);
-  border-left: 4px solid var(--secondary);
-  padding: 20px;
-  border-radius: 10px;
-  color: var(--dark);
-  font-weight: 600;
-}
-
-/* Cards */
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(270px, 1fr));
-  gap: 25px;
-  margin-top: 40px;
-}
-
-.card {
-  background: white;
-  padding: 34px;
-  border-radius: 15px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
-  transition: all 0.3s ease;
-  border-left: 5px solid var(--primary);
-  position: relative;
-  overflow: hidden;
-}
-
-.card:hover {
-  transform: translateY(-7px);
-  box-shadow: 0 12px 24px rgba(37, 99, 235, 0.15);
-}
-
-.card:nth-child(2) { border-left-color: var(--secondary); }
-.card:nth-child(3) { border-left-color: var(--accent); }
-.card:nth-child(4) { border-left-color: #8b5cf6; }
-.card:nth-child(5) { border-left-color: #ec4899; }
-.card:nth-child(6) { border-left-color: #06b6d4; }
-
-.card-image {
-  width: 100%;
-  height: 190px;
-  object-fit: cover;
-  border-radius: 10px;
-  margin-bottom: 20px;
-}
-
-.card-icon {
-  font-size: 32px;
-  margin-bottom: 14px;
-}
-
-.card h3 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 12px;
-  color: var(--dark);
-}
-
-.card p {
-  color: var(--gray-600);
-  font-size: 15px;
-  line-height: 1.7;
-}
-
-/* Split section */
-.split {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 26px;
-  margin-top: 35px;
-}
-
-.feature-box {
-  background: white;
-  padding: 34px;
-  border-radius: 15px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.08);
-}
-
-.feature-box h3 {
-  font-family: 'Poppins', sans-serif;
-  margin-bottom: 18px;
-  font-size: 22px;
-}
-
-.feature-box ul {
-  list-style: none;
-}
-
-.feature-box li {
-  padding: 11px 0;
-  border-bottom: 1px solid var(--gray-200);
-  color: var(--gray-600);
-}
-
-.feature-box li:last-child {
-  border-bottom: none;
-}
-
-.feature-box li::before {
-  content: '✓';
-  color: var(--accent);
-  font-weight: 700;
-  margin-right: 10px;
-}
-
-/* Target clients */
-.list-section {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 20px;
-  margin-top: 30px;
-}
-
-.list-item {
-  display: flex;
-  align-items: flex-start;
-  padding: 16px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.05);
-}
-
-.list-item::before {
-  content: '✓';
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 28px;
-  height: 28px;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  color: white;
-  border-radius: 50%;
-  margin-right: 15px;
-  font-weight: bold;
-  flex-shrink: 0;
-  font-size: 16px;
-}
-
-/* Process */
-.steps {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-  gap: 30px;
-  margin-top: 40px;
-}
-
-.step {
-  text-align: center;
-}
-
-.step-number {
-  width: 60px;
-  height: 60px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-family: 'Poppins', sans-serif;
-  font-size: 28px;
-  font-weight: 700;
-  margin: 0 auto 15px;
-  box-shadow: 0 4px 15px rgba(37, 99, 235, 0.3);
-}
-
-.step:nth-child(2) .step-number {
-  background: linear-gradient(135deg, var(--secondary) 0%, #fbbf24 100%);
-}
-
-.step:nth-child(3) .step-number {
-  background: linear-gradient(135deg, var(--accent) 0%, #34d399 100%);
-}
-
-.step:nth-child(4) .step-number {
-  background: linear-gradient(135deg, #8b5cf6 0%, #a78bfa 100%);
-}
-
-.step h3 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 18px;
-  font-weight: 600;
-  margin-top: 15px;
-  color: var(--dark);
-}
-
-.step p {
-  color: var(--gray-600);
-  font-size: 14px;
-  margin-top: 8px;
-}
-
-/* Map */
-#map {
-  width: 100%;
-  height: 500px;
-  border-radius: 15px;
-  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.1);
-  margin-top: 30px;
-  margin-bottom: 30px;
-}
-
-.location-notice {
-  background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(34, 197, 94, 0.06) 100%);
-  border-left: 4px solid var(--accent);
-  padding: 20px;
-  border-radius: 8px;
-  margin-top: 30px;
-  font-size: 15px;
-  color: var(--gray-600);
-  line-height: 1.7;
-}
-
-.location-notice strong {
-  color: var(--accent);
-}
-
-.city-marker {
-  background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
-  border: 3px solid white;
-  border-radius: 50%;
-  width: 30px;
-  height: 30px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.4);
-  cursor: pointer;
-}
-
-.city-popup {
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  color: var(--dark);
-}
-
-/* Contact */
-.contact-section {
-  text-align: center;
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.06) 0%, rgba(245, 158, 11, 0.06) 100%);
-  padding: 60px 40px;
-  border-radius: 20px;
-  border: 2px solid rgba(37, 99, 235, 0.1);
-  margin-top: 40px;
-}
-
-.contact-section h2 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 32px;
-  font-weight: 700;
-  margin-bottom: 15px;
-}
-
-.contact-section p {
-  font-size: 18px;
-  color: var(--gray-600);
-  margin-bottom: 25px;
-}
-
-.request-buttons {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 14px;
-  margin-top: 28px;
-}
-
-.request-buttons .button {
-  min-width: 220px;
-  text-align: center;
-}
-
-/* Footer */
-footer {
-  text-align: center;
-  padding: 40px 20px 0;
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.7);
-  background: var(--dark);
-  margin-top: 60px;
-}
-
-.disclaimer {
-  background: rgba(0, 0, 0, 0.5);
-  padding: 20px;
-  text-align: center;
-  font-size: 12px;
-  line-height: 1.6;
-  color: rgba(255, 255, 255, 0.62);
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  margin-top: 30px;
-}
-
-.disclaimer strong {
-  color: rgba(255, 255, 255, 0.86);
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-  header {
-    padding: 65px 20px;
-  }
-
-  header h1 {
-    font-size: 38px;
-  }
-
-  header .tagline {
-    font-size: 18px;
-  }
-
-  header .hero-subline {
-    font-size: 15px;
-  }
-
-  .container {
-    padding: 42px 20px;
-  }
-
-  .section {
-    margin-bottom: 60px;
-  }
-
-  .section-title {
-    font-size: 28px;
-  }
-
-  .intro-box {
-    padding: 30px;
-  }
-
-  .split {
-    grid-template-columns: 1fr;
-  }
-
-  .grid {
-    grid-template-columns: 1fr;
-  }
-
-  #map {
-    height: 380px;
-  }
-}
-
-@media (max-width: 480px) {
-  header h1 {
-    font-size: 30px;
-  }
-
-  .section-title {
-    font-size: 23px;
-  }
-
-  .card {
-    padding: 25px;
-  }
-
-  .button {
-    width: 100%;
-    text-align: center;
-  }
-
-  .request-buttons .button {
-    min-width: 100%;
-  }
-
-  #map {
-    height: 300px;
-  }
-
-  .disclaimer {
-    font-size: 11px;
-    padding: 15px;
-  }
-}
-
-/* Navigation */
-
-.top-nav {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    background: rgba(15, 23, 42, 0.95);
-    backdrop-filter: blur(10px);
-    z-index: 1000;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 15px 30px;
-    box-shadow: 0 2px 20px rgba(0,0,0,0.15);
-}
-
-.nav-brand {
-    color: white;
-    font-family: 'Poppins', sans-serif;
-    font-size: 22px;
-    font-weight: 700;
-}
-
-.nav-links {
-    display: flex;
-    gap: 25px;
-}
-
-.nav-links a {
-    color: white;
-    text-decoration: none;
-    font-weight: 500;
-    transition: 0.3s;
-}
-
-.nav-links a:hover {
-    color: var(--secondary);
-}
-
-.nav-toggle {
-    display: none;
-}
-
-@media (max-width: 768px) {
-  .top-nav {
-    padding: 14px 20px;
-  }
-
-  .nav-toggle {
-    display: block;
-    background: none;
-    border: none;
-    color: white;
-    font-size: 26px;
-    cursor: pointer;
-  }
-
-  .nav-links {
-    display: none;
-    position: absolute;
-    top: 62px;
-    left: 0;
-    right: 0;
-    background: rgba(15, 23, 42, 0.98);
-    flex-direction: column;
-    padding: 22px;
-    gap: 18px;
-    text-align: center;
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-}
-
-/* Inspectora Studio */
-
-.studio-layout {
-  display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: 30px;
-  margin-top: 40px;
-}
-
-.studio-options {
-  display: grid;
-  gap: 14px;
-}
-
-.studio-option {
-  background: white;
-  border: 1px solid var(--gray-200);
-  border-left: 5px solid var(--primary);
-  border-radius: 12px;
-  padding: 18px 20px;
-  text-align: left;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 600;
-  color: var(--dark);
-  cursor: pointer;
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-  transition: all 0.25s ease;
-}
-
-.studio-option span {
-  margin-right: 10px;
-}
-
-.studio-option:hover,
-.studio-option.active {
-  transform: translateX(6px);
-  border-left-color: var(--secondary);
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.06), rgba(245, 158, 11, 0.06));
-}
-
-.studio-preview {
-  background: linear-gradient(135deg, var(--dark), var(--primary-dark));
-  color: white;
-  border-radius: 18px;
-  padding: 40px;
-  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.18);
-}
-
-.preview-label {
-  color: rgba(255,255,255,0.65);
-  font-size: 13px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 12px;
-  font-weight: 700;
-}
-
-.studio-preview h3 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 28px;
-  margin-bottom: 14px;
-}
-
-.studio-preview p {
-  color: rgba(255,255,255,0.82);
-  font-size: 16px;
-  line-height: 1.8;
-  margin-bottom: 25px;
-}
-
-.studio-checklist {
-  display: grid;
-  gap: 12px;
-  margin-bottom: 28px;
-  color: rgba(255,255,255,0.86);
-  font-size: 15px;
-}
-
-@media (max-width: 768px) {
-  .studio-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .studio-preview {
-    padding: 28px;
-  }
-}
-
-/* Dokumentations-Konfigurator */
-
-.doc-tool {
-  display: grid;
-  grid-template-columns: 1fr 1.1fr;
-  gap: 30px;
-  margin-top: 40px;
-}
-
-.doc-panel,
-.doc-result {
-  background: white;
-  border-radius: 18px;
-  padding: 34px;
-  box-shadow: 0 10px 28px rgba(15, 23, 42, 0.08);
-}
-
-.doc-panel {
-  border-left: 5px solid var(--primary);
-}
-
-.doc-panel h3,
-.doc-result h3 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 24px;
-  margin-bottom: 22px;
-}
-
-.doc-panel label {
-  display: block;
-  font-weight: 700;
-  margin: 20px 0 10px;
-  color: var(--dark);
-}
-
-.doc-panel select {
-  width: 100%;
-  padding: 14px;
-  border-radius: 10px;
-  border: 1px solid var(--gray-400);
-  font-family: 'Inter', sans-serif;
-  font-size: 15px;
-  background: white;
-}
-
-.chip-group {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-}
-
-.doc-chip {
-  border: 1px solid var(--gray-300, #cbd5e1);
-  background: #f8fafc;
-  padding: 10px 14px;
-  border-radius: 999px;
-  cursor: pointer;
-  font-weight: 600;
-  transition: all 0.25s ease;
-}
-
-.doc-chip.active {
-  background: linear-gradient(135deg, var(--primary), var(--primary-light));
-  color: white;
-  border-color: transparent;
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.25);
-}
-
-.doc-result {
-  background: linear-gradient(135deg, var(--dark), var(--primary-dark));
-  color: white;
-  position: relative;
-  overflow: hidden;
-}
-
-.doc-result::after {
-  content: '';
-  position: absolute;
-  right: -80px;
-  top: -80px;
-  width: 220px;
-  height: 220px;
-  background: rgba(245, 158, 11, 0.16);
-  border-radius: 50%;
-}
-
-.result-badge {
-  display: inline-block;
-  background: rgba(245, 158, 11, 0.18);
-  color: #fbbf24;
-  padding: 7px 12px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-  letter-spacing: 0.8px;
-  margin-bottom: 16px;
-}
-
-.doc-result p {
-  color: rgba(255,255,255,0.82);
-  line-height: 1.8;
-  margin-bottom: 24px;
-}
-
-.result-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin: 24px 0;
-}
-
-.result-grid div {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 12px;
-  padding: 16px;
-}
-
-.result-grid span {
-  display: block;
-  font-size: 12px;
-  color: rgba(255,255,255,0.58);
-  margin-bottom: 6px;
-}
-
-.result-grid strong {
-  font-size: 14px;
-}
-
-.doc-next {
-  background: rgba(255,255,255,0.08);
-  border-left: 4px solid var(--secondary);
-  padding: 18px;
-  border-radius: 10px;
-  margin-bottom: 26px;
-}
-
-.doc-next p {
-  margin: 8px 0 0;
-}
-
-@media (max-width: 768px) {
-  .doc-tool {
-    grid-template-columns: 1fr;
-  }
-
-  .result-grid {
-    grid-template-columns: 1fr;
-  }
-}
-
-/* Ergebnisvorschau */
-
-.result-demo {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 28px;
-  margin-top: 40px;
-}
-
-.result-tabs {
-  display: grid;
-  gap: 14px;
-}
-
-.result-tab {
-  background: white;
-  border: 1px solid var(--gray-200);
-  border-left: 5px solid var(--primary);
-  padding: 18px 20px;
-  border-radius: 12px;
-  text-align: left;
-  font-family: 'Poppins', sans-serif;
-  font-weight: 700;
-  cursor: pointer;
-  color: var(--dark);
-  box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
-  transition: all 0.25s ease;
-}
-
-.result-tab:hover,
-.result-tab.active {
-  transform: translateX(6px);
-  border-left-color: var(--secondary);
-  background: linear-gradient(135deg, rgba(37, 99, 235, 0.06), rgba(245, 158, 11, 0.07));
-}
-
-.result-screen {
-  background: linear-gradient(135deg, var(--dark), var(--primary-dark));
-  color: white;
-  border-radius: 20px;
-  padding: 36px;
-  box-shadow: 0 18px 38px rgba(15, 23, 42, 0.22);
-  position: relative;
-  overflow: hidden;
-}
-
-.result-screen::after {
-  content: '';
-  position: absolute;
-  right: -90px;
-  top: -90px;
-  width: 240px;
-  height: 240px;
-  background: rgba(245, 158, 11, 0.14);
-  border-radius: 50%;
-}
-
-.screen-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  gap: 20px;
-  margin-bottom: 26px;
-  position: relative;
-  z-index: 1;
-}
-
-.screen-label {
-  font-size: 12px;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  color: rgba(255,255,255,0.6);
-  font-weight: 800;
-}
-
-.screen-header h3 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 30px;
-  margin-top: 8px;
-}
-
-.screen-status {
-  background: rgba(16, 185, 129, 0.18);
-  color: #6ee7b7;
-  padding: 8px 13px;
-  border-radius: 999px;
-  font-size: 12px;
-  font-weight: 800;
-  text-transform: uppercase;
-}
-
-.screen-meta {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 14px;
-  margin-bottom: 26px;
-  position: relative;
-  z-index: 1;
-}
-
-.screen-meta div {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 12px;
-  padding: 15px;
-}
-
-.screen-meta span {
-  display: block;
-  font-size: 12px;
-  color: rgba(255,255,255,0.58);
-  margin-bottom: 6px;
-}
-
-.screen-meta strong {
-  font-size: 14px;
-}
-
-.screen-content {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
-  border-radius: 16px;
-  padding: 24px;
-  margin-bottom: 26px;
-  position: relative;
-  z-index: 1;
-}
-
-.screen-content h4 {
-  font-family: 'Poppins', sans-serif;
-  font-size: 20px;
-  margin-bottom: 12px;
-}
-
-.screen-content p {
-  color: rgba(255,255,255,0.82);
-  line-height: 1.8;
-  margin-bottom: 18px;
-}
-
-.demo-list {
-  display: grid;
-  gap: 10px;
-  color: rgba(255,255,255,0.9);
-  font-size: 15px;
-}
-
-@media (max-width: 768px) {
-  .result-demo {
-    grid-template-columns: 1fr;
-  }
-
-  .screen-meta {
-    grid-template-columns: 1fr;
-  }
-
-  .result-screen {
-    padding: 26px;
-  }
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Inspectora strukturiert Immobilieninformationen zu Berichten, Fotodokumentationen und Maßnahmenübersichten – digital und bei Bedarf vor Ort.">
+  <title>Inspectora – Digitale Immobiliendokumentation</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
+
+  <link rel="stylesheet" href="styles.css">
 </head>
 
 <body>
-  
-<div class="scroll-progress"></div>
+  <div class="scroll-progress" aria-hidden="true"></div>
 
-<nav class="top-nav">
-  <div class="nav-brand">Inspectora</div>
+  <nav class="top-nav" aria-label="Hauptnavigation">
+    <a class="nav-brand" href="#start">
+      <span class="brand-mark">IN</span>
+      Inspectora
+    </a>
 
-  <button class="nav-toggle" onclick="toggleMenu()">☰</button>
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Menü öffnen" aria-expanded="false">☰</button>
 
-<div class="nav-links" id="navLinks">
-  <a href="#konfigurator">Konfigurator</a>
-  <a href="#ergebnisvorschau">Ergebnisvorschau</a>
-  <a href="#leistungen">Leistungen</a>
-  <a href="#einsatzgebiet">Einsatzgebiet</a>
-  <a href="#kontakt">Anfrage</a>
-</div>
-</nav>
-
-<header>
-  <h1>Inspectora</h1>
-  <p class="tagline">Immobilienberichte & Vor-Ort-Dokumentation für Immobilienunternehmen</p>
-  <p class="hero-subline">
-    Aus Fotos, Notizen und Objektinformationen entstehen strukturierte Dokumentationen, Zustandsberichte und nachvollziehbare Übersichten – bei Bedarf ergänzt durch Objektbegehungen vor Ort im Ruhrgebiet und am Niederrhein.
-  </p>
-  <div class="hero-actions">
-    <a class="button" href="#kontakt">Anfrage starten</a>
-    <a class="button secondary" href="#leistungen">Leistungen ansehen</a>
-  </div>
-</header>
-
-<div class="container">
-
-  <section class="section">
-    <div class="intro-box">
-      <h2>Strukturierte Immobilieninformationen statt unübersichtlicher Einzelnotizen</h2>
-      <p>
-        In Immobilienunternehmen entstehen täglich Fotos, Stichpunkte, Handwerkerrückmeldungen, Objektinformationen und interne Notizen. Häufig fehlt die Zeit, daraus eine klare und weiterverwendbare Dokumentation zu erstellen.
-      </p>
-      <p>
-        Inspectora unterstützt dabei, diese Informationen sauber zu erfassen, zu ordnen und in verständliche Berichte oder Fotodokumentationen zu übertragen.
-      </p>
-      <div class="intro-highlight">
-        Inspectora ist kein Gutachter und keine Hausverwaltung. Der Fokus liegt auf strukturierter Dokumentation, Sichtprüfung und nachvollziehbarer Aufbereitung von Immobilieninformationen.
-      </div>
+    <div class="nav-links" id="navLinks">
+      <a href="#konfigurator">Konfigurator</a>
+      <a href="#ergebnisse">Ergebnisse</a>
+      <a href="#studio">Studio</a>
+      <a href="#einsatzgebiet">Einsatzgebiet</a>
+      <a href="#projekt">Projekt starten</a>
     </div>
-  </section>
+  </nav>
 
-<section class="section" id="konfigurator">
-  <h2 class="section-title">Dokumentation konfigurieren</h2>
-  <p class="section-intro">
-    Wählen Sie aus, welche Unterlagen oder Informationen vorliegen. Inspectora schlägt daraus eine passende Dokumentationsleistung vor.
-  </p>
-
-  <div class="doc-tool">
-    <div class="doc-panel">
-      <h3>Ausgangslage</h3>
-
-      <label>Was liegt bereits vor?</label>
-      <div class="chip-group">
-        <button type="button" class="doc-chip active" data-value="Fotos">Fotos</button>
-        <button type="button" class="doc-chip" data-value="Notizen">Notizen</button>
-        <button type="button" class="doc-chip" data-value="Handwerkerinfos">Handwerkerinfos</button>
-        <button type="button" class="doc-chip" data-value="Objektdaten">Objektdaten</button>
-        <button type="button" class="doc-chip" data-value="Mängelhinweise">Mängelhinweise</button>
-      </div>
-
-      <label for="docPurpose">Wofür wird die Dokumentation benötigt?</label>
-      <select id="docPurpose">
-        <option value="Eigentümerinformation">Eigentümerinformation</option>
-        <option value="Vermarktung">Vermarktung / Exposé</option>
-        <option value="Mängelübersicht">Mängel- und Maßnahmenübersicht</option>
-        <option value="Interne Ablage">Interne Ablage</option>
-        <option value="Handwerkerstatus">Handwerkerstatus</option>
-      </select>
-
-      <label for="docObject">Objektart</label>
-      <select id="docObject">
-        <option value="Wohnung">Wohnung</option>
-        <option value="Mehrfamilienhaus">Mehrfamilienhaus</option>
-        <option value="Gewerbeobjekt">Gewerbeobjekt</option>
-        <option value="Leerstand">Leerstand</option>
-        <option value="Portfolio / mehrere Objekte">Portfolio / mehrere Objekte</option>
-      </select>
-
-      <label for="docDepth">Gewünschte Tiefe</label>
-      <select id="docDepth">
-        <option value="Kurz">Kurz und übersichtlich</option>
-        <option value="Standard">Standardbericht</option>
-        <option value="Ausführlich">Ausführliche Dokumentation</option>
-      </select>
-    </div>
-
-    <div class="doc-result">
-      <div class="result-badge">Empfehlung</div>
-      <h3 id="docRecommendation">Eigentümerbericht Standard</h3>
-      <p id="docDescription">
-        Strukturierte Zusammenfassung aus Fotos und Objektinformationen für Eigentümer oder Verwaltung.
-      </p>
-
-      <div class="result-grid">
-        <div>
-          <span>Benötigt</span>
-          <strong id="docNeeded">Fotos, Notizen, Objektdaten</strong>
-        </div>
-        <div>
-          <span>Ergebnis</span>
-          <strong id="docOutput">PDF-/Textbericht</strong>
-        </div>
-        <div>
-          <span>Umfang</span>
-          <strong id="docScope">Standard</strong>
-        </div>
-      </div>
-
-      <div class="doc-next">
-        <strong>Nächster Schritt:</strong>
-        <p id="docNextStep">Unterlagen senden und gewünschtes Ergebnis kurz beschreiben.</p>
-      </div>
-
-      <a class="button" id="docMailButton" href="mailto:kontakt.inspectora@gmail.com">
-        Diese Dokumentation anfragen
-      </a>
-    </div>
-  </div>
-</section>
-
-<section class="section" id="ergebnisvorschau">
-  <h2 class="section-title">Ergebnisvorschau</h2>
-  <p class="section-intro">
-    Sehen Sie beispielhaft, wie eine strukturierte Dokumentation am Ende aussehen kann.
-  </p>
-
-  <div class="result-demo">
-    <div class="result-tabs">
-      <button class="result-tab active" data-demo="owner">Eigentümerbericht</button>
-      <button class="result-tab" data-demo="defects">Mängelliste</button>
-      <button class="result-tab" data-demo="photos">Fotodokumentation</button>
-      <button class="result-tab" data-demo="craftsmen">Handwerkerstatus</button>
-    </div>
-
-    <div class="result-screen">
-      <div class="screen-header">
-        <div>
-          <span class="screen-label">Musteransicht</span>
-          <h3 id="demoTitle">Eigentümerbericht</h3>
-        </div>
-        <span class="screen-status">Strukturiert</span>
-      </div>
-
-      <div class="screen-meta">
-        <div>
-          <span>Objekt</span>
-          <strong id="demoObject">Wohnung, Duisburg</strong>
-        </div>
-        <div>
-          <span>Umfang</span>
-          <strong id="demoScope">12 Fotos / 4 Notizen</strong>
-        </div>
-        <div>
-          <span>Ergebnis</span>
-          <strong id="demoOutput">Berichtsvorlage</strong>
-        </div>
-      </div>
-
-      <div class="screen-content">
-        <h4 id="demoHeadline">Zusammenfassung</h4>
-        <p id="demoText">
-          Die vorhandenen Fotos und Notizen wurden zu einer übersichtlichen Eigentümerinformation zusammengeführt. Sichtbare Auffälligkeiten, erledigte Punkte und offene Themen sind klar getrennt dargestellt.
+  <header class="hero" id="start">
+    <div class="hero-inner">
+      <div>
+        <span class="eyebrow">Digitale Immobiliendokumentation</span>
+        <h1>Informationen rein. <span>Verwertbare Ergebnisse</span> raus.</h1>
+        <p class="hero-copy">
+          Fotos, Notizen und Objektdaten werden zu klaren Berichten, Fotodokumentationen und Maßnahmenübersichten.
         </p>
 
-        <div class="demo-list" id="demoList">
-          <div>✓ Zustand der Einheit zusammengefasst</div>
-          <div>✓ Auffälligkeiten separat aufgeführt</div>
-          <div>✓ Nächste Schritte verständlich vorbereitet</div>
+        <div class="hero-actions">
+          <a class="button" href="#konfigurator">Dokumentation konfigurieren →</a>
+          <a class="button-ghost" href="#ergebnisse">Ergebnis ansehen</a>
         </div>
       </div>
 
-      <a class="button" id="demoMailButton" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Eigentümerbericht">
-        Ähnliches Ergebnis anfragen
+      <div class="hero-console" aria-label="Beispielhafter Inspectora Workflow">
+        <div class="console-top">
+          <strong class="console-title">Inspectora Workflow</strong>
+          <span class="status-pill">Bereit</span>
+        </div>
+
+        <div class="console-flow">
+          <div class="console-card">
+            <small>Eingang</small>
+            <div class="console-lines">
+              <div class="console-line"><span>Fotos</span><strong>24</strong></div>
+              <div class="console-line"><span>Notizen</span><strong>8</strong></div>
+              <div class="console-line"><span>Objektdaten</span><strong>✓</strong></div>
+            </div>
+          </div>
+
+          <div class="console-arrow">→</div>
+
+          <div class="console-card">
+            <small>Ausgabe</small>
+            <div class="console-result">
+              <strong>Eigentümerbericht</strong>
+              <span>strukturiert · priorisiert · weiterverwendbar</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <div class="quick-strip" aria-label="Schnellzugriff">
+    <div class="quick-grid">
+      <a class="quick-link" href="#konfigurator">
+        <span class="quick-icon">01</span>
+        <span><strong>Konfigurieren</strong><span>passendes Ergebnis finden</span></span>
+      </a>
+      <a class="quick-link" href="#ergebnisse">
+        <span class="quick-icon">02</span>
+        <span><strong>Vorschau öffnen</strong><span>Beispielausgaben ansehen</span></span>
+      </a>
+      <a class="quick-link" href="#studio">
+        <span class="quick-icon">03</span>
+        <span><strong>Studio nutzen</strong><span>Leistung direkt auswählen</span></span>
+      </a>
+      <a class="quick-link" href="#projekt">
+        <span class="quick-icon">04</span>
+        <span><strong>Projekt starten</strong><span>Anfrage zusammenstellen</span></span>
       </a>
     </div>
   </div>
-</section>
 
-  <section class="section" id="leistungen">
-    <h2 class="section-title">Leistungen</h2>
-    <p class="section-intro">
-      Inspectora verbindet digitale Dokumentation mit praktischer Unterstützung vor Ort. Dadurch können Immobilienunternehmen Berichte, Objektinformationen und Vor-Ort-Termine effizienter abwickeln.
-    </p>
-
-    <div class="grid">
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&h=200&fit=crop" alt="Immobilienberichte" class="card-image">
-        <div class="card-icon">📄</div>
-        <h3>Immobilienberichte</h3>
-        <p>Strukturierte Berichte aus Fotos, Notizen und Objektinformationen für Eigentümer, Investoren, Verwalter und interne Ablagen.</p>
+  <main class="container">
+    <section class="section" id="konfigurator">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Werkzeug 01</span>
+          <h2 class="section-title">Dokumentation konfigurieren</h2>
+        </div>
+        <p class="section-note">Aus wenigen Angaben entsteht sofort eine passende Leistungsempfehlung.</p>
       </div>
 
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1452587925148-ce544e77e70d?w=400&h=200&fit=crop" alt="Fotodokumentation" class="card-image">
-        <div class="card-icon">📸</div>
-        <h3>Fotodokumentationen</h3>
-        <p>Übersichtliche Fotodokumentationen von Wohnungen, Mehrfamilienhäusern, Gewerbeobjekten und Außenbereichen.</p>
+      <div class="tool-grid">
+        <div class="panel tool-form">
+          <h3>Ausgangslage</h3>
+
+          <div class="field-group">
+            <label>Vorhandene Informationen</label>
+            <div class="chip-group">
+              <button type="button" class="doc-chip active" data-value="Fotos">Fotos</button>
+              <button type="button" class="doc-chip" data-value="Notizen">Notizen</button>
+              <button type="button" class="doc-chip" data-value="Handwerkerinfos">Handwerkerinfos</button>
+              <button type="button" class="doc-chip" data-value="Objektdaten">Objektdaten</button>
+              <button type="button" class="doc-chip" data-value="Mängelhinweise">Mängelhinweise</button>
+            </div>
+          </div>
+
+          <div class="field-group">
+            <label for="docPurpose">Ziel</label>
+            <select id="docPurpose">
+              <option value="Eigentümerinformation">Eigentümerinformation</option>
+              <option value="Vermarktung">Vermarktung / Exposé</option>
+              <option value="Mängelübersicht">Mängel- und Maßnahmenübersicht</option>
+              <option value="Interne Ablage">Interne Ablage</option>
+              <option value="Handwerkerstatus">Handwerkerstatus</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="docObject">Objektart</label>
+            <select id="docObject">
+              <option value="Wohnung">Wohnung</option>
+              <option value="Mehrfamilienhaus">Mehrfamilienhaus</option>
+              <option value="Gewerbeobjekt">Gewerbeobjekt</option>
+              <option value="Leerstand">Leerstand</option>
+              <option value="Portfolio / mehrere Objekte">Portfolio / mehrere Objekte</option>
+            </select>
+          </div>
+
+          <div class="field-group">
+            <label for="docDepth">Tiefe</label>
+            <select id="docDepth">
+              <option value="Kurz">Kurz und übersichtlich</option>
+              <option value="Standard">Standardbericht</option>
+              <option value="Ausführlich">Ausführliche Dokumentation</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="panel tool-result">
+          <span class="result-badge">Live-Empfehlung</span>
+          <h3 id="docRecommendation">Eigentümerbericht Standard</h3>
+          <p id="docDescription">Strukturierte Eigentümerinformation aus Fotos und Objektangaben.</p>
+
+          <div class="result-grid">
+            <div><span>Input</span><strong id="docNeeded">Fotos</strong></div>
+            <div><span>Output</span><strong id="docOutput">Eigentümerbericht</strong></div>
+            <div><span>Umfang</span><strong id="docScope">Standard</strong></div>
+          </div>
+
+          <div class="doc-next">
+            <strong>Nächster Schritt</strong>
+            <p id="docNextStep">Konfiguration in die Projektanfrage übernehmen.</p>
+          </div>
+
+          <div class="action-row">
+            <button type="button" class="button" id="applyDocButton">In Projekt übernehmen</button>
+            <button type="button" class="button-ghost" id="copyDocButton">Zusammenfassung kopieren</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="ergebnisse">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Werkzeug 02</span>
+          <h2 class="section-title">Ergebnisvorschau</h2>
+        </div>
+        <p class="section-note">Vier typische Ausgaben – direkt vergleichbar und in das Projekt übernehmbar.</p>
       </div>
 
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1486325212027-8081e485255e?w=400&h=200&fit=crop" alt="Objektbegehung" class="card-image">
-        <div class="card-icon">🔍</div>
-        <h3>Objektbegehungen</h3>
-        <p>Vor-Ort-Begehungen zur Erfassung sichtbarer Zustände, Auffälligkeiten und objektbezogener Informationen.</p>
+      <div class="result-demo">
+        <div class="result-tabs" role="tablist" aria-label="Ergebnisarten">
+          <button class="result-tab active" type="button" data-demo="owner">Eigentümerbericht</button>
+          <button class="result-tab" type="button" data-demo="defects">Mängelliste</button>
+          <button class="result-tab" type="button" data-demo="photos">Fotodokumentation</button>
+          <button class="result-tab" type="button" data-demo="craftsmen">Handwerkerstatus</button>
+        </div>
+
+        <div class="result-screen">
+          <div class="screen-header">
+            <div>
+              <span class="screen-label">Musteransicht</span>
+              <h3 id="demoTitle">Eigentümerbericht</h3>
+            </div>
+            <span class="screen-status">Strukturiert</span>
+          </div>
+
+          <div class="screen-meta">
+            <div><span>Objekt</span><strong id="demoObject">Wohnung, Duisburg</strong></div>
+            <div><span>Umfang</span><strong id="demoScope">12 Fotos / 4 Notizen</strong></div>
+            <div><span>Ergebnis</span><strong id="demoOutput">Berichtsvorlage</strong></div>
+          </div>
+
+          <div class="screen-content">
+            <h4 id="demoHeadline">Zusammenfassung</h4>
+            <p id="demoText">Fotos und Notizen werden zu einer klaren Eigentümerinformation zusammengeführt.</p>
+            <div class="demo-list" id="demoList">
+              <div>✓ Zustand der Einheit zusammengefasst</div>
+              <div>✓ Auffälligkeiten separat aufgeführt</div>
+              <div>✓ Nächste Schritte vorbereitet</div>
+            </div>
+          </div>
+
+          <div class="action-row">
+            <button type="button" class="button" id="applyDemoButton">In Projekt übernehmen</button>
+            <button type="button" class="button-ghost" id="copyDemoButton">Vorschau kopieren</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="studio">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Werkzeug 03</span>
+          <h2 class="section-title">Inspectora Studio</h2>
+        </div>
+        <p class="section-note">Leistung auswählen, Ergebnis prüfen und direkt in die Anfrage übernehmen.</p>
       </div>
 
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=200&fit=crop" alt="Leerstandskontrolle" class="card-image">
-        <div class="card-icon">🏚️</div>
-        <h3>Leerstandskontrollen</h3>
-        <p>Kontrolle leerstehender Einheiten inklusive Fotodokumentation, Zustandsübersicht und Dokumentation laufender Maßnahmen.</p>
+      <div class="studio-layout">
+        <div class="studio-options">
+          <button class="studio-option active" type="button" data-service="Exposé-Texte" data-result="Objektbeschreibung, Lagebeschreibung und Kurztext für Immobilienportale" data-output="Exposé-Textvorlage">
+            <span class="studio-code">EX</span>
+            <span>Exposé-Texte<small>Vermarktungstexte aus Objektdaten</small></span>
+          </button>
+
+          <button class="studio-option" type="button" data-service="Objektbericht" data-result="Strukturierter Bericht aus Fotos, Notizen und Objektinformationen" data-output="Objektbericht">
+            <span class="studio-code">OB</span>
+            <span>Objektbericht<small>Fotos und Notizen in Berichtsform</small></span>
+          </button>
+
+          <button class="studio-option" type="button" data-service="Mängel- & Maßnahmenliste" data-result="Übersichtliche Liste mit Bereich, Priorität, Status und nächstem Schritt" data-output="Maßnahmenübersicht">
+            <span class="studio-code">MM</span>
+            <span>Mängel & Maßnahmen<small>Priorisierte Übersicht offener Punkte</small></span>
+          </button>
+
+          <button class="studio-option" type="button" data-service="Fotodokumentation" data-result="Sortierte Fotodokumentation mit Bereichen, Beschriftungen und Übersicht" data-output="Fotodokumentation">
+            <span class="studio-code">FD</span>
+            <span>Fotos strukturieren<small>Bildmaterial sortieren und beschriften</small></span>
+          </button>
+
+          <button class="studio-option" type="button" data-service="Eigentümerbericht" data-result="Verständliche Zusammenfassung für Eigentümer, Verwaltung oder Investor" data-output="Eigentümerbericht">
+            <span class="studio-code">EB</span>
+            <span>Eigentümerbericht<small>Klare Zusammenfassung für Entscheider</small></span>
+          </button>
+
+          <button class="studio-option" type="button" data-service="Unterlagen strukturieren" data-result="Geordnete Objektinformationen, offene Punkte und verwertbare Zusammenfassung" data-output="Objektübersicht">
+            <span class="studio-code">OU</span>
+            <span>Unterlagen strukturieren<small>Aus Einzelinformationen wird Übersicht</small></span>
+          </button>
+        </div>
+
+        <div class="studio-preview">
+          <span class="preview-label">Ausgewählt</span>
+          <h3 id="studioTitle">Exposé-Texte</h3>
+          <p id="studioText">Objektbeschreibung, Lagebeschreibung und Kurztext für Immobilienportale.</p>
+
+          <div class="studio-checklist" id="studioChecklist">
+            <div>✓ auf Basis vorhandener Objektdaten</div>
+            <div>✓ klar strukturiert und weiterverwendbar</div>
+            <div>✓ als Text- oder Berichtsvorlage</div>
+          </div>
+
+          <div class="result-grid">
+            <div><span>Modus</span><strong>Digital</strong></div>
+            <div><span>Format</span><strong id="studioOutput">Exposé-Textvorlage</strong></div>
+            <div><span>Status</span><strong>Konfigurierbar</strong></div>
+          </div>
+
+          <div class="action-row">
+            <button type="button" class="button" id="applyStudioButton">In Projekt übernehmen</button>
+            <button type="button" class="button-ghost" id="copyStudioButton">Leistung kopieren</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="einsatzgebiet">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Abdeckung</span>
+          <h2 class="section-title">Einsatzgebiet</h2>
+        </div>
+        <p class="section-note">Digitale Leistungen ortsunabhängig. Vor-Ort-Termine im westlichen Ruhrgebiet und am Niederrhein.</p>
       </div>
 
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1503387762-592deb58ef4e?w=400&h=200&fit=crop" alt="Handwerkerkontrolle" class="card-image">
-        <div class="card-icon">🛠️</div>
-        <h3>Handwerkerkontrollen</h3>
-        <p>Dokumentation von Arbeitsfortschritten, erledigten Maßnahmen und sichtbaren Ergebnissen nach Handwerkerterminen.</p>
+      <div class="map-shell">
+        <div id="map" aria-label="Karte des Einsatzgebiets"></div>
+
+        <aside class="panel map-panel">
+          <h3>Verfügbarkeit</h3>
+
+          <div class="coverage-block">
+            <strong>Digital</strong>
+            <span>Berichte, Texte und Aufbereitung unabhängig vom Objektstandort.</span>
+          </div>
+
+          <div class="coverage-block">
+            <strong>Vor Ort</strong>
+            <span>Ruhrgebiet, Niederrhein und weitere Orte nach Abstimmung.</span>
+          </div>
+
+          <div class="city-list" aria-label="Beispielstädte">
+            <span class="city-tag">Duisburg</span>
+            <span class="city-tag">Moers</span>
+            <span class="city-tag">Kamp-Lintfort</span>
+            <span class="city-tag">Krefeld</span>
+            <span class="city-tag">Düsseldorf</span>
+            <span class="city-tag">Essen</span>
+            <span class="city-tag">Oberhausen</span>
+            <span class="city-tag">Dinslaken</span>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="section" id="projekt">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Werkzeug 04</span>
+          <h2 class="section-title">Projekt zusammenstellen</h2>
+        </div>
+        <p class="section-note">Anfrage erstellen, kopieren, herunterladen oder direkt als E-Mail öffnen.</p>
       </div>
 
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1560518883-ce09059eeffa?w=400&h=200&fit=crop" alt="Besichtigung" class="card-image">
-        <div class="card-icon">🚪</div>
-        <h3>Besichtigungen & Termine</h3>
-        <p>Unterstützung bei Besichtigungen, Objektterminen und sonstigen Vor-Ort-Aufgaben nach individueller Absprache.</p>
+      <div class="request-shell">
+        <div class="panel request-form">
+          <div class="request-form-head">
+            <h3>Projektangaben</h3>
+            <span class="save-state" id="saveState">Lokal gespeichert</span>
+          </div>
+
+          <div class="smart-request-box">
+            <div class="config-field">
+              <label for="serviceType">Leistung</label>
+              <select id="serviceType">
+                <option value="Eigentümerbericht">Eigentümerbericht</option>
+                <option value="Objektbericht">Objektbericht</option>
+                <option value="Fotodokumentation">Fotodokumentation</option>
+                <option value="Mängel- & Maßnahmenliste">Mängel- & Maßnahmenliste</option>
+                <option value="Exposé-Texte">Exposé-Texte</option>
+                <option value="Unterlagen strukturieren">Unterlagen strukturieren</option>
+                <option value="Handwerkerstatus">Handwerkerstatus</option>
+                <option value="Objektbegehung">Objektbegehung</option>
+                <option value="Leerstandskontrolle">Leerstandskontrolle</option>
+                <option value="Besichtigung / Vor-Ort-Termin">Besichtigung / Vor-Ort-Termin</option>
+                <option value="Sonstige Anfrage">Sonstige Anfrage</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="objectType">Objektart</label>
+              <select id="objectType">
+                <option value="Wohnung">Wohnung</option>
+                <option value="Mehrfamilienhaus">Mehrfamilienhaus</option>
+                <option value="Gewerbeobjekt">Gewerbeobjekt</option>
+                <option value="Leerstand">Leerstand</option>
+                <option value="Portfolio / mehrere Objekte">Portfolio / mehrere Objekte</option>
+                <option value="Sonstiges Objekt">Sonstiges Objekt</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="city">Ort</label>
+              <input id="city" type="text" value="Duisburg" placeholder="z. B. Duisburg oder digital">
+            </div>
+
+            <div class="config-field">
+              <label for="urgency">Zeitrahmen</label>
+              <select id="urgency">
+                <option value="flexibel">Flexibel</option>
+                <option value="innerhalb weniger Tage">Innerhalb weniger Tage</option>
+                <option value="kurzfristig">Kurzfristig</option>
+                <option value="nach Absprache">Nach Absprache</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="resultType">Gewünschtes Ergebnis</label>
+              <select id="resultType">
+                <option value="Eigentümerbericht">Eigentümerbericht</option>
+                <option value="Objektbericht">Objektbericht</option>
+                <option value="Fotodokumentation">Fotodokumentation</option>
+                <option value="Maßnahmenübersicht">Maßnahmenübersicht</option>
+                <option value="Exposé-Textvorlage">Exposé-Textvorlage</option>
+                <option value="Statusbericht">Statusbericht</option>
+                <option value="Objektübersicht">Objektübersicht</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="objectCount">Umfang</label>
+              <select id="objectCount">
+                <option value="1 Objekt / 1 Einheit">1 Objekt / 1 Einheit</option>
+                <option value="2–5 Einheiten">2–5 Einheiten</option>
+                <option value="mehrere Objekte">Mehrere Objekte</option>
+                <option value="noch offen">Noch offen</option>
+              </select>
+            </div>
+
+            <div class="config-field">
+              <label for="contactName">Name / Unternehmen</label>
+              <input id="contactName" type="text" placeholder="optional">
+            </div>
+
+            <div class="config-field">
+              <label for="contactEmail">E-Mail</label>
+              <input id="contactEmail" type="email" placeholder="optional">
+            </div>
+
+            <div class="config-field full">
+              <label for="projectDetails">Ausgangslage / Hinweise</label>
+              <textarea id="projectDetails" placeholder="z. B. 30 Fotos vorhanden, Eigentümer benötigt eine kurze Übersicht, zwei Punkte sind noch offen."></textarea>
+            </div>
+          </div>
+        </div>
+
+        <aside class="request-preview">
+          <span class="preview-label">Live-Zusammenfassung</span>
+          <h3 id="requestTitle">Eigentümerbericht</h3>
+
+          <div class="request-summary" id="requestSummary">Eigentümerbericht für 1 Objekt / 1 Einheit (Wohnung) in Duisburg.
+Zeitrahmen: flexibel.
+Gewünschtes Ergebnis: Eigentümerbericht.</div>
+
+          <div class="result-grid">
+            <div><span>Modus</span><strong id="requestMode">Digital / Vor Ort</strong></div>
+            <div><span>Umfang</span><strong id="requestScope">1 Objekt / 1 Einheit</strong></div>
+            <div><span>Status</span><strong>Bereit</strong></div>
+          </div>
+
+          <div class="action-row">
+            <a class="button" id="configuredMailButton" href="mailto:kontakt.inspectora@gmail.com">E-Mail vorbereiten</a>
+            <button type="button" class="button-ghost" id="copyRequestButton">Anfrage kopieren</button>
+            <button type="button" class="button-ghost" id="downloadRequestButton">Als TXT speichern</button>
+          </div>
+
+          <button type="button" class="text-button" id="resetRequestButton">Konfiguration zurücksetzen</button>
+        </aside>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div><strong>Inspectora</strong><br>Digitale Immobiliendokumentation</div>
+      <div class="footer-note">
+        © 2026 Inspectora · Keine Gutachten oder Sachverständigentätigkeit. Fokus: Sichtprüfung, Fotodokumentation und strukturierte Aufbereitung.
       </div>
     </div>
-  </section>
-  
-<section class="section" id="studio">
-  <h2 class="section-title">Inspectora Studio</h2>
-  <p class="section-intro">
-    Wählen Sie aus, welche Unterlagen, Texte oder Dokumentationen vorbereitet werden sollen. 
-    Inspectora strukturiert vorhandene Informationen zu verwertbaren Ergebnissen für Immobilienunternehmen.
-  </p>
+  </footer>
 
-  <div class="studio-layout">
-    <div class="studio-options">
-      <button class="studio-option active" data-service="Expose-Texte" data-result="Objektbeschreibung, Lagebeschreibung und Kurztext für Immobilienportale">
-        <span>🏢</span>
-        Exposé-Texte erstellen
-      </button>
+  <div class="toast" id="toast" role="status" aria-live="polite">Kopiert</div>
 
-      <button class="studio-option" data-service="Objektbericht" data-result="strukturierter Bericht aus Fotos, Notizen und Objektinformationen">
-        <span>📄</span>
-        Objektbericht erstellen
-      </button>
-
-      <button class="studio-option" data-service="Mängelliste" data-result="übersichtliche Liste mit Mängeln, Ort, Priorität und Status">
-        <span>🛠️</span>
-        Mängel- & Maßnahmenliste
-      </button>
-
-      <button class="studio-option" data-service="Fotodokumentation sortieren" data-result="sortierte Fotodokumentation mit Bereichen, Beschriftungen und Übersicht">
-        <span>📸</span>
-        Fotos sortieren & beschriften
-      </button>
-
-      <button class="studio-option" data-service="Eigentümerbericht" data-result="verständliche Zusammenfassung für Eigentümer, Verwaltung oder Investor">
-        <span>📊</span>
-        Eigentümerbericht vorbereiten
-      </button>
-
-      <button class="studio-option" data-service="Unterlagen strukturieren" data-result="geordnete Objektinformationen, offene Punkte und verwertbare Zusammenfassung">
-        <span>🗂️</span>
-        Objektunterlagen strukturieren
-      </button>
-    </div>
-
-    <div class="studio-preview">
-      <div class="preview-label">Ausgewählte Leistung</div>
-      <h3 id="studioTitle">Exposé-Texte</h3>
-      <p id="studioText">
-        Objektbeschreibung, Lagebeschreibung und Kurztext für Immobilienportale
-      </p>
-
-      <div class="studio-checklist">
-        <div>✓ Geeignet für Makler, Verwalter und Eigentümer</div>
-        <div>✓ Bearbeitung auf Basis vorhandener Informationen</div>
-        <div>✓ Ergebnis als strukturierte Text- oder Berichtsvorlage</div>
-      </div>
-
-      <a class="button" id="studioMailButton" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Expose-Texte">
-        Diese Leistung anfragen
-      </a>
-    </div>
-  </div>
-</section>
-
-  <section class="section">
-    <h2 class="section-title">Digitale Aufbereitung & Vor-Ort-Service</h2>
-    <p class="section-intro">
-      Je nach Bedarf kann Inspectora rein digital unterstützen oder die Informationen direkt vor Ort erfassen.
-    </p>
-
-    <div class="split">
-      <div class="feature-box">
-        <h3>Digitale Dokumentation</h3>
-        <ul>
-          <li>Berichte aus Fotos und Stichpunkten</li>
-          <li>Strukturierung von Objektinformationen</li>
-          <li>Aufbereitung von Fotodokumentationen</li>
-          <li>Zusammenfassungen für Eigentümer oder Investoren</li>
-          <li>Dokumentation von Maßnahmen und Auffälligkeiten</li>
-        </ul>
-      </div>
-
-      <div class="feature-box">
-        <h3>Vor-Ort-Unterstützung</h3>
-        <ul>
-          <li>Objektbegehungen</li>
-          <li>Leerstandskontrollen</li>
-          <li>Fotodokumentationen vor Ort</li>
-          <li>Handwerker- und Fortschrittskontrollen</li>
-          <li>Besichtigungen und Termine nach Absprache</li>
-        </ul>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2 class="section-title">Für wen Inspectora interessant ist</h2>
-    <div class="list-section">
-      <div class="list-item">Hausverwaltungen</div>
-      <div class="list-item">Immobilienmakler</div>
-      <div class="list-item">Investoren & Asset Manager</div>
-      <div class="list-item">Bestandshalter</div>
-      <div class="list-item">Projektentwickler</div>
-      <div class="list-item">Eigentümer mit mehreren Objekten</div>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2 class="section-title">Einsatzgebiet</h2>
-    <p class="section-intro">
-      Vor-Ort-Termine sind im westlichen Ruhrgebiet und am Niederrhein vorgesehen. Digitale Dokumentationen und Berichte können unabhängig vom Objektstandort vorbereitet werden.
-    </p>
-
-    <div id="map"></div>
-
-    <div class="location-notice">
-      <strong>Ruhrgebiet & Niederrhein:</strong> Duisburg, Oberhausen, Mülheim, Essen, Düsseldorf, Moers, Kamp-Lintfort, Neukirchen-Vluyn, Rheinberg, Voerde, Dinslaken, Krefeld, Ratingen und weitere Orte nach Absprache.
-    </div>
-  </section>
-
-  <section class="section">
-    <h2 class="section-title">Ablauf</h2>
-    <div class="steps">
-      <div class="step">
-        <div class="step-number">1</div>
-        <h3>Anfrage</h3>
-        <p>Sie schildern kurz, welche Dokumentation oder Unterstützung benötigt wird.</p>
-      </div>
-
-      <div class="step">
-        <div class="step-number">2</div>
-        <h3>Informationen</h3>
-        <p>Fotos, Notizen, Objektinformationen oder Terminwünsche werden abgestimmt.</p>
-      </div>
-
-      <div class="step">
-        <div class="step-number">3</div>
-        <h3>Aufbereitung</h3>
-        <p>Die Informationen werden strukturiert und in eine nachvollziehbare Form gebracht.</p>
-      </div>
-
-      <div class="step">
-        <div class="step-number">4</div>
-        <h3>Ergebnis</h3>
-        <p>Sie erhalten eine klare Dokumentation oder einen abgestimmten Bericht.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="section">
-    <h2 class="section-title">Warum Inspectora?</h2>
-    <div class="grid">
-      <div class="card">
-        <div class="card-icon">⏱️</div>
-        <h3>Zeitersparnis</h3>
-        <p>Interne Mitarbeiter müssen nicht jede Dokumentation, Sichtprüfung oder Nachbereitung selbst übernehmen.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">📌</div>
-        <h3>Klare Struktur</h3>
-        <p>Aus einzelnen Fotos, Notizen und Informationen entsteht eine übersichtliche und weiterverwendbare Dokumentation.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">📍</div>
-        <h3>Regional vor Ort</h3>
-        <p>Bei Bedarf können Objektinformationen im Ruhrgebiet und am Niederrhein direkt vor Ort erfasst werden.</p>
-      </div>
-
-      <div class="card">
-        <div class="card-icon">⚖️</div>
-        <h3>Neutral dokumentiert</h3>
-        <p>Der Fokus liegt auf sichtbaren Zuständen, nachvollziehbarer Beschreibung und sauberer Dokumentation.</p>
-      </div>
-    </div>
-  </section>
-
-  <section class="contact-section" id="kontakt">
-  <h2>Projektanfrage konfigurieren</h2>
-  <p>
-    Wählen Sie aus, was benötigt wird. Daraus wird automatisch eine passende Anfrage vorbereitet.
-  </p>
-
-  <div class="smart-request-box">
-    <div class="config-field">
-      <label for="serviceType">Welche Unterstützung wird benötigt?</label>
-      <select id="serviceType">
-        <option value="Immobilienbericht">Immobilienbericht aus Fotos / Notizen</option>
-        <option value="Fotodokumentation">Fotodokumentation</option>
-        <option value="Objektbegehung">Objektbegehung</option>
-        <option value="Leerstandskontrolle">Leerstandskontrolle</option>
-        <option value="Handwerkerkontrolle">Handwerker- / Fortschrittskontrolle</option>
-        <option value="Besichtigung">Besichtigung oder Vor-Ort-Termin</option>
-        <option value="Sonstige Anfrage">Sonstige Anfrage</option>
-      </select>
-    </div>
-
-    <div class="config-field">
-      <label for="objectType">Objektart</label>
-      <select id="objectType">
-        <option value="Wohnung">Wohnung</option>
-        <option value="Mehrfamilienhaus">Mehrfamilienhaus</option>
-        <option value="Gewerbeeinheit">Gewerbeeinheit</option>
-        <option value="Leerstehende Einheit">Leerstehende Einheit</option>
-        <option value="Außenbereich / Allgemeinfläche">Außenbereich / Allgemeinfläche</option>
-        <option value="Sonstiges Objekt">Sonstiges Objekt</option>
-      </select>
-    </div>
-
-    <div class="config-field">
-      <label for="city">Ort / Einsatzgebiet</label>
-      <select id="city">
-        <option value="Duisburg">Duisburg</option>
-        <option value="Moers">Moers</option>
-        <option value="Kamp-Lintfort">Kamp-Lintfort</option>
-        <option value="Krefeld">Krefeld</option>
-        <option value="Düsseldorf">Düsseldorf</option>
-        <option value="Essen / Mülheim / Oberhausen">Essen / Mülheim / Oberhausen</option>
-        <option value="Anderer Ort">Anderer Ort</option>
-      </select>
-    </div>
-
-    <div class="config-field">
-      <label for="urgency">Zeitrahmen</label>
-      <select id="urgency">
-        <option value="flexibel">Flexibel</option>
-        <option value="innerhalb weniger Tage">Innerhalb weniger Tage</option>
-        <option value="kurzfristig">Kurzfristig</option>
-        <option value="nach Absprache">Nach Absprache</option>
-      </select>
-    </div>
-
-    <div class="config-field">
-      <label for="resultType">Gewünschtes Ergebnis</label>
-      <select id="resultType">
-        <option value="strukturierter Bericht">Strukturierter Bericht</option>
-        <option value="Fotodokumentation">Fotodokumentation</option>
-        <option value="Kurzbericht">Kurzbericht</option>
-        <option value="Übersicht für Eigentümer / Verwaltung">Übersicht für Eigentümer / Verwaltung</option>
-        <option value="Dokumentation von Auffälligkeiten">Dokumentation von Auffälligkeiten</option>
-      </select>
-    </div>
-
-    <div class="config-field">
-      <label for="objectCount">Umfang</label>
-      <select id="objectCount">
-        <option value="1 Objekt / 1 Einheit">1 Objekt / 1 Einheit</option>
-        <option value="2-5 Einheiten">2-5 Einheiten</option>
-        <option value="mehrere Objekte">Mehrere Objekte</option>
-        <option value="noch offen">Noch offen</option>
-      </select>
-    </div>
-  </div>
-
-  <div class="request-preview">
-    <strong>Ihre Anfrage:</strong>
-    <p id="requestSummary">
-      Immobilienbericht für Wohnung in Duisburg, Zeitraum flexibel, Ergebnis: strukturierter Bericht.
-    </p>
-  </div>
-
-  <a class="button" id="configuredMailButton" href="mailto:kontakt.inspectora@gmail.com">
-    Anfrage vorbereiten
-  </a>
-</section>
-
-</div>
-
-<footer>
-  © 2025 Inspectora – Immobilienberichte & Vor-Ort-Dokumentation
-  <div class="disclaimer">
-    <strong>Hinweis:</strong> Inspectora befindet sich aktuell im Aufbau. Anfragen dienen zunächst der Abstimmung und Prüfung möglicher Einsatzfälle. Inspectora erstellt keine Gutachten und übernimmt keine Sachverständigentätigkeit. Der Fokus liegt auf Sichtprüfung, Fotodokumentation und strukturierter Berichterstattung.
-  </div>
-</footer>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
-
-<script>
-const map = L.map('map').setView([51.43, 6.78], 9);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-  attribution: '© OpenStreetMap contributors',
-  maxZoom: 19
-}).addTo(map);
-
-const cities = [
-  { name: 'Duisburg', lat: 51.4344, lng: 6.7673 },
-  { name: 'Oberhausen', lat: 51.4615, lng: 6.8569 },
-  { name: 'Mülheim an der Ruhr', lat: 51.4301, lng: 6.9789 },
-  { name: 'Essen', lat: 51.4556, lng: 7.0116 },
-  { name: 'Düsseldorf', lat: 51.2277, lng: 6.7735 },
-  { name: 'Moers', lat: 51.4528, lng: 6.6361 },
-  { name: 'Kamp-Lintfort', lat: 51.5000, lng: 6.5247 },
-  { name: 'Neukirchen-Vluyn', lat: 51.4306, lng: 6.3875 },
-  { name: 'Rheinberg', lat: 51.3764, lng: 6.4511 },
-  { name: 'Voerde', lat: 51.5675, lng: 6.7089 },
-  { name: 'Dinslaken', lat: 51.5606, lng: 6.7389 },
-  { name: 'Krefeld', lat: 51.3339, lng: 6.5688 },
-  { name: 'Ratingen', lat: 51.3050, lng: 6.8386 }
-];
-
-const markers = [];
-
-cities.forEach(city => {
-  const marker = L.marker([city.lat, city.lng], {
-    icon: L.divIcon({
-      className: 'city-marker',
-      html: '📍',
-      iconSize: [30, 30],
-      iconAnchor: [15, 15],
-      popupAnchor: [0, -15]
-    })
-  }).addTo(map)
-    .bindPopup(`<div class="city-popup">${city.name}</div>`)
-    .on('mouseover', function() { this.openPopup(); })
-    .on('mouseout', function() { this.closePopup(); });
-
-  markers.push(marker);
-});
-
-const group = L.featureGroup(markers);
-map.fitBounds(group.getBounds().pad(0.15));
-
-const serviceType = document.getElementById('serviceType');
-const objectType = document.getElementById('objectType');
-const city = document.getElementById('city');
-const urgency = document.getElementById('urgency');
-const resultType = document.getElementById('resultType');
-const objectCount = document.getElementById('objectCount');
-
-const requestSummary = document.getElementById('requestSummary');
-const configuredMailButton = document.getElementById('configuredMailButton');
-
-function updateRequest() {
-
-    const summary =
-        `${serviceType.value} für ${objectCount.value} (${objectType.value}) in ${city.value}. ` +
-        `Zeitrahmen: ${urgency.value}. ` +
-        `Gewünschtes Ergebnis: ${resultType.value}.`;
-
-    requestSummary.textContent = summary;
-
-    const subject =
-        encodeURIComponent(`Anfrage ${serviceType.value}`);
-
-    const body =
-        encodeURIComponent(
-`Guten Tag,
-
-ich interessiere mich für folgende Unterstützung:
-
-Leistung:
-${serviceType.value}
-
-Objektart:
-${objectType.value}
-
-Umfang:
-${objectCount.value}
-
-Ort:
-${city.value}
-
-Zeitrahmen:
-${urgency.value}
-
-Gewünschtes Ergebnis:
-${resultType.value}
-
-Weitere Informationen:
-
-`);
-
-    configuredMailButton.href =
-        `mailto:kontakt.inspectora@gmail.com?subject=${subject}&body=${body}`;
-}
-
-[
- serviceType,
- objectType,
- city,
- urgency,
- resultType,
- objectCount
-].forEach(element => {
-    element.addEventListener('change', updateRequest);
-});
-
-updateRequest();
-
-function toggleMenu() {
-  document.getElementById('navLinks').classList.toggle('active');
-}
-
-window.addEventListener('scroll', () => {
-  const scrollTop = window.scrollY;
-  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = (scrollTop / docHeight) * 100;
-  document.querySelector('.scroll-progress').style.width = progress + '%';
-});
-
-const studioOptions = document.querySelectorAll('.studio-option');
-const studioTitle = document.getElementById('studioTitle');
-const studioText = document.getElementById('studioText');
-const studioMailButton = document.getElementById('studioMailButton');
-
-studioOptions.forEach(option => {
-  option.addEventListener('click', () => {
-    studioOptions.forEach(btn => btn.classList.remove('active'));
-    option.classList.add('active');
-
-    const service = option.dataset.service;
-    const result = option.dataset.result;
-
-    studioTitle.textContent = service;
-    studioText.textContent = result;
-
-    const subject = encodeURIComponent(`Anfrage ${service}`);
-    const body = encodeURIComponent(
-`Guten Tag,
-
-ich interessiere mich für folgende Leistung:
-
-Leistung:
-${service}
-
-Gewünschtes Ergebnis:
-${result}
-
-Vorhandene Informationen / Unterlagen:
-- 
-
-Weitere Hinweise:
-- 
-
-Mit freundlichen Grüßen`
-    );
-
-    studioMailButton.href = `mailto:kontakt.inspectora@gmail.com?subject=${subject}&body=${body}`;
-  });
-});
-
-const docChips = document.querySelectorAll('.doc-chip');
-const docPurpose = document.getElementById('docPurpose');
-const docObject = document.getElementById('docObject');
-const docDepth = document.getElementById('docDepth');
-
-const docRecommendation = document.getElementById('docRecommendation');
-const docDescription = document.getElementById('docDescription');
-const docNeeded = document.getElementById('docNeeded');
-const docOutput = document.getElementById('docOutput');
-const docScope = document.getElementById('docScope');
-const docNextStep = document.getElementById('docNextStep');
-const docMailButton = document.getElementById('docMailButton');
-
-docChips.forEach(chip => {
-  chip.addEventListener('click', () => {
-    chip.classList.toggle('active');
-    updateDocTool();
-  });
-});
-
-[docPurpose, docObject, docDepth].forEach(field => {
-  field.addEventListener('change', updateDocTool);
-});
-
-function getSelectedInputs() {
-  return Array.from(document.querySelectorAll('.doc-chip.active'))
-    .map(chip => chip.dataset.value);
-}
-
-function updateDocTool() {
-  const inputs = getSelectedInputs();
-  const purpose = docPurpose.value;
-  const object = docObject.value;
-  const depth = docDepth.value;
-
-  let recommendation = 'Objektbericht Standard';
-  let description = 'Strukturierte Dokumentation aus vorhandenen Informationen, Fotos und Notizen.';
-  let output = 'PDF-/Textbericht';
-
-  if (purpose === 'Vermarktung') {
-    recommendation = 'Exposé-Textpaket';
-    description = 'Objektbeschreibung, Lagebeschreibung und Kurztexte für Immobilienportale oder interne Vermarktung.';
-    output = 'Exposé-Textvorlage';
-  }
-
-  if (purpose === 'Mängelübersicht') {
-    recommendation = 'Mängel- & Maßnahmenliste';
-    description = 'Übersichtliche Aufstellung von Auffälligkeiten, Bereichen, Prioritäten und möglichen nächsten Schritten.';
-    output = 'Maßnahmenübersicht';
-  }
-
-  if (purpose === 'Eigentümerinformation') {
-    recommendation = 'Eigentümerbericht';
-    description = 'Verständliche Zusammenfassung des Objektzustands oder Vorgangs für Eigentümer, Verwaltung oder Investor.';
-    output = 'Eigentümerbericht';
-  }
-
-  if (purpose === 'Handwerkerstatus') {
-    recommendation = 'Statusbericht Handwerkerleistung';
-    description = 'Dokumentation des aktuellen Arbeitsstands, sichtbarer Ergebnisse und offener Punkte.';
-    output = 'Statusbericht';
-  }
-
-  if (object === 'Portfolio / mehrere Objekte') {
-    recommendation = 'Portfolio-Übersicht';
-    description = 'Strukturierte Übersicht mehrerer Objekte oder Einheiten mit einheitlicher Darstellung.';
-    output = 'Objektübersicht';
-  }
-
-  const needed = inputs.length > 0 ? inputs.join(', ') : 'Fotos, Notizen oder Objektdaten';
-
-  docRecommendation.textContent = `${recommendation} ${depth}`;
-  docDescription.textContent = description;
-  docNeeded.textContent = needed;
-  docOutput.textContent = output;
-  docScope.textContent = depth;
-
-  docNextStep.textContent =
-    `Für ${object} mit Ziel "${purpose}" können vorhandene Unterlagen gesammelt und anschließend strukturiert aufbereitet werden.`;
-
-  const subject = encodeURIComponent(`Anfrage ${recommendation}`);
-
-  const body = encodeURIComponent(
-`Guten Tag,
-
-ich interessiere mich für folgende Dokumentationsleistung:
-
-Empfehlung:
-${recommendation} ${depth}
-
-Zweck:
-${purpose}
-
-Objektart:
-${object}
-
-Vorhandene Informationen:
-${needed}
-
-Gewünschtes Ergebnis:
-${output}
-
-Weitere Hinweise / Ausgangslage:
-
-`
-  );
-
-  docMailButton.href =
-    `mailto:kontakt.inspectora@gmail.com?subject=${subject}&body=${body}`;
-}
-
-updateDocTool();
-
-const resultTabs = document.querySelectorAll('.result-tab');
-const demoTitle = document.getElementById('demoTitle');
-const demoObject = document.getElementById('demoObject');
-const demoScope = document.getElementById('demoScope');
-const demoOutput = document.getElementById('demoOutput');
-const demoHeadline = document.getElementById('demoHeadline');
-const demoText = document.getElementById('demoText');
-const demoList = document.getElementById('demoList');
-const demoMailButton = document.getElementById('demoMailButton');
-
-const demoData = {
-  owner: {
-    title: 'Eigentümerbericht',
-    object: 'Wohnung, Duisburg',
-    scope: '12 Fotos / 4 Notizen',
-    output: 'Berichtsvorlage',
-    headline: 'Zusammenfassung',
-    text: 'Die vorhandenen Fotos und Notizen wurden zu einer übersichtlichen Eigentümerinformation zusammengeführt. Sichtbare Auffälligkeiten, erledigte Punkte und offene Themen sind klar getrennt dargestellt.',
-    items: [
-      'Zustand der Einheit zusammengefasst',
-      'Auffälligkeiten separat aufgeführt',
-      'Nächste Schritte verständlich vorbereitet'
-    ],
-    subject: 'Anfrage Eigentümerbericht'
-  },
-  defects: {
-    title: 'Mängel- & Maßnahmenliste',
-    object: 'Mehrfamilienhaus, Moers',
-    scope: '26 Fotos / 9 Hinweise',
-    output: 'Maßnahmenübersicht',
-    headline: 'Priorisierte Übersicht',
-    text: 'Auffälligkeiten werden nach Bereich, Dringlichkeit und Status geordnet. Dadurch entsteht eine klare Grundlage für interne Abstimmung, Handwerkerbeauftragung oder Eigentümerinformation.',
-    items: [
-      'Mängel nach Bereich sortiert',
-      'Prioritäten und Status sichtbar',
-      'Maßnahmen nachvollziehbar vorbereitet'
-    ],
-    subject: 'Anfrage Mängelliste'
-  },
-  photos: {
-    title: 'Fotodokumentation',
-    object: 'Gewerbeeinheit, Krefeld',
-    scope: '48 Fotos',
-    output: 'Sortierte Fotostrecke',
-    headline: 'Strukturierte Bildübersicht',
-    text: 'Unsortierte Fotos werden nach Räumen, Bereichen oder Themen geordnet und mit kurzen Beschreibungen versehen. So entsteht eine nachvollziehbare Fotodokumentation statt einer unübersichtlichen Bildsammlung.',
-    items: [
-      'Fotos nach Bereichen sortiert',
-      'Bildbeschriftungen vorbereitet',
-      'Übersicht für Verwaltung oder Eigentümer'
-    ],
-    subject: 'Anfrage Fotodokumentation'
-  },
-  craftsmen: {
-    title: 'Handwerkerstatus',
-    object: 'Leerwohnung, Kamp-Lintfort',
-    scope: '15 Fotos / 3 Gewerke',
-    output: 'Statusbericht',
-    headline: 'Fortschritt dokumentiert',
-    text: 'Laufende oder abgeschlossene Arbeiten werden übersichtlich dargestellt. Erledigte Punkte, offene Arbeiten und sichtbare Ergebnisse werden getrennt aufgeführt.',
-    items: [
-      'Arbeitsfortschritt zusammengefasst',
-      'Offene Punkte markiert',
-      'Dokumentation für Eigentümer oder Verwaltung'
-    ],
-    subject: 'Anfrage Handwerkerstatus'
-  }
-};
-
-resultTabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    resultTabs.forEach(btn => btn.classList.remove('active'));
-    tab.classList.add('active');
-
-    const data = demoData[tab.dataset.demo];
-
-    demoTitle.textContent = data.title;
-    demoObject.textContent = data.object;
-    demoScope.textContent = data.scope;
-    demoOutput.textContent = data.output;
-    demoHeadline.textContent = data.headline;
-    demoText.textContent = data.text;
-
-    demoList.innerHTML = data.items.map(item => `<div>✓ ${item}</div>`).join('');
-
-    const subject = encodeURIComponent(data.subject);
-    const body = encodeURIComponent(
-`Guten Tag,
-
-ich interessiere mich für folgendes Ergebnis:
-
-${data.title}
-
-Beispielhafte gewünschte Leistung:
-${data.output}
-
-Objekt / Ausgangslage:
-Bitte hier kurz beschreiben.
-
-Vorhandene Unterlagen:
-- Fotos:
-- Notizen:
-- Objektinformationen:
-
-Weitere Hinweise:
-
-`
-    );
-
-    demoMailButton.href = `mailto:kontakt.inspectora@gmail.com?subject=${subject}&body=${body}`;
-  });
-});
-
-</script>
-
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>
