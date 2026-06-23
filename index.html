@@ -842,20 +842,60 @@ footer {
   </section>
 
   <section class="contact-section" id="kontakt">
-    <h2>Benötigen Sie Unterstützung für Ihre Immobilien?</h2>
-    <p>
-      Wählen Sie die passende Anfrage aus. Ihr E-Mail-Programm öffnet sich anschließend mit dem entsprechenden Betreff.
-    </p>
+  <h2>Konfigurieren Sie Ihre Anfrage</h2>
+  <p>
+    Wählen Sie aus, welche Unterstützung benötigt wird. Anschließend wird eine passende E-Mail-Anfrage vorbereitet.
+  </p>
 
-    <div class="request-buttons">
-      <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Immobilienbericht">Immobilienbericht</a>
-      <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Fotodokumentation">Fotodokumentation</a>
-      <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Objektbegehung">Objektbegehung</a>
-      <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Leerstandskontrolle">Leerstandskontrolle</a>
-      <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Anfrage%20Handwerkerkontrolle">Handwerkerkontrolle</a>
-      <a class="button" href="mailto:kontakt.inspectora@gmail.com?subject=Allgemeine%20Anfrage%20Inspectora">Sonstige Anfrage</a>
+  <div class="request-configurator">
+    <div class="config-field">
+      <label for="serviceType">Gewünschte Leistung</label>
+      <select id="serviceType">
+        <option value="Immobilienbericht">Immobilienbericht</option>
+        <option value="Fotodokumentation">Fotodokumentation</option>
+        <option value="Objektbegehung">Objektbegehung</option>
+        <option value="Leerstandskontrolle">Leerstandskontrolle</option>
+        <option value="Handwerkerkontrolle">Handwerkerkontrolle</option>
+        <option value="Besichtigung">Besichtigung</option>
+        <option value="Sonstige Anfrage">Sonstige Anfrage</option>
+      </select>
     </div>
-  </section>
+
+    <div class="config-field">
+      <label for="objectType">Objektart</label>
+      <select id="objectType">
+        <option value="Wohnung">Wohnung</option>
+        <option value="Mehrfamilienhaus">Mehrfamilienhaus</option>
+        <option value="Gewerbeobjekt">Gewerbeobjekt</option>
+        <option value="Leerstand">Leerstand</option>
+        <option value="Außenbereich">Außenbereich</option>
+        <option value="Sonstiges Objekt">Sonstiges Objekt</option>
+      </select>
+    </div>
+
+    <div class="config-field">
+      <label for="urgency">Zeitrahmen</label>
+      <select id="urgency">
+        <option value="flexibel">Flexibel</option>
+        <option value="innerhalb weniger Tage">Innerhalb weniger Tage</option>
+        <option value="kurzfristig">Kurzfristig</option>
+        <option value="nach Absprache">Nach Absprache</option>
+      </select>
+    </div>
+
+    <div class="config-field">
+      <label for="resultType">Gewünschtes Ergebnis</label>
+      <select id="resultType">
+        <option value="strukturierter Bericht">Strukturierter Bericht</option>
+        <option value="Fotodokumentation">Fotodokumentation</option>
+        <option value="Kurzbericht">Kurzbericht</option>
+        <option value="Übersicht für Eigentümer oder Verwaltung">Übersicht für Eigentümer oder Verwaltung</option>
+      </select>
+    </div>
+  </div>
+
+  <a class="button" id="configuredMailButton" href="#">Anfrage vorbereiten</a>
+</section>
 
 </div>
 
