@@ -874,21 +874,21 @@ footer {
   </section>
 
   <section class="contact-section" id="kontakt">
-  <h2>Konfigurieren Sie Ihre Anfrage</h2>
+  <h2>Projektanfrage konfigurieren</h2>
   <p>
-    Wählen Sie aus, welche Unterstützung benötigt wird. Anschließend wird eine passende E-Mail-Anfrage vorbereitet.
+    Wählen Sie aus, was benötigt wird. Daraus wird automatisch eine passende Anfrage vorbereitet.
   </p>
 
-  <div class="request-configurator">
+  <div class="smart-request-box">
     <div class="config-field">
-      <label for="serviceType">Gewünschte Leistung</label>
+      <label for="serviceType">Welche Unterstützung wird benötigt?</label>
       <select id="serviceType">
-        <option value="Immobilienbericht">Immobilienbericht</option>
+        <option value="Immobilienbericht">Immobilienbericht aus Fotos / Notizen</option>
         <option value="Fotodokumentation">Fotodokumentation</option>
         <option value="Objektbegehung">Objektbegehung</option>
         <option value="Leerstandskontrolle">Leerstandskontrolle</option>
-        <option value="Handwerkerkontrolle">Handwerkerkontrolle</option>
-        <option value="Besichtigung">Besichtigung</option>
+        <option value="Handwerkerkontrolle">Handwerker- / Fortschrittskontrolle</option>
+        <option value="Besichtigung">Besichtigung oder Vor-Ort-Termin</option>
         <option value="Sonstige Anfrage">Sonstige Anfrage</option>
       </select>
     </div>
@@ -898,10 +898,23 @@ footer {
       <select id="objectType">
         <option value="Wohnung">Wohnung</option>
         <option value="Mehrfamilienhaus">Mehrfamilienhaus</option>
-        <option value="Gewerbeobjekt">Gewerbeobjekt</option>
-        <option value="Leerstand">Leerstand</option>
-        <option value="Außenbereich">Außenbereich</option>
+        <option value="Gewerbeeinheit">Gewerbeeinheit</option>
+        <option value="Leerstehende Einheit">Leerstehende Einheit</option>
+        <option value="Außenbereich / Allgemeinfläche">Außenbereich / Allgemeinfläche</option>
         <option value="Sonstiges Objekt">Sonstiges Objekt</option>
+      </select>
+    </div>
+
+    <div class="config-field">
+      <label for="city">Ort / Einsatzgebiet</label>
+      <select id="city">
+        <option value="Duisburg">Duisburg</option>
+        <option value="Moers">Moers</option>
+        <option value="Kamp-Lintfort">Kamp-Lintfort</option>
+        <option value="Krefeld">Krefeld</option>
+        <option value="Düsseldorf">Düsseldorf</option>
+        <option value="Essen / Mülheim / Oberhausen">Essen / Mülheim / Oberhausen</option>
+        <option value="Anderer Ort">Anderer Ort</option>
       </select>
     </div>
 
@@ -921,12 +934,32 @@ footer {
         <option value="strukturierter Bericht">Strukturierter Bericht</option>
         <option value="Fotodokumentation">Fotodokumentation</option>
         <option value="Kurzbericht">Kurzbericht</option>
-        <option value="Übersicht für Eigentümer oder Verwaltung">Übersicht für Eigentümer oder Verwaltung</option>
+        <option value="Übersicht für Eigentümer / Verwaltung">Übersicht für Eigentümer / Verwaltung</option>
+        <option value="Dokumentation von Auffälligkeiten">Dokumentation von Auffälligkeiten</option>
+      </select>
+    </div>
+
+    <div class="config-field">
+      <label for="objectCount">Umfang</label>
+      <select id="objectCount">
+        <option value="1 Objekt / 1 Einheit">1 Objekt / 1 Einheit</option>
+        <option value="2-5 Einheiten">2-5 Einheiten</option>
+        <option value="mehrere Objekte">Mehrere Objekte</option>
+        <option value="noch offen">Noch offen</option>
       </select>
     </div>
   </div>
 
-  <a class="button" id="configuredMailButton" href="#">Anfrage vorbereiten</a>
+  <div class="request-preview">
+    <strong>Ihre Anfrage:</strong>
+    <p id="requestSummary">
+      Immobilienbericht für Wohnung in Duisburg, Zeitraum flexibel, Ergebnis: strukturierter Bericht.
+    </p>
+  </div>
+
+  <a class="button" id="configuredMailButton" href="mailto:kontakt.inspectora@gmail.com">
+    Anfrage vorbereiten
+  </a>
 </section>
 
 </div>
