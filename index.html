@@ -1245,6 +1245,47 @@ window.addEventListener('scroll', () => {
   document.querySelector('.scroll-progress').style.width = progress + '%';
 });
 
+const studioOptions = document.querySelectorAll('.studio-option');
+const studioTitle = document.getElementById('studioTitle');
+const studioText = document.getElementById('studioText');
+const studioMailButton = document.getElementById('studioMailButton');
+
+studioOptions.forEach(option => {
+  option.addEventListener('click', () => {
+    studioOptions.forEach(btn => btn.classList.remove('active'));
+    option.classList.add('active');
+
+    const service = option.dataset.service;
+    const result = option.dataset.result;
+
+    studioTitle.textContent = service;
+    studioText.textContent = result;
+
+    const subject = encodeURIComponent(`Anfrage ${service}`);
+    const body = encodeURIComponent(
+`Guten Tag,
+
+ich interessiere mich für folgende Leistung:
+
+Leistung:
+${service}
+
+Gewünschtes Ergebnis:
+${result}
+
+Vorhandene Informationen / Unterlagen:
+- 
+
+Weitere Hinweise:
+- 
+
+Mit freundlichen Grüßen`
+    );
+
+    studioMailButton.href = `mailto:kontakt.inspectora@gmail.com?subject=${subject}&body=${body}`;
+  });
+});
+
 </script>
 
 </body>
