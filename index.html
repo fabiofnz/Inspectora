@@ -953,6 +953,18 @@ cities.forEach(city => {
 
 const group = L.featureGroup(markers);
 map.fitBounds(group.getBounds().pad(0.15));
+
+function toggleMenu() {
+  document.getElementById('navLinks').classList.toggle('active');
+}
+
+window.addEventListener('scroll', () => {
+  const scrollTop = window.scrollY;
+  const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+  const progress = (scrollTop / docHeight) * 100;
+  document.querySelector('.scroll-progress').style.width = progress + '%';
+});
+
 </script>
 
 </body>
