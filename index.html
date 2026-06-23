@@ -3,14 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="description" content="Inspectora strukturiert Immobilieninformationen zu Berichten, Fotodokumentationen und Maßnahmenübersichten – digital und bei Bedarf vor Ort.">
+  <meta name="description" content="Inspectora erstellt strukturierte Immobilienberichte, Fotodokumentationen, Exposé-Texte und Maßnahmenübersichten – digital und bei Bedarf vor Ort.">
   <title>Inspectora – Digitale Immobiliendokumentation</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Poppins:wght@600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
-
   <link rel="stylesheet" href="styles.css">
 </head>
 
@@ -26,313 +25,191 @@
     <button class="nav-toggle" id="navToggle" type="button" aria-label="Menü öffnen" aria-expanded="false">☰</button>
 
     <div class="nav-links" id="navLinks">
-      <a href="#konfigurator">Konfigurator</a>
-      <a href="#ergebnisse">Ergebnisse</a>
-      <a href="#studio">Studio</a>
+      <a href="#leistungen">Leistungen</a>
+      <a href="#portal">Portal-Demo</a>
       <a href="#einsatzgebiet">Einsatzgebiet</a>
-      <a href="#projekt">Projekt starten</a>
+      <a class="nav-cta" href="#projekt">Projekt starten</a>
     </div>
   </nav>
 
   <header class="hero" id="start">
     <div class="hero-inner">
-      <div>
+      <div class="hero-copy-block">
         <span class="eyebrow">Digitale Immobiliendokumentation</span>
-        <h1>Informationen rein. <span>Verwertbare Ergebnisse</span> raus.</h1>
+        <h1>Leistung auswählen. Unterlagen senden. Ergebnis erhalten.</h1>
         <p class="hero-copy">
-          Fotos, Notizen und Objektdaten werden zu klaren Berichten, Fotodokumentationen und Maßnahmenübersichten.
+          Inspectora bereitet Fotos, Notizen und Objektdaten zu professionellen Unterlagen für Immobilienunternehmen auf.
         </p>
 
         <div class="hero-actions">
-          <a class="button" href="#konfigurator">Dokumentation konfigurieren →</a>
-          <a class="button-ghost" href="#ergebnisse">Ergebnis ansehen</a>
+          <a class="button" href="#leistungen">Leistung auswählen →</a>
+          <a class="button-ghost" href="#portal">Portal ansehen</a>
+        </div>
+
+        <div class="hero-proof" aria-label="Leistungsübersicht">
+          <span>Berichte</span>
+          <span>Fotodokumentationen</span>
+          <span>Exposé-Texte</span>
+          <span>Maßnahmenübersichten</span>
         </div>
       </div>
 
-      <div class="hero-console" aria-label="Beispielhafter Inspectora Workflow">
-        <div class="console-top">
-          <strong class="console-title">Inspectora Workflow</strong>
-          <span class="status-pill">Bereit</span>
+      <div class="hero-dashboard" aria-label="Inspectora Projektübersicht">
+        <div class="dashboard-head">
+          <div>
+            <small>Beispielprojekt</small>
+            <strong>Musterstraße 12</strong>
+          </div>
+          <span class="live-pill"><i></i> In Bearbeitung</span>
         </div>
 
-        <div class="console-flow">
-          <div class="console-card">
-            <small>Eingang</small>
-            <div class="console-lines">
-              <div class="console-line"><span>Fotos</span><strong>24</strong></div>
-              <div class="console-line"><span>Notizen</span><strong>8</strong></div>
-              <div class="console-line"><span>Objektdaten</span><strong>✓</strong></div>
-            </div>
+        <div class="dashboard-progress">
+          <div>
+            <span>Projektfortschritt</span>
+            <strong>82%</strong>
           </div>
+          <div class="progress-track"><i></i></div>
+        </div>
 
-          <div class="console-arrow">→</div>
-
-          <div class="console-card">
-            <small>Ausgabe</small>
-            <div class="console-result">
-              <strong>Eigentümerbericht</strong>
-              <span>strukturiert · priorisiert · weiterverwendbar</span>
-            </div>
-          </div>
+        <div class="dashboard-list">
+          <div><span>✓</span><p><strong>Unterlagen eingegangen</strong><small>Fotos, Notizen und Objektdaten</small></p></div>
+          <div><span>✓</span><p><strong>Material strukturiert</strong><small>Bereiche und Hinweise zugeordnet</small></p></div>
+          <div class="active"><span>•</span><p><strong>Bericht wird erstellt</strong><small>Zusammenfassung in Bearbeitung</small></p></div>
         </div>
       </div>
     </div>
   </header>
 
-  <div class="quick-strip" aria-label="Schnellzugriff">
-    <div class="quick-grid">
-      <a class="quick-link" href="#konfigurator">
-        <span class="quick-icon">01</span>
-        <span><strong>Konfigurieren</strong><span>passendes Ergebnis finden</span></span>
-      </a>
-      <a class="quick-link" href="#ergebnisse">
-        <span class="quick-icon">02</span>
-        <span><strong>Vorschau öffnen</strong><span>Beispielausgaben ansehen</span></span>
-      </a>
-      <a class="quick-link" href="#studio">
-        <span class="quick-icon">03</span>
-        <span><strong>Studio nutzen</strong><span>Leistung direkt auswählen</span></span>
-      </a>
-      <a class="quick-link" href="#projekt">
-        <span class="quick-icon">04</span>
-        <span><strong>Projekt starten</strong><span>Anfrage zusammenstellen</span></span>
-      </a>
-    </div>
-  </div>
-
   <main class="container">
-    <section class="section" id="konfigurator">
+    <section class="section" id="leistungen">
       <div class="section-head">
         <div>
-          <span class="section-kicker">Werkzeug 01</span>
-          <h2 class="section-title">Dokumentation konfigurieren</h2>
+          <span class="section-kicker">Leistungen</span>
+          <h2 class="section-title">Was soll Inspectora für Sie erstellen?</h2>
         </div>
-        <p class="section-note">Aus wenigen Angaben entsteht sofort eine passende Leistungsempfehlung.</p>
+        <p class="section-note">Eine Leistung auswählen und direkt mit der Projektanfrage fortfahren.</p>
       </div>
 
-      <div class="tool-grid">
-        <div class="panel tool-form">
-          <h3>Ausgangslage</h3>
+      <div class="service-workspace">
+        <div class="service-grid" id="serviceGrid">
+          <button class="service-option active" type="button" data-service-key="owner">
+            <span class="service-code">EB</span>
+            <span><strong>Eigentümerbericht</strong><small>Klare Zusammenfassung für Entscheider</small></span>
+          </button>
 
-          <div class="field-group">
-            <label>Vorhandene Informationen</label>
-            <div class="chip-group">
-              <button type="button" class="doc-chip active" data-value="Fotos">Fotos</button>
-              <button type="button" class="doc-chip" data-value="Notizen">Notizen</button>
-              <button type="button" class="doc-chip" data-value="Handwerkerinfos">Handwerkerinfos</button>
-              <button type="button" class="doc-chip" data-value="Objektdaten">Objektdaten</button>
-              <button type="button" class="doc-chip" data-value="Mängelhinweise">Mängelhinweise</button>
-            </div>
-          </div>
+          <button class="service-option" type="button" data-service-key="object">
+            <span class="service-code">OB</span>
+            <span><strong>Objektbericht</strong><small>Fotos und Notizen in Berichtsform</small></span>
+          </button>
 
-          <div class="field-group">
-            <label for="docPurpose">Ziel</label>
-            <select id="docPurpose">
-              <option value="Eigentümerinformation">Eigentümerinformation</option>
-              <option value="Vermarktung">Vermarktung / Exposé</option>
-              <option value="Mängelübersicht">Mängel- und Maßnahmenübersicht</option>
-              <option value="Interne Ablage">Interne Ablage</option>
-              <option value="Handwerkerstatus">Handwerkerstatus</option>
-            </select>
-          </div>
+          <button class="service-option" type="button" data-service-key="defects">
+            <span class="service-code">MM</span>
+            <span><strong>Mängel & Maßnahmen</strong><small>Priorisierte Übersicht offener Punkte</small></span>
+          </button>
 
-          <div class="field-group">
-            <label for="docObject">Objektart</label>
-            <select id="docObject">
-              <option value="Wohnung">Wohnung</option>
-              <option value="Mehrfamilienhaus">Mehrfamilienhaus</option>
-              <option value="Gewerbeobjekt">Gewerbeobjekt</option>
-              <option value="Leerstand">Leerstand</option>
-              <option value="Portfolio / mehrere Objekte">Portfolio / mehrere Objekte</option>
-            </select>
-          </div>
+          <button class="service-option" type="button" data-service-key="photos">
+            <span class="service-code">FD</span>
+            <span><strong>Fotodokumentation</strong><small>Bildmaterial sortiert und beschriftet</small></span>
+          </button>
 
-          <div class="field-group">
-            <label for="docDepth">Tiefe</label>
-            <select id="docDepth">
-              <option value="Kurz">Kurz und übersichtlich</option>
-              <option value="Standard">Standardbericht</option>
-              <option value="Ausführlich">Ausführliche Dokumentation</option>
-            </select>
-          </div>
+          <button class="service-option" type="button" data-service-key="expose">
+            <span class="service-code">EX</span>
+            <span><strong>Exposé-Texte</strong><small>Vermarktungstexte aus Objektdaten</small></span>
+          </button>
+
+          <button class="service-option" type="button" data-service-key="documents">
+            <span class="service-code">OU</span>
+            <span><strong>Unterlagen strukturieren</strong><small>Aus Einzelinformationen wird Übersicht</small></span>
+          </button>
         </div>
 
-        <div class="panel tool-result">
-          <span class="result-badge">Live-Empfehlung</span>
-          <h3 id="docRecommendation">Eigentümerbericht Standard</h3>
-          <p id="docDescription">Strukturierte Eigentümerinformation aus Fotos und Objektangaben.</p>
-
-          <div class="result-grid">
-            <div><span>Input</span><strong id="docNeeded">Fotos</strong></div>
-            <div><span>Output</span><strong id="docOutput">Eigentümerbericht</strong></div>
-            <div><span>Umfang</span><strong id="docScope">Standard</strong></div>
+        <aside class="service-preview">
+          <div class="preview-top">
+            <span class="preview-label">Ausgewählte Leistung</span>
+            <span class="availability">Digital verfügbar</span>
           </div>
 
-          <div class="doc-next">
-            <strong>Nächster Schritt</strong>
-            <p id="docNextStep">Konfiguration in die Projektanfrage übernehmen.</p>
+          <h3 id="serviceTitle">Eigentümerbericht</h3>
+          <p id="serviceDescription">
+            Verständliche Zusammenfassung des Objektzustands, laufender Maßnahmen und offener Punkte.
+          </p>
+
+          <div class="service-facts">
+            <div><span>Geeignet für</span><strong id="serviceAudience">Verwaltung, Eigentümer, Investoren</strong></div>
+            <div><span>Ergebnis</span><strong id="serviceOutput">Eigentümerbericht</strong></div>
+            <div><span>Grundlage</span><strong id="serviceInput">Fotos, Notizen, Objektdaten</strong></div>
           </div>
 
-          <div class="action-row">
-            <button type="button" class="button" id="applyDocButton">In Projekt übernehmen</button>
-            <button type="button" class="button-ghost" id="copyDocButton">Zusammenfassung kopieren</button>
+          <div class="service-benefits" id="serviceBenefits">
+            <span>✓ kompakt und verständlich</span>
+            <span>✓ professionell weiterverwendbar</span>
+            <span>✓ offene Punkte klar erkennbar</span>
           </div>
-        </div>
+
+          <button type="button" class="button" id="serviceStartButton">Projekt mit dieser Leistung starten →</button>
+        </aside>
       </div>
     </section>
 
-   
-
-    <section class="section" id="ergebnisse">
-      <div class="section-head results-head">
+    <section class="section" id="portal">
+      <div class="section-head">
         <div>
-          <span class="section-kicker">Werkzeug 02</span>
-          <h2 class="section-title">Ergebnisse & Projektstatus</h2>
+          <span class="section-kicker">Portal-Demo</span>
+          <h2 class="section-title">So bleibt ein Projekt übersichtlich</h2>
         </div>
-
-        <div class="view-switch" aria-label="Ansicht auswählen">
-          <button class="view-switch-button active" id="viewOutputButton" type="button" aria-pressed="true">Ergebnisse</button>
-          <button class="view-switch-button" id="viewPortalButton" type="button" aria-pressed="false">Portal-Demo</button>
-        </div>
+        <p class="section-note">Status, Dokumente und offene Punkte gebündelt in einer Ansicht.</p>
       </div>
 
-      <div id="outputView">
-        <div class="result-demo">
-          <div class="result-tabs" role="tablist" aria-label="Ergebnisarten">
-            <button class="result-tab active" type="button" data-demo="owner">Eigentümerbericht</button>
-            <button class="result-tab" type="button" data-demo="defects">Mängelliste</button>
-            <button class="result-tab" type="button" data-demo="photos">Fotodokumentation</button>
-            <button class="result-tab" type="button" data-demo="craftsmen">Handwerkerstatus</button>
-          </div>
-
-          <div class="result-screen">
-            <div class="screen-header">
-              <div>
-                <span class="screen-label">Musteransicht</span>
-                <h3 id="demoTitle">Eigentümerbericht</h3>
-              </div>
-              <span class="screen-status">Strukturiert</span>
-            </div>
-
-            <div class="screen-meta">
-              <div><span>Objekt</span><strong id="demoObject">Wohnung, Duisburg</strong></div>
-              <div><span>Umfang</span><strong id="demoScope">12 Fotos / 4 Notizen</strong></div>
-              <div><span>Ergebnis</span><strong id="demoOutput">Eigentümerbericht</strong></div>
-            </div>
-
-            <div class="screen-content">
-              <h4 id="demoHeadline">Zusammenfassung</h4>
-              <p id="demoText">Fotos und Notizen werden zu einer klaren Eigentümerinformation zusammengeführt.</p>
-
-              <div class="demo-list" id="demoList">
-                <div>✓ Zustand der Einheit zusammengefasst</div>
-                <div>✓ Auffälligkeiten separat aufgeführt</div>
-                <div>✓ Nächste Schritte vorbereitet</div>
-              </div>
-            </div>
-
-            <div class="action-row">
-              <button type="button" class="button" id="applyDemoButton">In Projekt übernehmen</button>
-              <button type="button" class="button-ghost" id="copyDemoButton">Vorschau kopieren</button>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <div class="portal-demo is-hidden" id="portalView" aria-hidden="true">
+      <div class="portal-demo">
         <div class="portal-topbar">
           <div class="portal-project">
             <span class="portal-logo">IN</span>
-
             <div>
               <span>Demo-Projekt</span>
               <strong>Musterstraße 12 · Duisburg</strong>
             </div>
           </div>
 
-          <div class="portal-live">
-            <span></span>
-            Live-Status
-          </div>
+          <div class="portal-live"><span></span> Live-Status</div>
         </div>
 
         <div class="portal-kpis">
-          <div>
-            <span>Fortschritt</span>
-            <strong>82%</strong>
-            <small>Aufbereitung läuft</small>
-          </div>
-
-          <div>
-            <span>Unterlagen</span>
-            <strong>34</strong>
-            <small>Fotos & Notizen</small>
-          </div>
-
-          <div>
-            <span>Offene Punkte</span>
-            <strong>3</strong>
-            <small>priorisiert</small>
-          </div>
+          <div><span>Fortschritt</span><strong>82%</strong><small>Aufbereitung läuft</small></div>
+          <div><span>Unterlagen</span><strong>34</strong><small>Fotos & Notizen</small></div>
+          <div><span>Offene Punkte</span><strong>3</strong><small>priorisiert</small></div>
         </div>
 
         <div class="portal-layout">
           <article class="portal-panel">
             <div class="portal-panel-head">
-              <div>
-                <span>Workflow</span>
-                <h3>Projektstatus</h3>
-              </div>
-
+              <div><span>Workflow</span><h3>Projektstatus</h3></div>
               <b>In Bearbeitung</b>
             </div>
 
-            <div class="portal-progress">
-              <span></span>
-            </div>
+            <div class="portal-progress"><span></span></div>
 
             <div class="portal-steps">
               <div class="portal-step done">
                 <i>✓</i>
-
-                <p>
-                  <strong>Unterlagen eingegangen</strong>
-                  <small>24 Fotos, 8 Notizen, Objektdaten</small>
-                </p>
-
+                <p><strong>Unterlagen eingegangen</strong><small>24 Fotos, 8 Notizen, Objektdaten</small></p>
                 <time>09:12</time>
               </div>
 
               <div class="portal-step done">
                 <i>✓</i>
-
-                <p>
-                  <strong>Material strukturiert</strong>
-                  <small>Bereiche und Hinweise zugeordnet</small>
-                </p>
-
+                <p><strong>Material strukturiert</strong><small>Bereiche und Hinweise zugeordnet</small></p>
                 <time>11:40</time>
               </div>
 
               <div class="portal-step active">
                 <i>•</i>
-
-                <p>
-                  <strong>Bericht wird erstellt</strong>
-                  <small>Zusammenfassung in Bearbeitung</small>
-                </p>
-
+                <p><strong>Bericht wird erstellt</strong><small>Zusammenfassung in Bearbeitung</small></p>
                 <time>Live</time>
               </div>
 
               <div class="portal-step">
                 <i>4</i>
-
-                <p>
-                  <strong>Freigabe & Übergabe</strong>
-                  <small>Dokumente gesammelt bereitstellen</small>
-                </p>
-
+                <p><strong>Freigabe & Übergabe</strong><small>Dokumente gesammelt bereitstellen</small></p>
                 <time>offen</time>
               </div>
             </div>
@@ -340,45 +217,26 @@
 
           <article class="portal-panel">
             <div class="portal-panel-head">
-              <div>
-                <span>Dokumente</span>
-                <h3>Projektdateien</h3>
-              </div>
-
+              <div><span>Dokumente</span><h3>Projektdateien</h3></div>
               <b>3 Dateien</b>
             </div>
 
             <div class="portal-files">
               <button class="portal-file active" type="button" data-portal-file="owner">
                 <em>EB</em>
-
-                <span>
-                  <strong>Eigentümerbericht</strong>
-                  <small>PDF · 6 Seiten</small>
-                </span>
-
+                <span><strong>Eigentümerbericht</strong><small>PDF · 6 Seiten</small></span>
                 <b>82%</b>
               </button>
 
               <button class="portal-file" type="button" data-portal-file="photos">
                 <em>FD</em>
-
-                <span>
-                  <strong>Fotodokumentation</strong>
-                  <small>PDF · 24 Fotos</small>
-                </span>
-
+                <span><strong>Fotodokumentation</strong><small>PDF · 24 Fotos</small></span>
                 <b class="ready">Bereit</b>
               </button>
 
               <button class="portal-file" type="button" data-portal-file="actions">
                 <em>MM</em>
-
-                <span>
-                  <strong>Maßnahmenübersicht</strong>
-                  <small>3 offene Punkte</small>
-                </span>
-
+                <span><strong>Maßnahmenübersicht</strong><small>3 offene Punkte</small></span>
                 <b class="review">Prüfung</b>
               </button>
             </div>
@@ -388,112 +246,28 @@
         <div class="portal-preview">
           <div>
             <span class="portal-label">Dateivorschau</span>
-
             <h3 id="portalFileTitle">Eigentümerbericht</h3>
-
-            <p id="portalFileText">
-              Kompakte Zusammenfassung des Objektzustands mit Auffälligkeiten, Maßnahmen und nächsten Schritten.
-            </p>
+            <p id="portalFileText">Kompakte Zusammenfassung des Objektzustands mit Auffälligkeiten, Maßnahmen und nächsten Schritten.</p>
 
             <div class="portal-meta">
               <span id="portalFileMeta">PDF · 6 Seiten</span>
               <span id="portalFileStatus">In Bearbeitung · 82%</span>
             </div>
 
-            <div class="action-row">
-              <button type="button" class="button" id="applyPortalButton">In Projekt übernehmen</button>
-              <button type="button" class="button-ghost" id="copyPortalButton">Projektstatus kopieren</button>
-            </div>
+            <button type="button" class="button" id="portalStartButton">Dieses Ergebnis anfragen →</button>
           </div>
 
           <div class="document-mockup" aria-hidden="true">
-            <div>
-              <span id="portalDocumentCode">EB-2026-014</span>
-              <span>Vorschau</span>
-            </div>
-
+            <div><span id="portalDocumentCode">EB-2026-014</span><span>Vorschau</span></div>
             <section>
               <i class="doc-title"></i>
               <i class="doc-line wide"></i>
               <i class="doc-line medium"></i>
-
-              <div class="doc-images">
-                <i></i>
-                <i></i>
-                <i></i>
-              </div>
-
+              <div class="doc-images"><i></i><i></i><i></i></div>
               <i class="doc-line wide"></i>
               <i class="doc-line short"></i>
               <i class="doc-note"></i>
             </section>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <section class="section" id="studio">
-      <div class="section-head">
-        <div>
-          <span class="section-kicker">Werkzeug 03</span>
-          <h2 class="section-title">Inspectora Studio</h2>
-        </div>
-        <p class="section-note">Leistung auswählen, Ergebnis prüfen und direkt in die Anfrage übernehmen.</p>
-      </div>
-
-      <div class="studio-layout">
-        <div class="studio-options">
-          <button class="studio-option active" type="button" data-service="Exposé-Texte" data-result="Objektbeschreibung, Lagebeschreibung und Kurztext für Immobilienportale" data-output="Exposé-Textvorlage">
-            <span class="studio-code">EX</span>
-            <span>Exposé-Texte<small>Vermarktungstexte aus Objektdaten</small></span>
-          </button>
-
-          <button class="studio-option" type="button" data-service="Objektbericht" data-result="Strukturierter Bericht aus Fotos, Notizen und Objektinformationen" data-output="Objektbericht">
-            <span class="studio-code">OB</span>
-            <span>Objektbericht<small>Fotos und Notizen in Berichtsform</small></span>
-          </button>
-
-          <button class="studio-option" type="button" data-service="Mängel- & Maßnahmenliste" data-result="Übersichtliche Liste mit Bereich, Priorität, Status und nächstem Schritt" data-output="Maßnahmenübersicht">
-            <span class="studio-code">MM</span>
-            <span>Mängel & Maßnahmen<small>Priorisierte Übersicht offener Punkte</small></span>
-          </button>
-
-          <button class="studio-option" type="button" data-service="Fotodokumentation" data-result="Sortierte Fotodokumentation mit Bereichen, Beschriftungen und Übersicht" data-output="Fotodokumentation">
-            <span class="studio-code">FD</span>
-            <span>Fotos strukturieren<small>Bildmaterial sortieren und beschriften</small></span>
-          </button>
-
-          <button class="studio-option" type="button" data-service="Eigentümerbericht" data-result="Verständliche Zusammenfassung für Eigentümer, Verwaltung oder Investor" data-output="Eigentümerbericht">
-            <span class="studio-code">EB</span>
-            <span>Eigentümerbericht<small>Klare Zusammenfassung für Entscheider</small></span>
-          </button>
-
-          <button class="studio-option" type="button" data-service="Unterlagen strukturieren" data-result="Geordnete Objektinformationen, offene Punkte und verwertbare Zusammenfassung" data-output="Objektübersicht">
-            <span class="studio-code">OU</span>
-            <span>Unterlagen strukturieren<small>Aus Einzelinformationen wird Übersicht</small></span>
-          </button>
-        </div>
-
-        <div class="studio-preview">
-          <span class="preview-label">Ausgewählt</span>
-          <h3 id="studioTitle">Exposé-Texte</h3>
-          <p id="studioText">Objektbeschreibung, Lagebeschreibung und Kurztext für Immobilienportale.</p>
-
-          <div class="studio-checklist" id="studioChecklist">
-            <div>✓ auf Basis vorhandener Objektdaten</div>
-            <div>✓ klar strukturiert und weiterverwendbar</div>
-            <div>✓ als Text- oder Berichtsvorlage</div>
-          </div>
-
-          <div class="result-grid">
-            <div><span>Modus</span><strong>Digital</strong></div>
-            <div><span>Format</span><strong id="studioOutput">Exposé-Textvorlage</strong></div>
-            <div><span>Status</span><strong>Konfigurierbar</strong></div>
-          </div>
-
-          <div class="action-row">
-            <button type="button" class="button" id="applyStudioButton">In Projekt übernehmen</button>
-            <button type="button" class="button-ghost" id="copyStudioButton">Leistung kopieren</button>
           </div>
         </div>
       </div>
@@ -511,9 +285,7 @@
       <div class="map-shell">
         <div id="map" aria-label="Karte des Einsatzgebiets"></div>
 
-        <aside class="panel map-panel">
-          <h3>Verfügbarkeit</h3>
-
+        <aside class="map-panel">
           <div class="coverage-block">
             <strong>Digital</strong>
             <span>Berichte, Texte und Aufbereitung unabhängig vom Objektstandort.</span>
@@ -525,14 +297,8 @@
           </div>
 
           <div class="city-list" aria-label="Beispielstädte">
-            <span class="city-tag">Duisburg</span>
-            <span class="city-tag">Moers</span>
-            <span class="city-tag">Kamp-Lintfort</span>
-            <span class="city-tag">Krefeld</span>
-            <span class="city-tag">Düsseldorf</span>
-            <span class="city-tag">Essen</span>
-            <span class="city-tag">Oberhausen</span>
-            <span class="city-tag">Dinslaken</span>
+            <span>Duisburg</span><span>Moers</span><span>Kamp-Lintfort</span><span>Krefeld</span>
+            <span>Düsseldorf</span><span>Essen</span><span>Oberhausen</span><span>Dinslaken</span>
           </div>
         </aside>
       </div>
@@ -541,34 +307,29 @@
     <section class="section" id="projekt">
       <div class="section-head">
         <div>
-          <span class="section-kicker">Werkzeug 04</span>
-          <h2 class="section-title">Projekt zusammenstellen</h2>
+          <span class="section-kicker">Projektanfrage</span>
+          <h2 class="section-title">Kurz beschreiben, was benötigt wird</h2>
         </div>
-        <p class="section-note">Anfrage erstellen, kopieren, herunterladen oder direkt als E-Mail öffnen.</p>
+        <p class="section-note">Die ausgewählte Leistung wird automatisch übernommen.</p>
       </div>
 
       <div class="request-shell">
-        <div class="panel request-form">
+        <div class="request-form">
           <div class="request-form-head">
             <h3>Projektangaben</h3>
             <span class="save-state" id="saveState">Lokal gespeichert</span>
           </div>
 
           <div class="smart-request-box">
-            <div class="config-field">
-              <label for="serviceType">Leistung</label>
+            <div class="config-field full">
+              <label for="serviceType">Ausgewählte Leistung</label>
               <select id="serviceType">
                 <option value="Eigentümerbericht">Eigentümerbericht</option>
                 <option value="Objektbericht">Objektbericht</option>
-                <option value="Fotodokumentation">Fotodokumentation</option>
                 <option value="Mängel- & Maßnahmenliste">Mängel- & Maßnahmenliste</option>
+                <option value="Fotodokumentation">Fotodokumentation</option>
                 <option value="Exposé-Texte">Exposé-Texte</option>
                 <option value="Unterlagen strukturieren">Unterlagen strukturieren</option>
-                <option value="Handwerkerstatus">Handwerkerstatus</option>
-                <option value="Objektbegehung">Objektbegehung</option>
-                <option value="Leerstandskontrolle">Leerstandskontrolle</option>
-                <option value="Besichtigung / Vor-Ort-Termin">Besichtigung / Vor-Ort-Termin</option>
-                <option value="Sonstige Anfrage">Sonstige Anfrage</option>
               </select>
             </div>
 
@@ -585,41 +346,8 @@
             </div>
 
             <div class="config-field">
-              <label for="city">Ort</label>
-              <input id="city" type="text" value="Duisburg" placeholder="z. B. Duisburg oder digital">
-            </div>
-
-            <div class="config-field">
-              <label for="urgency">Zeitrahmen</label>
-              <select id="urgency">
-                <option value="flexibel">Flexibel</option>
-                <option value="innerhalb weniger Tage">Innerhalb weniger Tage</option>
-                <option value="kurzfristig">Kurzfristig</option>
-                <option value="nach Absprache">Nach Absprache</option>
-              </select>
-            </div>
-
-            <div class="config-field">
-              <label for="resultType">Gewünschtes Ergebnis</label>
-              <select id="resultType">
-                <option value="Eigentümerbericht">Eigentümerbericht</option>
-                <option value="Objektbericht">Objektbericht</option>
-                <option value="Fotodokumentation">Fotodokumentation</option>
-                <option value="Maßnahmenübersicht">Maßnahmenübersicht</option>
-                <option value="Exposé-Textvorlage">Exposé-Textvorlage</option>
-                <option value="Statusbericht">Statusbericht</option>
-                <option value="Objektübersicht">Objektübersicht</option>
-              </select>
-            </div>
-
-            <div class="config-field">
-              <label for="objectCount">Umfang</label>
-              <select id="objectCount">
-                <option value="1 Objekt / 1 Einheit">1 Objekt / 1 Einheit</option>
-                <option value="2–5 Einheiten">2–5 Einheiten</option>
-                <option value="mehrere Objekte">Mehrere Objekte</option>
-                <option value="noch offen">Noch offen</option>
-              </select>
+              <label for="city">Ort / Ausführung</label>
+              <input id="city" type="text" value="Digital" placeholder="z. B. Duisburg oder digital">
             </div>
 
             <div class="config-field">
@@ -633,8 +361,8 @@
             </div>
 
             <div class="config-field full">
-              <label for="projectDetails">Ausgangslage / Hinweise</label>
-              <textarea id="projectDetails" placeholder="z. B. 30 Fotos vorhanden, Eigentümer benötigt eine kurze Übersicht, zwei Punkte sind noch offen."></textarea>
+              <label for="projectDetails">Ausgangslage / gewünschtes Ergebnis</label>
+              <textarea id="projectDetails" placeholder="Zum Beispiel: 30 Fotos und kurze Notizen vorhanden. Benötigt wird eine kompakte Eigentümerübersicht mit offenen Punkten."></textarea>
             </div>
           </div>
         </div>
@@ -642,24 +370,20 @@
         <aside class="request-preview">
           <span class="preview-label">Live-Zusammenfassung</span>
           <h3 id="requestTitle">Eigentümerbericht</h3>
+          <div class="request-summary" id="requestSummary">Eigentümerbericht für eine Wohnung. Ausführung: Digital.</div>
 
-          <div class="request-summary" id="requestSummary">Eigentümerbericht für 1 Objekt / 1 Einheit (Wohnung) in Duisburg.
-Zeitrahmen: flexibel.
-Gewünschtes Ergebnis: Eigentümerbericht.</div>
-
-          <div class="result-grid">
-            <div><span>Modus</span><strong id="requestMode">Digital / Vor Ort</strong></div>
-            <div><span>Umfang</span><strong id="requestScope">1 Objekt / 1 Einheit</strong></div>
+          <div class="request-facts">
+            <div><span>Objekt</span><strong id="requestObject">Wohnung</strong></div>
+            <div><span>Ausführung</span><strong id="requestLocation">Digital</strong></div>
             <div><span>Status</span><strong>Bereit</strong></div>
           </div>
 
-          <div class="action-row">
+          <div class="request-actions">
             <a class="button" id="configuredMailButton" href="mailto:kontakt.inspectora@gmail.com">E-Mail vorbereiten</a>
             <button type="button" class="button-ghost" id="copyRequestButton">Anfrage kopieren</button>
-            <button type="button" class="button-ghost" id="downloadRequestButton">Als TXT speichern</button>
           </div>
 
-          <button type="button" class="text-button" id="resetRequestButton">Konfiguration zurücksetzen</button>
+          <button type="button" class="text-button" id="resetRequestButton">Eingaben zurücksetzen</button>
         </aside>
       </div>
     </section>
@@ -668,9 +392,7 @@ Gewünschtes Ergebnis: Eigentümerbericht.</div>
   <footer class="footer">
     <div class="footer-inner">
       <div><strong>Inspectora</strong><br>Digitale Immobiliendokumentation</div>
-      <div class="footer-note">
-        © 2026 Inspectora · Keine Gutachten oder Sachverständigentätigkeit. Fokus: Sichtprüfung, Fotodokumentation und strukturierte Aufbereitung.
-      </div>
+      <div class="footer-note">© 2026 Inspectora · Keine Gutachten oder Sachverständigentätigkeit.</div>
     </div>
   </footer>
 
