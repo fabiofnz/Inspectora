@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+ <!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -148,6 +148,145 @@
 
           <button type="button" class="button" id="serviceStartButton">Projekt mit dieser Leistung starten →</button>
         </aside>
+      </div>
+    </section>
+
+
+    <section class="section" id="praxisbeispiele">
+      <div class="section-head">
+        <div>
+          <span class="section-kicker">Praxisbeispiel</span>
+          <h2 class="section-title">Vom Ausgangsmaterial zum fertigen Ergebnis</h2>
+        </div>
+
+        <p class="section-note">
+          Fiktive Beispieldaten zeigen, wie vorhandene Informationen strukturiert aufbereitet werden können.
+        </p>
+      </div>
+
+      <div class="example-switch" aria-label="Beispiel auswählen">
+        <button class="example-tab active" type="button" data-example="expose">
+          Exposé-Text
+        </button>
+
+        <button class="example-tab" type="button" data-example="owner">
+          Eigentümerbericht
+        </button>
+
+        <button class="example-tab" type="button" data-example="defects">
+          Mängel & Maßnahmen
+        </button>
+
+        <button class="example-tab" type="button" data-example="photos">
+          Fotodokumentation
+        </button>
+      </div>
+
+      <div class="example-project">
+        <div class="example-gallery" id="exampleGallery">
+          <figure class="example-image example-image-large">
+            <img
+              src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1000&h=700&fit=crop"
+              alt="Helles Wohnzimmer einer fiktiven Beispielwohnung"
+            >
+            <figcaption>Wohnbereich</figcaption>
+          </figure>
+
+          <figure class="example-image">
+            <img
+              src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&h=500&fit=crop"
+              alt="Schlafzimmer einer fiktiven Beispielwohnung"
+            >
+            <figcaption>Schlafzimmer</figcaption>
+          </figure>
+
+          <figure class="example-image">
+            <img
+              src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=700&h=500&fit=crop"
+              alt="Badezimmer einer fiktiven Beispielwohnung"
+            >
+            <figcaption>Badezimmer</figcaption>
+          </figure>
+        </div>
+
+        <div class="example-comparison">
+          <article class="example-input">
+            <div class="example-card-head">
+              <div>
+                <span class="example-label">Eingang</span>
+                <h3 id="exampleInputTitle">Fotos, Objektdaten und Stichpunkte</h3>
+              </div>
+
+              <span class="example-status">Rohmaterial</span>
+            </div>
+
+            <div class="example-object">
+              <span>Fiktives Beispielobjekt</span>
+              <strong id="exampleObject">2-Zimmer-Wohnung · 58 m² · Duisburg-Neudorf</strong>
+            </div>
+
+            <ul class="example-input-list" id="exampleInputList">
+              <li>Wohnzimmer hell, Laminatboden</li>
+              <li>Balkon zum Innenhof</li>
+              <li>Badezimmer 2022 erneuert</li>
+              <li>Einbauküche vorhanden</li>
+              <li>Kellerraum gehört zur Wohnung</li>
+              <li>Universität und ÖPNV gut erreichbar</li>
+            </ul>
+          </article>
+
+          <div class="example-transform" aria-hidden="true">
+            <span>Inspectora</span>
+            <i>→</i>
+          </div>
+
+          <article class="example-output">
+            <div class="example-card-head">
+              <div>
+                <span class="example-label">Ergebnis</span>
+                <h3 id="exampleOutputTitle">Exposé-Text</h3>
+              </div>
+
+              <span class="example-status ready">Aufbereitet</span>
+            </div>
+
+            <div class="example-document">
+              <span class="document-type" id="exampleDocumentType">Objektbeschreibung</span>
+
+              <h4 id="exampleDocumentTitle">
+                2-Zimmer-Wohnung mit Balkon in Duisburg-Neudorf
+              </h4>
+
+              <p id="exampleDocumentText">
+                Die 2-Zimmer-Wohnung liegt im 3. Obergeschoss eines gepflegten
+                Mehrfamilienhauses in Duisburg-Neudorf. Auf rund 58 m² verteilen
+                sich ein Wohnzimmer, ein Schlafzimmer, eine separate Küche und
+                ein Badezimmer. Vom Wohnzimmer aus ist der rückwärtig gelegene
+                Balkon erreichbar. Das Bad wurde 2022 modernisiert. Eine
+                Einbauküche und ein Kellerraum gehören ebenfalls zur Wohnung.
+                Einkaufsmöglichkeiten, Bus- und Bahnverbindungen sowie die
+                Universität sind in kurzer Zeit erreichbar.
+              </p>
+
+              <div class="example-output-list" id="exampleOutputList">
+                <span>2 Zimmer</span>
+                <span>ca. 58 m²</span>
+                <span>Balkon</span>
+                <span>Einbauküche</span>
+                <span>Bad modernisiert</span>
+                <span>Kellerraum</span>
+              </div>
+            </div>
+
+            <button type="button" class="button" id="exampleStartButton">
+              Ähnliches Projekt starten →
+            </button>
+          </article>
+        </div>
+
+        <p class="example-disclaimer">
+          Fiktives Projekt und beispielhafte Darstellung. Bilder und Angaben dienen ausschließlich der Veranschaulichung.
+        </p>
       </div>
     </section>
 
