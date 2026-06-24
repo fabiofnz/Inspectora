@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="de">
 <head>
   <meta charset="UTF-8">
@@ -26,6 +26,7 @@
 
     <div class="nav-links" id="navLinks">
       <a href="#leistungen">Leistungen</a>
+      <a href="#praxisbeispiele">Praxisbeispiel</a>
       <a href="#portal">Portal-Demo</a>
       <a href="#einsatzgebiet">Einsatzgebiet</a>
       <a class="nav-cta" href="#projekt">Projekt starten</a>
@@ -155,138 +156,115 @@
     <section class="section" id="praxisbeispiele">
       <div class="section-head">
         <div>
-          <span class="section-kicker">Praxisbeispiel</span>
-          <h2 class="section-title">Vom Ausgangsmaterial zum fertigen Ergebnis</h2>
+          <span class="section-kicker">Fiktives Musterprojekt</span>
+          <h2 class="section-title">So wird aus ungeordnetem Material ein nutzbares Projektpaket</h2>
         </div>
-
         <p class="section-note">
-          Fiktive Beispieldaten zeigen, wie vorhandene Informationen strukturiert aufbereitet werden können.
+          Beispiel einer 2-Zimmer-Wohnung. Gezeigt wird nicht nur ein Text, sondern die vollständige Aufbereitung von Fotos, Unterlagen, Daten und offenen Punkten.
         </p>
       </div>
 
-      <div class="example-switch" aria-label="Beispiel auswählen">
-        <button class="example-tab active" type="button" data-example="expose">
-          Exposé-Text
-        </button>
-
-        <button class="example-tab" type="button" data-example="owner">
-          Eigentümerbericht
-        </button>
-
-        <button class="example-tab" type="button" data-example="defects">
-          Mängel & Maßnahmen
-        </button>
-
-        <button class="example-tab" type="button" data-example="photos">
-          Fotodokumentation
-        </button>
+      <div class="case-overview">
+        <div class="case-object">
+          <span class="case-label">Beispielobjekt</span>
+          <h3>2-Zimmer-Wohnung · 58 m² · Duisburg-Neudorf</h3>
+          <p>3. Obergeschoss · Balkon zum Innenhof · Bad 2022 modernisiert · Kellerraum</p>
+        </div>
+        <div class="case-source-stats" aria-label="Eingereichte Projektunterlagen">
+          <div><strong>28</strong><span>Objektfotos</span></div>
+          <div><strong>4</strong><span>Dokumente</span></div>
+          <div><strong>11</strong><span>Notizen</span></div>
+          <div><strong>3</strong><span>offene Angaben</span></div>
+        </div>
       </div>
 
-      <div class="example-project">
-        <div class="example-gallery" id="exampleGallery">
-          <figure class="example-image example-image-large">
-            <img
-              src="https://images.unsplash.com/photo-1505693416388-ac5ce068fe85?w=1000&h=700&fit=crop"
-              alt="Helles Wohnzimmer einer fiktiven Beispielwohnung"
-            >
-            <figcaption>Wohnbereich</figcaption>
-          </figure>
+      <div class="case-gallery" aria-label="Beispielbilder der Wohnung">
+        <figure class="case-photo case-photo-main">
+          <img src="https://images.unsplash.com/photo-1522708323590-d24dbb6b0267d?auto=format&fit=crop&w=1400&q=84" alt="Wohnzimmer einer hellen 2-Zimmer-Wohnung">
+          <figcaption>Wohnzimmer · Bild 04</figcaption>
+        </figure>
+        <figure class="case-photo">
+          <img src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?auto=format&fit=crop&w=900&q=84" alt="Schlafzimmer einer 2-Zimmer-Wohnung">
+          <figcaption>Schlafzimmer · Bild 11</figcaption>
+        </figure>
+        <figure class="case-photo">
+          <img src="https://images.unsplash.com/photo-1552321554-5fefe8c9ef14?auto=format&fit=crop&w=900&q=84" alt="Modernisiertes Badezimmer einer Wohnung">
+          <figcaption>Badezimmer · Bild 17</figcaption>
+        </figure>
+      </div>
 
-          <figure class="example-image">
-            <img
-              src="https://images.unsplash.com/photo-1560448204-e02f11c3d0e2?w=700&h=500&fit=crop"
-              alt="Schlafzimmer einer fiktiven Beispielwohnung"
-            >
-            <figcaption>Schlafzimmer</figcaption>
-          </figure>
+      <div class="case-tabs" role="tablist" aria-label="Dienstleistungsbeispiele">
+        <button class="case-tab active" type="button" role="tab" aria-selected="true" data-case="expose">Exposé-Paket</button>
+        <button class="case-tab" type="button" role="tab" aria-selected="false" data-case="owner">Eigentümerbericht</button>
+        <button class="case-tab" type="button" role="tab" aria-selected="false" data-case="object">Objektbericht</button>
+        <button class="case-tab" type="button" role="tab" aria-selected="false" data-case="defects">Mängel & Maßnahmen</button>
+        <button class="case-tab" type="button" role="tab" aria-selected="false" data-case="photos">Fotodokumentation</button>
+        <button class="case-tab" type="button" role="tab" aria-selected="false" data-case="documents">Unterlagen strukturieren</button>
+      </div>
 
-          <figure class="example-image">
-            <img
-              src="https://images.unsplash.com/photo-1600566753190-17f0baa2a6c3?w=700&h=500&fit=crop"
-              alt="Badezimmer einer fiktiven Beispielwohnung"
-            >
-            <figcaption>Badezimmer</figcaption>
-          </figure>
-        </div>
-
-        <div class="example-comparison">
-          <article class="example-input">
-            <div class="example-card-head">
-              <div>
-                <span class="example-label">Eingang</span>
-                <h3 id="exampleInputTitle">Fotos, Objektdaten und Stichpunkte</h3>
-              </div>
-
-              <span class="example-status">Rohmaterial</span>
+      <div class="case-workflow">
+        <article class="case-card case-input-card">
+          <div class="case-card-head">
+            <div>
+              <span class="case-label">Vom Unternehmen bereitgestellt</span>
+              <h3 id="caseInputTitle">Fotos, Grundriss und Objektdaten</h3>
             </div>
-
-            <div class="example-object">
-              <span>Fiktives Beispielobjekt</span>
-              <strong id="exampleObject">2-Zimmer-Wohnung · 58 m² · Duisburg-Neudorf</strong>
-            </div>
-
-            <ul class="example-input-list" id="exampleInputList">
-              <li>Wohnzimmer hell, Laminatboden</li>
-              <li>Balkon zum Innenhof</li>
-              <li>Badezimmer 2022 erneuert</li>
-              <li>Einbauküche vorhanden</li>
-              <li>Kellerraum gehört zur Wohnung</li>
-              <li>Universität und ÖPNV gut erreichbar</li>
-            </ul>
-          </article>
-
-          <div class="example-transform" aria-hidden="true">
-            <span>Inspectora</span>
-            <i>→</i>
+            <span class="case-badge raw">ungeordnet</span>
           </div>
 
-          <article class="example-output">
-            <div class="example-card-head">
-              <div>
-                <span class="example-label">Ergebnis</span>
-                <h3 id="exampleOutputTitle">Exposé-Text</h3>
-              </div>
+          <div class="source-file-list" id="caseInputList">
+            <div><span>JPG</span><p><strong>28 Objektfotos</strong><small>teilweise doppelt, ohne Raumzuordnung</small></p></div>
+            <div><span>PDF</span><p><strong>Grundriss</strong><small>Raumbezeichnungen vorhanden</small></p></div>
+            <div><span>PDF</span><p><strong>Energieausweis</strong><small>gültig bis 2031</small></p></div>
+            <div><span>TXT</span><p><strong>11 Besichtigungsnotizen</strong><small>Ausstattung, Lage und Zustand</small></p></div>
+          </div>
 
-              <span class="example-status ready">Aufbereitet</span>
-            </div>
+          <div class="case-check">
+            <span>Automatische Vorprüfung</span>
+            <ul id="caseCheckList">
+              <li><b>✓</b> Wohnfläche und Zimmerzahl vorhanden</li>
+              <li><b>!</b> Baujahr nicht eindeutig belegt</li>
+              <li><b>!</b> Angabe zu Hausgeld oder Nebenkosten fehlt</li>
+            </ul>
+          </div>
+        </article>
 
-            <div class="example-document">
-              <span class="document-type" id="exampleDocumentType">Objektbeschreibung</span>
-
-              <h4 id="exampleDocumentTitle">
-                2-Zimmer-Wohnung mit Balkon in Duisburg-Neudorf
-              </h4>
-
-              <p id="exampleDocumentText">
-                Die 2-Zimmer-Wohnung liegt im 3. Obergeschoss eines gepflegten
-                Mehrfamilienhauses in Duisburg-Neudorf. Auf rund 58 m² verteilen
-                sich ein Wohnzimmer, ein Schlafzimmer, eine separate Küche und
-                ein Badezimmer. Vom Wohnzimmer aus ist der rückwärtig gelegene
-                Balkon erreichbar. Das Bad wurde 2022 modernisiert. Eine
-                Einbauküche und ein Kellerraum gehören ebenfalls zur Wohnung.
-                Einkaufsmöglichkeiten, Bus- und Bahnverbindungen sowie die
-                Universität sind in kurzer Zeit erreichbar.
-              </p>
-
-              <div class="example-output-list" id="exampleOutputList">
-                <span>2 Zimmer</span>
-                <span>ca. 58 m²</span>
-                <span>Balkon</span>
-                <span>Einbauküche</span>
-                <span>Bad modernisiert</span>
-                <span>Kellerraum</span>
-              </div>
-            </div>
-
-            <button type="button" class="button" id="exampleStartButton">
-              Ähnliches Projekt starten →
-            </button>
-          </article>
+        <div class="case-process" aria-hidden="true">
+          <span>prüfen</span><i>→</i><span>ordnen</span><i>→</i><span>aufbereiten</span>
         </div>
 
-        <p class="example-disclaimer">
-          Fiktives Projekt und beispielhafte Darstellung. Bilder und Angaben dienen ausschließlich der Veranschaulichung.
-        </p>
+        <article class="case-card case-output-card">
+          <div class="case-card-head">
+            <div>
+              <span class="case-label">Von Inspectora aufbereitet</span>
+              <h3 id="caseOutputTitle">Vermarktungsfertiges Exposé-Paket</h3>
+            </div>
+            <span class="case-badge ready">bereit</span>
+          </div>
+
+          <div class="result-summary">
+            <div class="result-summary-top">
+              <span id="caseDocumentType">Vermarktungspaket</span>
+              <strong id="caseDocumentCode">EX-2026-021</strong>
+            </div>
+            <h4 id="caseDocumentTitle">Wohnungsdaten geprüft und einheitlich zusammengeführt</h4>
+            <p id="caseDocumentText">
+              Die Angaben aus Grundriss, Energieausweis, Notizen und Bildmaterial wurden abgeglichen. Widersprüchliche oder fehlende Punkte sind getrennt markiert. Für die Vermarktung stehen ein Datenblatt, eine sortierte Bildauswahl, ein sachlicher Exposé-Text und eine Liste der noch zu klärenden Angaben bereit.
+            </p>
+          </div>
+
+          <div class="result-grid" id="caseResultGrid">
+            <div><span>01</span><p><strong>Objektdatenblatt</strong><small>einheitliche Angaben für Portal und Exposé</small></p></div>
+            <div><span>02</span><p><strong>16 ausgewählte Fotos</strong><small>sortiert, beschriftet und ohne Dubletten</small></p></div>
+            <div><span>03</span><p><strong>Exposé-Text</strong><small>sachlich aus den geprüften Daten erstellt</small></p></div>
+            <div><span>04</span><p><strong>Klärungsliste</strong><small>3 fehlende oder unklare Angaben</small></p></div>
+          </div>
+
+          <div class="case-actions">
+            <button class="button" type="button" id="caseStartButton">Ähnliches Projekt starten →</button>
+            <span>Fiktives Beispiel · keine echten Objektdaten</span>
+          </div>
+        </article>
       </div>
     </section>
 
