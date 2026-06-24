@@ -415,3 +415,173 @@ restoreProject();
 renderService("owner");
 renderPortalFile("owner");
 updateRequest();
+
+/* Praxisbeispiele */
+
+const exampleData = {
+expose: {
+inputTitle: “Fotos, Objektdaten und Stichpunkte”,
+object: “2-Zimmer-Wohnung · 58 m² · Duisburg-Neudorf”,
+input: [
+“Wohnzimmer hell, Laminatboden”,
+“Balkon zum Innenhof”,
+“Badezimmer 2022 erneuert”,
+“Einbauküche vorhanden”,
+“Kellerraum gehört zur Wohnung”,
+“Universität und ÖPNV gut erreichbar”
+],
+outputTitle: “Exposé-Text”,
+documentType: “Objektbeschreibung”,
+documentTitle: “2-Zimmer-Wohnung mit Balkon in Duisburg-Neudorf”,
+documentText:
+“Die 2-Zimmer-Wohnung liegt im 3. Obergeschoss eines gepflegten Mehrfamilienhauses in Duisburg-Neudorf. Auf rund 58 m² verteilen sich ein Wohnzimmer, ein Schlafzimmer, eine separate Küche und ein Badezimmer. Vom Wohnzimmer aus ist der rückwärtig gelegene Balkon erreichbar. Das Bad wurde 2022 modernisiert. Eine Einbauküche und ein Kellerraum gehören ebenfalls zur Wohnung. Einkaufsmöglichkeiten, Bus- und Bahnverbindungen sowie die Universität sind in kurzer Zeit erreichbar.”,
+output: [
+“2 Zimmer”,
+“ca. 58 m²”,
+“Balkon”,
+“Einbauküche”,
+“Bad modernisiert”,
+“Kellerraum”
+],
+service: “Exposé-Texte”,
+details:
+“Orientierung am Praxisbeispiel Exposé-Text. Vorhandene Fotos und Objektdaten sollen zu einer sachlichen Objektbeschreibung aufbereitet werden.”
+},
+
+owner: {
+inputTitle: “Fotos und kurze Rückmeldungen”,
+object: “Leerwohnung · Duisburg-Hamborn”,
+input: [
+“Wohnung vollständig geräumt”,
+“Wände teilweise verschmutzt”,
+“Boden im Schlafzimmer beschädigt”,
+“Badezimmer ohne sichtbare Schäden”,
+“Küchenanschlüsse vorhanden”,
+“Zählerstände fotografiert”
+],
+outputTitle: “Eigentümerbericht”,
+documentType: “Zustandsübersicht”,
+documentTitle: “Zustand der Einheit nach Rückgabe”,
+documentText:
+“Die Wohnung wurde geräumt übergeben. Im Wohnbereich sind an mehreren Wandflächen Verschmutzungen und kleinere Bohrlöcher vorhanden. Der Laminatboden im Schlafzimmer weist im Bereich des Fensters eine sichtbare Beschädigung auf. Im Badezimmer wurden keine auffälligen Schäden festgestellt. Die Küchenanschlüsse sind vorhanden. Die dokumentierten Zählerstände wurden dem Bericht beigefügt.”,
+output: [
+“Wohnung geräumt”,
+“Wandflächen prüfen”,
+“Boden beschädigt”,
+“Bad ohne Befund”,
+“Zählerstände erfasst”
+],
+service: “Eigentümerbericht”,
+details:
+“Orientierung am Praxisbeispiel Eigentümerbericht. Fotos und Notizen sollen zu einer sachlichen Zustandsübersicht aufbereitet werden.”
+},
+
+defects: {
+inputTitle: “Mängelfotos und lose Notizen”,
+object: “Mehrfamilienhaus · Moers”,
+input: [
+“Kellerleuchte ohne Funktion”,
+“Feuchtigkeit an Wand bei Raum 4”,
+“Türschließer am Hauseingang locker”,
+“Geländer im Treppenhaus stabil”,
+“Müllraum stark verschmutzt”,
+“Termin mit Elektriker noch offen”
+],
+outputTitle: “Mängel- & Maßnahmenliste”,
+documentType: “Priorisierte Übersicht”,
+documentTitle: “Offene Punkte nach Objektkontrolle”,
+documentText:
+“Die festgestellten Punkte wurden nach Bereich und Dringlichkeit geordnet. Die Feuchtigkeit im Keller sollte kurzfristig überprüft werden. Für die ausgefallene Kellerbeleuchtung ist ein Elektrikertermin erforderlich. Der lockere Türschließer am Hauseingang kann im Rahmen eines regulären Handwerkertermins nachgestellt werden. Für den Müllraum wird eine Reinigung empfohlen.”,
+output: [
+“Feuchtigkeit · kurzfristig”,
+“Kellerlicht · Elektriker”,
+“Türschließer · nachstellen”,
+“Müllraum · Reinigung”
+],
+service: “Mängel- & Maßnahmenliste”,
+details:
+“Orientierung am Praxisbeispiel Mängel- und Maßnahmenliste. Hinweise und Fotos sollen nach Bereich, Priorität und nächstem Schritt geordnet werden.”
+},
+
+photos: {
+inputTitle: “Unsortierte Objektfotos”,
+object: “Gewerbeeinheit · Krefeld”,
+input: [
+“18 Innenaufnahmen ohne Reihenfolge”,
+“6 Fotos der Außenansicht”,
+“3 Aufnahmen des Technikraums”,
+“keine Bildbeschriftungen vorhanden”,
+“mehrere ähnliche Detailfotos”,
+“Weitergabe an Eigentümer vorgesehen”
+],
+outputTitle: “Fotodokumentation”,
+documentType: “Sortierte Bildübersicht”,
+documentTitle: “Fotodokumentation der Gewerbeeinheit”,
+documentText:
+“Die Aufnahmen wurden nach Außenbereich, Verkaufsfläche, Nebenräumen und Technik geordnet. Ähnliche Bilder wurden zusammengefasst und die verwendeten Fotos mit kurzen Beschreibungen versehen. Dadurch ist der Zustand der einzelnen Bereiche ohne zusätzliche Erläuterung nachvollziehbar.”,
+output: [
+“Außenbereich”,
+“Verkaufsfläche”,
+“Nebenräume”,
+“Technik”,
+“beschriftete Fotos”
+],
+service: “Fotodokumentation”,
+details:
+“Orientierung am Praxisbeispiel Fotodokumentation. Unsortierte Bilder sollen nach Bereichen geordnet und kurz beschriftet werden.”
+}
+};
+
+const exampleTabs = document.querySelectorAll(”.example-tab”);
+const exampleInputTitle = document.getElementById(“exampleInputTitle”);
+const exampleObject = document.getElementById(“exampleObject”);
+const exampleInputList = document.getElementById(“exampleInputList”);
+const exampleOutputTitle = document.getElementById(“exampleOutputTitle”);
+const exampleDocumentType = document.getElementById(“exampleDocumentType”);
+const exampleDocumentTitle = document.getElementById(“exampleDocumentTitle”);
+const exampleDocumentText = document.getElementById(“exampleDocumentText”);
+const exampleOutputList = document.getElementById(“exampleOutputList”);
+
+let currentExample = exampleData.expose;
+
+function renderExample(key) {
+currentExample = exampleData[key];
+
+exampleInputTitle.textContent = currentExample.inputTitle;
+exampleObject.textContent = currentExample.object;
+
+exampleInputList.innerHTML = currentExample.input
+.map(item => <li>${item}</li>)
+.join(””);
+
+exampleOutputTitle.textContent = currentExample.outputTitle;
+exampleDocumentType.textContent = currentExample.documentType;
+exampleDocumentTitle.textContent = currentExample.documentTitle;
+exampleDocumentText.textContent = currentExample.documentText;
+
+exampleOutputList.innerHTML = currentExample.output
+.map(item => <span>${item}</span>)
+.join(””);
+
+exampleTabs.forEach(tab => {
+tab.classList.toggle(“active”, tab.dataset.example === key);
+});
+}
+
+exampleTabs.forEach(tab => {
+tab.addEventListener(“click”, () => {
+renderExample(tab.dataset.example);
+});
+});
+
+document
+.getElementById(“exampleStartButton”)
+.addEventListener(“click”, () => {
+applyServiceToProject(
+currentExample.service,
+currentExample.outputTitle,
+currentExample.details
+);
+});
+
+renderExample(“expose”);
