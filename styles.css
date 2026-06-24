@@ -361,3 +361,19 @@ main {
     padding: 22px;
   }
 }
+
+.nav-secondary {
+  opacity: .65;
+  font-size: 11px;
+}
+
+.footer-note {
+  width: min(calc(100% - 40px), var(--max));
+  margin: 0 auto 40px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 10px;
+  line-height: 1.6;
+}
+}

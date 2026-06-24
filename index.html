@@ -21,27 +21,27 @@
 
     <nav class="site-nav" id="siteNav" aria-label="Hauptnavigation">
       <a href="#tool">Tool</a>
-      <a href="#projekte">Meine Projekte</a>
       <a href="#ablauf">Ablauf</a>
       <a href="#einsatzgebiet">Einsatzgebiet</a>
       <a href="#ueber-uns">Über uns</a>
-      <button class="nav-button" id="navStartProject" type="button">Objektaufnahme starten</button>
+      <a class="nav-secondary" href="#projekte">Meine Projekte</a>
+      <button class="nav-button" id="navStartProject" type="button">Eigenes Projekt starten</button>
     </nav>
   </header>
 
   <main>
     <section class="hero" id="start">
       <div class="hero-copy">
-        <span class="eyebrow">Digitales Werkzeug für Immobilienunternehmen</span>
-        <h1>Objektaufnahmen, Feststellungen und Maßnahmen an einem Ort.</h1>
-        <p>Inspectora führt strukturiert durch eine Begehung: Objekt anlegen, Bereiche erfassen, Punkte dokumentieren und eine saubere Maßnahmenübersicht erzeugen.</p>
+        <span class="eyebrow">Für Hausverwaltungen & Immobilienunternehmen</span>
+        <h1>Schluss mit verstreuten Notizzetteln bei der Objektkontrolle.</h1>
+        <p>Inspectora führt strukturiert durch jede Begehung und macht aus Notizen, Fotos und Eindrücken vor Ort eine klare, sofort weitergebbare Maßnahmenübersicht.</p>
         <div class="hero-actions">
-          <button class="button primary" id="heroStartProject" type="button">Tool ausprobieren</button>
-          <button class="button secondary" id="loadDemoButton" type="button">Demoprojekt laden</button>
+          <button class="button primary" id="loadDemoButton" type="button">Demoprojekt ansehen</button>
+          <button class="button secondary" id="heroStartProject" type="button">Eigenes Projekt starten</button>
         </div>
         <div class="hero-facts">
           <div><strong>Ohne Installation</strong><span>Direkt im Browser nutzbar</span></div>
-          <div><strong>Lokal gespeichert</strong><span>Für den Test auf diesem Gerät</span></div>
+          <div><strong>Daten bleiben bei Ihnen</strong><span>Keine Cloud – alles lokal im Browser</span></div>
           <div><strong>Berichtsfähig</strong><span>Drucken oder als PDF sichern</span></div>
         </div>
       </div>
@@ -80,6 +80,11 @@
       </div>
     </section>
 
+    <section class="section value-section tone-soft">
+      <div class="section-heading"><span class="eyebrow">Der praktische Nutzen</span><h2>Klare Übergaben statt verstreuter Informationen</h2></div>
+      <div class="value-grid"><article><h3>Einheitliche Erfassung</h3><p>Feststellungen werden immer nach demselben Aufbau dokumentiert.</p></article><article><h3>Klare Maßnahmen</h3><p>Priorität, Zuständigkeit, Frist und Status sind direkt hinterlegt.</p></article><article><h3>Saubere Weitergabe</h3><p>Aus der Aufnahme entsteht eine verständliche Übersicht für Verwaltung, Eigentümer oder Dienstleister.</p></article></div>
+    </section>
+
     <section class="tool-section" id="tool">
       <div class="tool-heading">
         <div>
@@ -99,7 +104,7 @@
           <button class="tool-step" type="button" data-step="2"><span>2</span><div><strong>Bereiche</strong><small>Aufnahme strukturieren</small></div></button>
           <button class="tool-step" type="button" data-step="3"><span>3</span><div><strong>Feststellungen</strong><small>Punkte dokumentieren</small></div></button>
           <button class="tool-step" type="button" data-step="4"><span>4</span><div><strong>Bericht</strong><small>Übersicht prüfen</small></div></button>
-          <div class="tool-note"><strong>Testmodus</strong><p>Alle Daten bleiben lokal in diesem Browser. Eine Online-Übertragung findet noch nicht statt.</p></div>
+          <div class="tool-note"><strong>Datenschutz inklusive</strong><p>Alle Eingaben bleiben in Ihrem Browser – es gibt keine Cloud-Übertragung.</p></div>
         </aside>
 
         <div class="tool-main">
@@ -184,16 +189,11 @@
       <div class="project-list" id="projectList"><div class="empty-state large"><strong>Noch keine Projekte gespeichert</strong><p>Starte oben eine Objektaufnahme oder lade das Demoprojekt.</p><button class="button primary" id="emptyStartButton" type="button">Erstes Projekt anlegen</button></div></div>
     </section>
 
-    <section class="section value-section tone-soft">
-      <div class="section-heading"><span class="eyebrow">Der praktische Nutzen</span><h2>Klare Übergaben statt verstreuter Informationen</h2></div>
-      <div class="value-grid"><article><h3>Einheitliche Erfassung</h3><p>Feststellungen werden immer nach demselben Aufbau dokumentiert.</p></article><article><h3>Klare Maßnahmen</h3><p>Priorität, Zuständigkeit, Frist und Status sind direkt hinterlegt.</p></article><article><h3>Saubere Weitergabe</h3><p>Aus der Aufnahme entsteht eine verständliche Übersicht für Verwaltung, Eigentümer oder Dienstleister.</p></article></div>
-    </section>
-
     <section class="section area-section" id="einsatzgebiet">
       <div class="section-heading section-heading-wide">
-        <span class="eyebrow">Vor-Ort-Unterstützung</span>
-        <h2>Einsatzgebiet am Niederrhein und im westlichen Ruhrgebiet</h2>
-        <p>Die Karte lässt sich frei verschieben und zoomen. Das markierte Gebiet zeigt den geplanten regionalen Schwerpunkt für Vor-Ort-Leistungen.</p>
+        <span class="eyebrow">Tool bundesweit – Vor-Ort-Service regional</span>
+        <h2>Digital überall nutzbar, persönlich am Niederrhein vor Ort</h2>
+        <p>Das Inspectora-Tool funktioniert unabhängig vom Standort im Browser. Für persönliche Vor-Ort-Leistungen wie Objektkontrollen und Fotodokumentation liegt der aktuelle Schwerpunkt rund um Moers, Kamp-Lintfort und die angrenzenden Städte. Die Karte lässt sich frei verschieben und zoomen.</p>
       </div>
 
       <div class="map-shell">
@@ -201,11 +201,10 @@
 
         <aside class="map-panel">
           <span class="eyebrow">Regionaler Schwerpunkt</span>
-          <h3>Digital nutzbar, vor Ort regional gestartet</h3>
+          <h3>Vor-Ort-Leistungen in dieser Region</h3>
           <p>
-            Das Tool kann unabhängig vom Standort genutzt werden. Für Objektkontrollen,
-            Fotodokumentationen und Termine vor Ort liegt der erste Schwerpunkt rund um
-            Moers, Kamp-Lintfort und die angrenzenden Städte.
+            Das Kerngebiet und der erweiterte Radius zeigen, wo persönliche
+            Vor-Ort-Termine aktuell stattfinden können.
           </p>
 
           <div class="map-legend">
@@ -228,11 +227,12 @@
     </section>
 
     <section class="section about-section" id="ueber-uns">
-      <div class="about-card"><div><span class="eyebrow">Über Inspectora</span><h2>Aus dem Immobilienalltag gedacht</h2></div><div class="about-text"><p>Hinter Inspectora steht ein angehender Immobilienkaufmann mit Praxiserfahrung aus dem Arbeitsalltag von Immobilienunternehmen.</p><p>Die Idee ist einfach: Objektinformationen sollen nicht länger in einzelnen Notizen, Fotos und Nachrichten verstreut bleiben. Inspectora verbindet ein übersichtliches Werkzeug mit unterstützenden Leistungen rund um Objektaufnahme, Dokumentation und Maßnahmen.</p></div></div>
+      <div class="about-card"><div><span class="eyebrow">Über Inspectora</span><h2>Aus dem Immobilienalltag gedacht</h2></div><div class="about-text"><p>Inspectora entsteht aus echtem Praxiswissen im Immobilienalltag – inklusive der Probleme, die bei Objektkontrollen durch verstreute Notizen, Fotos und Nachrichten entstehen.</p><p>Die Idee ist einfach: Objektinformationen sollen nicht länger verstreut bleiben, sondern in einem übersichtlichen Werkzeug zusammenlaufen – ergänzt um unterstützende Leistungen rund um Objektaufnahme, Dokumentation und Maßnahmen.</p><p>Fragen oder Feedback? <a href="mailto:kontakt.inspectora@gmail.com">kontakt.inspectora@gmail.com</a></p></div></div>
     </section>
   </main>
 
   <footer class="site-footer"><div><strong>Inspectora</strong><span>Objektaufnahme und Dokumentation</span></div><p>Funktionaler Browser-Prototyp ohne Online-Datenspeicherung.</p></footer>
+  <p class="footer-note">Inspectora befindet sich aktuell in einer nicht-kommerziellen Testphase. Es handelt sich noch nicht um ein gewerbliches Angebot oder eine rechtsverbindliche Dienstleistung.</p>
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <div class="modal" id="confirmModal" aria-hidden="true"><div class="modal-backdrop" data-close-modal></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle"><h3 id="confirmModalTitle">Projekt löschen?</h3><p>Dieser Vorgang kann nicht rückgängig gemacht werden.</p><div class="modal-actions"><button class="button secondary" type="button" data-close-modal>Abbrechen</button><button class="button danger" id="confirmDeleteButton" type="button">Löschen</button></div></div></div>
