@@ -1,651 +1,78 @@
-const EMAIL_ADDRESS = "kontakt.inspectora@gmail.com";
-const STORAGE_KEY = "inspectora-simple-project-v1";
+"use strict";
 
-const navToggle = document.getElementById("navToggle");
-const navLinks = document.getElementById("navLinks");
-const toast = document.getElementById("toast");
-const progressBar = document.querySelector(".scroll-progress");
-
-navToggle.addEventListener("click", () => {
-  const isOpen = navLinks.classList.toggle("active");
-  navToggle.setAttribute("aria-expanded", String(isOpen));
-  navToggle.textContent = isOpen ? "×" : "☰";
-});
-
-document.querySelectorAll(".nav-links a").forEach(link => {
-  link.addEventListener("click", () => {
-    navLinks.classList.remove("active");
-    navToggle.setAttribute("aria-expanded", "false");
-    navToggle.textContent = "☰";
-  });
-});
-
-window.addEventListener("scroll", () => {
-  const scrollable = document.documentElement.scrollHeight - window.innerHeight;
-  const progress = scrollable > 0 ? (window.scrollY / scrollable) * 100 : 0;
-  progressBar.style.width = `${progress}%`;
-});
-
-function showToast(message) {
-  toast.textContent = message;
-  toast.classList.add("show");
-  window.clearTimeout(showToast.timer);
-  showToast.timer = window.setTimeout(() => toast.classList.remove("show"), 1800);
-}
-
-async function copyText(text, successMessage = "Kopiert") {
-  try {
-    await navigator.clipboard.writeText(text);
-  } catch (error) {
-    const fallback = document.createElement("textarea");
-    fallback.value = text;
-    fallback.style.position = "fixed";
-    fallback.style.opacity = "0";
-    document.body.appendChild(fallback);
-    fallback.focus();
-    fallback.select();
-    document.execCommand("copy");
-    fallback.remove();
-  }
-
-  showToast(successMessage);
-}
-
-function scrollToProject() {
-  document.getElementById("projekt").scrollIntoView({
-    behavior: "smooth",
-    block: "start"
-  });
-}
-
-/* Karte */
-const mapElement = document.getElementById("map");
-let map = null;
-
-if (mapElement && typeof L !== "undefined") {
-  map = L.map(mapElement, { scrollWheelZoom: false }).setView([51.43, 6.78], 9);
-
-  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-    attribution: "© OpenStreetMap contributors",
-    maxZoom: 19
-  }).addTo(map);
-
-  const cities = [
-    { name: "Duisburg", lat: 51.4344, lng: 6.7673 },
-    { name: "Oberhausen", lat: 51.4615, lng: 6.8569 },
-    { name: "Mülheim an der Ruhr", lat: 51.4301, lng: 6.9789 },
-    { name: "Essen", lat: 51.4556, lng: 7.0116 },
-    { name: "Düsseldorf", lat: 51.2277, lng: 6.7735 },
-    { name: "Moers", lat: 51.4528, lng: 6.6361 },
-    { name: "Kamp-Lintfort", lat: 51.5000, lng: 6.5247 },
-    { name: "Neukirchen-Vluyn", lat: 51.4306, lng: 6.3875 },
-    { name: "Rheinberg", lat: 51.3764, lng: 6.4511 },
-    { name: "Voerde", lat: 51.5675, lng: 6.7089 },
-    { name: "Dinslaken", lat: 51.5606, lng: 6.7389 },
-    { name: "Krefeld", lat: 51.3339, lng: 6.5688 },
-    { name: "Ratingen", lat: 51.3050, lng: 6.8386 }
-  ];
-
-  const markers = cities.map(city => {
-    return L.marker([city.lat, city.lng], {
-      icon: L.divIcon({
-        className: "",
-        html: '<div class="city-marker">●</div>',
-        iconSize: [28, 28],
-        iconAnchor: [14, 14],
-        popupAnchor: [0, -14]
-      })
-    })
-      .addTo(map)
-      .bindPopup(`<div class="city-popup">${city.name}</div>`);
-  });
-
-  const markerGroup = L.featureGroup(markers);
-  map.fitBounds(markerGroup.getBounds().pad(0.15));
-
-  const mapLink = document.querySelector('a[href="#einsatzgebiet"]');
-  if (mapLink) {
-    mapLink.addEventListener("click", () => {
-      window.setTimeout(() => map.invalidateSize(), 350);
-    });
-  }
-
-  window.addEventListener("load", () => {
-    window.setTimeout(() => map.invalidateSize(), 150);
-  });
-}
-
-/* Leistungen */
-const serviceData = {
-  owner: {
-    service: "Eigentümerbericht",
-    description: "Verständliche Zusammenfassung des Objektzustands, laufender Maßnahmen und offener Punkte.",
-    audience: "Verwaltung, Eigentümer, Investoren",
-    output: "Eigentümerbericht",
-    input: "Fotos, Notizen, Objektdaten",
-    benefits: [
-      "kompakt und verständlich",
-      "professionell weiterverwendbar",
-      "offene Punkte klar erkennbar"
-    ]
-  },
-  object: {
-    service: "Objektbericht",
-    description: "Strukturierter Bericht aus vorhandenen Fotos, Notizen und Objektinformationen.",
-    audience: "Verwaltung, Bestandshalter, Makler",
-    output: "Objektbericht",
-    input: "Fotos, Notizen, Objektangaben",
-    benefits: [
-      "einheitlicher Aufbau",
-      "Informationen sauber gebündelt",
-      "für interne und externe Nutzung"
-    ]
-  },
-  defects: {
-    service: "Mängel- & Maßnahmenliste",
-    description: "Auffälligkeiten werden nach Bereich, Priorität, Status und nächstem Schritt geordnet.",
-    audience: "Verwaltung, Eigentümer, Projektteams",
-    output: "Maßnahmenübersicht",
-    input: "Fotos, Hinweise, Handwerkerinfos",
-    benefits: [
-      "Prioritäten sofort erkennbar",
-      "offene Punkte nachvollziehbar",
-      "geeignet für Abstimmungen"
-    ]
-  },
-  photos: {
-    service: "Fotodokumentation",
-    description: "Bildmaterial wird nach Bereichen sortiert, beschriftet und als klare Übersicht aufbereitet.",
-    audience: "Verwaltung, Makler, Eigentümer",
-    output: "Fotodokumentation",
-    input: "Fotos und kurze Hinweise",
-    benefits: [
-      "Fotos logisch sortiert",
-      "Bereiche klar beschriftet",
-      "übersichtliche Weitergabe"
-    ]
-  },
-  expose: {
-    service: "Exposé-Texte",
-    description: "Objektbeschreibung, Lagebeschreibung und Kurztexte für Vermarktung und Immobilienportale.",
-    audience: "Makler, Eigentümer, Vermarktung",
-    output: "Exposé-Textvorlage",
-    input: "Objektdaten, Ausstattungsmerkmale",
-    benefits: [
-      "professionelle Formulierungen",
-      "direkt weiterverwendbar",
-      "einheitlicher Markenauftritt"
-    ]
-  },
-  documents: {
-    service: "Unterlagen strukturieren",
-    description: "Ungeordnete Objektinformationen werden zu einer nachvollziehbaren, verwertbaren Übersicht.",
-    audience: "Verwaltung, Asset Management, Bestand",
-    output: "Objektübersicht",
-    input: "Dokumente, Notizen, Objektdaten",
-    benefits: [
-      "Informationen zentral gebündelt",
-      "offene Punkte sichtbar",
-      "leichter weiterzuverarbeiten"
-    ]
-  }
-};
-
-const serviceOptions = document.querySelectorAll(".service-option");
-const serviceTitle = document.getElementById("serviceTitle");
-const serviceDescription = document.getElementById("serviceDescription");
-const serviceAudience = document.getElementById("serviceAudience");
-const serviceOutput = document.getElementById("serviceOutput");
-const serviceInput = document.getElementById("serviceInput");
-const serviceBenefits = document.getElementById("serviceBenefits");
-
-let currentServiceKey = "owner";
-let currentService = serviceData[currentServiceKey];
-
-function renderService(key) {
-  currentServiceKey = key;
-  currentService = serviceData[key];
-
-  serviceTitle.textContent = currentService.service;
-  serviceDescription.textContent = currentService.description;
-  serviceAudience.textContent = currentService.audience;
-  serviceOutput.textContent = currentService.output;
-  serviceInput.textContent = currentService.input;
-  serviceBenefits.innerHTML = currentService.benefits
-    .map(item => `<span>✓ ${item}</span>`)
-    .join("");
-
-  serviceOptions.forEach(option => {
-    option.classList.toggle("active", option.dataset.serviceKey === key);
-  });
-}
-
-serviceOptions.forEach(option => {
-  option.addEventListener("click", () => {
-    renderService(option.dataset.serviceKey);
-  });
-});
-
-
-/* Praxisbeispiel */
-const caseData = {
-  expose: {
-    inputTitle: "Fotos, Grundriss und Objektdaten",
-    inputs: [
-      ["JPG", "28 Objektfotos", "teilweise doppelt, ohne Raumzuordnung"],
-      ["PDF", "Grundriss", "Raumbezeichnungen vorhanden"],
-      ["PDF", "Energieausweis", "gültig bis 2031"],
-      ["TXT", "11 Besichtigungsnotizen", "Ausstattung, Lage und Zustand"]
-    ],
-    checks: [
-      ["ok", "Wohnfläche und Zimmerzahl vorhanden"],
-      ["warn", "Baujahr nicht eindeutig belegt"],
-      ["warn", "Angabe zu Hausgeld oder Nebenkosten fehlt"]
-    ],
-    outputTitle: "Vermarktungsfertiges Exposé-Paket",
-    type: "Vermarktungspaket",
-    code: "EX-2026-021",
-    title: "Wohnungsdaten geprüft und einheitlich zusammengeführt",
-    text: "Die Angaben aus Grundriss, Energieausweis, Notizen und Bildmaterial wurden abgeglichen. Widersprüchliche oder fehlende Punkte sind getrennt markiert. Für die Vermarktung stehen ein Datenblatt, eine sortierte Bildauswahl, ein sachlicher Exposé-Text und eine Liste der noch zu klärenden Angaben bereit.",
-    results: [
-      ["01", "Objektdatenblatt", "einheitliche Angaben für Portal und Exposé"],
-      ["02", "16 ausgewählte Fotos", "sortiert, beschriftet und ohne Dubletten"],
-      ["03", "Exposé-Text", "sachlich aus den geprüften Daten erstellt"],
-      ["04", "Klärungsliste", "3 fehlende oder unklare Angaben"]
-    ],
-    service: "Exposé-Texte",
-    details: "Für eine 2-Zimmer-Wohnung sollen Fotos, Grundriss, Energieausweis und Objektdaten geprüft und als vollständiges Vermarktungspaket aufbereitet werden."
-  },
-  owner: {
-    inputTitle: "Objektfotos, Handwerkerstände und Rückfragen",
-    inputs: [
-      ["JPG", "19 Zustandsfotos", "Wohnung, Keller und Gemeinschaftsflächen"],
-      ["PDF", "2 Handwerkerangebote", "Malerarbeiten und Bodenreparatur"],
-      ["MAIL", "4 Rückmeldungen", "Verwaltung, Mieter und Dienstleister"],
-      ["TXT", "Übergabenotizen", "Zählerstände und offene Punkte"]
-    ],
-    checks: [
-      ["ok", "Maßnahmen nach Objektbereich zugeordnet"],
-      ["ok", "Angebote den offenen Punkten zugeordnet"],
-      ["warn", "Freigabe für Bodenreparatur noch offen"]
-    ],
-    outputTitle: "Entscheidungsfähiger Eigentümerbericht",
-    type: "Eigentümerinformation",
-    code: "EB-2026-021",
-    title: "Zustand, Kostenstände und Entscheidungen in einer Übersicht",
-    text: "Der Bericht trennt erledigte Arbeiten, offene Maßnahmen und notwendige Entscheidungen. Zu jeder Position sind Bildnachweis, aktueller Status und vorhandene Kostenangaben hinterlegt. Der Eigentümer sieht auf einer Seite, welche Punkte abgeschlossen sind und wo eine Freigabe benötigt wird.",
-    results: [
-      ["01", "Kurzstatus", "aktueller Stand des Objekts"],
-      ["02", "Maßnahmenübersicht", "erledigt, offen oder in Prüfung"],
-      ["03", "Kostenstände", "Angebote den Positionen zugeordnet"],
-      ["04", "Entscheidungsbedarf", "Freigaben klar markiert"]
-    ],
-    service: "Eigentümerbericht",
-    details: "Aus Fotos, Handwerkerständen, Angeboten und Übergabenotizen soll ein entscheidungsfähiger Eigentümerbericht entstehen."
-  },
-  object: {
-    inputTitle: "Besichtigungsfotos und Objektaufnahme",
-    inputs: [
-      ["JPG", "31 Innen- und Außenfotos", "ohne einheitliche Reihenfolge"],
-      ["PDF", "Bestandsgrundriss", "Raumaufteilung und Flächen"],
-      ["TXT", "Vor-Ort-Notizen", "Zustand und sichtbare Auffälligkeiten"],
-      ["XLS", "Objektstammdaten", "Adresse, Nutzung und Ansprechpartner"]
-    ],
-    checks: [
-      ["ok", "Fotos nach Gebäudebereich sortiert"],
-      ["ok", "Flächenangaben mit Grundriss abgeglichen"],
-      ["warn", "Angabe zum Baujahr muss bestätigt werden"]
-    ],
-    outputTitle: "Strukturierter Objektbericht",
-    type: "Objektdokumentation",
-    code: "OB-2026-021",
-    title: "Nachvollziehbare Bestandsaufnahme nach Bereichen",
-    text: "Der Objektbericht führt Stammdaten, Bildmaterial und Vor-Ort-Notizen in einer festen Struktur zusammen. Außenbereich, Gemeinschaftsflächen und Wohnung werden getrennt dargestellt. Sichtbare Auffälligkeiten bleiben als Beobachtung gekennzeichnet und werden nicht als Gutachten bewertet.",
-    results: [
-      ["01", "Objektstammdaten", "Adresse, Nutzung und Ansprechpartner"],
-      ["02", "Bereichsübersicht", "Außen, Gemeinschaft und Einheit"],
-      ["03", "Bildnachweise", "Fotos passend zu jedem Abschnitt"],
-      ["04", "Auffälligkeiten", "sichtbare Punkte getrennt dokumentiert"]
-    ],
-    service: "Objektbericht",
-    details: "Eine Vor-Ort-Aufnahme mit Fotos, Grundriss und Stammdaten soll als strukturierter Objektbericht aufbereitet werden."
-  },
-  defects: {
-    inputTitle: "Mängelfotos, Notizen und Handwerkerinfos",
-    inputs: [
-      ["JPG", "12 Mängelfotos", "mehrere Räume und Gemeinschaftsflächen"],
-      ["TXT", "9 Einzelhinweise", "ohne Priorität oder Zuständigkeit"],
-      ["MAIL", "3 Handwerkerrückmeldungen", "Termine und Materialbedarf"],
-      ["PDF", "1 Angebot", "Bodenreparatur Schlafzimmer"]
-    ],
-    checks: [
-      ["ok", "Doppelte Hinweise zusammengeführt"],
-      ["ok", "Bildnachweise den Positionen zugeordnet"],
-      ["warn", "Zuständigkeit für Feuchteprüfung noch offen"]
-    ],
-    outputTitle: "Priorisierte Mängel- und Maßnahmenliste",
-    type: "Maßnahmensteuerung",
-    code: "MM-2026-021",
-    title: "Jeder offene Punkt mit Nachweis, Priorität und nächstem Schritt",
-    text: "Aus einzelnen Fotos und Rückmeldungen entsteht eine Arbeitsliste, die nach Objektbereich und Dringlichkeit sortiert ist. Jede Position enthält Bildnachweis, Status, Zuständigkeit und den nächsten vereinbarten Schritt. So kann die Verwaltung die Bearbeitung direkt nachhalten.",
-    results: [
-      ["01", "9 Positionen", "nach Bereich zusammengeführt"],
-      ["02", "Prioritäten", "kurzfristig, regulär oder beobachten"],
-      ["03", "Zuständigkeiten", "Verwaltung, Handwerker oder Eigentümer"],
-      ["04", "Bearbeitungsstatus", "offen, terminiert oder erledigt"]
-    ],
-    service: "Mängel- & Maßnahmenliste",
-    details: "Mängelfotos, Einzelhinweise und Handwerkerrückmeldungen sollen in eine priorisierte Maßnahmenliste überführt werden."
-  },
-  photos: {
-    inputTitle: "Unsortierte Fotos aus Besichtigung und Übergabe",
-    inputs: [
-      ["JPG", "47 Originalfotos", "mehrere ähnliche Aufnahmen"],
-      ["JPG", "6 Detailaufnahmen", "Schäden und Zählerstände"],
-      ["TXT", "kurze Raumliste", "Wohnzimmer, Schlafen, Bad, Küche"],
-      ["TXT", "Übergabedatum", "Aufnahme vom 18.06.2026"]
-    ],
-    checks: [
-      ["ok", "Fotos nach Raum und Bereich erkannt"],
-      ["ok", "unscharfe und doppelte Aufnahmen markiert"],
-      ["ok", "Zählerstände getrennt dokumentiert"]
-    ],
-    outputTitle: "Geordnete Fotodokumentation",
-    type: "Bilddokumentation",
-    code: "FD-2026-021",
-    title: "Relevante Aufnahmen in nachvollziehbarer Reihenfolge",
-    text: "Die Originalbilder werden gesichtet, nach Räumen sortiert und mit kurzen sachlichen Beschriftungen versehen. Dubletten und unbrauchbare Aufnahmen werden nicht in das Ergebnis übernommen. Schäden, Details und Zählerstände erhalten eigene Abschnitte.",
-    results: [
-      ["01", "26 verwendete Fotos", "aus 53 Originalaufnahmen ausgewählt"],
-      ["02", "Raumstruktur", "klare Reihenfolge nach Objektbereichen"],
-      ["03", "Beschriftungen", "Ort und sichtbarer Inhalt je Foto"],
-      ["04", "Sonderabschnitte", "Details, Schäden und Zählerstände"]
-    ],
-    service: "Fotodokumentation",
-    details: "Unsortierte Besichtigungs- und Übergabefotos sollen ausgewählt, nach Räumen geordnet und sachlich beschriftet werden."
-  },
-  documents: {
-    inputTitle: "Verteilte Objektunterlagen aus mehreren Quellen",
-    inputs: [
-      ["PDF", "Grundriss und Energieausweis", "unterschiedliche Dateinamen"],
-      ["XLS", "Miet- und Flächendaten", "mehrere Tabellenblätter"],
-      ["MAIL", "Verwalterauskünfte", "Angaben zu Hausgeld und Rücklage"],
-      ["JPG", "Dokumentenfotos", "nicht eindeutig zugeordnet"]
-    ],
-    checks: [
-      ["ok", "Dateien nach Dokumentart erkannt"],
-      ["warn", "Wohnflächenangabe weicht zwischen zwei Quellen ab"],
-      ["warn", "aktueller Wirtschaftsplan fehlt"]
-    ],
-    outputTitle: "Geordnete Objektakte mit Prüfliste",
-    type: "Unterlagenübersicht",
-    code: "OU-2026-021",
-    title: "Vorhandene, fehlende und widersprüchliche Unterlagen getrennt",
-    text: "Die Unterlagen werden einheitlich benannt, nach Themen abgelegt und in einer zentralen Übersicht erfasst. Abweichende Angaben werden nicht stillschweigend übernommen, sondern als Klärungspunkt ausgewiesen. Fehlende Dokumente erscheinen in einer separaten Nachforderungsliste.",
-    results: [
-      ["01", "Dokumentenregister", "Dateiname, Stand und Dokumentart"],
-      ["02", "einheitliche Ablage", "Stammdaten, Technik, Vertrag und Kosten"],
-      ["03", "Abweichungsliste", "widersprüchliche Angaben sichtbar"],
-      ["04", "Nachforderungsliste", "fehlende Dokumente klar benannt"]
-    ],
-    service: "Unterlagen strukturieren",
-    details: "Verteilte Objektunterlagen aus PDF, Excel, E-Mail und Fotos sollen als geordnete Objektakte mit Prüfliste aufbereitet werden."
-  }
-};
-
-const caseTabs = document.querySelectorAll(".case-tab");
-const caseInputTitle = document.getElementById("caseInputTitle");
-const caseInputList = document.getElementById("caseInputList");
-const caseCheckList = document.getElementById("caseCheckList");
-const caseOutputTitle = document.getElementById("caseOutputTitle");
-const caseDocumentType = document.getElementById("caseDocumentType");
-const caseDocumentCode = document.getElementById("caseDocumentCode");
-const caseDocumentTitle = document.getElementById("caseDocumentTitle");
-const caseDocumentText = document.getElementById("caseDocumentText");
-const caseResultGrid = document.getElementById("caseResultGrid");
-const caseStartButton = document.getElementById("caseStartButton");
-let currentCase = caseData.expose;
-
-function renderCase(key) {
-  const data = caseData[key];
-  if (!data) return;
-  currentCase = data;
-
-  caseInputTitle.textContent = data.inputTitle;
-  caseInputList.innerHTML = data.inputs.map(item =>
-    `<div><span>${item[0]}</span><p><strong>${item[1]}</strong><small>${item[2]}</small></p></div>`
-  ).join("");
-
-  caseCheckList.innerHTML = data.checks.map(item => {
-    const symbol = item[0] === "ok" ? "✓" : "!";
-    return `<li class="${item[0]}"><b>${symbol}</b>${item[1]}</li>`;
-  }).join("");
-
-  caseOutputTitle.textContent = data.outputTitle;
-  caseDocumentType.textContent = data.type;
-  caseDocumentCode.textContent = data.code;
-  caseDocumentTitle.textContent = data.title;
-  caseDocumentText.textContent = data.text;
-  caseResultGrid.innerHTML = data.results.map(item =>
-    `<div><span>${item[0]}</span><p><strong>${item[1]}</strong><small>${item[2]}</small></p></div>`
-  ).join("");
-
-  caseTabs.forEach(tab => {
-    const active = tab.dataset.case === key;
-    tab.classList.toggle("active", active);
-    tab.setAttribute("aria-selected", String(active));
-  });
-}
-
-caseTabs.forEach(tab => {
-  tab.addEventListener("click", () => renderCase(tab.dataset.case));
-});
-
-if (caseStartButton) {
-  caseStartButton.addEventListener("click", () => {
-    applyServiceToProject(currentCase.service, currentCase.outputTitle, currentCase.details);
-  });
-}
-
-/* Projektanfrage */
-const serviceType = document.getElementById("serviceType");
-const objectType = document.getElementById("objectType");
-const city = document.getElementById("city");
-const contactName = document.getElementById("contactName");
-const contactEmail = document.getElementById("contactEmail");
-const projectDetails = document.getElementById("projectDetails");
-const requestTitle = document.getElementById("requestTitle");
-const requestSummary = document.getElementById("requestSummary");
-const requestObject = document.getElementById("requestObject");
-const requestLocation = document.getElementById("requestLocation");
-const configuredMailButton = document.getElementById("configuredMailButton");
-const saveState = document.getElementById("saveState");
-
-const projectFields = [
-  serviceType,
-  objectType,
-  city,
-  contactName,
-  contactEmail,
-  projectDetails
+const PROJECTS_KEY = "inspectoraProjectsV1";
+const DRAFT_KEY = "inspectoraProjectDraftV1";
+const statusSteps = [
+  { label: "Projekt angelegt", note: "Leistung und Objektdaten wurden erfasst." },
+  { label: "Unterlagen prüfen", note: "Vorhandenes Material wird gesichtet und zugeordnet." },
+  { label: "In Bearbeitung", note: "Das vereinbarte Ergebnis wird vorbereitet." },
+  { label: "Ergebnis prüfen", note: "Das Ergebnis befindet sich in der abschließenden Kontrolle." },
+  { label: "Abgeschlossen", note: "Das Projekt ist fertiggestellt." }
 ];
 
-function getProjectText() {
-  const location = city.value.trim() || "noch offen";
-  const details = projectDetails.value.trim() || "Keine zusätzlichen Hinweise eingetragen.";
-  const nameLine = contactName.value.trim()
-    ? `Name / Unternehmen: ${contactName.value.trim()}\n`
-    : "";
-  const emailLine = contactEmail.value.trim()
-    ? `E-Mail: ${contactEmail.value.trim()}\n`
-    : "";
-
-  return `Guten Tag,
-
-ich interessiere mich für folgende Inspectora-Leistung:
-
-Leistung: ${serviceType.value}
-Objektart: ${objectType.value}
-Ort / Ausführung: ${location}
-${nameLine}${emailLine}
-Ausgangslage / gewünschtes Ergebnis:
-${details}
-`;
-}
-
-function saveProject() {
-  const data = {};
-  projectFields.forEach(field => {
-    data[field.id] = field.value;
-  });
-
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
-  saveState.textContent = "Lokal gespeichert";
-}
-
-function updateRequest() {
-  const location = city.value.trim() || "noch offen";
-
-  requestTitle.textContent = serviceType.value;
-  requestSummary.textContent =
-    `${serviceType.value} für ${objectType.value}.\nAusführung: ${location}.`;
-  requestObject.textContent = objectType.value;
-  requestLocation.textContent = location;
-
-  const subject = encodeURIComponent(`Inspectora Anfrage – ${serviceType.value}`);
-  const body = encodeURIComponent(getProjectText());
-  configuredMailButton.href = `mailto:${EMAIL_ADDRESS}?subject=${subject}&body=${body}`;
-
-  saveProject();
-}
-
-function restoreProject() {
-  try {
-    const saved = JSON.parse(localStorage.getItem(STORAGE_KEY));
-    if (!saved) return;
-
-    projectFields.forEach(field => {
-      if (Object.prototype.hasOwnProperty.call(saved, field.id)) {
-        field.value = saved[field.id];
-      }
-    });
-  } catch (error) {
-    localStorage.removeItem(STORAGE_KEY);
-  }
-}
-
-projectFields.forEach(field => {
-  field.addEventListener(field.tagName === "SELECT" ? "change" : "input", updateRequest);
-});
-
-function applyServiceToProject(service, output, details = "") {
-  const availableServices = Array.from(serviceType.options).map(option => option.value);
-  serviceType.value = availableServices.includes(service)
-    ? service
-    : "Unterlagen strukturieren";
-
-  if (details) {
-    projectDetails.value = details;
-  }
-
-  updateRequest();
-  scrollToProject();
-  showToast("Leistung übernommen");
-}
-
-document.getElementById("serviceStartButton").addEventListener("click", () => {
-  applyServiceToProject(
-    currentService.service,
-    currentService.output,
-    `Vorhandene Grundlage: ${currentService.input}. Gewünschtes Ergebnis: ${currentService.output}.`
-  );
-});
-
-document.getElementById("copyRequestButton").addEventListener("click", () => {
-  copyText(getProjectText(), "Anfrage kopiert");
-});
-
-document.getElementById("resetRequestButton").addEventListener("click", () => {
-  localStorage.removeItem(STORAGE_KEY);
-  serviceType.value = "Eigentümerbericht";
-  objectType.value = "Wohnung";
-  city.value = "Digital";
-  contactName.value = "";
-  contactEmail.value = "";
-  projectDetails.value = "";
-  updateRequest();
-  showToast("Eingaben zurückgesetzt");
-});
-
-/* Portal-Demo */
-const portalFileData = {
-  owner: {
-    title: "Eigentümerbericht",
-    text: "Kompakte Zusammenfassung des Objektzustands mit Auffälligkeiten, Maßnahmen und nächsten Schritten.",
-    meta: "PDF · 6 Seiten",
-    status: "In Bearbeitung · 82%",
-    code: "EB-2026-014",
-    service: "Eigentümerbericht",
-    output: "Eigentümerbericht"
-  },
-  photos: {
-    title: "Fotodokumentation",
-    text: "24 Fotos, geordnet nach Bereichen und mit kurzen, nachvollziehbaren Beschriftungen versehen.",
-    meta: "PDF · 24 Fotos",
-    status: "Bereit zur Übergabe",
-    code: "FD-2026-014",
-    service: "Fotodokumentation",
-    output: "Fotodokumentation"
-  },
-  actions: {
-    title: "Maßnahmenübersicht",
-    text: "Drei offene Punkte mit Priorität, Zuständigkeit und empfohlenem nächsten Schritt.",
-    meta: "Übersicht · 3 Positionen",
-    status: "Prüfung ausstehend",
-    code: "MM-2026-014",
-    service: "Mängel- & Maßnahmenliste",
-    output: "Maßnahmenübersicht"
-  }
+const serviceData = {
+  owner:{service:"Eigentümerbericht",description:"Objektzustand, laufende Maßnahmen und offene Entscheidungen in einer verständlichen Übersicht.",audience:"Verwaltung, Eigentümer, Asset Management",output:"Eigentümerbericht mit Statusübersicht",input:"Fotos, Notizen, Angebote, Objektangaben",benefits:["Angaben aus mehreren Quellen zusammenführen","offene Punkte sichtbar machen","Entscheidungsbedarf klar kennzeichnen"]},
+  object:{service:"Objektbericht",description:"Fotos, Notizen und Objektangaben werden nach Bereichen geordnet und als nachvollziehbarer Bericht aufbereitet.",audience:"Verwaltung, Bestand, Projektleitung",output:"strukturierter Objektbericht",input:"Besichtigungsfotos, Notizen, Stammdaten",benefits:["Objektbereiche einheitlich dokumentieren","Feststellungen nachvollziehbar zuordnen","Bericht direkt weiterverwenden"]},
+  defects:{service:"Mängel & Maßnahmen",description:"Feststellungen werden nach Bereich, Dringlichkeit, Zuständigkeit und nächstem Schritt geordnet.",audience:"Verwaltung, Technik, Eigentümer",output:"priorisierte Maßnahmenübersicht",input:"Mängelfotos, Notizen, Handwerkerstände",benefits:["Prioritäten klar trennen","Zuständigkeiten erfassen","offene Entscheidungen markieren"]},
+  photos:{service:"Fotodokumentation",description:"Unsortierte Bilder werden ausgewählt, nach Räumen gegliedert und sachlich beschriftet.",audience:"Verwaltung, Eigentümer, Dienstleister",output:"sortierte Fotodokumentation",input:"Objektfotos und kurze Hinweise",benefits:["Dubletten aussortieren","Bilder Bereichen zuordnen","Schäden und Details gesondert zeigen"]},
+  expose:{service:"Exposé-Paket",description:"Objektdaten, Unterlagen und Bildmaterial werden geprüft und zu einem vollständigen Vermarktungspaket zusammengeführt.",audience:"Makler, Vermarktung, Eigentümer",output:"Datenblatt, Bildauswahl, Text und Klärungsliste",input:"Grundriss, Energieausweis, Fotos, Notizen",benefits:["Angaben zwischen Quellen abgleichen","fehlende Daten separat ausweisen","Bildauswahl und Unterlagen vereinheitlichen"]},
+  documents:{service:"Unterlagen strukturieren",description:"Verteilte Dateien und Angaben werden als geordnete Objektakte mit Register und Prüfliste zusammengeführt.",audience:"Verwaltung, Asset Management, Bestand",output:"Objektakte mit Dokumentenregister",input:"PDF, Tabellen, E-Mails, Dokumentenfotos",benefits:["Dateien einheitlich benennen","widersprüchliche Angaben markieren","fehlende Dokumente auflisten"]}
 };
 
-const portalFileButtons = document.querySelectorAll(".portal-file");
-const portalFileTitle = document.getElementById("portalFileTitle");
-const portalFileText = document.getElementById("portalFileText");
-const portalFileMeta = document.getElementById("portalFileMeta");
-const portalFileStatus = document.getElementById("portalFileStatus");
-const portalDocumentCode = document.getElementById("portalDocumentCode");
+const caseData = {
+  expose:{inputTitle:"Fotos, Grundriss und Objektdaten",inputs:[["JPG","28 Objektfotos","teilweise doppelt, ohne Raumzuordnung"],["PDF","Grundriss","Raumbezeichnungen vorhanden"],["PDF","Energieausweis","gültig bis 2031"],["TXT","11 Besichtigungsnotizen","Ausstattung, Lage und Zustand"]],checks:[["ok","Wohnfläche und Zimmerzahl vorhanden"],["warn","Baujahr nicht eindeutig belegt"],["warn","Angabe zu Hausgeld oder Nebenkosten fehlt"]],outputTitle:"Vermarktungsfertiges Exposé-Paket",type:"Vermarktungspaket",code:"EX-2026-021",title:"Wohnungsdaten geprüft und einheitlich zusammengeführt",text:"Die Angaben aus Grundriss, Energieausweis, Notizen und Bildmaterial wurden abgeglichen. Widersprüchliche oder fehlende Punkte sind getrennt markiert. Für die Vermarktung stehen ein Datenblatt, eine sortierte Bildauswahl, ein sachlicher Exposé-Text und eine Liste der noch zu klärenden Angaben bereit.",results:[["01","Objektdatenblatt","einheitliche Angaben für Portal und Exposé"],["02","16 ausgewählte Fotos","sortiert, beschriftet und ohne Dubletten"],["03","Exposé-Text","aus den geprüften Daten erstellt"],["04","Klärungsliste","3 fehlende oder unklare Angaben"]],service:"Exposé-Paket",details:"Fotos, Grundriss, Energieausweis und Objektdaten prüfen und als vollständiges Vermarktungspaket aufbereiten."},
+  owner:{inputTitle:"Fotos, Handwerkerstände und Rückfragen",inputs:[["JPG","19 Zustandsfotos","Wohnung, Keller und Gemeinschaftsflächen"],["PDF","2 Handwerkerangebote","Malerarbeiten und Bodenreparatur"],["MAIL","4 Rückmeldungen","Verwaltung, Mieter und Dienstleister"],["TXT","Übergabenotizen","Zählerstände und offene Punkte"]],checks:[["ok","Maßnahmen nach Objektbereich zugeordnet"],["ok","Angebote den offenen Punkten zugeordnet"],["warn","Freigabe für Bodenreparatur noch offen"]],outputTitle:"Entscheidungsfähiger Eigentümerbericht",type:"Eigentümerinformation",code:"EB-2026-021",title:"Zustand, Kostenstände und Entscheidungen in einer Übersicht",text:"Der Bericht trennt erledigte Arbeiten, offene Maßnahmen und notwendige Entscheidungen. Zu jeder Position sind Bildnachweis, aktueller Status und vorhandene Kostenangaben hinterlegt.",results:[["01","Kurzstatus","aktueller Stand des Objekts"],["02","Maßnahmenübersicht","erledigt, offen oder in Prüfung"],["03","Kostenstände","Angebote den Positionen zugeordnet"],["04","Entscheidungsbedarf","Freigaben klar markiert"]],service:"Eigentümerbericht",details:"Aus Fotos, Handwerkerständen, Angeboten und Übergabenotizen einen entscheidungsfähigen Eigentümerbericht erstellen."},
+  object:{inputTitle:"Besichtigungsfotos und Objektangaben",inputs:[["JPG","34 Fotos","Wohnung und Gemeinschaftsflächen"],["TXT","Besichtigungsnotizen","Zustand und Ausstattung"],["PDF","Grundriss","Flächen und Raumaufteilung"],["DATA","Objektstammdaten","Baujahr und Gebäudetechnik"]],checks:[["ok","Fotos nach Bereichen zugeordnet"],["ok","Grundriss mit Notizen abgeglichen"],["warn","Angabe zur Heizungsart prüfen"]],outputTitle:"Strukturierter Objektbericht",type:"Objektdokumentation",code:"OB-2026-021",title:"Objektzustand nach Bereichen nachvollziehbar dokumentiert",text:"Wohnung, Keller und Gemeinschaftsflächen wurden getrennt erfasst. Sichtbare Feststellungen sind den jeweiligen Bereichen und Fotos zugeordnet. Unklare Angaben erscheinen als eigener Prüfpunkt.",results:[["01","Objektübersicht","Stammdaten und Kurzstatus"],["02","Bereichsberichte","Wohnung, Keller, Gemeinschaft"],["03","Bildnachweise","Feststellungen eindeutig zugeordnet"],["04","Prüfpunkte","unklare Angaben separat"]],service:"Objektbericht",details:"Besichtigungsfotos, Grundriss, Notizen und Stammdaten als strukturierten Objektbericht zusammenführen."},
+  defects:{inputTitle:"Mängelfotos, Notizen und Termine",inputs:[["JPG","17 Mängelfotos","Keller, Eingang und Müllraum"],["TXT","9 Feststellungen","ohne einheitliche Priorität"],["MAIL","2 Handwerkerrückmeldungen","Termine teilweise offen"],["PDF","Angebot Elektriker","Kellerbeleuchtung"]],checks:[["ok","Feststellungen nach Bereichen sortiert"],["warn","Feuchtigkeitsursache noch nicht geklärt"],["warn","Termin für Türschließer fehlt"]],outputTitle:"Priorisierte Mängel- und Maßnahmenliste",type:"Maßnahmensteuerung",code:"MM-2026-021",title:"Offene Punkte nach Dringlichkeit und Zuständigkeit geordnet",text:"Jede Feststellung enthält Bereich, Bildnachweis, Priorität, Zuständigkeit und nächsten Schritt. Ungeklärte Ursachen werden nicht als fertige Diagnose dargestellt, sondern als Prüfauftrag markiert.",results:[["01","Dringlichkeit","kurzfristig, regulär oder beobachten"],["02","Zuständigkeit","Verwaltung, Handwerker oder Prüfung"],["03","Bildnachweise","je Position eindeutig zugeordnet"],["04","nächste Schritte","Termin, Angebot oder Freigabe"]],service:"Mängel & Maßnahmen",details:"Mängelfotos, Notizen, Angebote und Handwerkerstände als priorisierte Maßnahmenliste ordnen."},
+  photos:{inputTitle:"Unsortierte Aufnahmen aus Besichtigung und Übergabe",inputs:[["JPG","53 Originalfotos","mehrere Dubletten und Detailaufnahmen"],["TXT","Raumliste","Wohnzimmer, Schlafen, Bad, Küche"],["JPG","Zählerstände","Strom, Wasser und Heizung"],["NOTE","3 Schadenhinweise","ohne Bildzuordnung"]],checks:[["ok","Bilder nach Räumen sortiert"],["ok","Dubletten und unscharfe Fotos entfernt"],["warn","ein Schadenhinweis ohne eindeutiges Foto"]],outputTitle:"Geordnete Fotodokumentation",type:"Bilddokumentation",code:"FD-2026-021",title:"Relevante Aufnahmen in nachvollziehbarer Reihenfolge",text:"Die Originalbilder werden gesichtet, nach Räumen sortiert und mit kurzen sachlichen Beschriftungen versehen. Dubletten und unbrauchbare Aufnahmen werden nicht übernommen.",results:[["01","26 verwendete Fotos","aus 53 Originalaufnahmen ausgewählt"],["02","Raumstruktur","klare Reihenfolge nach Bereichen"],["03","Beschriftungen","Ort und sichtbarer Inhalt"],["04","Sonderabschnitte","Details, Schäden und Zählerstände"]],service:"Fotodokumentation",details:"Unsortierte Besichtigungs- und Übergabefotos auswählen, nach Räumen ordnen und sachlich beschriften."},
+  documents:{inputTitle:"Verteilte Objektunterlagen aus mehreren Quellen",inputs:[["PDF","Grundriss und Energieausweis","unterschiedliche Dateinamen"],["XLS","Miet- und Flächendaten","mehrere Tabellenblätter"],["MAIL","Verwalterauskünfte","Hausgeld und Rücklage"],["JPG","Dokumentenfotos","nicht eindeutig zugeordnet"]],checks:[["ok","Dateien nach Dokumentart erkannt"],["warn","Wohnflächenangabe weicht zwischen Quellen ab"],["warn","aktueller Wirtschaftsplan fehlt"]],outputTitle:"Geordnete Objektakte mit Prüfliste",type:"Unterlagenübersicht",code:"OU-2026-021",title:"Vorhandene, fehlende und widersprüchliche Unterlagen getrennt",text:"Die Unterlagen werden einheitlich benannt, nach Themen abgelegt und in einer zentralen Übersicht erfasst. Abweichende Angaben werden als Klärungspunkt ausgewiesen.",results:[["01","Dokumentenregister","Dateiname, Stand und Dokumentart"],["02","einheitliche Ablage","Stammdaten, Technik, Vertrag und Kosten"],["03","Abweichungsliste","widersprüchliche Angaben sichtbar"],["04","Nachforderungsliste","fehlende Dokumente klar benannt"]],service:"Unterlagen strukturieren",details:"Verteilte Objektunterlagen aus PDF, Tabellen, E-Mail und Fotos als geordnete Objektakte mit Prüfliste aufbereiten."}
+};
 
-let currentPortalFile = portalFileData.owner;
+const $ = selector => document.querySelector(selector);
+const $$ = selector => Array.from(document.querySelectorAll(selector));
+let currentServiceKey = "owner";
+let currentCaseKey = "expose";
+let currentWizardStep = 1;
+let selectedProjectId = null;
+let editingProjectId = null;
+let selectedFileNames = [];
+let mapInstance = null;
 
-function renderPortalFile(key) {
-  currentPortalFile = portalFileData[key];
-  portalFileTitle.textContent = currentPortalFile.title;
-  portalFileText.textContent = currentPortalFile.text;
-  portalFileMeta.textContent = currentPortalFile.meta;
-  portalFileStatus.textContent = currentPortalFile.status;
-  portalDocumentCode.textContent = currentPortalFile.code;
+function showToast(message){const toast=$("#toast");toast.textContent=message;toast.classList.add("show");clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>toast.classList.remove("show"),2200)}
+function scrollToId(id){document.getElementById(id)?.scrollIntoView({behavior:"smooth",block:"start"})}
+function getProjects(){try{return JSON.parse(localStorage.getItem(PROJECTS_KEY))||[]}catch{return []}}
+function saveProjects(projects){localStorage.setItem(PROJECTS_KEY,JSON.stringify(projects))}
+function escapeHtml(value){return String(value??"").replace(/[&<>'"]/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;","'":"&#39;",'"':"&quot;"}[char]))}
 
-  portalFileButtons.forEach(button => {
-    button.classList.toggle("active", button.dataset.portalFile === key);
-  });
-}
+function setupNavigation(){const toggle=$("#navToggle"),links=$("#navLinks");toggle?.addEventListener("click",()=>{const open=links.classList.toggle("open");toggle.setAttribute("aria-expanded",String(open))});$$("#navLinks a").forEach(link=>link.addEventListener("click",()=>links.classList.remove("open")));window.addEventListener("scroll",()=>{const max=document.documentElement.scrollHeight-innerHeight;$("#scrollProgress").style.width=`${max>0?(scrollY/max)*100:0}%`})}
 
-portalFileButtons.forEach(button => {
-  button.addEventListener("click", () => {
-    renderPortalFile(button.dataset.portalFile);
-  });
-});
+function renderService(key){const data=serviceData[key];if(!data)return;currentServiceKey=key;$("#serviceTitle").textContent=data.service;$("#serviceDescription").textContent=data.description;$("#serviceAudience").textContent=data.audience;$("#serviceOutput").textContent=data.output;$("#serviceInput").textContent=data.input;$("#serviceBenefits").innerHTML=data.benefits.map(item=>`<span>✓ ${escapeHtml(item)}</span>`).join("");$$(".service-option").forEach(btn=>btn.classList.toggle("active",btn.dataset.serviceKey===key))}
+function setupServices(){$$(".service-option").forEach(btn=>btn.addEventListener("click",()=>renderService(btn.dataset.serviceKey)));$("#serviceStartButton").addEventListener("click",()=>startProjectWithService(serviceData[currentServiceKey].service,""));renderService("owner")}
 
-document.getElementById("portalStartButton").addEventListener("click", () => {
-  applyServiceToProject(
-    currentPortalFile.service,
-    currentPortalFile.output,
-    `Orientierung an der Portal-Demo. Gewünschtes Ergebnis: ${currentPortalFile.title}.`
-  );
-});
+function renderCase(key){const data=caseData[key];if(!data)return;currentCaseKey=key;$("#caseInputTitle").textContent=data.inputTitle;$("#caseInputList").innerHTML=data.inputs.map(item=>`<div><span>${escapeHtml(item[0])}</span><p><strong>${escapeHtml(item[1])}</strong><small>${escapeHtml(item[2])}</small></p></div>`).join("");$("#caseCheckList").innerHTML=data.checks.map(item=>`<li class="${item[0]}"><b>${item[0]==="ok"?"✓":"!"}</b>${escapeHtml(item[1])}</li>`).join("");$("#caseOutputTitle").textContent=data.outputTitle;$("#caseDocumentType").textContent=data.type;$("#caseDocumentCode").textContent=data.code;$("#caseDocumentTitle").textContent=data.title;$("#caseDocumentText").textContent=data.text;$("#caseResultGrid").innerHTML=data.results.map(item=>`<div><span>${escapeHtml(item[0])}</span><p><strong>${escapeHtml(item[1])}</strong><small>${escapeHtml(item[2])}</small></p></div>`).join("");$$(".case-tab").forEach(btn=>btn.classList.toggle("active",btn.dataset.case===key))}
+function setupCases(){$$(".case-tab").forEach(btn=>btn.addEventListener("click",()=>renderCase(btn.dataset.case)));$("#caseStartButton").addEventListener("click",()=>{const data=caseData[currentCaseKey];startProjectWithService(data.service,data.details)});renderCase("expose")}
 
-restoreProject();
-renderService("owner");
-renderPortalFile("owner");
-renderCase("expose");
-updateRequest();
+function setWizardService(service){const radio=$$('[name="wizardService"]').find(input=>input.value===service);if(radio)radio.checked=true}
+function startProjectWithService(service,notes){resetWizard(false);setWizardService(service);if(notes)$("#projectNotes").value=notes;saveDraft();showWizardStep(1);scrollToId("projekt");showToast("Leistung in neues Projekt übernommen")}
+function showWizardStep(step){currentWizardStep=Math.min(4,Math.max(1,step));$$(".wizard-panel").forEach(panel=>panel.classList.toggle("active",Number(panel.dataset.panel)===currentWizardStep));$$(".wizard-step").forEach(btn=>btn.classList.toggle("active",Number(btn.dataset.step)===currentWizardStep));$("#wizardBackButton").classList.toggle("hidden",currentWizardStep===1);$("#wizardNextButton").classList.toggle("hidden",currentWizardStep===4);$("#createProjectButton").classList.toggle("hidden",currentWizardStep!==4);if(currentWizardStep===4)renderReview()}
+function validateStep(step){if(step===2){const name=$("#projectName"),city=$("#city");if(!name.value.trim()){name.focus();showToast("Bitte einen Projektnamen eintragen");return false}if(!city.value.trim()){city.focus();showToast("Bitte einen Ort eintragen");return false}}return true}
+function collectDraft(){return{service:$("[name='wizardService']:checked")?.value||"Eigentümerbericht",name:$("#projectName").value.trim(),objectType:$("#objectType").value,units:Math.max(1,Number($("#units").value)||1),street:$("#street").value.trim(),postalCode:$("#postalCode").value.trim(),city:$("#city").value.trim(),contactName:$("#contactName").value.trim(),contactEmail:$("#contactEmail").value.trim(),materials:$$('[name="material"]:checked').map(input=>input.value),photoCount:Math.max(0,Number($("#photoCount").value)||0),documentCount:Math.max(0,Number($("#documentCount").value)||0),fileNames:[...selectedFileNames],notes:$("#projectNotes").value.trim()}}
+function saveDraft(){localStorage.setItem(DRAFT_KEY,JSON.stringify(collectDraft()))}
+function applyDraft(draft){if(!draft)return;setWizardService(draft.service);$("#projectName").value=draft.name||"";$("#objectType").value=draft.objectType||"Wohnung";$("#units").value=draft.units||1;$("#street").value=draft.street||"";$("#postalCode").value=draft.postalCode||"";$("#city").value=draft.city||"";$("#contactName").value=draft.contactName||"";$("#contactEmail").value=draft.contactEmail||"";$$('[name="material"]').forEach(input=>input.checked=(draft.materials||[]).includes(input.value));$("#photoCount").value=draft.photoCount||0;$("#documentCount").value=draft.documentCount||0;selectedFileNames=draft.fileNames||[];renderSelectedFiles();$("#projectNotes").value=draft.notes||""}
+function restoreDraft(){try{applyDraft(JSON.parse(localStorage.getItem(DRAFT_KEY)))}catch{localStorage.removeItem(DRAFT_KEY)}}
+function renderSelectedFiles(){$("#selectedFiles").textContent=selectedFileNames.length?selectedFileNames.join(" · "):"Keine Dateien ausgewählt"}
+function renderReview(){const d=collectDraft();const address=[d.street,[d.postalCode,d.city].filter(Boolean).join(" ")].filter(Boolean).join(", ")||"Noch keine vollständige Adresse";$("#projectReview").innerHTML=`<div class="review-group"><h4>Projekt</h4><dl><div><dt>Name</dt><dd>${escapeHtml(d.name||"–")}</dd></div><div><dt>Leistung</dt><dd>${escapeHtml(d.service)}</dd></div><div><dt>Objekt</dt><dd>${escapeHtml(d.objectType)}</dd></div><div><dt>Adresse</dt><dd>${escapeHtml(address)}</dd></div></dl></div><div class="review-group"><h4>Material</h4><dl><div><dt>Auswahl</dt><dd>${escapeHtml(d.materials.join(", ")||"Keine Auswahl")}</dd></div><div><dt>Fotos</dt><dd>${d.photoCount}</dd></div><div><dt>Dokumente</dt><dd>${d.documentCount}</dd></div><div><dt>Dateien</dt><dd>${d.fileNames.length}</dd></div></dl></div><div class="review-group"><h4>Ansprechpartner</h4><dl><div><dt>Name</dt><dd>${escapeHtml(d.contactName||"–")}</dd></div><div><dt>E-Mail</dt><dd>${escapeHtml(d.contactEmail||"–")}</dd></div><div><dt>Einheiten</dt><dd>${d.units}</dd></div></dl></div><div class="review-group"><h4>Hinweise</h4><p>${escapeHtml(d.notes||"Keine zusätzlichen Hinweise eingetragen.")}</p></div>`}
+function generateProjectId(projects){const year=new Date().getFullYear();const numbers=projects.map(p=>Number(String(p.id).split("-").pop())).filter(Number.isFinite);const next=(numbers.length?Math.max(...numbers):0)+1;return `IN-${year}-${String(next).padStart(3,"0")}`}
+function createOrUpdateProject(event){event.preventDefault();if(!validateStep(2))return;const draft=collectDraft();let projects=getProjects();if(editingProjectId){projects=projects.map(project=>project.id===editingProjectId?{...project,...draft,updatedAt:new Date().toISOString()}:project);selectedProjectId=editingProjectId;showToast("Projekt aktualisiert")}else{const project={...draft,id:generateProjectId(projects),statusIndex:0,createdAt:new Date().toISOString(),updatedAt:new Date().toISOString()};projects.unshift(project);selectedProjectId=project.id;showToast("Projekt im Portal angelegt")}saveProjects(projects);localStorage.removeItem(DRAFT_KEY);resetWizard(false);renderPortal();scrollToId("portal")}
+function resetWizard(clearDraft=true){editingProjectId=null;$("#projectWizard").reset();$("#objectType").value="Wohnung";$("#units").value=1;$("#photoCount").value=0;$("#documentCount").value=0;selectedFileNames=[];renderSelectedFiles();setWizardService("Eigentümerbericht");showWizardStep(1);if(clearDraft)localStorage.removeItem(DRAFT_KEY)}
+function setupWizard(){restoreDraft();renderSelectedFiles();$("#wizardNextButton").addEventListener("click",()=>{if(!validateStep(currentWizardStep))return;saveDraft();showWizardStep(currentWizardStep+1)});$("#wizardBackButton").addEventListener("click",()=>showWizardStep(currentWizardStep-1));$$(".wizard-step").forEach(btn=>btn.addEventListener("click",()=>{const target=Number(btn.dataset.step);if(target<=currentWizardStep||validateStep(currentWizardStep))showWizardStep(target)}));$("#fileInput").addEventListener("change",event=>{selectedFileNames=Array.from(event.target.files).map(file=>file.name);renderSelectedFiles();saveDraft()});$("#projectWizard").addEventListener("input",saveDraft);$("#projectWizard").addEventListener("change",saveDraft);$("#projectWizard").addEventListener("submit",createOrUpdateProject)}
+
+function projectAddress(project){return [project.street,[project.postalCode,project.city].filter(Boolean).join(" ")].filter(Boolean).join(", ")||project.city||"Adresse offen"}
+function renderPortal(){const projects=getProjects();$("#projectCount").textContent=`${projects.length} ${projects.length===1?"Projekt":"Projekte"}`;const list=$("#projectList");if(!projects.length){list.innerHTML='<div class="project-list-empty">Noch keine Projekte angelegt.</div>';selectedProjectId=null}else{if(!selectedProjectId||!projects.some(p=>p.id===selectedProjectId))selectedProjectId=projects[0].id;list.innerHTML=projects.map(project=>`<button class="project-list-item ${project.id===selectedProjectId?"active":""}" type="button" data-project-id="${escapeHtml(project.id)}"><div class="project-list-item-top"><div><strong>${escapeHtml(project.name)}</strong><small>${escapeHtml(project.service)}</small></div><span class="mini-status">${escapeHtml(statusSteps[project.statusIndex].label)}</span></div><div class="project-list-item-meta"><span>${escapeHtml(project.id)}</span><span>${escapeHtml(project.city||"Ort offen")}</span></div></button>`).join("");$$('.project-list-item').forEach(btn=>btn.addEventListener("click",()=>{selectedProjectId=btn.dataset.projectId;renderPortal()}))}renderProjectDetail(projects.find(p=>p.id===selectedProjectId))}
+function renderProjectDetail(project){const empty=$("#portalEmptyState"),detail=$("#projectDetail");if(!project){empty.classList.remove("hidden");detail.classList.add("hidden");return}empty.classList.add("hidden");detail.classList.remove("hidden");const progress=Math.round(((project.statusIndex+1)/statusSteps.length)*100);$("#detailProjectId").textContent=project.id;$("#detailProjectName").textContent=project.name;$("#detailProjectSubtitle").textContent=`${project.service} · ${project.objectType}`;$("#detailStatusBadge").textContent=statusSteps[project.statusIndex].label;$("#detailProgressText").textContent=`${progress}%`;$("#detailProgressBar").style.width=`${progress}%`;$("#detailObjectType").textContent=project.objectType;$("#detailAddress").textContent=projectAddress(project);$("#detailUnits").textContent=String(project.units||1);$("#detailContact").textContent=project.contactName||project.contactEmail||"Nicht eingetragen";const material=[...(project.materials||[])];if(project.photoCount)material.push(`${project.photoCount} Fotos`);if(project.documentCount)material.push(`${project.documentCount} Dokumente`);if((project.fileNames||[]).length)material.push(`${project.fileNames.length} Dateinamen`);$("#detailMaterialTags").innerHTML=(material.length?material:["Noch kein Material erfasst"]).map(item=>`<span>${escapeHtml(item)}</span>`).join("");$("#detailNotes").textContent=project.notes||"Keine zusätzlichen Hinweise eingetragen.";$("#detailTimeline").innerHTML=statusSteps.map((step,index)=>`<div class="timeline-step ${index<project.statusIndex?"done":index===project.statusIndex?"active":""}"><i>${index<project.statusIndex?"✓":index+1}</i><p><strong>${escapeHtml(step.label)}</strong><small>${escapeHtml(step.note)}</small></p></div>`).join("");$("#advanceStatusButton").disabled=project.statusIndex>=statusSteps.length-1;$("#advanceStatusButton").textContent=project.statusIndex>=statusSteps.length-1?"Projekt abgeschlossen":"Nächsten Status simulieren"}
+function setupPortal(){const openNew=()=>{resetWizard();scrollToId("projekt")};$("#portalNewProjectButton").addEventListener("click",openNew);$("#emptyNewProjectButton").addEventListener("click",openNew);$("#advanceStatusButton").addEventListener("click",()=>{const projects=getProjects();const index=projects.findIndex(p=>p.id===selectedProjectId);if(index<0)return;if(projects[index].statusIndex<statusSteps.length-1){projects[index].statusIndex+=1;projects[index].updatedAt=new Date().toISOString();saveProjects(projects);renderPortal();showToast("Projektstatus aktualisiert")}});$("#editProjectButton").addEventListener("click",()=>{const project=getProjects().find(p=>p.id===selectedProjectId);if(!project)return;editingProjectId=project.id;applyDraft(project);showWizardStep(1);scrollToId("projekt");showToast("Projekt zur Bearbeitung geöffnet")});$("#deleteProjectButton").addEventListener("click",()=>{const project=getProjects().find(p=>p.id===selectedProjectId);if(!project)return;if(!confirm(`Projekt ${project.id} wirklich löschen?`))return;saveProjects(getProjects().filter(p=>p.id!==selectedProjectId));selectedProjectId=null;renderPortal();showToast("Projekt gelöscht")});renderPortal()}
+
+function setupMap(){if(typeof L==="undefined"||!$("#map"))return;mapInstance=L.map("map",{scrollWheelZoom:false}).setView([51.4516,6.6408],9);L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap"}).addTo(mapInstance);L.circle([51.4516,6.6408],{radius:50000,color:"#2563eb",weight:2,fillColor:"#2563eb",fillOpacity:.1}).addTo(mapInstance);[[51.4516,6.6408,"Moers"],[51.4963,6.5459,"Kamp-Lintfort"],[51.4344,6.7623,"Duisburg"],[51.3388,6.5853,"Krefeld"]].forEach(([lat,lng,name])=>L.marker([lat,lng]).addTo(mapInstance).bindPopup(name));setTimeout(()=>mapInstance.invalidateSize(),250)}
+
+function init(){setupNavigation();setupServices();setupCases();setupWizard();setupPortal();setupMap()}
+document.addEventListener("DOMContentLoaded",init);
