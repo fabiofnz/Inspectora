@@ -7,6 +7,7 @@
   <title>Inspectora – Objektaufnahme & Maßnahmenplaner</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="styles.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
 </head>
 <body>
   <header class="site-header">
@@ -151,7 +152,7 @@
                 <label class="field"><span>Zuständigkeit</span><input id="findingResponsible" type="text" placeholder="z. B. technische Verwaltung"></label>
                 <label class="field"><span>Frist</span><input id="findingDeadline" type="date"></label>
                 <label class="field wide"><span>Interne Notiz</span><textarea id="findingInternalNote" rows="2" placeholder="Zusätzlicher interner Hinweis"></textarea></label>
-                <div class="field wide"><span>Bildnachweis</span><div class="file-box"><input id="findingPhotos" type="file" accept="image/*" multiple><p>In dieser Testversion werden nur Dateinamen gespeichert.</p></div></div>
+                <div class="field wide"><span>Bildnachweis</span><div class="file-box"><input id="findingPhotos" type="file" accept="image/*" multiple><p>Bilder werden komprimiert lokal in Ihrem Browser gespeichert (max. 4 pro Feststellung).</p><div class="photo-preview" id="findingPhotoPreview"><p class="photo-empty">Noch keine Bilder ausgewählt (max. 4).</p></div></div></div>
                 <input id="editingFindingId" type="hidden">
                 <div class="form-actions wide"><button class="button secondary" id="resetFindingButton" type="button">Eingabe leeren</button><button class="button primary" type="submit">Feststellung übernehmen</button></div>
               </form>
@@ -165,7 +166,7 @@
           </section>
 
           <section class="tool-panel" data-panel="4">
-            <div class="panel-heading"><div><span class="panel-kicker">Schritt 4</span><h3>Berichtsvorschau</h3></div><div class="report-actions"><button class="button secondary small" id="copySummaryButton" type="button">Kurzfassung kopieren</button><button class="button primary small" id="printReportButton" type="button">Drucken / PDF</button></div></div>
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 4</span><h3>Berichtsvorschau</h3></div><div class="report-actions"><button class="button secondary small" id="copySummaryButton" type="button">Kurzfassung kopieren</button><button class="button primary small" id="printReportButton" type="button">Als PDF exportieren</button></div></div>
             <div class="report-card" id="reportCard">
               <div class="report-header"><div><span class="report-brand">Inspectora</span><h3 id="reportProjectName">Neues Objektprojekt</h3><p id="reportObjectMeta">Noch keine Objektdaten eingetragen</p></div><div class="report-id"><span>Projekt-ID</span><strong id="reportProjectId">Entwurf</strong></div></div>
               <div class="report-summary-grid"><article><span>Bereiche</span><strong id="reportAreaTotal">0</strong></article><article><span>Feststellungen</span><strong id="reportFindingTotal">0</strong></article><article><span>Hohe Priorität</span><strong id="reportHighTotal">0</strong></article><article><span>Erledigt</span><strong id="reportDoneTotal">0</strong></article></div>
