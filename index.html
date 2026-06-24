@@ -22,6 +22,7 @@
 
     <nav class="site-nav" id="siteNav" aria-label="Hauptnavigation">
       <a href="#tool">Tool</a>
+      <a href="#wegTool">Protokolle</a>
       <a href="#ablauf">Ablauf</a>
       <a href="#einsatzgebiet">Einsatzgebiet</a>
       <a href="#ueber-uns">Über uns</a>
@@ -189,6 +190,93 @@
       <div class="project-overview"><article><span>Gesamt</span><strong id="totalProjects">0</strong></article><article><span>In Bearbeitung</span><strong id="activeProjects">0</strong></article><article><span>Offene Punkte</span><strong id="openFindings">0</strong></article><article><span>Hohe Priorität</span><strong id="highFindings">0</strong></article></div>
       <div class="project-list" id="projectList"><div class="empty-state large"><strong>Noch keine Projekte gespeichert</strong><p>Starte oben eine Objektaufnahme oder lade das Demoprojekt.</p><button class="button primary" id="emptyStartButton" type="button">Erstes Projekt anlegen</button></div></div>
     </section>
+
+    <section class="tool-section" id="wegTool">
+      <div class="tool-heading">
+        <div>
+          <span class="eyebrow">Inspectora Tool</span>
+          <h2>WEG-Versammlungsprotokoll-Generator</h2>
+          <p>Eigenständiges Tool für Protokolle von Eigentümerversammlungen. Unabhängig von der Objektaufnahme nutzbar.</p>
+        </div>
+        <div class="tool-actions">
+          <button class="button secondary small" id="newWegButton" type="button">Neues Protokoll</button>
+          <button class="button primary small" id="saveWegButton" type="button">Protokoll speichern</button>
+        </div>
+      </div>
+
+      <div class="tool-shell">
+        <aside class="tool-sidebar">
+          <button class="weg-step active" type="button" data-step="1"><span>1</span><div><strong>Grunddaten</strong><small>Versammlung</small></div></button>
+          <button class="weg-step" type="button" data-step="2"><span>2</span><div><strong>TOPs</strong><small>Tagesordnungspunkte</small></div></button>
+          <button class="weg-step" type="button" data-step="3"><span>3</span><div><strong>Protokoll</strong><small>Vorschau &amp; Export</small></div></button>
+          <div class="tool-note"><strong>Datenschutz inklusive</strong><p>Alle Eingaben bleiben in Ihrem Browser – keine Audioaufnahme, keine externe Verarbeitung.</p></div>
+        </aside>
+
+        <div class="tool-main">
+          <section class="weg-panel active" data-panel="1">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 1</span><h3>Grunddaten der Versammlung</h3></div><span class="required-note">* Pflichtfelder</span></div>
+            <div class="form-grid">
+              <label class="field wide"><span>WEG-/Objektbezeichnung *</span><input id="wegName" type="text" placeholder="z. B. WEG Jahnstraße 28, Kamp-Lintfort"></label>
+              <label class="field"><span>Datum der Versammlung *</span><input id="wegDate" type="date"></label>
+              <label class="field"><span>Ort der Versammlung</span><input id="wegLocation" type="text" placeholder="z. B. Gemeinschaftsraum, Jahnstraße 28"></label>
+              <label class="field"><span>Versammlungsleiter *</span><input id="wegChair" type="text" placeholder="Vor- und Nachname"></label>
+              <label class="field"><span>Anwesende Eigentümer</span><input id="wegOwnersPresent" type="number" min="0" placeholder="z. B. 8"></label>
+              <label class="field"><span>Vertretene Eigentümer</span><input id="wegOwnersRepresented" type="number" min="0" placeholder="z. B. 3"></label>
+              <label class="field"><span>Beschlussfähigkeit</span><select id="wegQuorumStatus"><option value="">Bitte auswählen</option><option>Beschlussfähig</option><option>Nicht beschlussfähig</option><option>Teilweise beschlussfähig</option></select></label>
+              <label class="field wide"><span>Angaben zur Beschlussfähigkeit</span><textarea id="wegQuorumNote" rows="3" placeholder="z. B. Berechnung nach Miteigentumsanteilen, Hinweis auf Einladungsfrist"></textarea></label>
+            </div>
+            <div class="panel-actions"><span></span><button class="button primary weg-next" type="button" data-next="2">Weiter zu den TOPs</button></div>
+          </section>
+
+          <section class="weg-panel" data-panel="2">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 2</span><h3>Tagesordnungspunkte erfassen</h3></div><span class="panel-counter" id="wegTopCount">0 TOPs</span></div>
+            <div class="finding-layout">
+              <form class="finding-form" id="wegTopForm">
+                <label class="field wide"><span>Titel des TOP *</span><input id="wegTopTitle" type="text" placeholder="z. B. Beschluss über Fassadensanierung"></label>
+                <label class="field wide"><span>Stichworte zur Beschreibung/Diskussion</span><textarea id="wegTopNotes" rows="3" placeholder="Kurze Stichpunkte zum Verlauf der Besprechung"></textarea></label>
+                <label class="field wide"><span>Beschlussantrag im Wortlaut</span><textarea id="wegTopMotion" rows="3" placeholder="Die Eigentümerversammlung beschließt …"></textarea></label>
+                <label class="field"><span>Ja-Stimmen</span><input id="wegTopYes" type="number" min="0" placeholder="0"></label>
+                <label class="field"><span>Nein-Stimmen</span><input id="wegTopNo" type="number" min="0" placeholder="0"></label>
+                <label class="field"><span>Enthaltungen</span><input id="wegTopAbstain" type="number" min="0" placeholder="0"></label>
+                <label class="field"><span>Ergebnis</span><select id="wegTopResultMode"><option value="">Automatisch aus Stimmen</option><option value="Angenommen">Angenommen (manuell)</option><option value="Abgelehnt">Abgelehnt (manuell)</option></select></label>
+                <input id="wegEditingTopId" type="hidden">
+                <div class="form-actions wide"><button class="button secondary" id="resetWegTopButton" type="button">Eingabe leeren</button><button class="button primary" type="submit">TOP übernehmen</button></div>
+              </form>
+
+              <div class="finding-list-wrap">
+                <div class="list-toolbar"><strong>Erfasste TOPs</strong></div>
+                <div class="finding-list" id="wegTopList"><div class="empty-state"><strong>Noch keine TOPs</strong><p>Erfasse links den ersten Tagesordnungspunkt.</p></div></div>
+              </div>
+            </div>
+            <div class="panel-actions"><button class="button secondary weg-prev" type="button" data-previous="1">Zurück</button><button class="button primary weg-next" type="button" data-next="3">Protokoll ansehen</button></div>
+          </section>
+
+          <section class="weg-panel" data-panel="3">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 3</span><h3>Protokollvorschau</h3></div><div class="report-actions"><button class="button secondary small" id="copyWegButton" type="button">Text kopieren</button><button class="button primary small" id="printWegButton" type="button">Als PDF exportieren</button></div></div>
+            <div class="disclaimer-banner"><strong>Hinweis:</strong> Dieses Protokoll ist ein automatisch erstellter Entwurf. Die fachliche und formale Verantwortung für Richtigkeit, Vollständigkeit und Form liegt beim Verwalter bzw. Versammlungsleiter.</div>
+            <div class="report-card" id="wegReportCard">
+              <div class="report-header"><div><span class="report-brand">Inspectora</span><h3 id="wegReportName">Neues Versammlungsprotokoll</h3><p id="wegReportMeta">Noch keine Versammlungsdaten eingetragen</p></div><div class="report-id"><span>Protokoll-ID</span><strong id="wegReportId">Entwurf</strong></div></div>
+              <div class="report-summary-grid"><article><span>Anwesend</span><strong id="wegReportPresent">0</strong></article><article><span>Vertreten</span><strong id="wegReportRepresented">0</strong></article><article><span>TOPs</span><strong id="wegReportTopTotal">0</strong></article><article><span>Abgelehnt</span><strong id="wegReportRejectedTotal">0</strong></article></div>
+              <section class="report-section"><h4>Versammlungsdaten</h4><dl class="report-details" id="wegReportDetails"></dl></section>
+              <section class="report-section"><h4>Tagesordnungspunkte und Beschlüsse</h4><div class="report-findings" id="wegReportTops"></div></section>
+              <section class="report-section report-note"><h4>Hinweis</h4><p>Dieses Protokoll ist ein automatisch erstellter Entwurf. Die fachliche und formale Verantwortung für Richtigkeit, Vollständigkeit und Form liegt beim Verwalter bzw. Versammlungsleiter.</p></section>
+            </div>
+            <div class="panel-actions"><button class="button secondary weg-prev" type="button" data-previous="2">Zurück</button><button class="button primary" id="finishAndSaveWegButton" type="button">Protokoll speichern</button></div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="section projects-section" id="wegProjekte">
+      <div class="projects-heading">
+        <div class="section-heading"><span class="eyebrow">Protokollübersicht</span><h2>Meine Protokolle</h2><p>Gespeicherte Versammlungsprotokolle können auf diesem Gerät geöffnet, weiterbearbeitet, dupliziert oder gelöscht werden.</p></div>
+        <div class="project-toolbar"><input id="wegSearch" type="search" placeholder="Protokolle durchsuchen"><select id="wegStatusFilter"><option value="Alle">Alle Status</option><option value="Entwurf">Entwurf</option><option value="Abgeschlossen">Abgeschlossen</option></select></div>
+      </div>
+      <div class="project-overview"><article><span>Gesamt</span><strong id="wegTotalCount">0</strong></article><article><span>Entwürfe</span><strong id="wegDraftCount">0</strong></article><article><span>Erfasste TOPs</span><strong id="wegTopsCount">0</strong></article><article><span>Abgelehnte Beschlüsse</span><strong id="wegRejectedCount">0</strong></article></div>
+      <div class="project-list" id="wegList"><div class="empty-state large"><strong>Noch keine Protokolle gespeichert</strong><p>Starte oben ein neues Versammlungsprotokoll.</p><button class="button primary" id="wegEmptyStartButton" type="button">Erstes Protokoll anlegen</button></div></div>
+    </section>
+
+    <div class="modal" id="wegConfirmModal" aria-hidden="true"><div class="modal-backdrop" data-close-weg-modal></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="wegConfirmModalTitle"><h3 id="wegConfirmModalTitle">Protokoll löschen?</h3><p>Dieser Vorgang kann nicht rückgängig gemacht werden.</p><div class="modal-actions"><button class="button secondary" type="button" data-close-weg-modal>Abbrechen</button><button class="button danger" id="wegConfirmDeleteButton" type="button">Löschen</button></div></div></div>
 
     <section class="section area-section" id="einsatzgebiet">
       <div class="section-heading section-heading-wide">

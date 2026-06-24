@@ -436,3 +436,25 @@ main {
   border: 1px solid var(--line);
   border-radius: 9px;
 }
+
+.weg-step,
+.weg-panel {
+  /* Eigenständige Klassen für das WEG-Protokoll-Tool, damit die Begehungs-Logik unberührt bleibt */
+}
+
+.weg-step{width:100%;display:flex;align-items:center;gap:12px;padding:13px;border:0;border-radius:13px;color:#617188;background:transparent;text-align:left}
+.weg-step+.weg-step{margin-top:6px}
+.weg-step>span{width:30px;height:30px;display:grid;place-items:center;flex:0 0 auto;border:1px solid #cbd8e8;border-radius:9px;color:#31527f;background:rgba(255,255,255,.72);font-size:11px;font-weight:900}
+.weg-step strong,.weg-step small{display:block}
+.weg-step strong{font-size:12px}
+.weg-step small{font-size:9px}
+.weg-step:hover,.weg-step.active{color:#17315f;background:#fff;box-shadow:0 8px 22px rgba(35,63,105,.08)}
+.weg-step.active>span{color:#fff;border-color:transparent;background:var(--primary)}
+.weg-panel{display:none;min-height:700px;padding:30px;background:#fff}
+.weg-panel.active{display:block}
+
+.disclaimer-banner{margin-top:20px;padding:14px 16px;border:1px solid #f1d4ab;border-radius:13px;color:#7a4a06;background:#fff4e3;font-size:12px;line-height:1.55}
+.disclaimer-banner strong{color:#5c3700}
+
+@media(max-width:1020px){.weg-step div{display:block}.weg-step{justify-content:flex-start}}
+@media(max-width:760px){.weg-panel{min-height:auto;padding:20px 16px}.tool-sidebar .weg-step{justify-content:center;flex-direction:column;gap:5px;text-align:center}.tool-sidebar .weg-step div{display:block}.tool-sidebar .weg-step small{display:none}}

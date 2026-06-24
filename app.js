@@ -406,3 +406,570 @@ function generatePdf(){
 }
 
 function init(){bind();initHeaderScroll();initServiceMap();try{const d=repairStoredData(JSON.parse(localStorage.getItem(DRAFT_KEY)||"null"));if(d&&typeof d==="object"){state.current={...emptyProject(),...d};localStorage.setItem(DRAFT_KEY,JSON.stringify(state.current))}}catch{}syncState();renderProjects();setStep(1)}init()})();
+
+(()=>{"use strict";
+// Eigenständiges WEG-Versammlungsprotokoll-Tool. Vollständig unabhängig vom Objektaufnahme-Tool oben:
+// eigener Storage, eigener State, eigene DOM-Referenzen, keine geteilten Funktionen oder IDs.
+const WEG_STORAGE_KEY="inspectora_weg_protocols_v1",WEG_DRAFT_KEY="inspectora_weg_draft_v1";
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=v=>String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+const today=()=>new Date().toISOString().slice(0,10);
+const fmt=v=>v?new Intl.DateTimeFormat("de-DE").format(new Date(v+"T12:00:00")):"Nicht angegeben";
+
+const emptyWegTop=()=>({id:"",title:"",notes:"",motion:"",yes:0,no:0,abstain:0,resultMode:""});
+const emptyWegProtocol=()=>({id:"",name:"",status:"Entwurf",date:today(),location:"",chair:"",ownersPresent:"",ownersRepresented:"",quorumStatus:"",quorumNote:"",tops:[],createdAt:"",updatedAt:""});
+
+function wegTopId(){return`WTOP-${Date.now()}-${Math.random().toString(16).slice(2,7)}`}
+function wegResult(top){return top.resultMode||((Number(top.yes)||0)>(Number(top.no)||0)?"Angenommen":"Abgelehnt")}
+
+let wegProtocols=[];
+try{
+  wegProtocols=JSON.parse(localStorage.getItem(WEG_STORAGE_KEY)||"[]");
+  if(!Array.isArray(wegProtocols))wegProtocols=[];
+}catch{wegProtocols=[]}
+
+const wegState={step:1,current:emptyWegProtocol(),protocols:wegProtocols,deleteTarget:null};
+
+const wegRefs={
+  toast:$("#toast"),
+  name:$("#wegName"),date:$("#wegDate"),location:$("#wegLocation"),chair:$("#wegChair"),
+  ownersPresent:$("#wegOwnersPresent"),ownersRepresented:$("#wegOwnersRepresented"),
+  quorumStatus:$("#wegQuorumStatus"),quorumNote:$("#wegQuorumNote"),
+  tool:$("#wegTool"),
+  topTitle:$("#wegTopTitle"),topNotes:$("#wegTopNotes"),topMotion:$("#wegTopMotion"),
+  topYes:$("#wegTopYes"),topNo:$("#wegTopNo"),topAbstain:$("#wegTopAbstain"),topResultMode:$("#wegTopResultMode"),
+  editingTopId:$("#wegEditingTopId"),topForm:$("#wegTopForm"),resetTopButton:$("#resetWegTopButton"),
+  topList:$("#wegTopList"),topCount:$("#wegTopCount"),
+  reportName:$("#wegReportName"),reportMeta:$("#wegReportMeta"),reportId:$("#wegReportId"),
+  reportPresent:$("#wegReportPresent"),reportRepresented:$("#wegReportRepresented"),
+  reportTopTotal:$("#wegReportTopTotal"),reportRejectedTotal:$("#wegReportRejectedTotal"),
+  reportDetails:$("#wegReportDetails"),reportTops:$("#wegReportTops"),
+  search:$("#wegSearch"),statusFilter:$("#wegStatusFilter"),list:$("#wegList"),
+  totalCount:$("#wegTotalCount"),draftCount:$("#wegDraftCount"),topsCount:$("#wegTopsCount"),rejectedCount:$("#wegRejectedCount"),
+  confirmModal:$("#wegConfirmModal"),confirmDeleteButton:$("#wegConfirmDeleteButton")
+};
+
+function wegToast(msg){if(!wegRefs.toast)return;wegRefs.toast.textContent=msg;wegRefs.toast.classList.add("show");clearTimeout(wegToast.t);wegToast.t=setTimeout(()=>wegRefs.toast.classList.remove("show"),2600)}
+
+function wegPersist(){
+  try{localStorage.setItem(WEG_STORAGE_KEY,JSON.stringify(wegState.protocols));return true}
+  catch{wegToast("Speicher voll – bitte ältere Protokolle löschen und erneut speichern.");return false}
+}
+function wegSaveDraft(){wegSyncForm();try{localStorage.setItem(WEG_DRAFT_KEY,JSON.stringify(wegState.current))}catch{}}
+
+function wegProtocolId(){
+  const y=new Date().getFullYear();
+  const nums=wegState.protocols.map(p=>Number(String(p.id).split("-").pop())).filter(Number.isFinite);
+  return`WEG-${y}-${String((nums.length?Math.max(...nums):0)+1).padStart(3,"0")}`;
+}
+
+function wegGoTool(){wegRefs.tool?.scrollIntoView({behavior:"smooth",block:"start"})}
+
+function wegSetStep(n){
+  wegState.step=Number(n);
+  $$('.weg-step').forEach(b=>b.classList.toggle('active',Number(b.dataset.step)===wegState.step));
+  $$('.weg-panel').forEach(p=>p.classList.toggle('active',Number(p.dataset.panel)===wegState.step));
+  if(wegState.step===3){wegSyncForm();wegRenderReport()}
+  wegSaveDraft();
+}
+
+function wegValidate(n){
+  if(Number(n)===1){
+    wegSyncForm();
+    if(!wegState.current.name){wegToast("Bitte eine WEG-/Objektbezeichnung eintragen.");wegRefs.name.focus();return false}
+    if(!wegState.current.date){wegToast("Bitte das Datum der Versammlung eintragen.");wegRefs.date.focus();return false}
+    if(!wegState.current.chair){wegToast("Bitte den Versammlungsleiter eintragen.");wegRefs.chair.focus();return false}
+  }
+  return true;
+}
+
+function wegSyncForm(){
+  Object.assign(wegState.current,{
+    name:wegRefs.name.value.trim(),date:wegRefs.date.value,location:wegRefs.location.value.trim(),
+    chair:wegRefs.chair.value.trim(),ownersPresent:wegRefs.ownersPresent.value,ownersRepresented:wegRefs.ownersRepresented.value,
+    quorumStatus:wegRefs.quorumStatus.value,quorumNote:wegRefs.quorumNote.value.trim()
+  });
+}
+
+function wegSyncState(){
+  wegRefs.name.value=wegState.current.name||"";
+  wegRefs.date.value=wegState.current.date||today();
+  wegRefs.location.value=wegState.current.location||"";
+  wegRefs.chair.value=wegState.current.chair||"";
+  wegRefs.ownersPresent.value=wegState.current.ownersPresent||"";
+  wegRefs.ownersRepresented.value=wegState.current.ownersRepresented||"";
+  wegRefs.quorumStatus.value=wegState.current.quorumStatus||"";
+  wegRefs.quorumNote.value=wegState.current.quorumNote||"";
+  wegRenderTops();
+  wegRenderReport();
+}
+
+function wegResetTopForm(){
+  wegRefs.topForm.reset();
+  wegRefs.editingTopId.value="";
+}
+
+function wegTopFromForm(){
+  return{
+    id:wegRefs.editingTopId.value||wegTopId(),
+    title:wegRefs.topTitle.value.trim(),
+    notes:wegRefs.topNotes.value.trim(),
+    motion:wegRefs.topMotion.value.trim(),
+    yes:Number(wegRefs.topYes.value)||0,
+    no:Number(wegRefs.topNo.value)||0,
+    abstain:Number(wegRefs.topAbstain.value)||0,
+    resultMode:wegRefs.topResultMode.value
+  };
+}
+
+function wegRenderTops(){
+  const tops=wegState.current.tops;
+  wegRefs.topCount.textContent=`${tops.length} ${tops.length===1?"TOP":"TOPs"}`;
+  if(!tops.length){
+    wegRefs.topList.innerHTML=`<div class="empty-state"><strong>Noch keine TOPs</strong><p>Erfasse links den ersten Tagesordnungspunkt.</p></div>`;
+    return;
+  }
+  wegRefs.topList.innerHTML=tops.map((t,i)=>{
+    const result=wegResult(t),cls=result==="Angenommen"?"low":"high";
+    return`<article class="finding-card"><div class="finding-card-top"><div><span class="finding-area">TOP ${i+1}</span><h4>${esc(t.title)}</h4></div><span class="priority-label ${cls}">${esc(result)}</span></div>${t.motion?`<p><strong>Beschlussantrag:</strong> ${esc(t.motion)}</p>`:""}<div class="finding-meta"><span>Ja: ${t.yes}</span><span>Nein: ${t.no}</span><span>Enthaltungen: ${t.abstain}</span></div><div class="finding-card-actions"><button type="button" data-edit-top="${esc(t.id)}">Bearbeiten</button><button type="button" data-delete-top="${esc(t.id)}">Löschen</button></div></article>`;
+  }).join("");
+}
+
+function wegEditTop(id){
+  const t=wegState.current.tops.find(x=>x.id===id);
+  if(!t)return;
+  wegRefs.topTitle.value=t.title;
+  wegRefs.topNotes.value=t.notes;
+  wegRefs.topMotion.value=t.motion;
+  wegRefs.topYes.value=t.yes;
+  wegRefs.topNo.value=t.no;
+  wegRefs.topAbstain.value=t.abstain;
+  wegRefs.topResultMode.value=t.resultMode;
+  wegRefs.editingTopId.value=t.id;
+  wegRefs.topTitle.focus();
+}
+
+function wegDeleteTop(id){
+  wegState.current.tops=wegState.current.tops.filter(t=>t.id!==id);
+  wegRenderTops();
+  wegRenderReport();
+  wegSaveDraft();
+  wegToast("TOP gelöscht.");
+}
+
+function wegRenderReport(){
+  const p=wegState.current,tops=p.tops,rejected=tops.filter(t=>wegResult(t)==="Abgelehnt").length;
+  wegRefs.reportName.textContent=p.name||"Neues Versammlungsprotokoll";
+  wegRefs.reportMeta.textContent=[p.date?fmt(p.date):"",p.location].filter(Boolean).join(" · ")||"Noch keine Versammlungsdaten eingetragen";
+  wegRefs.reportId.textContent=p.id||"Entwurf";
+  wegRefs.reportPresent.textContent=p.ownersPresent||0;
+  wegRefs.reportRepresented.textContent=p.ownersRepresented||0;
+  wegRefs.reportTopTotal.textContent=tops.length;
+  wegRefs.reportRejectedTotal.textContent=rejected;
+
+  const details=[
+    ["Versammlungsleiter",p.chair],
+    ["Ort",p.location],
+    ["Datum",p.date?fmt(p.date):""],
+    ["Anwesende Eigentümer",p.ownersPresent],
+    ["Vertretene Eigentümer",p.ownersRepresented],
+    ["Beschlussfähigkeit",p.quorumStatus],
+    ["Angaben zur Beschlussfähigkeit",p.quorumNote]
+  ].filter(([,v])=>v);
+  wegRefs.reportDetails.innerHTML=details.length
+    ?details.map(([l,v])=>`<div><dt>${esc(l)}</dt><dd>${esc(v)}</dd></div>`).join("")
+    :`<div><dt>Hinweis</dt><dd>Noch keine Angaben vorhanden.</dd></div>`;
+
+  wegRefs.reportTops.innerHTML=tops.length
+    ?tops.map((t,i)=>{
+      const result=wegResult(t);
+      return`<article class="report-finding"><div class="report-finding-aside"><strong>TOP ${i+1}</strong><span>${esc(result)}</span></div><div class="report-finding-main"><h5>${esc(t.title)}</h5>${t.notes?`<p>${esc(t.notes)}</p>`:""}${t.motion?`<p><strong>Beschlussantrag:</strong> ${esc(t.motion)}</p>`:""}<dl><div><dt>Ja-Stimmen</dt><dd>${t.yes}</dd></div><div><dt>Nein-Stimmen</dt><dd>${t.no}</dd></div><div><dt>Enthaltungen</dt><dd>${t.abstain}</dd></div></dl></div></article>`;
+    }).join("")
+    :`<div class="empty-state compact"><strong>Noch keine TOPs</strong><p>Erfasste Tagesordnungspunkte erscheinen hier automatisch.</p></div>`;
+}
+
+function wegSaveCurrent(){
+  wegSyncForm();
+  if(!wegValidate(1))return false;
+  const now=new Date().toISOString();
+  if(!wegState.current.id){wegState.current.id=wegProtocolId();wegState.current.createdAt=now}
+  wegState.current.updatedAt=now;
+  const i=wegState.protocols.findIndex(p=>p.id===wegState.current.id),copy=JSON.parse(JSON.stringify(wegState.current));
+  if(i>=0)wegState.protocols[i]=copy;else wegState.protocols.unshift(copy);
+  if(!wegPersist())return false;
+  localStorage.setItem(WEG_DRAFT_KEY,JSON.stringify(wegState.current));
+  wegRenderList();
+  wegRenderReport();
+  wegToast(`Protokoll ${wegState.current.id} gespeichert.`);
+  return true;
+}
+
+function wegNewProtocol(confirmReset=true){
+  const has=wegState.current.name||wegState.current.tops.length;
+  if(confirmReset&&has&&!window.confirm("Aktuellen Entwurf verwerfen und ein neues Protokoll beginnen?"))return;
+  wegState.current=emptyWegProtocol();
+  wegSyncState();
+  wegResetTopForm();
+  wegSetStep(1);
+  localStorage.removeItem(WEG_DRAFT_KEY);
+  wegGoTool();
+  wegToast("Neues Protokoll gestartet.");
+}
+
+function wegOpenProtocol(id){
+  const p=wegState.protocols.find(x=>x.id===id);
+  if(!p)return;
+  wegState.current=JSON.parse(JSON.stringify(p));
+  wegSyncState();
+  wegSetStep(1);
+  localStorage.setItem(WEG_DRAFT_KEY,JSON.stringify(wegState.current));
+  wegGoTool();
+  wegToast(`${id} geöffnet.`);
+}
+
+function wegDuplicateProtocol(id){
+  const p=wegState.protocols.find(x=>x.id===id);
+  if(!p)return;
+  const c=JSON.parse(JSON.stringify(p));
+  c.id=wegProtocolId();
+  c.name+=` – Kopie`;
+  c.status="Entwurf";
+  c.createdAt=c.updatedAt=new Date().toISOString();
+  c.tops=c.tops.map(t=>({...t,id:wegTopId()}));
+  wegState.protocols.unshift(c);
+  wegPersist();
+  wegRenderList();
+  wegToast(`Protokoll als ${c.id} dupliziert.`);
+}
+
+function wegRequestDelete(id){
+  wegState.deleteTarget=id;
+  wegRefs.confirmModal.classList.add("open");
+  wegRefs.confirmModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+}
+
+function wegCloseModal(){
+  wegState.deleteTarget=null;
+  wegRefs.confirmModal.classList.remove("open");
+  wegRefs.confirmModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+}
+
+function wegConfirmDelete(){
+  if(!wegState.deleteTarget)return;
+  wegState.protocols=wegState.protocols.filter(p=>p.id!==wegState.deleteTarget);
+  if(wegState.current.id===wegState.deleteTarget){
+    wegState.current=emptyWegProtocol();
+    wegSyncState();
+    localStorage.removeItem(WEG_DRAFT_KEY);
+  }
+  wegPersist();
+  wegRenderList();
+  wegCloseModal();
+  wegToast("Protokoll gelöscht.");
+}
+
+function wegChangeStatus(id,status){
+  const p=wegState.protocols.find(x=>x.id===id);
+  if(!p)return;
+  p.status=status;
+  p.updatedAt=new Date().toISOString();
+  if(wegState.current.id===id)wegState.current.status=status;
+  wegPersist();
+  wegRenderList();
+  wegToast(`Status auf „${status}“ gesetzt.`);
+}
+
+function wegRenderList(){
+  const q=wegRefs.search.value.trim().toLowerCase(),status=wegRefs.statusFilter.value;
+  const filtered=wegState.protocols.filter(p=>[p.id,p.name,p.location,p.chair].join(" ").toLowerCase().includes(q)&&(status==="Alle"||p.status===status));
+  const allTops=wegState.protocols.flatMap(p=>p.tops||[]);
+  wegRefs.totalCount.textContent=wegState.protocols.length;
+  wegRefs.draftCount.textContent=wegState.protocols.filter(p=>p.status==="Entwurf").length;
+  wegRefs.topsCount.textContent=allTops.length;
+  wegRefs.rejectedCount.textContent=allTops.filter(t=>wegResult(t)==="Abgelehnt").length;
+
+  if(!filtered.length){
+    wegRefs.list.innerHTML=`<div class="empty-state large"><strong>${wegState.protocols.length?"Keine passenden Protokolle gefunden":"Noch keine Protokolle gespeichert"}</strong><p>${wegState.protocols.length?"Passe Suche oder Filter an.":"Starte oben ein neues Versammlungsprotokoll."}</p>${wegState.protocols.length?"":`<button class="button primary" id="wegDynamicEmptyStartButton" type="button">Erstes Protokoll anlegen</button>`}</div>`;
+    $("#wegDynamicEmptyStartButton")?.addEventListener("click",()=>wegNewProtocol(false));
+    return;
+  }
+
+  wegRefs.list.innerHTML=filtered.map(p=>{
+    const rejected=(p.tops||[]).filter(t=>wegResult(t)==="Abgelehnt").length;
+    return`<article class="project-card"><div class="project-card-top"><div><span class="project-id">${esc(p.id)}</span><h3>${esc(p.name)}</h3><p>${esc([p.date?fmt(p.date):"",p.location].filter(Boolean).join(" · ")||"Keine weiteren Angaben")}</p></div><span class="status-badge">${esc(p.status)}</span></div><div class="project-card-meta"><div><span>TOPs</span><strong>${p.tops?.length||0}</strong></div><div><span>Abgelehnt</span><strong>${rejected}</strong></div><div><span>Anwesend</span><strong>${p.ownersPresent||0}</strong></div></div><div class="project-card-actions"><button type="button" data-open-weg="${esc(p.id)}">Öffnen</button><button type="button" data-duplicate-weg="${esc(p.id)}">Duplizieren</button><select data-status-weg="${esc(p.id)}" aria-label="Protokollstatus ändern">${["Entwurf","Abgeschlossen"].map(o=>`<option ${p.status===o?"selected":""}>${o}</option>`).join("")}</select><button type="button" data-delete-weg="${esc(p.id)}">Löschen</button></div></article>`;
+  }).join("");
+}
+
+function wegProtocolText(){
+  wegSyncForm();
+  const p=wegState.current;
+  const lines=[
+    `Protokoll der Eigentümerversammlung`,
+    `${p.name||"WEG"} (${p.id||"Entwurf"})`,
+    `Datum: ${p.date?fmt(p.date):"Nicht angegeben"}    Ort: ${p.location||"Nicht angegeben"}`,
+    `Versammlungsleiter: ${p.chair||"Nicht angegeben"}`,
+    `Anwesende Eigentümer: ${p.ownersPresent||0}    Vertretene Eigentümer: ${p.ownersRepresented||0}`,
+    `Beschlussfähigkeit: ${p.quorumStatus||"Nicht angegeben"}${p.quorumNote?` – ${p.quorumNote}`:""}`,
+    ""
+  ];
+  p.tops.forEach((t,i)=>{
+    lines.push(`TOP ${i+1}: ${t.title}`);
+    if(t.notes)lines.push(`  Diskussion: ${t.notes}`);
+    if(t.motion)lines.push(`  Beschlussantrag: ${t.motion}`);
+    lines.push(`  Abstimmung – Ja: ${t.yes}, Nein: ${t.no}, Enthaltungen: ${t.abstain} – Ergebnis: ${wegResult(t)}`);
+    lines.push("");
+  });
+  lines.push("Hinweis: Dieses Protokoll ist ein automatisch erstellter Entwurf. Die fachliche und formale Verantwortung für Richtigkeit, Vollständigkeit und Form liegt beim Verwalter bzw. Versammlungsleiter.");
+  return lines.join("\n");
+}
+
+function wegCopyText(){
+  navigator.clipboard.writeText(wegProtocolText())
+    .then(()=>wegToast("Protokolltext kopiert."))
+    .catch(()=>wegToast("Kopieren wurde vom Browser nicht erlaubt."));
+}
+
+function wegGeneratePdf(){
+  if(typeof window.jspdf==="undefined"){
+    wegToast("PDF-Bibliothek konnte nicht geladen werden. Bitte Internetverbindung prüfen.");
+    return;
+  }
+  wegSyncForm();
+  wegRenderReport();
+  const p=wegState.current;
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:"mm",format:"a4"});
+  const pageW=doc.internal.pageSize.getWidth();
+  const pageH=doc.internal.pageSize.getHeight();
+  const marginX=16,contentW=pageW-marginX*2,headerH=24,footerH=16;
+  let pageNum=1,cursorY=0;
+
+  function drawHeader(){
+    doc.setFillColor(36,87,214);
+    doc.roundedRect(marginX,8,9,9,2,2,"F");
+    doc.setTextColor(255,255,255);
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(11);
+    doc.text("I",marginX+4.5,14.3,{align:"center"});
+    doc.setTextColor(16,32,57);
+    doc.setFontSize(13);
+    doc.text("Inspectora",marginX+13,13.5);
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(8);
+    doc.setTextColor(100,110,130);
+    doc.text(p.name||"Versammlungsprotokoll",marginX+13,18);
+    doc.text(`Protokoll-ID: ${p.id||"Entwurf"}`,pageW-marginX,11,{align:"right"});
+    doc.text(`Seite ${pageNum}`,pageW-marginX,16,{align:"right"});
+    doc.setDrawColor(220,228,238);
+    doc.line(marginX,headerH,pageW-marginX,headerH);
+  }
+
+  function drawFooter(){
+    doc.setDrawColor(220,228,238);
+    doc.line(marginX,pageH-footerH,pageW-marginX,pageH-footerH);
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(7);
+    doc.setTextColor(140,150,165);
+    const lines=doc.splitTextToSize("Dieses Protokoll ist ein automatisch erstellter Entwurf. Die fachliche und formale Verantwortung für Richtigkeit, Vollständigkeit und Form liegt beim Verwalter bzw. Versammlungsleiter.",contentW);
+    lines.forEach((line,i)=>doc.text(line,marginX,pageH-11+i*3.4));
+  }
+
+  function newPage(){
+    drawFooter();
+    doc.addPage();
+    pageNum++;
+    drawHeader();
+    cursorY=headerH+10;
+  }
+
+  function ensureSpace(h){
+    if(cursorY+h>pageH-footerH-4)newPage();
+  }
+
+  drawHeader();
+  cursorY=headerH+10;
+
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(16);
+  doc.setTextColor(16,32,57);
+  doc.text("Protokoll der Eigentümerversammlung",marginX,cursorY);
+  cursorY+=7;
+
+  doc.setFont("helvetica","normal");
+  doc.setFontSize(9);
+  doc.setTextColor(90,100,120);
+  doc.text(`${p.name||"Neues Versammlungsprotokoll"}`,marginX,cursorY);
+  cursorY+=10;
+
+  const details=[
+    ["Datum",p.date?fmt(p.date):""],
+    ["Ort",p.location],
+    ["Versammlungsleiter",p.chair],
+    ["Anwesende Eigentümer",p.ownersPresent?String(p.ownersPresent):""],
+    ["Vertretene Eigentümer",p.ownersRepresented?String(p.ownersRepresented):""],
+    ["Beschlussfähigkeit",p.quorumStatus],
+    ["Angaben zur Beschlussfähigkeit",p.quorumNote]
+  ].filter(([,v])=>v);
+
+  if(details.length){
+    ensureSpace(8);
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(11);
+    doc.setTextColor(16,32,57);
+    doc.text("Versammlungsdaten",marginX,cursorY);
+    cursorY+=6;
+    details.forEach(([label,value])=>{
+      const valueLines=doc.splitTextToSize(String(value),contentW-48);
+      ensureSpace(Math.max(5,valueLines.length*4.4)+1.5);
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(8);
+      doc.setTextColor(110,120,140);
+      doc.text(`${label}:`,marginX,cursorY);
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(9);
+      doc.setTextColor(40,48,64);
+      valueLines.forEach((line,i)=>doc.text(line,marginX+48,cursorY+i*4.4));
+      cursorY+=Math.max(5,valueLines.length*4.4)+1.5;
+    });
+    cursorY+=4;
+  }
+
+  ensureSpace(10);
+  doc.setFont("helvetica","bold");
+  doc.setFontSize(13);
+  doc.setTextColor(16,32,57);
+  doc.text("Tagesordnungspunkte und Beschlüsse",marginX,cursorY);
+  cursorY+=8;
+
+  if(!p.tops.length){
+    ensureSpace(8);
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(9);
+    doc.setTextColor(110,120,140);
+    doc.text("Noch keine Tagesordnungspunkte erfasst.",marginX,cursorY);
+    cursorY+=8;
+  }
+
+  p.tops.forEach((t,i)=>{
+    const lineH=4.4;
+    const titleLines=doc.splitTextToSize(`TOP ${i+1}: ${t.title||""}`,contentW);
+    const notesLines=t.notes?doc.splitTextToSize(`Diskussion: ${t.notes}`,contentW):[];
+    const motionLines=t.motion?doc.splitTextToSize(`Beschlussantrag: ${t.motion}`,contentW):[];
+    const blockH=11+titleLines.length*lineH+(notesLines.length?notesLines.length*lineH+2:0)+(motionLines.length?motionLines.length*lineH+2:0)+6;
+
+    if(cursorY+blockH>pageH-footerH-4)newPage();
+
+    doc.setDrawColor(225,231,240);
+    doc.line(marginX,cursorY,marginX+contentW,cursorY);
+    cursorY+=6;
+
+    const result=wegResult(t),resultColor=result==="Angenommen"?[20,121,90]:[196,60,80];
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(8);
+    doc.setTextColor(...resultColor);
+    doc.text(result.toUpperCase(),marginX+contentW,cursorY,{align:"right"});
+
+    doc.setTextColor(16,32,57);
+    titleLines.forEach((line,li)=>doc.text(line,marginX,cursorY+li*lineH));
+    cursorY+=titleLines.length*lineH+1.5;
+
+    if(notesLines.length){
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(9);
+      doc.setTextColor(70,80,100);
+      notesLines.forEach((line,li)=>doc.text(line,marginX,cursorY+li*lineH));
+      cursorY+=notesLines.length*lineH+1.5;
+    }
+
+    if(motionLines.length){
+      doc.setFont("helvetica","normal");
+      doc.setFontSize(9);
+      doc.setTextColor(70,80,100);
+      motionLines.forEach((line,li)=>doc.text(line,marginX,cursorY+li*lineH));
+      cursorY+=motionLines.length*lineH+1.5;
+    }
+
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(8);
+    doc.setTextColor(110,120,140);
+    doc.text(`Ja: ${t.yes}   ·   Nein: ${t.no}   ·   Enthaltungen: ${t.abstain}`,marginX,cursorY);
+    cursorY+=6;
+  });
+
+  drawFooter();
+  doc.save(`Inspectora-WEG-${p.id||"Entwurf"}-${today()}.pdf`);
+  wegToast("PDF wurde erstellt.");
+}
+
+function wegBind(){
+  $$('.weg-step').forEach(b=>b.addEventListener("click",()=>wegSetStep(b.dataset.step)));
+  $$('.weg-next').forEach(b=>b.addEventListener("click",()=>{if(wegValidate(wegState.step))wegSetStep(b.dataset.next)}));
+  $$('.weg-prev').forEach(b=>b.addEventListener("click",()=>wegSetStep(b.dataset.previous)));
+
+  $("#newWegButton")?.addEventListener("click",()=>wegNewProtocol(true));
+  $("#saveWegButton")?.addEventListener("click",wegSaveCurrent);
+  $("#finishAndSaveWegButton")?.addEventListener("click",()=>{if(wegSaveCurrent())$("#wegProjekte")?.scrollIntoView({behavior:"smooth"})});
+
+  wegRefs.topForm.addEventListener("submit",e=>{
+    e.preventDefault();
+    const t=wegTopFromForm();
+    if(!t.title){wegToast("Bitte einen Titel für den TOP eintragen.");return}
+    const i=wegState.current.tops.findIndex(x=>x.id===t.id);
+    if(i>=0){wegState.current.tops[i]=t;wegToast("TOP aktualisiert.")}
+    else{wegState.current.tops.push(t);wegToast("TOP übernommen.")}
+    wegResetTopForm();
+    wegRenderTops();
+    wegRenderReport();
+    wegSaveDraft();
+  });
+  wegRefs.resetTopButton.addEventListener("click",wegResetTopForm);
+  wegRefs.topList.addEventListener("click",e=>{
+    const ed=e.target.closest("[data-edit-top]"),de=e.target.closest("[data-delete-top]");
+    if(ed)wegEditTop(ed.dataset.editTop);
+    if(de)wegDeleteTop(de.dataset.deleteTop);
+  });
+
+  $("#printWegButton")?.addEventListener("click",wegGeneratePdf);
+  $("#copyWegButton")?.addEventListener("click",wegCopyText);
+
+  wegRefs.search.addEventListener("input",wegRenderList);
+  wegRefs.statusFilter.addEventListener("change",wegRenderList);
+  wegRefs.list.addEventListener("click",e=>{
+    const o=e.target.closest("[data-open-weg]"),u=e.target.closest("[data-duplicate-weg]"),d=e.target.closest("[data-delete-weg]");
+    if(o)wegOpenProtocol(o.dataset.openWeg);
+    if(u)wegDuplicateProtocol(u.dataset.duplicateWeg);
+    if(d)wegRequestDelete(d.dataset.deleteWeg);
+  });
+  wegRefs.list.addEventListener("change",e=>{
+    const s=e.target.closest("[data-status-weg]");
+    if(s)wegChangeStatus(s.dataset.statusWeg,s.value);
+  });
+  $("#wegEmptyStartButton")?.addEventListener("click",()=>wegNewProtocol(false));
+
+  $$('[data-close-weg-modal]').forEach(x=>x.addEventListener("click",wegCloseModal));
+  wegRefs.confirmDeleteButton.addEventListener("click",wegConfirmDelete);
+
+  [wegRefs.name,wegRefs.date,wegRefs.location,wegRefs.chair,wegRefs.ownersPresent,wegRefs.ownersRepresented,wegRefs.quorumStatus,wegRefs.quorumNote].forEach(el=>{
+    el.addEventListener("input",wegSaveDraft);
+    el.addEventListener("change",wegSaveDraft);
+  });
+}
+
+function wegInit(){
+  if(!wegRefs.tool)return;
+  wegBind();
+  try{
+    const d=JSON.parse(localStorage.getItem(WEG_DRAFT_KEY)||"null");
+    if(d&&typeof d==="object"){
+      wegState.current={...emptyWegProtocol(),...d};
+      localStorage.setItem(WEG_DRAFT_KEY,JSON.stringify(wegState.current));
+    }
+  }catch{}
+  wegSyncState();
+  wegRenderList();
+  wegSetStep(1);
+}
+wegInit();
+})();
