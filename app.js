@@ -59,49 +59,61 @@ function scrollToProject() {
 }
 
 /* Karte */
-const map = L.map("map", { scrollWheelZoom: false }).setView([51.43, 6.78], 9);
+const mapElement = document.getElementById("map");
+let map = null;
 
-L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-  attribution: "© OpenStreetMap contributors",
-  maxZoom: 19
-}).addTo(map);
+if (mapElement && typeof L !== "undefined") {
+  map = L.map(mapElement, { scrollWheelZoom: false }).setView([51.43, 6.78], 9);
 
-const cities = [
-  { name: "Duisburg", lat: 51.4344, lng: 6.7673 },
-  { name: "Oberhausen", lat: 51.4615, lng: 6.8569 },
-  { name: "Mülheim an der Ruhr", lat: 51.4301, lng: 6.9789 },
-  { name: "Essen", lat: 51.4556, lng: 7.0116 },
-  { name: "Düsseldorf", lat: 51.2277, lng: 6.7735 },
-  { name: "Moers", lat: 51.4528, lng: 6.6361 },
-  { name: "Kamp-Lintfort", lat: 51.5000, lng: 6.5247 },
-  { name: "Neukirchen-Vluyn", lat: 51.4306, lng: 6.3875 },
-  { name: "Rheinberg", lat: 51.3764, lng: 6.4511 },
-  { name: "Voerde", lat: 51.5675, lng: 6.7089 },
-  { name: "Dinslaken", lat: 51.5606, lng: 6.7389 },
-  { name: "Krefeld", lat: 51.3339, lng: 6.5688 },
-  { name: "Ratingen", lat: 51.3050, lng: 6.8386 }
-];
+  L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+    attribution: "© OpenStreetMap contributors",
+    maxZoom: 19
+  }).addTo(map);
 
-const markers = cities.map(city => {
-  return L.marker([city.lat, city.lng], {
-    icon: L.divIcon({
-      className: "",
-      html: '<div class="city-marker">●</div>',
-      iconSize: [28, 28],
-      iconAnchor: [14, 14],
-      popupAnchor: [0, -14]
+  const cities = [
+    { name: "Duisburg", lat: 51.4344, lng: 6.7673 },
+    { name: "Oberhausen", lat: 51.4615, lng: 6.8569 },
+    { name: "Mülheim an der Ruhr", lat: 51.4301, lng: 6.9789 },
+    { name: "Essen", lat: 51.4556, lng: 7.0116 },
+    { name: "Düsseldorf", lat: 51.2277, lng: 6.7735 },
+    { name: "Moers", lat: 51.4528, lng: 6.6361 },
+    { name: "Kamp-Lintfort", lat: 51.5000, lng: 6.5247 },
+    { name: "Neukirchen-Vluyn", lat: 51.4306, lng: 6.3875 },
+    { name: "Rheinberg", lat: 51.3764, lng: 6.4511 },
+    { name: "Voerde", lat: 51.5675, lng: 6.7089 },
+    { name: "Dinslaken", lat: 51.5606, lng: 6.7389 },
+    { name: "Krefeld", lat: 51.3339, lng: 6.5688 },
+    { name: "Ratingen", lat: 51.3050, lng: 6.8386 }
+  ];
+
+  const markers = cities.map(city => {
+    return L.marker([city.lat, city.lng], {
+      icon: L.divIcon({
+        className: "",
+        html: '<div class="city-marker">●</div>',
+        iconSize: [28, 28],
+        iconAnchor: [14, 14],
+        popupAnchor: [0, -14]
+      })
     })
-  })
-    .addTo(map)
-    .bindPopup(`<div class="city-popup">${city.name}</div>`);
-});
+      .addTo(map)
+      .bindPopup(`<div class="city-popup">${city.name}</div>`);
+  });
 
-const markerGroup = L.featureGroup(markers);
-map.fitBounds(markerGroup.getBounds().pad(0.15));
+  const markerGroup = L.featureGroup(markers);
+  map.fitBounds(markerGroup.getBounds().pad(0.15));
 
-document.querySelector('a[href="#einsatzgebiet"]').addEventListener("click", () => {
-  window.setTimeout(() => map.invalidateSize(), 350);
-});
+  const mapLink = document.querySelector('a[href="#einsatzgebiet"]');
+  if (mapLink) {
+    mapLink.addEventListener("click", () => {
+      window.setTimeout(() => map.invalidateSize(), 350);
+    });
+  }
+
+  window.addEventListener("load", () => {
+    window.setTimeout(() => map.invalidateSize(), 150);
+  });
+}
 
 /* Leistungen */
 const serviceData = {
@@ -213,6 +225,227 @@ serviceOptions.forEach(option => {
     renderService(option.dataset.serviceKey);
   });
 });
+
+
+/* Praxisbeispiel */
+const caseData = {
+  expose: {
+    inputTitle: "Fotos, Grundriss und Objektdaten",
+    inputs: [
+      ["JPG", "28 Objektfotos", "teilweise doppelt, ohne Raumzuordnung"],
+      ["PDF", "Grundriss", "Raumbezeichnungen vorhanden"],
+      ["PDF", "Energieausweis", "gültig bis 2031"],
+      ["TXT", "11 Besichtigungsnotizen", "Ausstattung, Lage und Zustand"]
+    ],
+    checks: [
+      ["ok", "Wohnfläche und Zimmerzahl vorhanden"],
+      ["warn", "Baujahr nicht eindeutig belegt"],
+      ["warn", "Angabe zu Hausgeld oder Nebenkosten fehlt"]
+    ],
+    outputTitle: "Vermarktungsfertiges Exposé-Paket",
+    type: "Vermarktungspaket",
+    code: "EX-2026-021",
+    title: "Wohnungsdaten geprüft und einheitlich zusammengeführt",
+    text: "Die Angaben aus Grundriss, Energieausweis, Notizen und Bildmaterial wurden abgeglichen. Widersprüchliche oder fehlende Punkte sind getrennt markiert. Für die Vermarktung stehen ein Datenblatt, eine sortierte Bildauswahl, ein sachlicher Exposé-Text und eine Liste der noch zu klärenden Angaben bereit.",
+    results: [
+      ["01", "Objektdatenblatt", "einheitliche Angaben für Portal und Exposé"],
+      ["02", "16 ausgewählte Fotos", "sortiert, beschriftet und ohne Dubletten"],
+      ["03", "Exposé-Text", "sachlich aus den geprüften Daten erstellt"],
+      ["04", "Klärungsliste", "3 fehlende oder unklare Angaben"]
+    ],
+    service: "Exposé-Texte",
+    details: "Für eine 2-Zimmer-Wohnung sollen Fotos, Grundriss, Energieausweis und Objektdaten geprüft und als vollständiges Vermarktungspaket aufbereitet werden."
+  },
+  owner: {
+    inputTitle: "Objektfotos, Handwerkerstände und Rückfragen",
+    inputs: [
+      ["JPG", "19 Zustandsfotos", "Wohnung, Keller und Gemeinschaftsflächen"],
+      ["PDF", "2 Handwerkerangebote", "Malerarbeiten und Bodenreparatur"],
+      ["MAIL", "4 Rückmeldungen", "Verwaltung, Mieter und Dienstleister"],
+      ["TXT", "Übergabenotizen", "Zählerstände und offene Punkte"]
+    ],
+    checks: [
+      ["ok", "Maßnahmen nach Objektbereich zugeordnet"],
+      ["ok", "Angebote den offenen Punkten zugeordnet"],
+      ["warn", "Freigabe für Bodenreparatur noch offen"]
+    ],
+    outputTitle: "Entscheidungsfähiger Eigentümerbericht",
+    type: "Eigentümerinformation",
+    code: "EB-2026-021",
+    title: "Zustand, Kostenstände und Entscheidungen in einer Übersicht",
+    text: "Der Bericht trennt erledigte Arbeiten, offene Maßnahmen und notwendige Entscheidungen. Zu jeder Position sind Bildnachweis, aktueller Status und vorhandene Kostenangaben hinterlegt. Der Eigentümer sieht auf einer Seite, welche Punkte abgeschlossen sind und wo eine Freigabe benötigt wird.",
+    results: [
+      ["01", "Kurzstatus", "aktueller Stand des Objekts"],
+      ["02", "Maßnahmenübersicht", "erledigt, offen oder in Prüfung"],
+      ["03", "Kostenstände", "Angebote den Positionen zugeordnet"],
+      ["04", "Entscheidungsbedarf", "Freigaben klar markiert"]
+    ],
+    service: "Eigentümerbericht",
+    details: "Aus Fotos, Handwerkerständen, Angeboten und Übergabenotizen soll ein entscheidungsfähiger Eigentümerbericht entstehen."
+  },
+  object: {
+    inputTitle: "Besichtigungsfotos und Objektaufnahme",
+    inputs: [
+      ["JPG", "31 Innen- und Außenfotos", "ohne einheitliche Reihenfolge"],
+      ["PDF", "Bestandsgrundriss", "Raumaufteilung und Flächen"],
+      ["TXT", "Vor-Ort-Notizen", "Zustand und sichtbare Auffälligkeiten"],
+      ["XLS", "Objektstammdaten", "Adresse, Nutzung und Ansprechpartner"]
+    ],
+    checks: [
+      ["ok", "Fotos nach Gebäudebereich sortiert"],
+      ["ok", "Flächenangaben mit Grundriss abgeglichen"],
+      ["warn", "Angabe zum Baujahr muss bestätigt werden"]
+    ],
+    outputTitle: "Strukturierter Objektbericht",
+    type: "Objektdokumentation",
+    code: "OB-2026-021",
+    title: "Nachvollziehbare Bestandsaufnahme nach Bereichen",
+    text: "Der Objektbericht führt Stammdaten, Bildmaterial und Vor-Ort-Notizen in einer festen Struktur zusammen. Außenbereich, Gemeinschaftsflächen und Wohnung werden getrennt dargestellt. Sichtbare Auffälligkeiten bleiben als Beobachtung gekennzeichnet und werden nicht als Gutachten bewertet.",
+    results: [
+      ["01", "Objektstammdaten", "Adresse, Nutzung und Ansprechpartner"],
+      ["02", "Bereichsübersicht", "Außen, Gemeinschaft und Einheit"],
+      ["03", "Bildnachweise", "Fotos passend zu jedem Abschnitt"],
+      ["04", "Auffälligkeiten", "sichtbare Punkte getrennt dokumentiert"]
+    ],
+    service: "Objektbericht",
+    details: "Eine Vor-Ort-Aufnahme mit Fotos, Grundriss und Stammdaten soll als strukturierter Objektbericht aufbereitet werden."
+  },
+  defects: {
+    inputTitle: "Mängelfotos, Notizen und Handwerkerinfos",
+    inputs: [
+      ["JPG", "12 Mängelfotos", "mehrere Räume und Gemeinschaftsflächen"],
+      ["TXT", "9 Einzelhinweise", "ohne Priorität oder Zuständigkeit"],
+      ["MAIL", "3 Handwerkerrückmeldungen", "Termine und Materialbedarf"],
+      ["PDF", "1 Angebot", "Bodenreparatur Schlafzimmer"]
+    ],
+    checks: [
+      ["ok", "Doppelte Hinweise zusammengeführt"],
+      ["ok", "Bildnachweise den Positionen zugeordnet"],
+      ["warn", "Zuständigkeit für Feuchteprüfung noch offen"]
+    ],
+    outputTitle: "Priorisierte Mängel- und Maßnahmenliste",
+    type: "Maßnahmensteuerung",
+    code: "MM-2026-021",
+    title: "Jeder offene Punkt mit Nachweis, Priorität und nächstem Schritt",
+    text: "Aus einzelnen Fotos und Rückmeldungen entsteht eine Arbeitsliste, die nach Objektbereich und Dringlichkeit sortiert ist. Jede Position enthält Bildnachweis, Status, Zuständigkeit und den nächsten vereinbarten Schritt. So kann die Verwaltung die Bearbeitung direkt nachhalten.",
+    results: [
+      ["01", "9 Positionen", "nach Bereich zusammengeführt"],
+      ["02", "Prioritäten", "kurzfristig, regulär oder beobachten"],
+      ["03", "Zuständigkeiten", "Verwaltung, Handwerker oder Eigentümer"],
+      ["04", "Bearbeitungsstatus", "offen, terminiert oder erledigt"]
+    ],
+    service: "Mängel- & Maßnahmenliste",
+    details: "Mängelfotos, Einzelhinweise und Handwerkerrückmeldungen sollen in eine priorisierte Maßnahmenliste überführt werden."
+  },
+  photos: {
+    inputTitle: "Unsortierte Fotos aus Besichtigung und Übergabe",
+    inputs: [
+      ["JPG", "47 Originalfotos", "mehrere ähnliche Aufnahmen"],
+      ["JPG", "6 Detailaufnahmen", "Schäden und Zählerstände"],
+      ["TXT", "kurze Raumliste", "Wohnzimmer, Schlafen, Bad, Küche"],
+      ["TXT", "Übergabedatum", "Aufnahme vom 18.06.2026"]
+    ],
+    checks: [
+      ["ok", "Fotos nach Raum und Bereich erkannt"],
+      ["ok", "unscharfe und doppelte Aufnahmen markiert"],
+      ["ok", "Zählerstände getrennt dokumentiert"]
+    ],
+    outputTitle: "Geordnete Fotodokumentation",
+    type: "Bilddokumentation",
+    code: "FD-2026-021",
+    title: "Relevante Aufnahmen in nachvollziehbarer Reihenfolge",
+    text: "Die Originalbilder werden gesichtet, nach Räumen sortiert und mit kurzen sachlichen Beschriftungen versehen. Dubletten und unbrauchbare Aufnahmen werden nicht in das Ergebnis übernommen. Schäden, Details und Zählerstände erhalten eigene Abschnitte.",
+    results: [
+      ["01", "26 verwendete Fotos", "aus 53 Originalaufnahmen ausgewählt"],
+      ["02", "Raumstruktur", "klare Reihenfolge nach Objektbereichen"],
+      ["03", "Beschriftungen", "Ort und sichtbarer Inhalt je Foto"],
+      ["04", "Sonderabschnitte", "Details, Schäden und Zählerstände"]
+    ],
+    service: "Fotodokumentation",
+    details: "Unsortierte Besichtigungs- und Übergabefotos sollen ausgewählt, nach Räumen geordnet und sachlich beschriftet werden."
+  },
+  documents: {
+    inputTitle: "Verteilte Objektunterlagen aus mehreren Quellen",
+    inputs: [
+      ["PDF", "Grundriss und Energieausweis", "unterschiedliche Dateinamen"],
+      ["XLS", "Miet- und Flächendaten", "mehrere Tabellenblätter"],
+      ["MAIL", "Verwalterauskünfte", "Angaben zu Hausgeld und Rücklage"],
+      ["JPG", "Dokumentenfotos", "nicht eindeutig zugeordnet"]
+    ],
+    checks: [
+      ["ok", "Dateien nach Dokumentart erkannt"],
+      ["warn", "Wohnflächenangabe weicht zwischen zwei Quellen ab"],
+      ["warn", "aktueller Wirtschaftsplan fehlt"]
+    ],
+    outputTitle: "Geordnete Objektakte mit Prüfliste",
+    type: "Unterlagenübersicht",
+    code: "OU-2026-021",
+    title: "Vorhandene, fehlende und widersprüchliche Unterlagen getrennt",
+    text: "Die Unterlagen werden einheitlich benannt, nach Themen abgelegt und in einer zentralen Übersicht erfasst. Abweichende Angaben werden nicht stillschweigend übernommen, sondern als Klärungspunkt ausgewiesen. Fehlende Dokumente erscheinen in einer separaten Nachforderungsliste.",
+    results: [
+      ["01", "Dokumentenregister", "Dateiname, Stand und Dokumentart"],
+      ["02", "einheitliche Ablage", "Stammdaten, Technik, Vertrag und Kosten"],
+      ["03", "Abweichungsliste", "widersprüchliche Angaben sichtbar"],
+      ["04", "Nachforderungsliste", "fehlende Dokumente klar benannt"]
+    ],
+    service: "Unterlagen strukturieren",
+    details: "Verteilte Objektunterlagen aus PDF, Excel, E-Mail und Fotos sollen als geordnete Objektakte mit Prüfliste aufbereitet werden."
+  }
+};
+
+const caseTabs = document.querySelectorAll(".case-tab");
+const caseInputTitle = document.getElementById("caseInputTitle");
+const caseInputList = document.getElementById("caseInputList");
+const caseCheckList = document.getElementById("caseCheckList");
+const caseOutputTitle = document.getElementById("caseOutputTitle");
+const caseDocumentType = document.getElementById("caseDocumentType");
+const caseDocumentCode = document.getElementById("caseDocumentCode");
+const caseDocumentTitle = document.getElementById("caseDocumentTitle");
+const caseDocumentText = document.getElementById("caseDocumentText");
+const caseResultGrid = document.getElementById("caseResultGrid");
+const caseStartButton = document.getElementById("caseStartButton");
+let currentCase = caseData.expose;
+
+function renderCase(key) {
+  const data = caseData[key];
+  if (!data) return;
+  currentCase = data;
+
+  caseInputTitle.textContent = data.inputTitle;
+  caseInputList.innerHTML = data.inputs.map(item =>
+    `<div><span>${item[0]}</span><p><strong>${item[1]}</strong><small>${item[2]}</small></p></div>`
+  ).join("");
+
+  caseCheckList.innerHTML = data.checks.map(item => {
+    const symbol = item[0] === "ok" ? "✓" : "!";
+    return `<li class="${item[0]}"><b>${symbol}</b>${item[1]}</li>`;
+  }).join("");
+
+  caseOutputTitle.textContent = data.outputTitle;
+  caseDocumentType.textContent = data.type;
+  caseDocumentCode.textContent = data.code;
+  caseDocumentTitle.textContent = data.title;
+  caseDocumentText.textContent = data.text;
+  caseResultGrid.innerHTML = data.results.map(item =>
+    `<div><span>${item[0]}</span><p><strong>${item[1]}</strong><small>${item[2]}</small></p></div>`
+  ).join("");
+
+  caseTabs.forEach(tab => {
+    const active = tab.dataset.case === key;
+    tab.classList.toggle("active", active);
+    tab.setAttribute("aria-selected", String(active));
+  });
+}
+
+caseTabs.forEach(tab => {
+  tab.addEventListener("click", () => renderCase(tab.dataset.case));
+});
+
+if (caseStartButton) {
+  caseStartButton.addEventListener("click", () => {
+    applyServiceToProject(currentCase.service, currentCase.outputTitle, currentCase.details);
+  });
+}
 
 /* Projektanfrage */
 const serviceType = document.getElementById("serviceType");
@@ -414,174 +647,5 @@ document.getElementById("portalStartButton").addEventListener("click", () => {
 restoreProject();
 renderService("owner");
 renderPortalFile("owner");
+renderCase("expose");
 updateRequest();
-
-/* Praxisbeispiele */
-
-const exampleData = {
-expose: {
-inputTitle: “Fotos, Objektdaten und Stichpunkte”,
-object: “2-Zimmer-Wohnung · 58 m² · Duisburg-Neudorf”,
-input: [
-“Wohnzimmer hell, Laminatboden”,
-“Balkon zum Innenhof”,
-“Badezimmer 2022 erneuert”,
-“Einbauküche vorhanden”,
-“Kellerraum gehört zur Wohnung”,
-“Universität und ÖPNV gut erreichbar”
-],
-outputTitle: “Exposé-Text”,
-documentType: “Objektbeschreibung”,
-documentTitle: “2-Zimmer-Wohnung mit Balkon in Duisburg-Neudorf”,
-documentText:
-“Die 2-Zimmer-Wohnung liegt im 3. Obergeschoss eines gepflegten Mehrfamilienhauses in Duisburg-Neudorf. Auf rund 58 m² verteilen sich ein Wohnzimmer, ein Schlafzimmer, eine separate Küche und ein Badezimmer. Vom Wohnzimmer aus ist der rückwärtig gelegene Balkon erreichbar. Das Bad wurde 2022 modernisiert. Eine Einbauküche und ein Kellerraum gehören ebenfalls zur Wohnung. Einkaufsmöglichkeiten, Bus- und Bahnverbindungen sowie die Universität sind in kurzer Zeit erreichbar.”,
-output: [
-“2 Zimmer”,
-“ca. 58 m²”,
-“Balkon”,
-“Einbauküche”,
-“Bad modernisiert”,
-“Kellerraum”
-],
-service: “Exposé-Texte”,
-details:
-“Orientierung am Praxisbeispiel Exposé-Text. Vorhandene Fotos und Objektdaten sollen zu einer sachlichen Objektbeschreibung aufbereitet werden.”
-},
-
-owner: {
-inputTitle: “Fotos und kurze Rückmeldungen”,
-object: “Leerwohnung · Duisburg-Hamborn”,
-input: [
-“Wohnung vollständig geräumt”,
-“Wände teilweise verschmutzt”,
-“Boden im Schlafzimmer beschädigt”,
-“Badezimmer ohne sichtbare Schäden”,
-“Küchenanschlüsse vorhanden”,
-“Zählerstände fotografiert”
-],
-outputTitle: “Eigentümerbericht”,
-documentType: “Zustandsübersicht”,
-documentTitle: “Zustand der Einheit nach Rückgabe”,
-documentText:
-“Die Wohnung wurde geräumt übergeben. Im Wohnbereich sind an mehreren Wandflächen Verschmutzungen und kleinere Bohrlöcher vorhanden. Der Laminatboden im Schlafzimmer weist im Bereich des Fensters eine sichtbare Beschädigung auf. Im Badezimmer wurden keine auffälligen Schäden festgestellt. Die Küchenanschlüsse sind vorhanden. Die dokumentierten Zählerstände wurden dem Bericht beigefügt.”,
-output: [
-“Wohnung geräumt”,
-“Wandflächen prüfen”,
-“Boden beschädigt”,
-“Bad ohne Befund”,
-“Zählerstände erfasst”
-],
-service: “Eigentümerbericht”,
-details:
-“Orientierung am Praxisbeispiel Eigentümerbericht. Fotos und Notizen sollen zu einer sachlichen Zustandsübersicht aufbereitet werden.”
-},
-
-defects: {
-inputTitle: “Mängelfotos und lose Notizen”,
-object: “Mehrfamilienhaus · Moers”,
-input: [
-“Kellerleuchte ohne Funktion”,
-“Feuchtigkeit an Wand bei Raum 4”,
-“Türschließer am Hauseingang locker”,
-“Geländer im Treppenhaus stabil”,
-“Müllraum stark verschmutzt”,
-“Termin mit Elektriker noch offen”
-],
-outputTitle: “Mängel- & Maßnahmenliste”,
-documentType: “Priorisierte Übersicht”,
-documentTitle: “Offene Punkte nach Objektkontrolle”,
-documentText:
-“Die festgestellten Punkte wurden nach Bereich und Dringlichkeit geordnet. Die Feuchtigkeit im Keller sollte kurzfristig überprüft werden. Für die ausgefallene Kellerbeleuchtung ist ein Elektrikertermin erforderlich. Der lockere Türschließer am Hauseingang kann im Rahmen eines regulären Handwerkertermins nachgestellt werden. Für den Müllraum wird eine Reinigung empfohlen.”,
-output: [
-“Feuchtigkeit · kurzfristig”,
-“Kellerlicht · Elektriker”,
-“Türschließer · nachstellen”,
-“Müllraum · Reinigung”
-],
-service: “Mängel- & Maßnahmenliste”,
-details:
-“Orientierung am Praxisbeispiel Mängel- und Maßnahmenliste. Hinweise und Fotos sollen nach Bereich, Priorität und nächstem Schritt geordnet werden.”
-},
-
-photos: {
-inputTitle: “Unsortierte Objektfotos”,
-object: “Gewerbeeinheit · Krefeld”,
-input: [
-“18 Innenaufnahmen ohne Reihenfolge”,
-“6 Fotos der Außenansicht”,
-“3 Aufnahmen des Technikraums”,
-“keine Bildbeschriftungen vorhanden”,
-“mehrere ähnliche Detailfotos”,
-“Weitergabe an Eigentümer vorgesehen”
-],
-outputTitle: “Fotodokumentation”,
-documentType: “Sortierte Bildübersicht”,
-documentTitle: “Fotodokumentation der Gewerbeeinheit”,
-documentText:
-“Die Aufnahmen wurden nach Außenbereich, Verkaufsfläche, Nebenräumen und Technik geordnet. Ähnliche Bilder wurden zusammengefasst und die verwendeten Fotos mit kurzen Beschreibungen versehen. Dadurch ist der Zustand der einzelnen Bereiche ohne zusätzliche Erläuterung nachvollziehbar.”,
-output: [
-“Außenbereich”,
-“Verkaufsfläche”,
-“Nebenräume”,
-“Technik”,
-“beschriftete Fotos”
-],
-service: “Fotodokumentation”,
-details:
-“Orientierung am Praxisbeispiel Fotodokumentation. Unsortierte Bilder sollen nach Bereichen geordnet und kurz beschriftet werden.”
-}
-};
-
-const exampleTabs = document.querySelectorAll(”.example-tab”);
-const exampleInputTitle = document.getElementById(“exampleInputTitle”);
-const exampleObject = document.getElementById(“exampleObject”);
-const exampleInputList = document.getElementById(“exampleInputList”);
-const exampleOutputTitle = document.getElementById(“exampleOutputTitle”);
-const exampleDocumentType = document.getElementById(“exampleDocumentType”);
-const exampleDocumentTitle = document.getElementById(“exampleDocumentTitle”);
-const exampleDocumentText = document.getElementById(“exampleDocumentText”);
-const exampleOutputList = document.getElementById(“exampleOutputList”);
-
-let currentExample = exampleData.expose;
-
-function renderExample(key) {
-currentExample = exampleData[key];
-
-exampleInputTitle.textContent = currentExample.inputTitle;
-exampleObject.textContent = currentExample.object;
-
-exampleInputList.innerHTML = currentExample.input
-.map(item => <li>${item}</li>)
-.join(””);
-
-exampleOutputTitle.textContent = currentExample.outputTitle;
-exampleDocumentType.textContent = currentExample.documentType;
-exampleDocumentTitle.textContent = currentExample.documentTitle;
-exampleDocumentText.textContent = currentExample.documentText;
-
-exampleOutputList.innerHTML = currentExample.output
-.map(item => <span>${item}</span>)
-.join(””);
-
-exampleTabs.forEach(tab => {
-tab.classList.toggle(“active”, tab.dataset.example === key);
-});
-}
-
-exampleTabs.forEach(tab => {
-tab.addEventListener(“click”, () => {
-renderExample(tab.dataset.example);
-});
-});
-
-document
-.getElementById(“exampleStartButton”)
-.addEventListener(“click”, () => {
-applyServiceToProject(
-currentExample.service,
-currentExample.outputTitle,
-currentExample.details
-);
-});
-
-renderExample(“expose”);
