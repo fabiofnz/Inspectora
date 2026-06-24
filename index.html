@@ -5,6 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Inspectora – Objektaufnahme und Maßnahmenplanung für Immobilienunternehmen.">
   <title>Inspectora – Objektaufnahme & Maßnahmenplaner</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
@@ -189,47 +190,40 @@
     </section>
 
     <section class="section area-section" id="einsatzgebiet">
-      <div class="section-heading"><span class="eyebrow">Vor-Ort-Unterstützung</span><h2>Einsatzgebiet am Niederrhein und im westlichen Ruhrgebiet</h2><p>Das Tool kann ortsunabhängig genutzt werden. Vor-Ort-Leistungen sind zunächst regional vorgesehen.</p></div>
-      <div class="area-layout">
-        <div class="area-map" aria-label="Schematische Darstellung des Einsatzgebiets am Niederrhein und im westlichen Ruhrgebiet">
-          <svg class="coverage-map" viewBox="0 0 760 520" role="img" aria-labelledby="coverageMapTitle coverageMapDesc">
-            <title id="coverageMapTitle">Einsatzgebiet von Inspectora</title>
-            <desc id="coverageMapDesc">Schematische Karte mit Moers und Kamp-Lintfort als Zentrum sowie umliegenden Städten.</desc>
-            <defs>
-              <linearGradient id="coverageGradient" x1="0" y1="0" x2="1" y2="1">
-                <stop offset="0%" stop-color="#dce9ff"/>
-                <stop offset="100%" stop-color="#edf4ff"/>
-              </linearGradient>
-              <filter id="mapShadow" x="-20%" y="-20%" width="140%" height="140%">
-                <feDropShadow dx="0" dy="10" stdDeviation="12" flood-color="#1b3f7a" flood-opacity="0.16"/>
-              </filter>
-            </defs>
-            <path class="map-region" d="M88 135 C145 67 247 48 343 72 C422 92 498 68 580 105 C659 141 701 218 676 294 C650 373 572 426 476 449 C381 472 289 457 205 418 C119 379 67 313 64 232 C62 194 69 163 88 135 Z" fill="url(#coverageGradient)"/>
-            <path class="map-river" d="M540 44 C505 105 516 156 480 209 C447 258 450 322 411 376 C387 408 374 442 365 486"/>
-            <path class="map-road" d="M132 150 L264 190 L382 166 L535 215 L628 286"/>
-            <path class="map-road" d="M183 360 L286 294 L407 310 L552 378"/>
-            <path class="map-road minor" d="M271 103 L300 205 L286 294 L302 420"/>
-            <circle class="coverage-radius outer" cx="315" cy="255" r="150"/>
-            <circle class="coverage-radius inner" cx="315" cy="255" r="86"/>
-            <g class="map-pin hub" transform="translate(315 255)" filter="url(#mapShadow)"><circle r="37"/><circle class="pin-core" r="12"/></g>
-            <text class="map-label hub-label" x="315" y="314" text-anchor="middle">Moers / Kamp-Lintfort</text>
-            <text class="map-sub-label" x="315" y="334" text-anchor="middle">Ausgangspunkt</text>
-            <g class="city-point"><circle cx="214" cy="214" r="7"/><text x="198" y="191">Moers</text></g>
-            <g class="city-point"><circle cx="322" cy="164" r="7"/><text x="322" y="139" text-anchor="middle">Kamp-Lintfort</text></g>
-            <g class="city-point"><circle cx="514" cy="246" r="7"/><text x="534" y="251">Duisburg</text></g>
-            <g class="city-point"><circle cx="382" cy="386" r="7"/><text x="382" y="416" text-anchor="middle">Krefeld</text></g>
-            <g class="city-point"><circle cx="425" cy="105" r="7"/><text x="445" y="110">Wesel</text></g>
-            <g class="city-point"><circle cx="143" cy="303" r="7"/><text x="116" y="333">Geldern</text></g>
-            <g class="city-point"><circle cx="247" cy="329" r="7"/><text x="221" y="357">Neukirchen-Vluyn</text></g>
-            <g class="city-point"><circle cx="270" cy="103" r="7"/><text x="247" y="80">Rheinberg</text></g>
-          </svg>
+      <div class="section-heading section-heading-wide">
+        <span class="eyebrow">Vor-Ort-Unterstützung</span>
+        <h2>Einsatzgebiet am Niederrhein und im westlichen Ruhrgebiet</h2>
+        <p>Die Karte lässt sich frei verschieben und zoomen. Das markierte Gebiet zeigt den geplanten regionalen Schwerpunkt für Vor-Ort-Leistungen.</p>
+      </div>
+
+      <div class="map-shell">
+        <div id="map" aria-label="Interaktive Karte des Inspectora-Einsatzgebiets"></div>
+
+        <aside class="map-panel">
+          <span class="eyebrow">Regionaler Schwerpunkt</span>
+          <h3>Digital nutzbar, vor Ort regional gestartet</h3>
+          <p>
+            Das Tool kann unabhängig vom Standort genutzt werden. Für Objektkontrollen,
+            Fotodokumentationen und Termine vor Ort liegt der erste Schwerpunkt rund um
+            Moers, Kamp-Lintfort und die angrenzenden Städte.
+          </p>
+
           <div class="map-legend">
-            <span><i class="legend-core"></i> Kerngebiet</span>
-            <span><i class="legend-radius"></i> Erweiterter Radius</span>
-            <small>Schematische Darstellung</small>
+            <div><span class="legend-swatch core"></span><strong>Kerngebiet</strong></div>
+            <div><span class="legend-swatch extended"></span><strong>Erweiterter Radius</strong></div>
           </div>
-        </div>
-        <div class="area-copy"><h3>Regional starten, digital weiterdenken</h3><p>Für Objektkontrollen, Fotodokumentationen und Vor-Ort-Termine liegt der erste Schwerpunkt auf dem Niederrhein und dem westlichen Ruhrgebiet.</p><div class="city-tags"><span>Moers</span><span>Kamp-Lintfort</span><span>Neukirchen-Vluyn</span><span>Rheinberg</span><span>Duisburg</span><span>Krefeld</span><span>Wesel</span><span>Geldern</span></div></div>
+
+          <div class="city-tags">
+            <span>Moers</span>
+            <span>Kamp-Lintfort</span>
+            <span>Neukirchen-Vluyn</span>
+            <span>Rheinberg</span>
+            <span>Duisburg</span>
+            <span>Krefeld</span>
+            <span>Wesel</span>
+            <span>Geldern</span>
+          </div>
+        </aside>
       </div>
     </section>
 
@@ -243,6 +237,7 @@
 
   <div class="modal" id="confirmModal" aria-hidden="true"><div class="modal-backdrop" data-close-modal></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="confirmModalTitle"><h3 id="confirmModalTitle">Projekt löschen?</h3><p>Dieser Vorgang kann nicht rückgängig gemacht werden.</p><div class="modal-actions"><button class="button secondary" type="button" data-close-modal>Abbrechen</button><button class="button danger" id="confirmDeleteButton" type="button">Löschen</button></div></div></div>
 
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"></script>
   <script src="app.js"></script>
 </body>
 </html>
