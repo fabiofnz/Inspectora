@@ -458,3 +458,18 @@ main {
 
 @media(max-width:1020px){.weg-step div{display:block}.weg-step{justify-content:flex-start}}
 @media(max-width:760px){.weg-panel{min-height:auto;padding:20px 16px}.tool-sidebar .weg-step{justify-content:center;flex-direction:column;gap:5px;text-align:center}.tool-sidebar .weg-step div{display:block}.tool-sidebar .weg-step small{display:none}}
+
+/* Hero-Signature-Element: "Chaos-Cluster" als Kontrast zur aufgeräumten Tool-Vorschau */
+.chaos-cluster{position:relative;height:148px;margin-top:34px}
+.chaos-card{position:absolute;border-radius:11px;font-size:11px;font-weight:700;line-height:1.4;box-shadow:0 10px 22px rgba(15,23,42,.14);animation:chaosFloat 6s ease-in-out infinite}
+.chaos-note{top:0;left:0;width:148px;padding:11px 13px;background:#fff3b0;color:#5c4a06;--r:-7deg;animation-delay:0s}
+.chaos-chat{top:16px;left:120px;width:180px;padding:11px 13px;background:#eef3ff;color:#1d3a66;--r:4deg;animation-delay:.6s}
+.chaos-photo{top:80px;left:8px;width:120px;padding:10px 10px;display:flex;align-items:flex-end;color:#fff;font-size:9px;font-weight:800;letter-spacing:.03em;background:linear-gradient(135deg,#aebbcd,#677995);--r:-3deg;animation-delay:1.1s}
+@keyframes chaosFloat{0%,100%{transform:translateY(0) rotate(var(--r,0deg))}50%{transform:translateY(-6px) rotate(var(--r,0deg))}}
+.chaos-caption{margin-top:14px;color:var(--muted);font-size:11px}
+@media(prefers-reduced-motion:reduce){.chaos-card{animation:none;transform:rotate(var(--r,0deg))}}
+@media(max-width:500px){.chaos-cluster{height:auto;display:flex;flex-direction:column;gap:8px}.chaos-card{position:static;width:auto!important;animation:none;transform:none}}
+
+/* Über-uns: ehrliche Vertrauens-Chips, keine erfundenen Kennzahlen */
+.trust-chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}
+.trust-chips span{padding:7px 10px;border-radius:999px;color:#345070;border:1px solid #d8e3ef;background:#f5f8fc;font-size:10px;font-weight:800}
