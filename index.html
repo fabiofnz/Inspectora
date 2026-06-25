@@ -5,6 +5,9 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="description" content="Inspectora – Objektaufnahme und Maßnahmenplanung für Immobilienunternehmen.">
   <title>Inspectora – Objektaufnahme & Maßnahmenplaner</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css">
   <link rel="stylesheet" href="styles.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
@@ -70,12 +73,12 @@
     </section>
 
     <section class="section" id="ablauf">
-      <div class="section-heading">
+      <div class="section-heading reveal">
         <span class="eyebrow">Einfacher Ablauf</span>
         <h2>Von der Begehung zur klaren Übersicht</h2>
         <p>Das Tool bleibt bewusst kompakt und konzentriert sich auf Angaben, die im Immobilienalltag tatsächlich gebraucht werden.</p>
       </div>
-      <div class="steps-grid">
+      <div class="steps-grid reveal-stagger">
         <article><span>01</span><h3>Objekt anlegen</h3><p>Adresse, Objektart, Anlass und zuständige Person erfassen.</p></article>
         <article><span>02</span><h3>Bereiche festlegen</h3><p>Zum Beispiel Außenbereich, Treppenhaus, Keller oder einzelne Räume.</p></article>
         <article><span>03</span><h3>Feststellungen aufnehmen</h3><p>Zustand, Priorität, Maßnahme, Zuständigkeit und Frist dokumentieren.</p></article>
@@ -84,8 +87,8 @@
     </section>
 
     <section class="section value-section tone-soft">
-      <div class="section-heading"><span class="eyebrow">Der praktische Nutzen</span><h2>Klare Übergaben statt verstreuter Informationen</h2></div>
-      <div class="value-grid"><article><h3>Einheitliche Erfassung</h3><p>Feststellungen werden immer nach demselben Aufbau dokumentiert.</p></article><article><h3>Klare Maßnahmen</h3><p>Priorität, Zuständigkeit, Frist und Status sind direkt hinterlegt.</p></article><article><h3>Saubere Weitergabe</h3><p>Aus der Aufnahme entsteht eine verständliche Übersicht für Verwaltung, Eigentümer oder Dienstleister.</p></article></div>
+      <div class="section-heading reveal"><span class="eyebrow">Der praktische Nutzen</span><h2>Klare Übergaben statt verstreuter Informationen</h2></div>
+      <div class="value-grid reveal-stagger"><article><h3>Einheitliche Erfassung</h3><p>Feststellungen werden immer nach demselben Aufbau dokumentiert.</p></article><article><h3>Klare Maßnahmen</h3><p>Priorität, Zuständigkeit, Frist und Status sind direkt hinterlegt.</p></article><article><h3>Saubere Weitergabe</h3><p>Aus der Aufnahme entsteht eine verständliche Übersicht für Verwaltung, Eigentümer oder Dienstleister.</p></article></div>
     </section>
 
     <section class="tool-section" id="tool">
@@ -185,7 +188,7 @@
 
     <section class="section projects-section" id="projekte">
       <div class="projects-heading">
-        <div class="section-heading"><span class="eyebrow">Projektübersicht</span><h2>Meine Projekte</h2><p>Gespeicherte Projekte können auf diesem Gerät geöffnet, weiterbearbeitet, dupliziert oder gelöscht werden.</p></div>
+        <div class="section-heading reveal"><span class="eyebrow">Projektübersicht</span><h2>Meine Projekte</h2><p>Gespeicherte Projekte können auf diesem Gerät geöffnet, weiterbearbeitet, dupliziert oder gelöscht werden.</p></div>
         <div class="project-toolbar"><input id="projectSearch" type="search" placeholder="Projekte durchsuchen"><select id="projectStatusFilter"><option value="Alle">Alle Status</option><option value="Entwurf">Entwurf</option><option value="In Bearbeitung">In Bearbeitung</option><option value="Zur Prüfung">Zur Prüfung</option><option value="Abgeschlossen">Abgeschlossen</option></select></div>
       </div>
       <div class="project-overview"><article><span>Gesamt</span><strong id="totalProjects">0</strong></article><article><span>In Bearbeitung</span><strong id="activeProjects">0</strong></article><article><span>Offene Punkte</span><strong id="openFindings">0</strong></article><article><span>Hohe Priorität</span><strong id="highFindings">0</strong></article></div>
