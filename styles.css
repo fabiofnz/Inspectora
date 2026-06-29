@@ -601,7 +601,7 @@ main { padding-top: 0; }
 
 .hero h1 {
   font-size: clamp(52px, 6.5vw, 88px);
-  line-height: .97; letter-spacing: -.06em; color: #fff; max-width: 780px;
+  line-height: 1.08; letter-spacing: -.045em; color: #fff; max-width: 780px;
 }
 .hero .eyebrow { color: rgba(255,255,255,.68); background: rgba(255,255,255,.08); border-color: rgba(255,255,255,.15); }
 .hero-copy > p { font-size: 18px; line-height: 1.72; color: rgba(255,255,255,.58); max-width: 520px; margin-top: 22px; }
