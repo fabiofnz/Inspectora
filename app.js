@@ -417,7 +417,7 @@ const today=()=>new Date().toISOString().slice(0,10);
 const fmt=v=>v?new Intl.DateTimeFormat("de-DE").format(new Date(v+"T12:00:00")):"Nicht angegeben";
 
 const emptyWegTop=()=>({id:"",title:"",notes:"",motion:"",yes:0,no:0,abstain:0,resultMode:""});
-const emptyWegProtocol=()=>({id:"",name:"",status:"Entwurf",date:today(),location:"",chair:"",ownersPresent:"",ownersRepresented:"",quorumStatus:"",quorumNote:"",tops:[],createdAt:"",updatedAt:""});
+const emptyWegProtocol=()=>({id:"",name:"",status:"Entwurf",date:today(),location:"",chair:"",ownersPresent:"",ownersRepresented:"",quorumStatus:"",quorumNote:"",tops:[],createdAt:"",updatedAt:"",draftText:""});
 
 function wegTopId(){return`WTOP-${Date.now()}-${Math.random().toString(16).slice(2,7)}`}
 function wegResult(top){return top.resultMode||((Number(top.yes)||0)>(Number(top.no)||0)?"Angenommen":"Abgelehnt")}
@@ -446,6 +446,7 @@ const wegRefs={
   reportDetails:$("#wegReportDetails"),reportTops:$("#wegReportTops"),
   search:$("#wegSearch"),statusFilter:$("#wegStatusFilter"),list:$("#wegList"),
   totalCount:$("#wegTotalCount"),draftCount:$("#wegDraftCount"),topsCount:$("#wegTopsCount"),rejectedCount:$("#wegRejectedCount"),
+  draft:$("#wegProtocolDraft"),
   confirmModal:$("#wegConfirmModal"),confirmDeleteButton:$("#wegConfirmDeleteButton")
 };
 
@@ -469,7 +470,7 @@ function wegSetStep(n){
   wegState.step=Number(n);
   $$('.weg-step').forEach(b=>b.classList.toggle('active',Number(b.dataset.step)===wegState.step));
   $$('.weg-panel').forEach(p=>p.classList.toggle('active',Number(p.dataset.panel)===wegState.step));
-  if(wegState.step===3){wegSyncForm();wegRenderReport()}
+  if(wegState.step===3){wegSyncForm();wegRenderReport();if(wegRefs.draft&&!wegRefs.draft.value.trim()){wegRefs.draft.value=wegGenerateText();wegState.current.draftText=wegRefs.draft.value;}}
   wegSaveDraft();
 }
 
@@ -489,6 +490,7 @@ function wegSyncForm(){
     chair:wegRefs.chair.value.trim(),ownersPresent:wegRefs.ownersPresent.value,ownersRepresented:wegRefs.ownersRepresented.value,
     quorumStatus:wegRefs.quorumStatus.value,quorumNote:wegRefs.quorumNote.value.trim()
   });
+  if(wegRefs.draft)wegState.current.draftText=wegRefs.draft.value;
 }
 
 function wegSyncState(){
@@ -500,6 +502,7 @@ function wegSyncState(){
   wegRefs.ownersRepresented.value=wegState.current.ownersRepresented||"";
   wegRefs.quorumStatus.value=wegState.current.quorumStatus||"";
   wegRefs.quorumNote.value=wegState.current.quorumNote||"";
+  if(wegRefs.draft)wegRefs.draft.value=wegState.current.draftText||"";
   wegRenderTops();
   wegRenderReport();
 }
@@ -702,6 +705,87 @@ function wegRenderList(){
   }).join("");
 }
 
+function wegGenerateText(){
+  wegSyncForm();
+  const p=wegState.current;
+  const present=Number(p.ownersPresent)||0;
+  const represented=Number(p.ownersRepresented)||0;
+  const total=present+represented;
+  const out=[];
+
+  out.push("Protokoll der Eigentümerversammlung");
+  out.push(p.name||"[WEG-Bezeichnung eintragen]");
+  out.push("");
+
+  let intro=`Die Eigentümerversammlung der ${p.name||"[WEG-Bezeichnung]"} fand am ${p.date?fmt(p.date):"[Datum]"}`;
+  if(p.location)intro+=` in ${p.location}`;
+  intro+=` statt. Den Vorsitz der Versammlung führte ${p.chair||"[Versammlungsleiter]"}.`;
+  out.push(intro);
+  out.push("");
+
+  if(total>0){
+    let s=`Es waren ${present} Eigentümer persönlich anwesend`;
+    if(represented>0)s+=`, ${represented} ${represented===1?"war":"waren"} durch Vollmacht vertreten`;
+    s+=`. Insgesamt nahmen damit ${total} Eigentümer an der Versammlung teil.`;
+    out.push(s);
+  } else {
+    out.push("[Angaben zu anwesenden und vertretenen Eigentümern ergänzen]");
+  }
+
+  if(p.quorumStatus==="Beschlussfähig"){
+    out.push(`Der Versammlungsleiter stellte die Beschlussfähigkeit der Versammlung fest.${p.quorumNote?" "+p.quorumNote:""}`);
+  } else if(p.quorumStatus==="Nicht beschlussfähig"){
+    out.push(`Der Versammlungsleiter stellte fest, dass die Versammlung nicht beschlussfähig ist.${p.quorumNote?" "+p.quorumNote:""}`);
+  } else if(p.quorumStatus==="Teilweise beschlussfähig"){
+    out.push(`Der Versammlungsleiter wies darauf hin, dass die Versammlung nur teilweise beschlussfähig ist.${p.quorumNote?" "+p.quorumNote:""}`);
+  } else if(p.quorumNote){
+    out.push(p.quorumNote);
+  }
+  out.push("");
+
+  if(!p.tops.length){
+    out.push("[Tagesordnungspunkte werden nach der Erfassung in Schritt 2 hier eingesetzt]");
+    out.push("");
+  } else {
+    p.tops.forEach((t,i)=>{
+      const result=wegResult(t);
+      const yes=Number(t.yes)||0;
+      const no=Number(t.no)||0;
+      const abstain=Number(t.abstain)||0;
+      const ja=yes===1?"1 Ja-Stimme":`${yes} Ja-Stimmen`;
+      const nein=no===1?"1 Nein-Stimme":`${no} Nein-Stimmen`;
+      const enth=abstain===1?"1 Enthaltung":`${abstain} Enthaltungen`;
+      out.push(`TOP ${i+1}: ${t.title||"[Ohne Titel]"}`);
+      out.push("");
+      if(t.notes){
+        out.push(`Im Rahmen der Erörterung wurden folgende Aspekte besprochen: ${t.notes}.`);
+        out.push("");
+      }
+      if(t.motion){
+        out.push("Beschlussantrag:");
+        out.push(t.motion);
+        out.push("");
+      }
+      if(result==="Angenommen"){
+        out.push(`Der Beschluss wurde mit ${ja}, ${nein} und ${enth} angenommen.`);
+      } else {
+        out.push(`Der Antrag wurde mit ${nein} gegen ${ja} bei ${enth} abgelehnt.`);
+      }
+      out.push("");
+    });
+  }
+
+  out.push("Da keine weiteren Tagesordnungspunkte vorlagen, schloss der Versammlungsleiter die Versammlung.");
+  out.push("");
+  out.push("");
+  out.push("___________________________          ___________________________");
+  out.push(`${p.chair||"[Versammlungsleiter]"}                   [Protokollführer]`);
+  out.push("");
+  out.push("─────────────────────────────────────────────────────────────────────────");
+  out.push("Hinweis: Dieser Text ist ein automatisch erstellter Entwurf. Die fachliche und formale Verantwortung für Richtigkeit, Vollständigkeit und Form liegt beim Verwalter bzw. Versammlungsleiter.");
+  return out.join("\n");
+}
+
 function wegProtocolText(){
   wegSyncForm();
   const p=wegState.current;
@@ -726,7 +810,8 @@ function wegProtocolText(){
 }
 
 function wegCopyText(){
-  navigator.clipboard.writeText(wegProtocolText())
+  const text=wegRefs.draft&&wegRefs.draft.value.trim()?wegRefs.draft.value:wegGenerateText();
+  navigator.clipboard.writeText(text)
     .then(()=>wegToast("Protokolltext kopiert."))
     .catch(()=>wegToast("Kopieren wurde vom Browser nicht erlaubt."));
 }
@@ -737,8 +822,8 @@ function wegGeneratePdf(){
     return;
   }
   wegSyncForm();
-  wegRenderReport();
   const p=wegState.current;
+  const draftText=(wegRefs.draft&&wegRefs.draft.value.trim())?wegRefs.draft.value:wegGenerateText();
   const{jsPDF}=window.jspdf;
   const doc=new jsPDF({unit:"mm",format:"a4"});
   const pageW=doc.internal.pageSize.getWidth();
@@ -772,7 +857,7 @@ function wegGeneratePdf(){
     doc.setFont("helvetica","normal");
     doc.setFontSize(7);
     doc.setTextColor(140,150,165);
-    const lines=doc.splitTextToSize("Dieses Protokoll ist ein automatisch erstellter Entwurf. Die fachliche und formale Verantwortung für Richtigkeit, Vollständigkeit und Form liegt beim Verwalter bzw. Versammlungsleiter.",contentW);
+    const lines=doc.splitTextToSize("ENTWURF – Die fachliche und formale Verantwortung für Richtigkeit, Vollständigkeit und Form liegt beim Verwalter bzw. Versammlungsleiter.",contentW);
     lines.forEach((line,i)=>doc.text(line,marginX,pageH-11+i*3.4));
   }
 
@@ -781,7 +866,7 @@ function wegGeneratePdf(){
     doc.addPage();
     pageNum++;
     drawHeader();
-    cursorY=headerH+10;
+    cursorY=headerH+8;
   }
 
   function ensureSpace(h){
@@ -791,111 +876,78 @@ function wegGeneratePdf(){
   drawHeader();
   cursorY=headerH+10;
 
-  doc.setFont("helvetica","bold");
-  doc.setFontSize(16);
-  doc.setTextColor(16,32,57);
-  doc.text("Protokoll der Eigentümerversammlung",marginX,cursorY);
-  cursorY+=7;
+  const rawLines=draftText.split("\n");
+  const lineH=4.6;
+  let firstNonEmpty=true;
 
-  doc.setFont("helvetica","normal");
-  doc.setFontSize(9);
-  doc.setTextColor(90,100,120);
-  doc.text(`${p.name||"Neues Versammlungsprotokoll"}`,marginX,cursorY);
-  cursorY+=10;
+  rawLines.forEach(rawLine=>{
+    const trimmed=rawLine.trimEnd();
+    if(!trimmed){cursorY+=2.5;return;}
 
-  const details=[
-    ["Datum",p.date?fmt(p.date):""],
-    ["Ort",p.location],
-    ["Versammlungsleiter",p.chair],
-    ["Anwesende Eigentümer",p.ownersPresent?String(p.ownersPresent):""],
-    ["Vertretene Eigentümer",p.ownersRepresented?String(p.ownersRepresented):""],
-    ["Beschlussfähigkeit",p.quorumStatus],
-    ["Angaben zur Beschlussfähigkeit",p.quorumNote]
-  ].filter(([,v])=>v);
+    if(/^Hinweis:/.test(trimmed)||/^─{3,}/.test(trimmed)){
+      ensureSpace(lineH+1);
+      doc.setFont("helvetica","italic");
+      doc.setFontSize(7.5);
+      doc.setTextColor(130,140,155);
+      const segs=doc.splitTextToSize(trimmed,contentW);
+      segs.forEach((l,li)=>doc.text(l,marginX,cursorY+li*lineH));
+      cursorY+=segs.length*lineH+1;
+      return;
+    }
 
-  if(details.length){
-    ensureSpace(8);
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(11);
-    doc.setTextColor(16,32,57);
-    doc.text("Versammlungsdaten",marginX,cursorY);
-    cursorY+=6;
-    details.forEach(([label,value])=>{
-      const valueLines=doc.splitTextToSize(String(value),contentW-48);
-      ensureSpace(Math.max(5,valueLines.length*4.4)+1.5);
-      doc.setFont("helvetica","bold");
-      doc.setFontSize(8);
-      doc.setTextColor(110,120,140);
-      doc.text(`${label}:`,marginX,cursorY);
+    if(/^_{3,}/.test(trimmed)){
+      ensureSpace(lineH+2);
       doc.setFont("helvetica","normal");
+      doc.setFontSize(8.5);
+      doc.setTextColor(90,100,115);
+      doc.text(trimmed,marginX,cursorY);
+      cursorY+=lineH+2;
+      return;
+    }
+
+    if(firstNonEmpty){
+      firstNonEmpty=false;
+      ensureSpace(12);
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(15);
+      doc.setTextColor(16,32,57);
+      const segs=doc.splitTextToSize(trimmed,contentW);
+      segs.forEach((l,li)=>doc.text(l,marginX,cursorY+li*6.4));
+      cursorY+=segs.length*6.4+3;
+      return;
+    }
+
+    if(/^TOP \d+:/i.test(trimmed)){
+      ensureSpace(16);
+      cursorY+=3;
+      doc.setDrawColor(215,225,238);
+      doc.line(marginX,cursorY-2,marginX+contentW,cursorY-2);
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(10.5);
+      doc.setTextColor(16,32,57);
+      const segs=doc.splitTextToSize(trimmed,contentW);
+      segs.forEach((l,li)=>doc.text(l,marginX,cursorY+li*5));
+      cursorY+=segs.length*5+2;
+      return;
+    }
+
+    if(/^Beschlussantrag:/.test(trimmed)){
+      ensureSpace(lineH+1);
+      doc.setFont("helvetica","bold");
       doc.setFontSize(9);
-      doc.setTextColor(40,48,64);
-      valueLines.forEach((line,i)=>doc.text(line,marginX+48,cursorY+i*4.4));
-      cursorY+=Math.max(5,valueLines.length*4.4)+1.5;
-    });
-    cursorY+=4;
-  }
+      doc.setTextColor(40,50,70);
+      doc.text("Beschlussantrag:",marginX,cursorY);
+      cursorY+=lineH+0.5;
+      return;
+    }
 
-  ensureSpace(10);
-  doc.setFont("helvetica","bold");
-  doc.setFontSize(13);
-  doc.setTextColor(16,32,57);
-  doc.text("Tagesordnungspunkte und Beschlüsse",marginX,cursorY);
-  cursorY+=8;
-
-  if(!p.tops.length){
-    ensureSpace(8);
+    ensureSpace(lineH+1);
     doc.setFont("helvetica","normal");
     doc.setFontSize(9);
-    doc.setTextColor(110,120,140);
-    doc.text("Noch keine Tagesordnungspunkte erfasst.",marginX,cursorY);
-    cursorY+=8;
-  }
-
-  p.tops.forEach((t,i)=>{
-    const lineH=4.4;
-    const titleLines=doc.splitTextToSize(`TOP ${i+1}: ${t.title||""}`,contentW);
-    const notesLines=t.notes?doc.splitTextToSize(`Diskussion: ${t.notes}`,contentW):[];
-    const motionLines=t.motion?doc.splitTextToSize(`Beschlussantrag: ${t.motion}`,contentW):[];
-    const blockH=11+titleLines.length*lineH+(notesLines.length?notesLines.length*lineH+2:0)+(motionLines.length?motionLines.length*lineH+2:0)+6;
-
-    if(cursorY+blockH>pageH-footerH-4)newPage();
-
-    doc.setDrawColor(225,231,240);
-    doc.line(marginX,cursorY,marginX+contentW,cursorY);
-    cursorY+=6;
-
-    const result=wegResult(t),resultColor=result==="Angenommen"?[20,121,90]:[196,60,80];
-    doc.setFont("helvetica","bold");
-    doc.setFontSize(8);
-    doc.setTextColor(...resultColor);
-    doc.text(result.toUpperCase(),marginX+contentW,cursorY,{align:"right"});
-
-    doc.setTextColor(16,32,57);
-    titleLines.forEach((line,li)=>doc.text(line,marginX,cursorY+li*lineH));
-    cursorY+=titleLines.length*lineH+1.5;
-
-    if(notesLines.length){
-      doc.setFont("helvetica","normal");
-      doc.setFontSize(9);
-      doc.setTextColor(70,80,100);
-      notesLines.forEach((line,li)=>doc.text(line,marginX,cursorY+li*lineH));
-      cursorY+=notesLines.length*lineH+1.5;
-    }
-
-    if(motionLines.length){
-      doc.setFont("helvetica","normal");
-      doc.setFontSize(9);
-      doc.setTextColor(70,80,100);
-      motionLines.forEach((line,li)=>doc.text(line,marginX,cursorY+li*lineH));
-      cursorY+=motionLines.length*lineH+1.5;
-    }
-
-    doc.setFont("helvetica","normal");
-    doc.setFontSize(8);
-    doc.setTextColor(110,120,140);
-    doc.text(`Ja: ${t.yes}   ·   Nein: ${t.no}   ·   Enthaltungen: ${t.abstain}`,marginX,cursorY);
-    cursorY+=6;
+    doc.setTextColor(35,45,62);
+    const segs=doc.splitTextToSize(trimmed,contentW);
+    segs.forEach((l,li)=>doc.text(l,marginX,cursorY+li*lineH));
+    cursorY+=segs.length*lineH+0.6;
   });
 
   drawFooter();
@@ -933,6 +985,19 @@ function wegBind(){
 
   $("#printWegButton")?.addEventListener("click",wegGeneratePdf);
   $("#copyWegButton")?.addEventListener("click",wegCopyText);
+  $("#regenerateWegButton")?.addEventListener("click",()=>{
+    if(!wegRefs.draft)return;
+    if(wegRefs.draft.value.trim()&&!window.confirm("Protokolltext neu generieren? Manuelle Änderungen gehen dabei verloren."))return;
+    wegRefs.draft.value=wegGenerateText();
+    wegState.current.draftText=wegRefs.draft.value;
+    wegSaveDraft();
+  });
+  if(wegRefs.draft){
+    wegRefs.draft.addEventListener("input",()=>{
+      wegState.current.draftText=wegRefs.draft.value;
+      wegSaveDraft();
+    });
+  }
 
   wegRefs.search.addEventListener("input",wegRenderList);
   wegRefs.statusFilter.addEventListener("change",wegRenderList);

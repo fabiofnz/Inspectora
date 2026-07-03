@@ -258,6 +258,16 @@
           <section class="weg-panel" data-panel="3">
             <div class="panel-heading"><div><span class="panel-kicker">Schritt 3</span><h3>Protokollvorschau</h3></div><div class="report-actions"><button class="button secondary small" id="copyWegButton" type="button">Text kopieren</button><button class="button primary small" id="printWegButton" type="button">Als PDF exportieren</button></div></div>
             <div class="disclaimer-banner"><strong>Hinweis:</strong> Dieses Protokoll ist ein automatisch erstellter Entwurf. Die fachliche und formale Verantwortung für Richtigkeit, Vollständigkeit und Form liegt beim Verwalter bzw. Versammlungsleiter.</div>
+            <div class="weg-draft-wrap">
+              <div class="weg-draft-head">
+                <div>
+                  <strong>Protokolltext (bearbeitbar)</strong>
+                  <span>Automatisch aus Ihren Eingaben erstellt – bitte inhaltlich prüfen und bei Bedarf anpassen.</span>
+                </div>
+                <button class="button secondary small" id="regenerateWegButton" type="button">Neu generieren</button>
+              </div>
+              <textarea id="wegProtocolDraft" rows="20" spellcheck="true" aria-label="Protokolltext Entwurf – bearbeitbar"></textarea>
+            </div>
             <div class="report-card" id="wegReportCard">
               <div class="report-header"><div><span class="report-brand">Inspectora</span><h3 id="wegReportName">Neues Versammlungsprotokoll</h3><p id="wegReportMeta">Noch keine Versammlungsdaten eingetragen</p></div><div class="report-id"><span>Protokoll-ID</span><strong id="wegReportId">Entwurf</strong></div></div>
               <div class="report-summary-grid"><article><span>Anwesend</span><strong id="wegReportPresent">0</strong></article><article><span>Vertreten</span><strong id="wegReportRepresented">0</strong></article><article><span>TOPs</span><strong id="wegReportTopTotal">0</strong></article><article><span>Abgelehnt</span><strong id="wegReportRejectedTotal">0</strong></article></div>
