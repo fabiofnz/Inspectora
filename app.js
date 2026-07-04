@@ -1089,3 +1089,822 @@ wegInit();
   }
 
 })();
+
+/* ── Hausgeld- & Wirtschaftsplan-Rechner ─────────────────────── */
+(function () {
+  'use strict';
+
+  const HG_STORAGE_KEY = 'inspectora_hg_plans_v1';
+  const HG_DRAFT_KEY   = 'inspectora_hg_draft_v1';
+  const $ = (s, r = document) => r.querySelector(s);
+  const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+  const esc = v => String(v ?? '').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
+  const today = () => new Date().toISOString().slice(0, 10);
+  const fmt   = v => v ? new Intl.DateTimeFormat('de-DE').format(new Date(v + 'T12:00:00')) : '';
+
+  const emptyHgPlan = () => ({
+    id: '', name: '', status: 'Entwurf',
+    year: new Date().getFullYear(), meaDenominator: 1000,
+    manager: '', units: [], costs: [],
+    createdAt: '', updatedAt: ''
+  });
+
+  let hgPlansArr = [];
+  try {
+    hgPlansArr = JSON.parse(localStorage.getItem(HG_STORAGE_KEY) || '[]');
+    if (!Array.isArray(hgPlansArr)) hgPlansArr = [];
+  } catch { hgPlansArr = []; }
+
+  const hgState = {
+    step: 1,
+    current: emptyHgPlan(),
+    plans: hgPlansArr,
+    deleteTarget: null,
+    view: 'year',
+    costHint: null
+  };
+
+  // ── Utilities ─────────────────────────────────────────────────
+  function hgToast(msg) {
+    const el = document.getElementById('toast');
+    if (!el) return;
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(hgToast._t);
+    hgToast._t = setTimeout(() => el.classList.remove('show'), 2600);
+  }
+
+  function hgPersist() {
+    try { localStorage.setItem(HG_STORAGE_KEY, JSON.stringify(hgState.plans)); return true; }
+    catch { hgToast('Speicher voll – bitte ältere Pläne löschen.'); return false; }
+  }
+
+  function hgSaveDraft() {
+    try { localStorage.setItem(HG_DRAFT_KEY, JSON.stringify(hgState.current)); } catch {}
+  }
+
+  function hgPlanId() {
+    const y = new Date().getFullYear();
+    const nums = hgState.plans.map(p => Number(String(p.id).split('-').pop())).filter(Number.isFinite);
+    return `HG-${y}-${String((nums.length ? Math.max(...nums) : 0) + 1).padStart(3, '0')}`;
+  }
+
+  let _hgUnitSeq = 0, _hgCostSeq = 0;
+  function hgUnitId() { return `HGU-${Date.now()}-${++_hgUnitSeq}`; }
+  function hgCostId() { return `HGC-${Date.now()}-${++_hgCostSeq}`; }
+
+  function hgFmt(cents) {
+    return (cents / 100).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €';
+  }
+  function hgFmtN(v, dec = 2) {
+    return (parseFloat(v) || 0).toLocaleString('de-DE', { minimumFractionDigits: dec, maximumFractionDigits: dec });
+  }
+  function hgCellFmt(cents) {
+    return hgState.view === 'month'
+      ? (cents / 1200).toLocaleString('de-DE', { minimumFractionDigits: 2, maximumFractionDigits: 2 }) + ' €'
+      : hgFmt(cents);
+  }
+  function hgKeyLabel(key) {
+    return key === 'area' ? 'Fläche (m²)' : key === 'equal' ? 'Einheiten' : 'MEA';
+  }
+
+  // ── Distribution: Largest-Remainder, cent-exact ───────────────
+  function hgDistribute(totalCents, weights) {
+    const totalW = weights.reduce((a, b) => a + b, 0);
+    if (!totalW) return weights.map(() => 0);
+    const raw     = weights.map(w => totalCents * w / totalW);
+    const floored = raw.map(Math.floor);
+    let rem = totalCents - floored.reduce((a, b) => a + b, 0);
+    const byFrac = raw.map((v, i) => [i, v - floored[i]]).sort((a, b) => b[1] - a[1]);
+    const result = [...floored];
+    for (let k = 0; k < rem; k++) result[byFrac[k][0]]++;
+    return result;
+  }
+
+  function hgCalculate() {
+    const { units, costs } = hgState.current;
+    if (!units.length || !costs.length) return [];
+    const n = units.length, m = costs.length;
+    const matrix = Array.from({ length: n }, () => new Array(m).fill(0));
+    costs.forEach((cost, j) => {
+      const totalCents = Math.round((parseFloat(cost.amount) || 0) * 100);
+      if (!totalCents) return;
+      let weights;
+      if      (cost.key === 'area')  weights = units.map(u => parseFloat(u.area) || 0);
+      else if (cost.key === 'equal') weights = units.map(() => 1);
+      else                           weights = units.map(u => parseFloat(u.mea)  || 0);
+      const dist = hgDistribute(totalCents, weights);
+      for (let i = 0; i < n; i++) matrix[i][j] = dist[i];
+    });
+    return matrix;
+  }
+
+  // ── Step management ───────────────────────────────────────────
+  function hgSetStep(n) {
+    hgState.step = Number(n);
+    $$('.hg-step').forEach(b => b.classList.toggle('active', Number(b.dataset.step) === hgState.step));
+    $$('.hg-panel').forEach(p => p.classList.toggle('active', Number(p.dataset.panel) === hgState.step));
+    if (hgState.step === 4) { hgSyncForm(); hgRenderResult(); }
+    hgSaveDraft();
+  }
+
+  function hgValidate(step) {
+    hgSyncForm();
+    const p = hgState.current;
+    if (Number(step) === 1) {
+      if (!p.name)            { hgToast('Bitte eine WEG-Bezeichnung eintragen.');   return false; }
+      if (!p.year)            { hgToast('Bitte ein Wirtschaftsjahr eintragen.');      return false; }
+      if (!p.meaDenominator)  { hgToast('Bitte den MEA-Gesamtnenner eintragen.');   return false; }
+    }
+    if (Number(step) === 2 && !p.units.length) { hgToast('Bitte mindestens eine Einheit erfassen.');        return false; }
+    if (Number(step) === 3 && !p.costs.length) { hgToast('Bitte mindestens eine Kostenposition erfassen.'); return false; }
+    return true;
+  }
+
+  // ── Form sync ─────────────────────────────────────────────────
+  function hgSyncForm() {
+    Object.assign(hgState.current, {
+      name:           ($('#hgName')?.value || '').trim(),
+      year:           parseInt($('#hgYear')?.value || '') || new Date().getFullYear(),
+      manager:        ($('#hgManager')?.value || '').trim(),
+      meaDenominator: parseFloat($('#hgMeaDenominator')?.value || '') || 1000,
+      status:         $('#hgStatus')?.value || 'Entwurf'
+    });
+  }
+
+  function hgSyncState() {
+    const p = hgState.current;
+    const set = (id, val) => { const el = $(`#${id}`); if (el) el.value = val; };
+    set('hgName',           p.name            || '');
+    set('hgYear',           p.year            || new Date().getFullYear());
+    set('hgManager',        p.manager         || '');
+    set('hgMeaDenominator', p.meaDenominator  || 1000);
+    set('hgStatus',         p.status          || 'Entwurf');
+    hgRenderUnits();
+    hgMeaCheckRender();
+    hgRenderCosts();
+  }
+
+  // ── Units ─────────────────────────────────────────────────────
+  function hgUnitFromForm() {
+    const existingId = $('#hgEditingUnitId')?.value;
+    return {
+      id:    existingId || hgUnitId(),
+      label: ($('#hgUnitLabel')?.value || '').trim(),
+      owner: ($('#hgUnitOwner')?.value || '').trim(),
+      mea:   $('#hgUnitMea')?.value  || '',
+      area:  $('#hgUnitArea')?.value || ''
+    };
+  }
+
+  function hgResetUnitForm() {
+    ['hgUnitLabel','hgUnitOwner','hgUnitMea','hgUnitArea','hgEditingUnitId']
+      .forEach(id => { const el = $(`#${id}`); if (el) el.value = ''; });
+  }
+
+  function hgRenderUnits() {
+    const el = $('#hgUnitList');
+    if (!el) return;
+    const units = hgState.current.units;
+    const n = units.length;
+    const countEl = $('#hgUnitCount');
+    if (countEl) countEl.textContent = `${n} ${n === 1 ? 'Einheit' : 'Einheiten'}`;
+    if (!n) {
+      el.innerHTML = '<div class="empty-state"><strong>Noch keine Einheiten</strong><p>Erfasse links die erste Wohneinheit.</p></div>';
+      return;
+    }
+    el.innerHTML = units.map((u, i) => `
+      <article class="finding-card">
+        <div class="finding-card-top">
+          <div>
+            <span class="finding-area">Einheit ${i + 1}</span>
+            <h4>${esc(u.label)}</h4>
+            ${u.owner ? `<p style="margin-top:2px;font-size:11px;color:var(--muted)">${esc(u.owner)}</p>` : ''}
+          </div>
+          <span class="hg-key-badge mea">MEA&thinsp;${hgFmtN(u.mea, 3)}</span>
+        </div>
+        <div class="finding-meta">
+          <span>Fläche: ${hgFmtN(u.area)}&thinsp;m²</span>
+        </div>
+        <div class="finding-card-actions">
+          <button type="button" data-edit-unit="${esc(u.id)}">Bearbeiten</button>
+          ${i > 0       ? `<button type="button" data-move-unit="${esc(u.id)}" data-dir="up">↑</button>` : ''}
+          ${i < n - 1   ? `<button type="button" data-move-unit="${esc(u.id)}" data-dir="down">↓</button>` : ''}
+          <button type="button" data-delete-unit="${esc(u.id)}">Löschen</button>
+        </div>
+      </article>`).join('');
+  }
+
+  function hgMeaCheckRender() {
+    const el = $('#hgMeaCheck');
+    if (!el) return;
+    const units = hgState.current.units;
+    if (!units.length) { el.innerHTML = ''; el.className = 'hg-mea-check'; return; }
+    const sum = units.reduce((s, u) => s + (parseFloat(u.mea) || 0), 0);
+    const den = hgState.current.meaDenominator || 1000;
+    const ok  = Math.abs(sum - den) < 0.001;
+    el.className = `hg-mea-check ${ok ? 'hg-mea-ok' : 'hg-mea-warn'}`;
+    el.innerHTML = `${ok ? '✓' : '⚠'}&thinsp;MEA-Summe: <strong>${hgFmtN(sum, 3)}</strong> von <strong>${den}</strong>&nbsp;${ok ? '(vollständig erfasst)' : '(Differenz: ' + hgFmtN(den - sum, 3) + ')'}`;
+  }
+
+  function hgEditUnit(id) {
+    const u = hgState.current.units.find(x => x.id === id);
+    if (!u) return;
+    const set = (f, v) => { const el = $(`#${f}`); if (el) el.value = v; };
+    set('hgUnitLabel', u.label); set('hgUnitOwner', u.owner);
+    set('hgUnitMea', u.mea);    set('hgUnitArea', u.area);
+    set('hgEditingUnitId', u.id);
+    $('#hgUnitLabel')?.focus();
+  }
+
+  function hgDeleteUnit(id) {
+    hgState.current.units = hgState.current.units.filter(u => u.id !== id);
+    hgRenderUnits(); hgMeaCheckRender(); hgSaveDraft();
+    hgToast('Einheit gelöscht.');
+  }
+
+  function hgMoveUnit(id, dir) {
+    const arr = hgState.current.units;
+    const i = arr.findIndex(u => u.id === id);
+    if (i < 0) return;
+    if (dir === 'up'   && i > 0)             [arr[i-1], arr[i]]   = [arr[i], arr[i-1]];
+    if (dir === 'down' && i < arr.length - 1) [arr[i],  arr[i+1]] = [arr[i+1], arr[i]];
+    hgRenderUnits(); hgMeaCheckRender(); hgSaveDraft();
+  }
+
+  // ── Costs ─────────────────────────────────────────────────────
+  function hgCostFromForm() {
+    const existingId = $('#hgEditingCostId')?.value;
+    return {
+      id:     existingId || hgCostId(),
+      label:  ($('#hgCostLabel')?.value  || '').trim(),
+      amount: $('#hgCostAmount')?.value  || '',
+      key:    $('#hgCostKey')?.value     || 'mea'
+    };
+  }
+
+  function hgResetCostForm() {
+    ['hgCostLabel','hgCostAmount','hgEditingCostId'].forEach(id => { const el = $(`#${id}`); if (el) el.value = ''; });
+    const keyEl = $('#hgCostKey'); if (keyEl) keyEl.value = 'mea';
+    hgState.costHint = null;
+    hgRenderCostHint();
+  }
+
+  function hgRenderCostHint() {
+    const el = $('#hgCostHint');
+    if (!el) return;
+    const h = hgState.costHint;
+    if (h === 'heizung') {
+      el.className   = 'hg-hint-box hg-hint-warn';
+      el.style.display = '';
+      el.innerHTML = '<strong>Orientierungshinweis – unverbindlich, keine Rechtsberatung:</strong> Bei Heizkosten und Warmwasserkosten können gesetzliche Pflichten zur verbrauchsabhängigen Abrechnung bestehen (vgl. § 7, § 8 HeizkostenV). Wird die Verbrauchserfassung unterlassen, kann ein Kürzungsrecht entstehen (§ 9a HeizkostenV). Der gewählte Schlüssel gilt nur für den Wirtschaftsplan-Vorschuss – die Abrechnung folgt eigenen Regeln. Bitte fachlich prüfen.';
+    } else if (h === 'ruecklage') {
+      el.className   = 'hg-hint-box';
+      el.style.display = '';
+      el.innerHTML = '<strong>Orientierungshinweis – unverbindlich, keine Rechtsberatung:</strong> Für die Erhaltungsrücklage können gesetzliche Mindestanforderungen und Beschlüsse der Eigentümerversammlung maßgeblich sein (vgl. § 19 Abs. 2 Nr. 4 WEG). Die angemessene Höhe ist individuell zu ermitteln. Bitte fachlich prüfen.';
+    } else {
+      el.innerHTML = '';
+      el.style.display = 'none';
+    }
+  }
+
+  function hgRenderCosts() {
+    const el = $('#hgCostList');
+    if (!el) return;
+    const costs = hgState.current.costs;
+    const countEl = $('#hgCostCount');
+    if (countEl) countEl.textContent = `${costs.length} ${costs.length === 1 ? 'Position' : 'Positionen'}`;
+    if (!costs.length) {
+      el.innerHTML = '<div class="empty-state"><strong>Noch keine Positionen</strong><p>Wähle oben eine Vorlage oder trage eine eigene Position ein.</p></div>';
+      return;
+    }
+    const total = costs.reduce((s, c) => s + Math.round((parseFloat(c.amount) || 0) * 100), 0);
+    el.innerHTML = costs.map(c => `
+      <article class="finding-card">
+        <div class="finding-card-top">
+          <div>
+            <span class="hg-key-badge ${esc(c.key)}">${esc(hgKeyLabel(c.key))}</span>
+            <h4 style="margin-top:5px">${esc(c.label)}</h4>
+          </div>
+          <strong style="font-size:14px;color:var(--primary)">${hgFmt(Math.round((parseFloat(c.amount) || 0) * 100))}</strong>
+        </div>
+        <div class="finding-meta">
+          <span>Je Monat: ${hgFmt(Math.round(Math.round((parseFloat(c.amount) || 0) * 100) / 12))}</span>
+        </div>
+        <div class="finding-card-actions">
+          <button type="button" data-edit-cost="${esc(c.id)}">Bearbeiten</button>
+          <button type="button" data-delete-cost="${esc(c.id)}">Löschen</button>
+        </div>
+      </article>`).join('') +
+      `<div style="padding:10px 0;font-size:11px;font-weight:700;color:var(--text);text-align:right">
+         Gesamt: ${hgFmt(total)}/Jahr &nbsp;·&nbsp; ${hgFmt(Math.round(total / 12))}/Monat
+       </div>`;
+  }
+
+  function hgEditCost(id) {
+    const c = hgState.current.costs.find(x => x.id === id);
+    if (!c) return;
+    const set = (f, v) => { const el = $(`#${f}`); if (el) el.value = v; };
+    set('hgCostLabel', c.label); set('hgCostAmount', c.amount);
+    set('hgCostKey', c.key);     set('hgEditingCostId', c.id);
+    hgState.costHint = null; hgRenderCostHint();
+    $('#hgCostLabel')?.focus();
+  }
+
+  function hgDeleteCost(id) {
+    hgState.current.costs = hgState.current.costs.filter(c => c.id !== id);
+    hgRenderCosts(); hgSaveDraft();
+    hgToast('Position gelöscht.');
+  }
+
+  // ── Result ────────────────────────────────────────────────────
+  function hgToggleView(v) {
+    hgState.view = v;
+    $('#hgViewYear')?.classList.toggle('active',  v === 'year');
+    $('#hgViewMonth')?.classList.toggle('active', v === 'month');
+    hgRenderResult();
+  }
+
+  function hgRenderResult() {
+    const el = $('#hgResultArea');
+    if (!el) return;
+    const p = hgState.current;
+    if (!p.units.length || !p.costs.length) {
+      el.innerHTML = '<div class="empty-state compact" style="margin-top:20px"><strong>Keine Daten</strong><p>Bitte zuerst Einheiten (Schritt 2) und Kostenpositionen (Schritt 3) erfassen.</p></div>';
+      return;
+    }
+    const matrix     = hgCalculate();
+    const unitTotals = p.units.map((u, i) => matrix[i].reduce((a, b) => a + b, 0));
+    const grandTotal = unitTotals.reduce((a, b) => a + b, 0);
+    const isMonth    = hgState.view === 'month';
+
+    const summHtml = `<div class="hg-summary-grid">
+      <article><span>Jahreskosten gesamt</span><strong>${hgFmt(grandTotal)}</strong></article>
+      <article><span>Monatliche Gesamtkosten</span><strong>${hgFmt(Math.round(grandTotal / 12))}</strong></article>
+      <article><span>Ø Hausgeld / Einheit / Monat</span><strong>${p.units.length ? hgFmt(Math.round(grandTotal / 12 / p.units.length)) : '–'}</strong></article>
+    </div>`;
+
+    const headCols = `<th>Einheit / Eigentümer</th><th>MEA</th><th>m²</th>` +
+      p.costs.map(c => `<th>${esc(c.label)}<br><span class="hg-key-badge ${esc(c.key)}">${esc(hgKeyLabel(c.key))}</span></th>`).join('') +
+      `<th class="hg-col-total">${isMonth ? 'HG/Monat' : 'HG/Jahr'}</th>`;
+
+    const bodyRows = p.units.map((u, i) => `<tr>
+      <td><strong>${esc(u.label)}</strong>${u.owner ? `<br><small style="color:var(--muted)">${esc(u.owner)}</small>` : ''}</td>
+      <td>${hgFmtN(u.mea, 3)}</td>
+      <td>${hgFmtN(u.area)}</td>
+      ${matrix[i].map(cents => `<td>${hgCellFmt(cents)}</td>`).join('')}
+      <td class="hg-col-total">${hgCellFmt(unitTotals[i])}</td>
+    </tr>`).join('');
+
+    const footCells = p.costs.map((c, j) => {
+      const cTot = Math.round((parseFloat(c.amount) || 0) * 100);
+      const dTot = matrix.reduce((s, row) => s + row[j], 0);
+      const ok   = cTot === dTot;
+      return `<td class="${ok ? 'hg-check-ok' : 'hg-check-warn'}">${hgCellFmt(cTot)}&nbsp;${ok ? '✓' : '⚠'}</td>`;
+    }).join('');
+
+    const meaSum  = p.units.reduce((s, u) => s + (parseFloat(u.mea)  || 0), 0);
+    const areaSum = p.units.reduce((s, u) => s + (parseFloat(u.area) || 0), 0);
+    const footRow = `<tr>
+      <td><strong>Summe / Check</strong></td>
+      <td>${hgFmtN(meaSum, 3)}</td>
+      <td>${hgFmtN(areaSum)}</td>
+      ${footCells}
+      <td class="hg-col-total"><strong>${hgCellFmt(grandTotal)}</strong></td>
+    </tr>`;
+
+    el.innerHTML = summHtml + `
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead><tr>${headCols}</tr></thead>
+          <tbody>${bodyRows}</tbody>
+          <tfoot>${footRow}</tfoot>
+        </table>
+      </div>
+      <p class="hg-result-note">✓ = Rundungsprüfung bestanden &nbsp;·&nbsp; ⚠ = Abweichung durch Rundung (Cent-Differenz möglich)</p>`;
+  }
+
+  // ── Copy as text ──────────────────────────────────────────────
+  function hgCopyText() {
+    hgSyncForm();
+    const p = hgState.current;
+    if (!p.units.length || !p.costs.length) { hgToast('Keine Daten vorhanden.'); return; }
+    const matrix     = hgCalculate();
+    const unitTotals = p.units.map((u, i) => matrix[i].reduce((a, b) => a + b, 0));
+    const grandTotal = unitTotals.reduce((a, b) => a + b, 0);
+    const lines = [
+      `Hausgeld- & Wirtschaftsplan – ${p.name}`,
+      `Wirtschaftsjahr ${p.year}${p.manager ? ' · Verwalter: ' + p.manager : ''}`,
+      `Status: ${p.status} · MEA-Nenner: ${p.meaDenominator}`,
+      '',
+      'Kostenpositionen:',
+      ...p.costs.map(c => `  ${c.label}: ${hgFmt(Math.round((parseFloat(c.amount) || 0) * 100))} (${hgKeyLabel(c.key)})`),
+      `  ― Gesamtkosten/Jahr: ${hgFmt(grandTotal)}`,
+      '',
+      'Hausgeld je Einheit:',
+      ...p.units.map((u, i) => `  ${u.label}${u.owner ? ' (' + u.owner + ')' : ''}: ${hgFmt(unitTotals[i])}/Jahr  ·  ${hgFmt(Math.round(unitTotals[i] / 12))}/Monat`),
+      '',
+      'Unverbindliche Orientierung – keine Rechtsberatung. Bitte fachlich prüfen.',
+      `Erstellt mit Inspectora am ${fmt(today())}`
+    ];
+    navigator.clipboard.writeText(lines.join('\n'))
+      .then(() => hgToast('Text kopiert.'))
+      .catch(() => hgToast('Kopieren wurde vom Browser blockiert.'));
+  }
+
+  // ── PDF export ────────────────────────────────────────────────
+  function hgGeneratePdf() {
+    if (typeof window.jspdf === 'undefined') { hgToast('PDF-Bibliothek nicht geladen. Bitte Seite neu laden.'); return; }
+    hgSyncForm();
+    const p = hgState.current;
+    if (!p.units.length || !p.costs.length) { hgToast('Bitte zuerst Einheiten und Kostenpositionen erfassen.'); return; }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
+    const ML = 20, MR = 20, MT = 24, MB = 22;
+    const CW = 210 - ML - MR;
+    let y = MT;
+
+    const matrix     = hgCalculate();
+    const unitTotals = p.units.map((u, i) => matrix[i].reduce((a, b) => a + b, 0));
+    const grandTotal = unitTotals.reduce((a, b) => a + b, 0);
+
+    const drawFooter = () => {
+      doc.setFontSize(7); doc.setTextColor(160, 160, 160);
+      doc.text(`Inspectora · Hausgeld- & Wirtschaftsplan-Rechner · Seite ${doc.getCurrentPageInfo().pageNumber}  ·  Unverbindliche Orientierung – keine Rechtsberatung.`, ML, 292);
+      doc.setTextColor(0, 0, 0);
+    };
+
+    const checkPage = (needed) => {
+      if (y + needed > 297 - MB) { drawFooter(); doc.addPage(); y = MT; }
+    };
+
+    // Header
+    doc.setFillColor(36, 87, 214); doc.roundedRect(ML, y, CW, 22, 4, 4, 'F');
+    doc.setFontSize(14); doc.setTextColor(255, 255, 255); doc.setFont(undefined, 'bold');
+    doc.text('Inspectora', ML + 8, y + 9);
+    doc.setFontSize(8); doc.setFont(undefined, 'normal');
+    doc.text('Hausgeld- & Wirtschaftsplan-Rechner', ML + 8, y + 16);
+    doc.text(`Stand: ${fmt(today())}`, ML + CW - 8, y + 16, { align: 'right' });
+    doc.setTextColor(0, 0, 0); y += 28;
+
+    // WEG info
+    doc.setFontSize(18); doc.setFont(undefined, 'bold'); doc.text(p.name || 'Wirtschaftsplan', ML, y); y += 7;
+    doc.setFontSize(8.5); doc.setFont(undefined, 'normal'); doc.setTextColor(100, 100, 100);
+    doc.text([`Wirtschaftsjahr ${p.year}`, p.manager ? `Verwalter: ${p.manager}` : '', `Status: ${p.status}`, `MEA-Nenner: ${p.meaDenominator}`].filter(Boolean).join('  ·  '), ML, y);
+    doc.setTextColor(0, 0, 0); y += 7;
+    doc.setDrawColor(220, 220, 220); doc.line(ML, y, ML + CW, y); y += 7;
+
+    // Summary boxes
+    doc.setFontSize(10); doc.setFont(undefined, 'bold'); doc.text('Zusammenfassung', ML, y); y += 5;
+    const bW = CW / 3 - 2;
+    [['Jahreskosten gesamt', hgFmt(grandTotal)], ['Einheiten', String(p.units.length)], ['Kostenpositionen', String(p.costs.length)]].forEach((item, k) => {
+      const bx = ML + k * (bW + 3);
+      doc.setFillColor(240, 244, 252); doc.roundedRect(bx, y, bW, 14, 2, 2, 'F');
+      doc.setFontSize(7); doc.setFont(undefined, 'normal'); doc.setTextColor(110, 110, 110); doc.text(item[0], bx + 4, y + 5);
+      doc.setFontSize(10); doc.setFont(undefined, 'bold'); doc.setTextColor(0, 0, 0); doc.text(item[1], bx + 4, y + 12);
+    }); y += 20;
+
+    // Kostenpositionen table
+    checkPage(20);
+    doc.setFontSize(10); doc.setFont(undefined, 'bold'); doc.text('Kostenpositionen', ML, y); y += 5;
+    const cC = [CW * 0.50, CW * 0.28, CW * 0.22];
+    doc.setFillColor(225, 232, 248); doc.rect(ML, y, CW, 7, 'F');
+    doc.setFontSize(7.5); doc.setFont(undefined, 'bold');
+    ['Bezeichnung', 'Jahresbetrag', 'Schlüssel'].forEach((h, k) => doc.text(h, ML + cC.slice(0,k).reduce((a,b)=>a+b,0) + 2, y + 5));
+    doc.setFont(undefined, 'normal'); y += 7;
+    p.costs.forEach((c, idx) => {
+      checkPage(8);
+      if (idx % 2 === 0) { doc.setFillColor(248, 250, 253); doc.rect(ML, y, CW, 7, 'F'); }
+      doc.setFontSize(7.5);
+      doc.text(c.label || '', ML + 2, y + 5, { maxWidth: cC[0] - 4 });
+      doc.text(hgFmt(Math.round((parseFloat(c.amount) || 0) * 100)), ML + cC[0] + 2, y + 5);
+      doc.text(hgKeyLabel(c.key), ML + cC[0] + cC[1] + 2, y + 5);
+      y += 7;
+    });
+    doc.setFillColor(210, 220, 244); doc.rect(ML, y, CW, 7, 'F');
+    doc.setFont(undefined, 'bold'); doc.setFontSize(7.5);
+    doc.text('Gesamtkosten / Jahr', ML + 2, y + 5);
+    doc.text(hgFmt(grandTotal), ML + cC[0] + 2, y + 5);
+    doc.setFont(undefined, 'normal'); y += 12;
+
+    // Hausgeld je Einheit table
+    checkPage(20);
+    doc.setFontSize(10); doc.setFont(undefined, 'bold'); doc.text('Hausgeld je Einheit', ML, y); y += 5;
+    const uC = [CW*0.29, CW*0.23, CW*0.11, CW*0.11, CW*0.14, CW*0.12];
+    const uCx = k => ML + uC.slice(0,k).reduce((a,b)=>a+b,0) + 2;
+    doc.setFillColor(225, 232, 248); doc.rect(ML, y, CW, 7, 'F');
+    doc.setFontSize(7); doc.setFont(undefined, 'bold');
+    ['Einheit','Eigentümer','MEA','m²','HG/Jahr','HG/Monat'].forEach((h, k) => doc.text(h, uCx(k), y + 5));
+    doc.setFont(undefined, 'normal'); y += 7;
+    p.units.forEach((u, i) => {
+      checkPage(9);
+      if (i % 2 === 0) { doc.setFillColor(248, 250, 253); doc.rect(ML, y, CW, 8, 'F'); }
+      doc.setFontSize(7);
+      doc.text(u.label || '', uCx(0), y + 5, { maxWidth: uC[0] - 4 });
+      doc.text(u.owner || '–',  uCx(1), y + 5, { maxWidth: uC[1] - 4 });
+      doc.text(hgFmtN(u.mea, 0),  uCx(2), y + 5);
+      doc.text(hgFmtN(u.area),    uCx(3), y + 5);
+      doc.setFont(undefined, 'bold'); doc.text(hgFmt(unitTotals[i]), uCx(4), y + 5);
+      doc.setFont(undefined, 'normal'); doc.text(hgFmt(Math.round(unitTotals[i] / 12)), uCx(5), y + 5);
+      y += 8;
+    }); y += 5;
+
+    // Disclaimer
+    checkPage(28);
+    doc.setFillColor(255, 244, 218); doc.roundedRect(ML, y, CW, 26, 3, 3, 'F');
+    doc.setFontSize(7.5); doc.setFont(undefined, 'bold'); doc.setTextColor(92, 55, 0);
+    doc.text('Unverbindliche Orientierung – keine Rechtsberatung:', ML + 4, y + 7);
+    doc.setFont(undefined, 'normal');
+    doc.text(doc.splitTextToSize('Diese Berechnung ist ein automatisch erstellter Entwurf ohne Gewähr. Sie ersetzt keine fachliche, steuerliche oder rechtliche Prüfung. Die Verantwortung für Richtigkeit und Vollständigkeit liegt beim Verwalter.', CW - 8), ML + 4, y + 13);
+    doc.setTextColor(0, 0, 0); y += 30;
+
+    // Signatures
+    checkPage(18);
+    doc.setFontSize(8);
+    doc.text('______________________________', ML, y);
+    doc.text('______________________________', ML + CW / 2, y);
+    y += 5; doc.setFontSize(7); doc.setTextColor(100, 100, 100);
+    doc.text(p.manager || 'Verwalter', ML, y);
+    doc.text('Datum / Unterschrift', ML + CW / 2, y);
+    doc.setTextColor(0, 0, 0);
+
+    drawFooter();
+    doc.save(`Inspectora-Hausgeld-${p.id || 'Entwurf'}-${today()}.pdf`);
+    hgToast('PDF wurde erstellt.');
+  }
+
+  // ── Plan management ───────────────────────────────────────────
+  function hgSaveCurrent() {
+    hgSyncForm();
+    if (!hgValidate(1)) return false;
+    const now = new Date().toISOString();
+    if (!hgState.current.id) {
+      hgState.current.id        = hgPlanId();
+      hgState.current.createdAt = now;
+    }
+    hgState.current.updatedAt = now;
+    const copy = JSON.parse(JSON.stringify(hgState.current));
+    const i = hgState.plans.findIndex(x => x.id === hgState.current.id);
+    if (i >= 0) hgState.plans[i] = copy; else hgState.plans.unshift(copy);
+    if (!hgPersist()) return false;
+    hgSaveDraft(); hgRenderList();
+    hgToast(`Wirtschaftsplan ${hgState.current.id} gespeichert.`);
+    return true;
+  }
+
+  function hgNewPlan(confirmReset) {
+    const has = hgState.current.name || hgState.current.units.length || hgState.current.costs.length;
+    if (confirmReset && has && !window.confirm('Aktuellen Entwurf verwerfen und neuen Wirtschaftsplan beginnen?')) return;
+    hgState.current = emptyHgPlan();
+    hgSyncState(); hgResetUnitForm(); hgResetCostForm();
+    localStorage.removeItem(HG_DRAFT_KEY);
+    hgSetStep(1);
+    $('#hgTool')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    hgToast('Neuer Wirtschaftsplan gestartet.');
+  }
+
+  function hgOpenPlan(id) {
+    const p = hgState.plans.find(x => x.id === id);
+    if (!p) return;
+    hgState.current = JSON.parse(JSON.stringify(p));
+    hgSyncState(); hgSaveDraft();
+    hgSetStep(1);
+    $('#hgTool')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    hgToast(`${id} geöffnet.`);
+  }
+
+  function hgDuplicatePlan(id) {
+    const p = hgState.plans.find(x => x.id === id);
+    if (!p) return;
+    const c = JSON.parse(JSON.stringify(p));
+    c.id = hgPlanId(); c.name += ' – Kopie'; c.status = 'Entwurf';
+    c.createdAt = c.updatedAt = new Date().toISOString();
+    hgState.plans.unshift(c); hgPersist(); hgRenderList();
+    hgToast(`Dupliziert als ${c.id}.`);
+  }
+
+  function hgRequestDelete(id) {
+    hgState.deleteTarget = id;
+    const modal = $('#hgConfirmModal');
+    if (modal) { modal.classList.add('open'); modal.setAttribute('aria-hidden', 'false'); }
+    document.body.classList.add('modal-open');
+  }
+
+  function hgCloseModal() {
+    hgState.deleteTarget = null;
+    const modal = $('#hgConfirmModal');
+    if (modal) { modal.classList.remove('open'); modal.setAttribute('aria-hidden', 'true'); }
+    document.body.classList.remove('modal-open');
+  }
+
+  function hgConfirmDelete() {
+    if (!hgState.deleteTarget) return;
+    hgState.plans = hgState.plans.filter(x => x.id !== hgState.deleteTarget);
+    if (hgState.current.id === hgState.deleteTarget) {
+      hgState.current = emptyHgPlan(); hgSyncState();
+      localStorage.removeItem(HG_DRAFT_KEY);
+    }
+    hgPersist(); hgRenderList(); hgCloseModal();
+    hgToast('Wirtschaftsplan gelöscht.');
+  }
+
+  function hgChangeStatus(id, status) {
+    const p = hgState.plans.find(x => x.id === id);
+    if (!p) return;
+    p.status = status; p.updatedAt = new Date().toISOString();
+    if (hgState.current.id === id) hgState.current.status = status;
+    hgPersist(); hgRenderList();
+    hgToast(`Status auf „${status}“ gesetzt.`);
+  }
+
+  function hgRenderList() {
+    const q      = ($('#hgSearch')?.value || '').trim().toLowerCase();
+    const status = $('#hgStatusFilter')?.value || 'Alle';
+    const plans  = hgState.plans;
+    const filtered = plans.filter(p =>
+      [p.id, p.name, p.manager].join(' ').toLowerCase().includes(q) &&
+      (status === 'Alle' || p.status === status)
+    );
+    const setN = (id, v) => { const el = $(`#${id}`); if (el) el.textContent = v; };
+    setN('hgTotalCount',       plans.length);
+    setN('hgDraftCount',       plans.filter(p => p.status === 'Entwurf').length);
+    setN('hgGenehmigtCount',   plans.filter(p => p.status === 'Genehmigt').length);
+    setN('hgBeschlossenCount', plans.filter(p => p.status === 'Beschlossen').length);
+    const listEl = $('#hgList');
+    if (!listEl) return;
+    if (!filtered.length) {
+      listEl.innerHTML = `<div class="empty-state large">
+        <strong>${plans.length ? 'Keine passenden Pläne' : 'Noch keine Wirtschaftspläne gespeichert'}</strong>
+        <p>${plans.length ? 'Passe Suche oder Filter an.' : 'Starte oben einen neuen Wirtschaftsplan.'}</p>
+        ${plans.length ? '' : '<button class="button primary" id="hgDynEmptyBtn" type="button">Ersten Plan anlegen</button>'}
+      </div>`;
+      $('#hgDynEmptyBtn')?.addEventListener('click', () => hgNewPlan(false));
+      return;
+    }
+    listEl.innerHTML = filtered.map(p => {
+      const total = (p.costs || []).reduce((s, c) => s + Math.round((parseFloat(c.amount) || 0) * 100), 0);
+      return `<article class="project-card">
+        <div class="project-card-top">
+          <div>
+            <span class="project-id">${esc(p.id)}</span>
+            <h3>${esc(p.name)}</h3>
+            <p>${esc(String(p.year))} · ${p.manager ? esc(p.manager) : 'Kein Verwalter'} · MEA-Nenner: ${esc(String(p.meaDenominator))}</p>
+          </div>
+          <span class="status-badge">${esc(p.status)}</span>
+        </div>
+        <div class="project-card-meta">
+          <div><span>Einheiten</span><strong>${(p.units || []).length}</strong></div>
+          <div><span>Kosten/Jahr</span><strong>${hgFmt(total)}</strong></div>
+          <div><span>Kosten/Monat</span><strong>${hgFmt(Math.round(total / 12))}</strong></div>
+        </div>
+        <div class="project-card-actions">
+          <button type="button" data-open-hg="${esc(p.id)}">Öffnen</button>
+          <button type="button" data-duplicate-hg="${esc(p.id)}">Duplizieren</button>
+          <select data-status-hg="${esc(p.id)}" aria-label="Status ändern">
+            ${['Entwurf','Genehmigt','Beschlossen'].map(o => `<option ${p.status===o?'selected':''}>${o}</option>`).join('')}
+          </select>
+          <button type="button" data-delete-hg="${esc(p.id)}">Löschen</button>
+        </div>
+      </article>`;
+    }).join('');
+  }
+
+  // ── Demo data ─────────────────────────────────────────────────
+  function hgLoadDemo() {
+    if ((hgState.current.units.length || hgState.current.costs.length) &&
+      !window.confirm('Demo-Daten laden? Bisherige Einheiten und Positionen werden ersetzt.')) return;
+    hgState.current.units = [
+      { id: hgUnitId(), label: 'Whg. 1, EG links',  owner: 'Anna Muster',  mea: '250', area: '62.00' },
+      { id: hgUnitId(), label: 'Whg. 2, EG rechts', owner: 'Klaus Schmidt', mea: '250', area: '65.50' },
+      { id: hgUnitId(), label: 'Whg. 3, OG links',  owner: 'Maria Fischer', mea: '250', area: '62.00' },
+      { id: hgUnitId(), label: 'Whg. 4, OG rechts', owner: 'Hans Müller',  mea: '250', area: '68.50' }
+    ];
+    hgState.current.costs = [
+      { id: hgCostId(), label: 'Hausmeisterdienst',    amount: '2400.00', key: 'equal' },
+      { id: hgCostId(), label: 'Treppenhausreinigung', amount: '1440.00', key: 'equal' },
+      { id: hgCostId(), label: 'Allgemeinstrom',       amount:  '480.00', key: 'mea'   },
+      { id: hgCostId(), label: 'Gebäudeversicherung',  amount: '1200.00', key: 'mea'   },
+      { id: hgCostId(), label: 'Verwaltervergütung',   amount: '2400.00', key: 'mea'   },
+      { id: hgCostId(), label: 'Erhaltungsrücklage',   amount: '2000.00', key: 'mea'   }
+    ];
+    if (!hgState.current.name) hgState.current.name = 'WEG Musterhaus – Demo';
+    if (!hgState.current.year) hgState.current.year = new Date().getFullYear();
+    hgState.current.meaDenominator = 1000;
+    hgRenderUnits(); hgMeaCheckRender(); hgRenderCosts(); hgSaveDraft();
+    hgToast('Demo-Daten geladen.');
+  }
+
+  // ── Event binding ─────────────────────────────────────────────
+  function hgBind() {
+    $$('.hg-step').forEach(b => b.addEventListener('click', () => hgSetStep(b.dataset.step)));
+    $$('.hg-next').forEach(b => b.addEventListener('click', () => { if (hgValidate(hgState.step)) hgSetStep(b.dataset.next); }));
+    $$('.hg-prev').forEach(b => b.addEventListener('click', () => hgSetStep(b.dataset.previous)));
+
+    $('#newHgButton')?.addEventListener('click', () => hgNewPlan(true));
+    $('#saveHgButton')?.addEventListener('click', hgSaveCurrent);
+    $('#hgSaveFromResultButton')?.addEventListener('click', () => { if (hgSaveCurrent()) $('#hgProjekte')?.scrollIntoView({ behavior: 'smooth' }); });
+
+    ['hgName','hgYear','hgManager','hgMeaDenominator','hgStatus'].forEach(id => {
+      const el = $(`#${id}`);
+      el?.addEventListener('input',  () => { hgSyncForm(); hgSaveDraft(); });
+      el?.addEventListener('change', () => { hgSyncForm(); hgSaveDraft(); });
+    });
+
+    $('#hgUnitForm')?.addEventListener('submit', e => {
+      e.preventDefault();
+      const u = hgUnitFromForm();
+      if (!u.label)                               { hgToast('Bitte eine Bezeichnung eintragen.');  return; }
+      if (!u.mea  || isNaN(parseFloat(u.mea)))   { hgToast('Bitte den MEA-Zähler eintragen.'); return; }
+      if (!u.area || isNaN(parseFloat(u.area)))   { hgToast('Bitte die Wohnfläche eintragen.'); return; }
+      const idx = hgState.current.units.findIndex(x => x.id === u.id);
+      if (idx >= 0) { hgState.current.units[idx] = u; hgToast('Einheit aktualisiert.'); }
+      else          { hgState.current.units.push(u);  hgToast('Einheit übernommen.'); }
+      hgResetUnitForm(); hgRenderUnits(); hgMeaCheckRender(); hgSaveDraft();
+    });
+    $('#hgResetUnitButton')?.addEventListener('click', hgResetUnitForm);
+    $('#hgUnitList')?.addEventListener('click', e => {
+      const ed = e.target.closest('[data-edit-unit]');
+      const de = e.target.closest('[data-delete-unit]');
+      const mu = e.target.closest('[data-move-unit]');
+      if (ed) hgEditUnit(ed.dataset.editUnit);
+      if (de) hgDeleteUnit(de.dataset.deleteUnit);
+      if (mu) hgMoveUnit(mu.dataset.moveUnit, mu.dataset.dir);
+    });
+    $('#hgDemoButton')?.addEventListener('click', hgLoadDemo);
+
+    $('#hgQuickGrid')?.addEventListener('click', e => {
+      const b = e.target.closest('.hg-quick-btn');
+      if (!b) return;
+      const labelEl = $('#hgCostLabel'), keyEl = $('#hgCostKey');
+      if (labelEl) labelEl.value = b.dataset.label;
+      if (keyEl)   keyEl.value   = b.dataset.key;
+      hgState.costHint = b.dataset.hint || null;
+      hgRenderCostHint();
+      $('#hgCostAmount')?.focus();
+    });
+
+    $('#hgCostForm')?.addEventListener('submit', e => {
+      e.preventDefault();
+      const c = hgCostFromForm();
+      if (!c.label) { hgToast('Bitte eine Bezeichnung eintragen.'); return; }
+      if (!c.amount || isNaN(parseFloat(c.amount)) || parseFloat(c.amount) <= 0) { hgToast('Bitte einen gültigen Betrag eintragen.'); return; }
+      const idx = hgState.current.costs.findIndex(x => x.id === c.id);
+      if (idx >= 0) { hgState.current.costs[idx] = c; hgToast('Position aktualisiert.'); }
+      else          { hgState.current.costs.push(c);  hgToast('Position übernommen.'); }
+      hgResetCostForm(); hgRenderCosts(); hgSaveDraft();
+    });
+    $('#hgResetCostButton')?.addEventListener('click', hgResetCostForm);
+    $('#hgCostList')?.addEventListener('click', e => {
+      const ed = e.target.closest('[data-edit-cost]');
+      const de = e.target.closest('[data-delete-cost]');
+      if (ed) hgEditCost(ed.dataset.editCost);
+      if (de) hgDeleteCost(de.dataset.deleteCost);
+    });
+
+    $('#hgViewYear')?.addEventListener('click',  () => hgToggleView('year'));
+    $('#hgViewMonth')?.addEventListener('click', () => hgToggleView('month'));
+    $('#hgCopyButton')?.addEventListener('click', hgCopyText);
+    $('#hgPdfButton')?.addEventListener('click',  hgGeneratePdf);
+
+    $('#hgSearch')?.addEventListener('input', hgRenderList);
+    $('#hgStatusFilter')?.addEventListener('change', hgRenderList);
+    $('#hgList')?.addEventListener('click', e => {
+      const o = e.target.closest('[data-open-hg]');
+      const u = e.target.closest('[data-duplicate-hg]');
+      const d = e.target.closest('[data-delete-hg]');
+      if (o) hgOpenPlan(o.dataset.openHg);
+      if (u) hgDuplicatePlan(u.dataset.duplicateHg);
+      if (d) hgRequestDelete(d.dataset.deleteHg);
+    });
+    $('#hgList')?.addEventListener('change', e => {
+      const s = e.target.closest('[data-status-hg]');
+      if (s) hgChangeStatus(s.dataset.statusHg, s.value);
+    });
+    $('#hgEmptyStartButton')?.addEventListener('click', () => hgNewPlan(false));
+
+    $$('[data-close-hg-modal]').forEach(x => x.addEventListener('click', hgCloseModal));
+    $('#hgConfirmDeleteButton')?.addEventListener('click', hgConfirmDelete);
+  }
+
+  // ── Init ──────────────────────────────────────────────────────
+  function hgInit() {
+    if (!$('#hgTool')) return;
+    hgBind();
+    try {
+      const d = JSON.parse(localStorage.getItem(HG_DRAFT_KEY) || 'null');
+      if (d && typeof d === 'object') {
+        hgState.current = { ...emptyHgPlan(), ...d };
+        if (!Array.isArray(hgState.current.units)) hgState.current.units = [];
+        if (!Array.isArray(hgState.current.costs)) hgState.current.costs = [];
+      }
+    } catch {}
+    hgSyncState();
+    hgRenderList();
+    hgSetStep(hgState.step || 1);
+    const hintEl = $('#hgCostHint'); if (hintEl) hintEl.style.display = 'none';
+  }
+
+  hgInit();
+
+})();

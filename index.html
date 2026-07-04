@@ -26,6 +26,7 @@
     <nav class="site-nav" id="siteNav" aria-label="Hauptnavigation">
       <a href="#tool">Tool</a>
       <a href="#wegTool">Protokolle</a>
+      <a href="#hgTool">Hausgeld</a>
       <a href="#ablauf">Ablauf</a>
       <a href="#einsatzgebiet">Einsatzgebiet</a>
       <a href="#ueber-uns">Über uns</a>
@@ -291,6 +292,174 @@
     </section>
 
     <div class="modal" id="wegConfirmModal" aria-hidden="true"><div class="modal-backdrop" data-close-weg-modal></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="wegConfirmModalTitle"><h3 id="wegConfirmModalTitle">Protokoll löschen?</h3><p>Dieser Vorgang kann nicht rückgängig gemacht werden.</p><div class="modal-actions"><button class="button secondary" type="button" data-close-weg-modal>Abbrechen</button><button class="button danger" id="wegConfirmDeleteButton" type="button">Löschen</button></div></div></div>
+
+    <!-- ── Hausgeld- & Wirtschaftsplan-Rechner ─────────────────────── -->
+    <section class="tool-section" id="hgTool">
+      <div class="tool-heading">
+        <div>
+          <span class="eyebrow">Inspectora Tool</span>
+          <h2>Hausgeld- &amp; Wirtschaftsplan-Rechner</h2>
+          <p>Jahreskosten der WEG planen und nach MEA, Wohnfläche oder Einheiten auf die Eigentumseinheiten verteilen. Unabhängig von den anderen Tools nutzbar.</p>
+        </div>
+        <div class="tool-actions">
+          <button class="button secondary small" id="newHgButton" type="button">Neuer Wirtschaftsplan</button>
+          <button class="button primary small" id="saveHgButton" type="button">Plan speichern</button>
+        </div>
+      </div>
+
+      <div class="tool-shell">
+        <aside class="tool-sidebar">
+          <button class="hg-step active" type="button" data-step="1"><span>1</span><div><strong>Grunddaten</strong><small>WEG &amp; Jahr</small></div></button>
+          <button class="hg-step" type="button" data-step="2"><span>2</span><div><strong>Einheiten</strong><small>MEA &amp; Fläche</small></div></button>
+          <button class="hg-step" type="button" data-step="3"><span>3</span><div><strong>Kosten</strong><small>Positionen &amp; Schlüssel</small></div></button>
+          <button class="hg-step" type="button" data-step="4"><span>4</span><div><strong>Ergebnis</strong><small>Hausgeld &amp; PDF</small></div></button>
+          <div class="tool-note"><strong>Datenschutz inklusive</strong><p>Alle Eingaben bleiben in Ihrem Browser – keine Cloud-Übertragung.</p></div>
+        </aside>
+
+        <div class="tool-main">
+
+          <!-- Schritt 1: Grunddaten -->
+          <section class="hg-panel active" data-panel="1">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 1</span><h3>Grunddaten des Wirtschaftsplans</h3></div><span class="required-note">* Pflichtfelder</span></div>
+            <div class="form-grid">
+              <label class="field wide"><span>WEG-/Objektbezeichnung *</span><input id="hgName" type="text" placeholder="z. B. WEG Jahnstraße 28, Kamp-Lintfort"></label>
+              <label class="field"><span>Wirtschaftsjahr *</span><input id="hgYear" type="number" min="2000" max="2100" placeholder="z. B. 2025"></label>
+              <label class="field"><span>Verwalter / Ersteller</span><input id="hgManager" type="text" placeholder="Vor- und Nachname"></label>
+              <label class="field"><span>Gesamtnenner MEA *</span><input id="hgMeaDenominator" type="number" min="1" placeholder="z. B. 1000 für Tausendstel"></label>
+              <label class="field"><span>Status des Wirtschaftsplans</span><select id="hgStatus"><option value="Entwurf">Entwurf</option><option value="Genehmigt">Genehmigt</option><option value="Beschlossen">Beschlossen</option></select></label>
+              <div class="field wide">
+                <div class="hg-hint-box">
+                  <strong>Orientierungshinweis – unverbindlich, keine Rechtsberatung:</strong> Der Verwalter hat nach § 28 Abs. 1 WEG für jedes Wirtschaftsjahr einen Wirtschaftsplan aufzustellen. Die Wohnungseigentümer beschließen auf dieser Grundlage die von jedem zu leistenden Vorschüsse (Hausgeld). Bitte fachlich und rechtlich prüfen lassen.
+                </div>
+              </div>
+            </div>
+            <div class="panel-actions"><span></span><button class="button primary hg-next" type="button" data-next="2">Weiter zu den Einheiten</button></div>
+          </section>
+
+          <!-- Schritt 2: Einheiten -->
+          <section class="hg-panel" data-panel="2">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 2</span><h3>Wohneinheiten erfassen</h3></div><span class="panel-counter" id="hgUnitCount">0 Einheiten</span></div>
+            <div class="finding-layout">
+              <form class="finding-form" id="hgUnitForm">
+                <label class="field wide"><span>Bezeichnung der Einheit *</span><input id="hgUnitLabel" type="text" placeholder="z. B. Whg. 1, EG links"></label>
+                <label class="field wide"><span>Eigentümername</span><input id="hgUnitOwner" type="text" placeholder="Vor- und Nachname"></label>
+                <label class="field"><span>MEA-Zähler *</span><input id="hgUnitMea" type="number" min="0" step="0.001" placeholder="z. B. 250"></label>
+                <label class="field"><span>Wohnfläche m² *</span><input id="hgUnitArea" type="number" min="0" step="0.01" placeholder="z. B. 65.50"></label>
+                <input id="hgEditingUnitId" type="hidden">
+                <div class="form-actions wide">
+                  <button class="button secondary" id="hgResetUnitButton" type="button">Eingabe leeren</button>
+                  <button class="button primary" type="submit">Einheit übernehmen</button>
+                </div>
+              </form>
+              <div class="finding-list-wrap">
+                <div class="list-toolbar">
+                  <strong>Erfasste Einheiten</strong>
+                  <button class="button secondary small" id="hgDemoButton" type="button">Demo: 4-Parteien-Haus</button>
+                </div>
+                <div id="hgUnitList" class="finding-list"><div class="empty-state"><strong>Noch keine Einheiten</strong><p>Erfasse links die erste Wohneinheit.</p></div></div>
+                <div id="hgMeaCheck" class="hg-mea-check"></div>
+              </div>
+            </div>
+            <div class="panel-actions"><button class="button secondary hg-prev" type="button" data-previous="1">Zurück</button><button class="button primary hg-next" type="button" data-next="3">Weiter zu den Kosten</button></div>
+          </section>
+
+          <!-- Schritt 3: Kostenpositionen -->
+          <section class="hg-panel" data-panel="3">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 3</span><h3>Kostenpositionen erfassen</h3></div><span class="panel-counter" id="hgCostCount">0 Positionen</span></div>
+            <div class="hg-hint-box hg-hint-law">
+              <strong>Orientierungshinweis – unverbindlich, keine Rechtsberatung:</strong> Nach § 16 Abs. 2 Satz 1 WEG trägt jeder Eigentümer die gemeinschaftlichen Kosten nach dem Verhältnis seines Miteigentumsanteils (MEA). Per Mehrheitsbeschluss können für einzelne Kostenarten abweichende Verteilungsschlüssel festgelegt werden (§ 16 Abs. 2 Satz 2 WEG). Bitte fachlich prüfen, welcher Schlüssel im konkreten Fall maßgeblich ist.
+            </div>
+            <p class="panel-intro">Schnellvorlagen für typische Positionen – oder eigene Position eintragen:</p>
+            <div class="hg-quick-grid" id="hgQuickGrid">
+              <button type="button" class="hg-quick-btn" data-label="Hausmeisterdienst" data-key="equal">Hausmeisterdienst</button>
+              <button type="button" class="hg-quick-btn" data-label="Treppenhausreinigung" data-key="equal">Treppenhausreinigung</button>
+              <button type="button" class="hg-quick-btn" data-label="Winterdienst" data-key="equal">Winterdienst</button>
+              <button type="button" class="hg-quick-btn" data-label="Grünpflege / Außenpflege" data-key="mea">Grünpflege / Außenpflege</button>
+              <button type="button" class="hg-quick-btn" data-label="Allgemeinstrom" data-key="mea">Allgemeinstrom</button>
+              <button type="button" class="hg-quick-btn" data-label="Müllgebühren" data-key="equal">Müllgebühren</button>
+              <button type="button" class="hg-quick-btn" data-label="Aufzugswartung" data-key="mea">Aufzugswartung</button>
+              <button type="button" class="hg-quick-btn hg-warn-btn" data-label="Heizung / Brennstoff" data-key="area" data-hint="heizung">Heizung / Brennstoff ⚠</button>
+              <button type="button" class="hg-quick-btn hg-warn-btn" data-label="Warmwasser" data-key="area" data-hint="heizung">Warmwasser ⚠</button>
+              <button type="button" class="hg-quick-btn" data-label="Gebäudeversicherung" data-key="mea">Gebäudeversicherung</button>
+              <button type="button" class="hg-quick-btn" data-label="Haftpflichtversicherung" data-key="mea">Haftpflichtversicherung</button>
+              <button type="button" class="hg-quick-btn" data-label="Verwaltervergütung" data-key="mea">Verwaltervergütung</button>
+              <button type="button" class="hg-quick-btn" data-label="Buchhaltung / Steuerberatung" data-key="mea">Buchhaltung / Steuerberat.</button>
+              <button type="button" class="hg-quick-btn hg-info-btn" data-label="Erhaltungsrücklage" data-key="mea" data-hint="ruecklage">Erhaltungsrücklage ℹ</button>
+              <button type="button" class="hg-quick-btn" data-label="Kontoführung" data-key="equal">Kontoführung</button>
+              <button type="button" class="hg-quick-btn" data-label="Rauchwarnmelder (Wartung)" data-key="equal">Rauchwarnmelder</button>
+            </div>
+            <div class="finding-layout">
+              <form class="finding-form" id="hgCostForm">
+                <label class="field wide"><span>Bezeichnung der Kostenposition *</span><input id="hgCostLabel" type="text" placeholder="z. B. Verwaltervergütung"></label>
+                <label class="field"><span>Jahresbetrag (EUR) *</span><input id="hgCostAmount" type="number" min="0" step="0.01" placeholder="z. B. 2400.00"></label>
+                <label class="field"><span>Verteilungsschlüssel</span><select id="hgCostKey">
+                  <option value="mea">Nach MEA (Miteigentumsanteile)</option>
+                  <option value="area">Nach Wohnfläche (m²)</option>
+                  <option value="equal">Gleichmäßig (pro Einheit)</option>
+                </select></label>
+                <input id="hgEditingCostId" type="hidden">
+                <div id="hgCostHint"></div>
+                <div class="form-actions wide">
+                  <button class="button secondary" id="hgResetCostButton" type="button">Eingabe leeren</button>
+                  <button class="button primary" type="submit">Position übernehmen</button>
+                </div>
+              </form>
+              <div class="finding-list-wrap">
+                <div class="list-toolbar"><strong>Erfasste Positionen</strong></div>
+                <div id="hgCostList" class="finding-list"><div class="empty-state"><strong>Noch keine Positionen</strong><p>Wähle oben eine Vorlage oder trage eine eigene Position ein.</p></div></div>
+              </div>
+            </div>
+            <div class="panel-actions"><button class="button secondary hg-prev" type="button" data-previous="2">Zurück</button><button class="button primary hg-next" type="button" data-next="4">Ergebnis berechnen</button></div>
+          </section>
+
+          <!-- Schritt 4: Ergebnis -->
+          <section class="hg-panel" data-panel="4">
+            <div class="panel-heading">
+              <div><span class="panel-kicker">Schritt 4</span><h3>Wirtschaftsplan – Ergebnis</h3></div>
+              <div class="report-actions">
+                <div class="hg-view-toggle" role="group" aria-label="Ansicht wechseln">
+                  <button id="hgViewYear" type="button" class="active">Jahresbeträge</button>
+                  <button id="hgViewMonth" type="button">Monatsbeträge</button>
+                </div>
+                <button class="button secondary small" id="hgCopyButton" type="button">Text kopieren</button>
+                <button class="button primary small" id="hgPdfButton" type="button">Als PDF exportieren</button>
+              </div>
+            </div>
+            <div class="disclaimer-banner">
+              <strong>Unverbindliche Orientierung – keine Rechtsberatung.</strong> Diese Berechnung ist ein automatisch erstellter Entwurf ohne Gewähr und ersetzt keine fachliche, steuerliche oder rechtliche Prüfung. Die Verantwortung für Richtigkeit, Vollständigkeit und Einhaltung aller gesetzlichen Vorgaben liegt beim Verwalter.
+            </div>
+            <div id="hgResultArea"></div>
+            <div class="panel-actions">
+              <button class="button secondary hg-prev" type="button" data-previous="3">Zurück</button>
+              <button class="button primary" id="hgSaveFromResultButton" type="button">Wirtschaftsplan speichern</button>
+            </div>
+          </section>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Gespeicherte Wirtschaftspläne ──────────────────────────── -->
+    <section class="section projects-section" id="hgProjekte">
+      <div class="projects-heading">
+        <div class="section-heading"><span class="eyebrow">Planungsübersicht</span><h2>Meine Wirtschaftspläne</h2><p>Gespeicherte Pläne können auf diesem Gerät geöffnet, weiterbearbeitet, dupliziert oder gelöscht werden.</p></div>
+        <div class="project-toolbar">
+          <input id="hgSearch" type="search" placeholder="Pläne durchsuchen">
+          <select id="hgStatusFilter"><option value="Alle">Alle Status</option><option value="Entwurf">Entwurf</option><option value="Genehmigt">Genehmigt</option><option value="Beschlossen">Beschlossen</option></select>
+        </div>
+      </div>
+      <div class="project-overview">
+        <article><span>Gesamt</span><strong id="hgTotalCount">0</strong></article>
+        <article><span>Entwürfe</span><strong id="hgDraftCount">0</strong></article>
+        <article><span>Genehmigt</span><strong id="hgGenehmigtCount">0</strong></article>
+        <article><span>Beschlossen</span><strong id="hgBeschlossenCount">0</strong></article>
+      </div>
+      <div class="project-list" id="hgList">
+        <div class="empty-state large"><strong>Noch keine Wirtschaftspläne gespeichert</strong><p>Starte oben einen neuen Wirtschaftsplan.</p><button class="button primary" id="hgEmptyStartButton" type="button">Ersten Plan anlegen</button></div>
+      </div>
+    </section>
+
+    <div class="modal" id="hgConfirmModal" aria-hidden="true"><div class="modal-backdrop" data-close-hg-modal></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="hgConfirmModalTitle"><h3 id="hgConfirmModalTitle">Wirtschaftsplan löschen?</h3><p>Dieser Vorgang kann nicht rückgängig gemacht werden.</p><div class="modal-actions"><button class="button secondary" type="button" data-close-hg-modal>Abbrechen</button><button class="button danger" id="hgConfirmDeleteButton" type="button">Löschen</button></div></div></div>
 
     <section class="section area-section" id="einsatzgebiet">
       <div class="section-heading section-heading-wide">
