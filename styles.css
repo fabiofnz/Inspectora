@@ -1396,3 +1396,70 @@ h1, h2, h3 { font-weight: 800; }
   .hero-copy > p { font-size: 16px; }
   .about-card { padding: 32px 28px; gap: 28px; }
 }
+
+/* ── WEG-Einladungs-Generator ──────────────────────────────────── */
+.inv-panel{display:none;min-height:700px;padding:30px;background:#fff}
+.inv-panel.active{display:block}
+.inv-step{width:100%;display:flex;align-items:center;gap:12px;padding:13px;border:0;border-radius:13px;color:rgba(255,255,255,.58);background:transparent;text-align:left;transition:.15s}
+.inv-step+.inv-step{margin-top:6px}
+.inv-step>span{width:30px;height:30px;display:grid;place-items:center;flex:0 0 auto;border:1px solid rgba(255,255,255,.12);border-radius:9px;font-size:11px;font-weight:900}
+.inv-step strong,.inv-step small{display:block}
+.inv-step strong{font-size:12px}
+.inv-step small{font-size:9px}
+.inv-step{color:rgba(255,255,255,.4)}
+.inv-step>span{border-color:rgba(255,255,255,.07);background:rgba(255,255,255,.05);color:rgba(255,255,255,.4)}
+.inv-step:hover,.inv-step.active{color:rgba(255,255,255,.92);background:rgba(255,255,255,.07);box-shadow:none}
+.inv-step.active>span{background:linear-gradient(135deg,var(--primary),var(--violet));border-color:transparent;color:#fff}
+
+.inv-frist-box{margin-top:14px;padding:14px 16px;border:1px solid var(--line);border-radius:12px;background:var(--soft)}
+.inv-frist-box strong{display:block;font-size:12px;color:var(--text)}
+.inv-frist-box p{margin-top:6px;font-size:12px;line-height:1.6;color:var(--muted)}
+.inv-frist-box .inv-frist-disclaimer{display:block;margin-top:10px;font-size:10px;line-height:1.6;color:var(--muted)}
+.inv-frist-box.inv-frist-ok{border-color:rgba(5,150,105,.28);background:var(--success-soft)}
+.inv-frist-box.inv-frist-ok strong{color:#065f46}
+.inv-frist-box.inv-frist-warn{border-color:rgba(217,119,6,.3);background:var(--warning-soft)}
+.inv-frist-box.inv-frist-warn strong{color:#92400e}
+.inv-frist-box.inv-frist-bad{border-color:rgba(220,38,38,.3);background:var(--danger-soft)}
+.inv-frist-box.inv-frist-bad strong{color:#991b1b}
+
+@media(max-width:1020px){
+  .inv-step div{display:block}
+  .inv-step{justify-content:flex-start}
+}
+@media(max-width:760px){
+  .inv-panel{min-height:auto;padding:20px 16px}
+  .tool-sidebar .inv-step{justify-content:center;flex-direction:column;gap:5px;text-align:center}
+  .tool-sidebar .inv-step div{display:block}
+  .tool-sidebar .inv-step small{display:none}
+}
+
+/* ── Gruppierte Navigation (WEG-Verwaltung / Meine Projekte) ───── */
+.nav-links{display:flex;align-items:center;gap:2px}
+.nav-group{position:relative}
+.nav-trigger{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border:0;border-radius:7px;background:transparent;color:inherit;font:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:color .15s,background .15s}
+.nav-trigger:hover{color:#fff;background:rgba(255,255,255,.09)}
+.site-header.scrolled .nav-trigger:hover{color:var(--text);background:var(--surface-soft)}
+.nav-chevron{flex:0 0 auto;transition:transform .18s}
+.nav-group.open .nav-chevron{transform:rotate(180deg)}
+.nav-link-muted{opacity:.68;font-size:12px}
+
+.nav-panel{position:absolute;top:calc(100% + 10px);left:0;z-index:200;display:grid;gap:2px;min-width:290px;padding:10px;border:1px solid var(--line);border-radius:14px;background:#fff;box-shadow:var(--shadow);opacity:0;visibility:hidden;transform:translateY(-6px);transition:opacity .18s ease,transform .18s ease,visibility .18s}
+.nav-group.open .nav-panel{opacity:1;visibility:visible;transform:translateY(0)}
+.nav-panel-label{padding:6px 10px 2px;color:var(--muted);font-size:9px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}
+.nav-panel a{display:grid;gap:2px;padding:9px 10px;border-radius:10px;color:var(--text);transition:background .15s}
+.nav-panel a:hover{background:var(--surface-soft)}
+.nav-panel a strong{font-size:12px}
+.nav-panel a span{color:var(--muted);font-size:10.5px}
+
+.nav-current{color:#fff!important;background:rgba(255,255,255,.14)!important}
+.site-header.scrolled .nav-current{color:var(--text)!important;background:var(--primary-soft)!important}
+
+@media(max-width:1020px){
+  .nav-links{flex-direction:column;align-items:stretch;width:100%;gap:2px}
+  .nav-group{width:100%}
+  .nav-trigger{width:100%;min-height:48px;justify-content:space-between;padding:0 14px;border-radius:10px;color:var(--text)}
+  .nav-trigger:hover{color:var(--text);background:var(--surface-soft)}
+  .nav-panel{position:static;opacity:1;visibility:visible;transform:none;box-shadow:none;border:0;background:var(--soft);min-width:0;margin:2px 0 8px;padding:6px;display:none}
+  .nav-group.open .nav-panel{display:grid}
+  .nav-current{color:var(--text)!important;background:var(--primary-soft)!important}
+}

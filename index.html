@@ -24,13 +24,39 @@
     </button>
 
     <nav class="site-nav" id="siteNav" aria-label="Hauptnavigation">
-      <a href="#tool">Tool</a>
-      <a href="#wegTool">Protokolle</a>
-      <a href="#hgTool">Hausgeld</a>
-      <a href="#ablauf">Ablauf</a>
-      <a href="#einsatzgebiet">Einsatzgebiet</a>
-      <a href="#ueber-uns">Über uns</a>
-      <a class="nav-secondary" href="#projekte">Meine Projekte</a>
+      <div class="nav-links">
+        <div class="nav-group" data-nav-group>
+          <button class="nav-trigger" type="button" aria-expanded="false" aria-haspopup="true" data-nav-toggle data-nav-sections="invTool invProjekte wegTool wegProjekte hgTool hgProjekte">
+            WEG-Verwaltung
+            <svg class="nav-chevron" width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="nav-panel" role="menu" aria-label="WEG-Verwaltung Werkzeuge">
+            <span class="nav-panel-label">WEG-Tools</span>
+            <a href="#invTool" role="menuitem"><strong>Einladung</strong><span>Einladung &amp; Tagesordnung erstellen</span></a>
+            <a href="#wegTool" role="menuitem"><strong>Protokoll</strong><span>Versammlungsprotokoll erstellen</span></a>
+            <a href="#hgTool" role="menuitem"><strong>Hausgeld</strong><span>Wirtschaftsplan berechnen</span></a>
+          </div>
+        </div>
+
+        <a class="nav-link" href="#ablauf" data-nav-sections="ablauf">Ablauf</a>
+        <a class="nav-link" href="#einsatzgebiet" data-nav-sections="einsatzgebiet">Einsatzgebiet</a>
+        <a class="nav-link" href="#ueber-uns" data-nav-sections="ueber-uns">Über uns</a>
+        <a class="nav-link nav-link-muted" href="#tool" data-nav-sections="tool projekte">Objektaufnahme</a>
+
+        <div class="nav-group" data-nav-group>
+          <button class="nav-trigger" type="button" aria-expanded="false" aria-haspopup="true" data-nav-toggle data-nav-sections="invProjekte wegProjekte hgProjekte projekte">
+            Meine Projekte
+            <svg class="nav-chevron" width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="nav-panel" role="menu" aria-label="Meine gespeicherten Projekte">
+            <a href="#invProjekte" role="menuitem"><strong>Einladungen</strong><span>Gespeicherte Versammlungseinladungen</span></a>
+            <a href="#wegProjekte" role="menuitem"><strong>Protokolle</strong><span>Gespeicherte Versammlungsprotokolle</span></a>
+            <a href="#hgProjekte" role="menuitem"><strong>Wirtschaftspläne</strong><span>Gespeicherte Hausgeldabrechnungen</span></a>
+            <a href="#projekte" role="menuitem"><strong>Objektaufnahmen</strong><span>Gespeicherte Objektprojekte</span></a>
+          </div>
+        </div>
+      </div>
+
       <button class="nav-button" id="navStartProject" type="button">Eigenes Projekt starten</button>
     </nav>
   </header>
@@ -73,128 +99,103 @@
       </div>
     </section>
 
-    <section class="section" id="ablauf">
-      <div class="section-heading reveal">
-        <span class="eyebrow">Einfacher Ablauf</span>
-        <h2>Von der Begehung zur klaren Übersicht</h2>
-        <p>Das Tool bleibt bewusst kompakt und konzentriert sich auf Angaben, die im Immobilienalltag tatsächlich gebraucht werden.</p>
-      </div>
-      <div class="steps-grid reveal-stagger">
-        <article><span>01</span><h3>Objekt anlegen</h3><p>Adresse, Objektart, Anlass und zuständige Person erfassen.</p></article>
-        <article><span>02</span><h3>Bereiche festlegen</h3><p>Zum Beispiel Außenbereich, Treppenhaus, Keller oder einzelne Räume.</p></article>
-        <article><span>03</span><h3>Feststellungen aufnehmen</h3><p>Zustand, Priorität, Maßnahme, Zuständigkeit und Frist dokumentieren.</p></article>
-        <article><span>04</span><h3>Bericht erstellen</h3><p>Alle Punkte werden automatisch zu einer übersichtlichen Ausgabe zusammengeführt.</p></article>
-      </div>
-    </section>
-
-    <section class="section value-section tone-soft">
-      <div class="section-heading reveal"><span class="eyebrow">Der praktische Nutzen</span><h2>Klare Übergaben statt verstreuter Informationen</h2></div>
-      <div class="value-grid reveal-stagger"><article><h3>Einheitliche Erfassung</h3><p>Feststellungen werden immer nach demselben Aufbau dokumentiert.</p></article><article><h3>Klare Maßnahmen</h3><p>Priorität, Zuständigkeit, Frist und Status sind direkt hinterlegt.</p></article><article><h3>Saubere Weitergabe</h3><p>Aus der Aufnahme entsteht eine verständliche Übersicht für Verwaltung, Eigentümer oder Dienstleister.</p></article></div>
-    </section>
-
-    <section class="tool-section" id="tool">
+    <section class="tool-section" id="invTool">
       <div class="tool-heading">
         <div>
           <span class="eyebrow">Inspectora Tool</span>
-          <h2>Objektaufnahme & Maßnahmenplaner</h2>
-          <p>Ein Projekt kann gespeichert und später unter „Meine Projekte“ weiterbearbeitet werden.</p>
+          <h2>WEG-Einladungs-Generator</h2>
+          <p>Eigenständiges Tool für Einladungen zur Eigentümerversammlung inkl. Tagesordnung. Unabhängig von den anderen Tools nutzbar.</p>
         </div>
         <div class="tool-actions">
-          <button class="button secondary small" id="newProjectButton" type="button">Neues Projekt</button>
-          <button class="button primary small" id="saveProjectButton" type="button">Projekt speichern</button>
+          <button class="button secondary small" id="newInvButton" type="button">Neue Einladung</button>
+          <button class="button primary small" id="saveInvButton" type="button">Einladung speichern</button>
         </div>
       </div>
 
       <div class="tool-shell">
         <aside class="tool-sidebar">
-          <button class="tool-step active" type="button" data-step="1"><span>1</span><div><strong>Objekt</strong><small>Grunddaten</small></div></button>
-          <button class="tool-step" type="button" data-step="2"><span>2</span><div><strong>Bereiche</strong><small>Aufnahme strukturieren</small></div></button>
-          <button class="tool-step" type="button" data-step="3"><span>3</span><div><strong>Feststellungen</strong><small>Punkte dokumentieren</small></div></button>
-          <button class="tool-step" type="button" data-step="4"><span>4</span><div><strong>Bericht</strong><small>Übersicht prüfen</small></div></button>
-          <div class="tool-note"><strong>Datenschutz inklusive</strong><p>Alle Eingaben bleiben in Ihrem Browser – es gibt keine Cloud-Übertragung.</p></div>
+          <button class="inv-step active" type="button" data-step="1"><span>1</span><div><strong>Grunddaten</strong><small>Versammlung</small></div></button>
+          <button class="inv-step" type="button" data-step="2"><span>2</span><div><strong>TOPs</strong><small>Tagesordnungspunkte</small></div></button>
+          <button class="inv-step" type="button" data-step="3"><span>3</span><div><strong>Einladung</strong><small>Vorschau &amp; Export</small></div></button>
+          <div class="tool-note"><strong>Datenschutz inklusive</strong><p>Alle Eingaben bleiben in Ihrem Browser – keine Cloud-Übertragung.</p></div>
         </aside>
 
         <div class="tool-main">
-          <section class="tool-panel active" data-panel="1">
-            <div class="panel-heading"><div><span class="panel-kicker">Schritt 1</span><h3>Objektdaten</h3></div><span class="required-note">* Pflichtfelder</span></div>
+          <section class="inv-panel active" data-panel="1">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 1</span><h3>Grunddaten der Versammlung</h3></div><span class="required-note">* Pflichtfelder</span></div>
             <div class="form-grid">
-              <label class="field wide"><span>Projektname *</span><input id="projectName" type="text" placeholder="z. B. Objektkontrolle Jahnstraße 28"></label>
-              <label class="field"><span>Objektart *</span><select id="objectType"><option value="">Bitte auswählen</option><option>Mehrfamilienhaus</option><option>Wohnung</option><option>Gewerbeeinheit</option><option>Einfamilienhaus</option><option>Außenanlage</option><option>Sonstiges</option></select></label>
-              <label class="field"><span>Anlass *</span><select id="inspectionReason"><option value="">Bitte auswählen</option><option>Regelmäßige Objektkontrolle</option><option>Wohnungsrückgabe</option><option>Leerstandskontrolle</option><option>Schadensaufnahme</option><option>Handwerkerkontrolle</option><option>Vermarktungsvorbereitung</option><option>Sonstiger Anlass</option></select></label>
-              <label class="field wide"><span>Straße und Hausnummer</span><input id="street" type="text" placeholder="Jahnstraße 28"></label>
-              <label class="field"><span>Postleitzahl</span><input id="postalCode" type="text" inputmode="numeric" placeholder="47475"></label>
-              <label class="field"><span>Ort</span><input id="city" type="text" placeholder="Kamp-Lintfort"></label>
-              <label class="field"><span>Einheit / Gebäudeteil</span><input id="unit" type="text" placeholder="z. B. 3. OG links"></label>
-              <label class="field"><span>Datum der Aufnahme</span><input id="inspectionDate" type="date"></label>
-              <label class="field"><span>Bearbeitende Person</span><input id="inspectorName" type="text" placeholder="Vor- und Nachname"></label>
-              <label class="field wide"><span>Kurze Ausgangslage</span><textarea id="projectNote" rows="4" placeholder="Worum geht es bei diesem Objekt oder Termin?"></textarea></label>
+              <label class="field wide"><span>WEG-/Objektbezeichnung *</span><input id="invName" type="text" placeholder="z. B. WEG Jahnstraße 28, Kamp-Lintfort"></label>
+              <label class="field"><span>Art der Versammlung</span><select id="invType"><option>Ordentliche Eigentümerversammlung</option><option>Außerordentliche Eigentümerversammlung</option></select></label>
+              <label class="field"><span>Verwalter / Einladender *</span><input id="invHost" type="text" placeholder="Vor- und Nachname"></label>
+              <label class="field"><span>Datum der Versammlung *</span><input id="invDate" type="date"></label>
+              <label class="field"><span>Uhrzeit der Versammlung *</span><input id="invTime" type="time"></label>
+              <label class="field wide"><span>Ort der Versammlung</span><input id="invLocation" type="text" placeholder="z. B. Gemeinschaftsraum, Jahnstraße 28"></label>
+              <label class="field"><span>Geplantes Versanddatum der Einladung</span><input id="invSendDate" type="date"></label>
+              <div class="field wide">
+                <div class="inv-frist-box" id="invFristCheck">
+                  <strong id="invFristTitle">Ladungsfrist-Hinweis</strong>
+                  <p id="invFristText">Bitte Versammlungsdatum eingeben, um die Ladungsfrist zu prüfen.</p>
+                  <span class="inv-frist-disclaimer">Unverbindliche Orientierung, keine Rechtsberatung – bitte im Einzelfall und anhand der Gemeinschaftsordnung prüfen. Nach § 24 Abs. 4 WEG beträgt die gesetzliche Einberufungsfrist in der Regel mindestens drei Wochen, sofern keine besondere Dringlichkeit vorliegt.</span>
+                </div>
+              </div>
             </div>
-            <div class="panel-actions"><span></span><button class="button primary next-step" type="button" data-next="2">Weiter zu den Bereichen</button></div>
+            <div class="panel-actions"><span></span><button class="button primary inv-next" type="button" data-next="2">Weiter zu den TOPs</button></div>
           </section>
 
-          <section class="tool-panel" data-panel="2">
-            <div class="panel-heading"><div><span class="panel-kicker">Schritt 2</span><h3>Bereiche festlegen</h3></div><span class="panel-counter" id="areaCount">0 Bereiche</span></div>
-            <p class="panel-intro">Wähle häufige Bereiche aus oder ergänze eigene Bezeichnungen.</p>
-            <div class="quick-area-grid" id="quickAreaGrid">
-              <button type="button" data-area="Außenbereich">Außenbereich</button><button type="button" data-area="Hauseingang">Hauseingang</button><button type="button" data-area="Treppenhaus">Treppenhaus</button><button type="button" data-area="Keller">Keller</button>
-              <button type="button" data-area="Technikraum">Technikraum</button><button type="button" data-area="Wohnung">Wohnung</button><button type="button" data-area="Küche">Küche</button><button type="button" data-area="Badezimmer">Badezimmer</button>
-              <button type="button" data-area="Wohnzimmer">Wohnzimmer</button><button type="button" data-area="Schlafzimmer">Schlafzimmer</button><button type="button" data-area="Gemeinschaftsfläche">Gemeinschaftsfläche</button><button type="button" data-area="Garage / Stellplatz">Garage / Stellplatz</button>
-            </div>
-            <div class="inline-form"><input id="customAreaInput" type="text" placeholder="Eigenen Bereich eingeben"><button class="button secondary small" id="addCustomAreaButton" type="button">Bereich hinzufügen</button></div>
-            <div class="selected-areas" id="selectedAreas"><div class="empty-state compact"><strong>Noch keine Bereiche ausgewählt</strong><p>Wähle oben die passenden Bereiche aus.</p></div></div>
-            <div class="panel-actions"><button class="button secondary previous-step" type="button" data-previous="1">Zurück</button><button class="button primary next-step" type="button" data-next="3">Weiter zu den Feststellungen</button></div>
-          </section>
-
-          <section class="tool-panel" data-panel="3">
-            <div class="panel-heading"><div><span class="panel-kicker">Schritt 3</span><h3>Feststellungen erfassen</h3></div><span class="panel-counter" id="findingCount">0 Feststellungen</span></div>
+          <section class="inv-panel" data-panel="2">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 2</span><h3>Tagesordnungspunkte erfassen</h3></div><span class="panel-counter" id="invTopCount">0 TOPs</span></div>
             <div class="finding-layout">
-              <form class="finding-form" id="findingForm">
-                <label class="field"><span>Bereich *</span><select id="findingArea"><option value="">Bitte zuerst Bereiche anlegen</option></select></label>
-                <label class="field"><span>Kategorie</span><select id="findingCategory"><option>Allgemeiner Zustand</option><option>Beschädigung</option><option>Feuchtigkeit</option><option>Reinigung</option><option>Technik</option><option>Sicherheit</option><option>Unterlagen fehlen</option><option>Sonstiges</option></select></label>
-                <label class="field wide"><span>Feststellung *</span><textarea id="findingDescription" rows="3" placeholder="Was wurde festgestellt?"></textarea></label>
-                <label class="field"><span>Priorität *</span><select id="findingPriority"><option value="Niedrig">Niedrig</option><option value="Mittel" selected>Mittel</option><option value="Hoch">Hoch</option></select></label>
-                <label class="field"><span>Status</span><select id="findingStatus"><option>Offen</option><option>Prüfung erforderlich</option><option>Beauftragung vorgesehen</option><option>In Bearbeitung</option><option>Erledigt</option></select></label>
-                <label class="field wide"><span>Empfohlene Maßnahme</span><textarea id="findingMeasure" rows="3" placeholder="Welcher nächste Schritt ist sinnvoll?"></textarea></label>
-                <label class="field"><span>Zuständigkeit</span><input id="findingResponsible" type="text" placeholder="z. B. technische Verwaltung"></label>
-                <label class="field"><span>Frist</span><input id="findingDeadline" type="date"></label>
-                <label class="field wide"><span>Interne Notiz</span><textarea id="findingInternalNote" rows="2" placeholder="Zusätzlicher interner Hinweis"></textarea></label>
-                <div class="field wide"><span>Bildnachweis</span><div class="file-box"><input id="findingPhotos" type="file" accept="image/*" multiple><p>Bilder werden komprimiert lokal in Ihrem Browser gespeichert (max. 4 pro Feststellung).</p><div class="photo-preview" id="findingPhotoPreview"><p class="photo-empty">Noch keine Bilder ausgewählt (max. 4).</p></div></div></div>
-                <input id="editingFindingId" type="hidden">
-                <div class="form-actions wide"><button class="button secondary" id="resetFindingButton" type="button">Eingabe leeren</button><button class="button primary" type="submit">Feststellung übernehmen</button></div>
+              <form class="finding-form" id="invTopForm">
+                <label class="field wide"><span>Titel des TOP *</span><input id="invTopTitle" type="text" placeholder="z. B. Beschluss über Fassadensanierung"></label>
+                <label class="field wide"><span>Kurzbeschreibung (optional)</span><textarea id="invTopNotes" rows="3" placeholder="Kurze Erläuterung zum Tagesordnungspunkt"></textarea></label>
+                <input id="invEditingTopId" type="hidden">
+                <div class="form-actions wide"><button class="button secondary" id="resetInvTopButton" type="button">Eingabe leeren</button><button class="button primary" type="submit">TOP übernehmen</button></div>
               </form>
 
               <div class="finding-list-wrap">
-                <div class="list-toolbar"><strong>Erfasste Punkte</strong><select id="findingFilter" aria-label="Feststellungen filtern"><option value="Alle">Alle Prioritäten</option><option value="Hoch">Nur Hoch</option><option value="Mittel">Nur Mittel</option><option value="Niedrig">Nur Niedrig</option></select></div>
-                <div class="finding-list" id="findingList"><div class="empty-state"><strong>Noch keine Feststellungen</strong><p>Erfasse links den ersten Punkt.</p></div></div>
+                <div class="list-toolbar"><strong>Erfasste TOPs</strong></div>
+                <div class="finding-list" id="invTopList"><div class="empty-state"><strong>Noch keine TOPs</strong><p>Erfasse links den ersten Tagesordnungspunkt.</p></div></div>
               </div>
             </div>
-            <div class="panel-actions"><button class="button secondary previous-step" type="button" data-previous="2">Zurück</button><button class="button primary next-step" type="button" data-next="4">Bericht ansehen</button></div>
+            <div class="panel-actions"><button class="button secondary inv-prev" type="button" data-previous="1">Zurück</button><button class="button primary inv-next" type="button" data-next="3">Einladung ansehen</button></div>
           </section>
 
-          <section class="tool-panel" data-panel="4">
-            <div class="panel-heading"><div><span class="panel-kicker">Schritt 4</span><h3>Berichtsvorschau</h3></div><div class="report-actions"><button class="button secondary small" id="copySummaryButton" type="button">Kurzfassung kopieren</button><button class="button primary small" id="printReportButton" type="button">Als PDF exportieren</button></div></div>
-            <div class="report-card" id="reportCard">
-              <div class="report-header"><div><span class="report-brand">Inspectora</span><h3 id="reportProjectName">Neues Objektprojekt</h3><p id="reportObjectMeta">Noch keine Objektdaten eingetragen</p></div><div class="report-id"><span>Projekt-ID</span><strong id="reportProjectId">Entwurf</strong></div></div>
-              <div class="report-summary-grid"><article><span>Bereiche</span><strong id="reportAreaTotal">0</strong></article><article><span>Feststellungen</span><strong id="reportFindingTotal">0</strong></article><article><span>Hohe Priorität</span><strong id="reportHighTotal">0</strong></article><article><span>Erledigt</span><strong id="reportDoneTotal">0</strong></article></div>
-              <section class="report-section"><h4>Objekt und Anlass</h4><dl class="report-details" id="reportDetails"></dl></section>
-              <section class="report-section"><h4>Bereiche</h4><div class="report-tags" id="reportAreas"></div></section>
-              <section class="report-section"><h4>Feststellungen und Maßnahmen</h4><div class="report-findings" id="reportFindings"></div></section>
-              <section class="report-section report-note"><h4>Hinweis</h4><p>Diese Übersicht dient der strukturierten Dokumentation. Sie ersetzt keine technische Begutachtung oder fachliche Prüfung.</p></section>
+          <section class="inv-panel" data-panel="3">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 3</span><h3>Einladungsvorschau</h3></div><div class="report-actions"><button class="button secondary small" id="copyInvButton" type="button">Text kopieren</button><button class="button primary small" id="printInvButton" type="button">Als PDF exportieren</button></div></div>
+            <div class="disclaimer-banner"><strong>Hinweis:</strong> Automatisch erstellter Entwurf, unverbindlich und ohne Gewähr. Rechtliche Verantwortung liegt beim Verwalter/Einladenden.</div>
+            <div class="weg-draft-wrap">
+              <div class="weg-draft-head">
+                <div>
+                  <strong>Einladungstext (bearbeitbar)</strong>
+                  <span>Automatisch aus Ihren Eingaben erstellt – bitte inhaltlich prüfen und bei Bedarf anpassen.</span>
+                </div>
+                <button class="button secondary small" id="regenerateInvButton" type="button">Neu generieren</button>
+              </div>
+              <textarea id="invDraft" rows="20" spellcheck="true" aria-label="Einladungstext Entwurf – bearbeitbar"></textarea>
             </div>
-            <div class="panel-actions"><button class="button secondary previous-step" type="button" data-previous="3">Zurück</button><button class="button primary" id="finishAndSaveButton" type="button">Projekt speichern</button></div>
+            <div class="report-card" id="invReportCard">
+              <div class="report-header"><div><span class="report-brand">Inspectora</span><h3 id="invReportName">Neue Einladung</h3><p id="invReportMeta">Noch keine Versammlungsdaten eingetragen</p></div><div class="report-id"><span>Einladungs-ID</span><strong id="invReportId">Entwurf</strong></div></div>
+              <div class="report-summary-grid"><article><span>TOPs</span><strong id="invReportTopTotal">0</strong></article><article><span>Tage bis Versammlung</span><strong id="invReportDays">–</strong></article><article><span>Ladungsfrist</span><strong id="invReportFristStatus">Unbekannt</strong></article><article><span>Art</span><strong id="invReportType">–</strong></article></div>
+              <section class="report-section"><h4>Versammlungsdaten</h4><dl class="report-details" id="invReportDetails"></dl></section>
+              <section class="report-section"><h4>Tagesordnung</h4><div class="report-findings" id="invReportTops"></div></section>
+              <section class="report-section report-note"><h4>Hinweis</h4><p>Automatisch erstellter Entwurf, unverbindlich und ohne Gewähr. Rechtliche Verantwortung liegt beim Verwalter/Einladenden.</p></section>
+            </div>
+            <div class="panel-actions"><button class="button secondary inv-prev" type="button" data-previous="2">Zurück</button><button class="button primary" id="finishAndSaveInvButton" type="button">Einladung speichern</button></div>
           </section>
         </div>
       </div>
     </section>
 
-    <section class="section projects-section" id="projekte">
+    <section class="section projects-section" id="invProjekte">
       <div class="projects-heading">
-        <div class="section-heading reveal"><span class="eyebrow">Projektübersicht</span><h2>Meine Projekte</h2><p>Gespeicherte Projekte können auf diesem Gerät geöffnet, weiterbearbeitet, dupliziert oder gelöscht werden.</p></div>
-        <div class="project-toolbar"><input id="projectSearch" type="search" placeholder="Projekte durchsuchen"><select id="projectStatusFilter"><option value="Alle">Alle Status</option><option value="Entwurf">Entwurf</option><option value="In Bearbeitung">In Bearbeitung</option><option value="Zur Prüfung">Zur Prüfung</option><option value="Abgeschlossen">Abgeschlossen</option></select></div>
+        <div class="section-heading"><span class="eyebrow">Einladungsübersicht</span><h2>Meine Einladungen</h2><p>Gespeicherte Versammlungseinladungen können auf diesem Gerät geöffnet, weiterbearbeitet, dupliziert oder gelöscht werden.</p></div>
+        <div class="project-toolbar"><input id="invSearch" type="search" placeholder="Einladungen durchsuchen"><select id="invStatusFilter"><option value="Alle">Alle Status</option><option value="Entwurf">Entwurf</option><option value="Versendet">Versendet</option><option value="Abgeschlossen">Abgeschlossen</option></select></div>
       </div>
-      <div class="project-overview"><article><span>Gesamt</span><strong id="totalProjects">0</strong></article><article><span>In Bearbeitung</span><strong id="activeProjects">0</strong></article><article><span>Offene Punkte</span><strong id="openFindings">0</strong></article><article><span>Hohe Priorität</span><strong id="highFindings">0</strong></article></div>
-      <div class="project-list" id="projectList"><div class="empty-state large"><strong>Noch keine Projekte gespeichert</strong><p>Starte oben eine Objektaufnahme oder lade das Demoprojekt.</p><button class="button primary" id="emptyStartButton" type="button">Erstes Projekt anlegen</button></div></div>
+      <div class="project-overview"><article><span>Gesamt</span><strong id="invTotalCount">0</strong></article><article><span>Entwürfe</span><strong id="invDraftCount">0</strong></article><article><span>Erfasste TOPs</span><strong id="invTopsCount">0</strong></article><article><span>Frist knapp/verletzt</span><strong id="invFristWarnCount">0</strong></article></div>
+      <div class="project-list" id="invList"><div class="empty-state large"><strong>Noch keine Einladungen gespeichert</strong><p>Starte oben eine neue Versammlungseinladung.</p><button class="button primary" id="invEmptyStartButton" type="button">Erste Einladung anlegen</button></div></div>
     </section>
+
+    <div class="modal" id="invConfirmModal" aria-hidden="true"><div class="modal-backdrop" data-close-inv-modal></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="invConfirmModalTitle"><h3 id="invConfirmModalTitle">Einladung löschen?</h3><p>Dieser Vorgang kann nicht rückgängig gemacht werden.</p><div class="modal-actions"><button class="button secondary" type="button" data-close-inv-modal>Abbrechen</button><button class="button danger" id="invConfirmDeleteButton" type="button">Löschen</button></div></div></div>
 
     <section class="tool-section" id="wegTool">
       <div class="tool-heading">
@@ -460,6 +461,129 @@
     </section>
 
     <div class="modal" id="hgConfirmModal" aria-hidden="true"><div class="modal-backdrop" data-close-hg-modal></div><div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="hgConfirmModalTitle"><h3 id="hgConfirmModalTitle">Wirtschaftsplan löschen?</h3><p>Dieser Vorgang kann nicht rückgängig gemacht werden.</p><div class="modal-actions"><button class="button secondary" type="button" data-close-hg-modal>Abbrechen</button><button class="button danger" id="hgConfirmDeleteButton" type="button">Löschen</button></div></div></div>
+
+    <section class="section" id="ablauf">
+      <div class="section-heading reveal">
+        <span class="eyebrow">Objektaufnahme – Ablauf</span>
+        <h2>Von der Begehung zur klaren Übersicht</h2>
+        <p>Das Tool bleibt bewusst kompakt und konzentriert sich auf Angaben, die im Immobilienalltag tatsächlich gebraucht werden.</p>
+      </div>
+      <div class="steps-grid reveal-stagger">
+        <article><span>01</span><h3>Objekt anlegen</h3><p>Adresse, Objektart, Anlass und zuständige Person erfassen.</p></article>
+        <article><span>02</span><h3>Bereiche festlegen</h3><p>Zum Beispiel Außenbereich, Treppenhaus, Keller oder einzelne Räume.</p></article>
+        <article><span>03</span><h3>Feststellungen aufnehmen</h3><p>Zustand, Priorität, Maßnahme, Zuständigkeit und Frist dokumentieren.</p></article>
+        <article><span>04</span><h3>Bericht erstellen</h3><p>Alle Punkte werden automatisch zu einer übersichtlichen Ausgabe zusammengeführt.</p></article>
+      </div>
+    </section>
+
+    <section class="section value-section tone-soft">
+      <div class="section-heading reveal"><span class="eyebrow">Der praktische Nutzen</span><h2>Klare Übergaben statt verstreuter Informationen</h2></div>
+      <div class="value-grid reveal-stagger"><article><h3>Einheitliche Erfassung</h3><p>Feststellungen werden immer nach demselben Aufbau dokumentiert.</p></article><article><h3>Klare Maßnahmen</h3><p>Priorität, Zuständigkeit, Frist und Status sind direkt hinterlegt.</p></article><article><h3>Saubere Weitergabe</h3><p>Aus der Aufnahme entsteht eine verständliche Übersicht für Verwaltung, Eigentümer oder Dienstleister.</p></article></div>
+    </section>
+
+    <section class="tool-section" id="tool">
+      <div class="tool-heading">
+        <div>
+          <span class="eyebrow">Inspectora Tool</span>
+          <h2>Objektaufnahme & Maßnahmenplaner</h2>
+          <p>Ein Projekt kann gespeichert und später unter „Meine Projekte“ weiterbearbeitet werden.</p>
+        </div>
+        <div class="tool-actions">
+          <button class="button secondary small" id="newProjectButton" type="button">Neues Projekt</button>
+          <button class="button primary small" id="saveProjectButton" type="button">Projekt speichern</button>
+        </div>
+      </div>
+
+      <div class="tool-shell">
+        <aside class="tool-sidebar">
+          <button class="tool-step active" type="button" data-step="1"><span>1</span><div><strong>Objekt</strong><small>Grunddaten</small></div></button>
+          <button class="tool-step" type="button" data-step="2"><span>2</span><div><strong>Bereiche</strong><small>Aufnahme strukturieren</small></div></button>
+          <button class="tool-step" type="button" data-step="3"><span>3</span><div><strong>Feststellungen</strong><small>Punkte dokumentieren</small></div></button>
+          <button class="tool-step" type="button" data-step="4"><span>4</span><div><strong>Bericht</strong><small>Übersicht prüfen</small></div></button>
+          <div class="tool-note"><strong>Datenschutz inklusive</strong><p>Alle Eingaben bleiben in Ihrem Browser – es gibt keine Cloud-Übertragung.</p></div>
+        </aside>
+
+        <div class="tool-main">
+          <section class="tool-panel active" data-panel="1">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 1</span><h3>Objektdaten</h3></div><span class="required-note">* Pflichtfelder</span></div>
+            <div class="form-grid">
+              <label class="field wide"><span>Projektname *</span><input id="projectName" type="text" placeholder="z. B. Objektkontrolle Jahnstraße 28"></label>
+              <label class="field"><span>Objektart *</span><select id="objectType"><option value="">Bitte auswählen</option><option>Mehrfamilienhaus</option><option>Wohnung</option><option>Gewerbeeinheit</option><option>Einfamilienhaus</option><option>Außenanlage</option><option>Sonstiges</option></select></label>
+              <label class="field"><span>Anlass *</span><select id="inspectionReason"><option value="">Bitte auswählen</option><option>Regelmäßige Objektkontrolle</option><option>Wohnungsrückgabe</option><option>Leerstandskontrolle</option><option>Schadensaufnahme</option><option>Handwerkerkontrolle</option><option>Vermarktungsvorbereitung</option><option>Sonstiger Anlass</option></select></label>
+              <label class="field wide"><span>Straße und Hausnummer</span><input id="street" type="text" placeholder="Jahnstraße 28"></label>
+              <label class="field"><span>Postleitzahl</span><input id="postalCode" type="text" inputmode="numeric" placeholder="47475"></label>
+              <label class="field"><span>Ort</span><input id="city" type="text" placeholder="Kamp-Lintfort"></label>
+              <label class="field"><span>Einheit / Gebäudeteil</span><input id="unit" type="text" placeholder="z. B. 3. OG links"></label>
+              <label class="field"><span>Datum der Aufnahme</span><input id="inspectionDate" type="date"></label>
+              <label class="field"><span>Bearbeitende Person</span><input id="inspectorName" type="text" placeholder="Vor- und Nachname"></label>
+              <label class="field wide"><span>Kurze Ausgangslage</span><textarea id="projectNote" rows="4" placeholder="Worum geht es bei diesem Objekt oder Termin?"></textarea></label>
+            </div>
+            <div class="panel-actions"><span></span><button class="button primary next-step" type="button" data-next="2">Weiter zu den Bereichen</button></div>
+          </section>
+
+          <section class="tool-panel" data-panel="2">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 2</span><h3>Bereiche festlegen</h3></div><span class="panel-counter" id="areaCount">0 Bereiche</span></div>
+            <p class="panel-intro">Wähle häufige Bereiche aus oder ergänze eigene Bezeichnungen.</p>
+            <div class="quick-area-grid" id="quickAreaGrid">
+              <button type="button" data-area="Außenbereich">Außenbereich</button><button type="button" data-area="Hauseingang">Hauseingang</button><button type="button" data-area="Treppenhaus">Treppenhaus</button><button type="button" data-area="Keller">Keller</button>
+              <button type="button" data-area="Technikraum">Technikraum</button><button type="button" data-area="Wohnung">Wohnung</button><button type="button" data-area="Küche">Küche</button><button type="button" data-area="Badezimmer">Badezimmer</button>
+              <button type="button" data-area="Wohnzimmer">Wohnzimmer</button><button type="button" data-area="Schlafzimmer">Schlafzimmer</button><button type="button" data-area="Gemeinschaftsfläche">Gemeinschaftsfläche</button><button type="button" data-area="Garage / Stellplatz">Garage / Stellplatz</button>
+            </div>
+            <div class="inline-form"><input id="customAreaInput" type="text" placeholder="Eigenen Bereich eingeben"><button class="button secondary small" id="addCustomAreaButton" type="button">Bereich hinzufügen</button></div>
+            <div class="selected-areas" id="selectedAreas"><div class="empty-state compact"><strong>Noch keine Bereiche ausgewählt</strong><p>Wähle oben die passenden Bereiche aus.</p></div></div>
+            <div class="panel-actions"><button class="button secondary previous-step" type="button" data-previous="1">Zurück</button><button class="button primary next-step" type="button" data-next="3">Weiter zu den Feststellungen</button></div>
+          </section>
+
+          <section class="tool-panel" data-panel="3">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 3</span><h3>Feststellungen erfassen</h3></div><span class="panel-counter" id="findingCount">0 Feststellungen</span></div>
+            <div class="finding-layout">
+              <form class="finding-form" id="findingForm">
+                <label class="field"><span>Bereich *</span><select id="findingArea"><option value="">Bitte zuerst Bereiche anlegen</option></select></label>
+                <label class="field"><span>Kategorie</span><select id="findingCategory"><option>Allgemeiner Zustand</option><option>Beschädigung</option><option>Feuchtigkeit</option><option>Reinigung</option><option>Technik</option><option>Sicherheit</option><option>Unterlagen fehlen</option><option>Sonstiges</option></select></label>
+                <label class="field wide"><span>Feststellung *</span><textarea id="findingDescription" rows="3" placeholder="Was wurde festgestellt?"></textarea></label>
+                <label class="field"><span>Priorität *</span><select id="findingPriority"><option value="Niedrig">Niedrig</option><option value="Mittel" selected>Mittel</option><option value="Hoch">Hoch</option></select></label>
+                <label class="field"><span>Status</span><select id="findingStatus"><option>Offen</option><option>Prüfung erforderlich</option><option>Beauftragung vorgesehen</option><option>In Bearbeitung</option><option>Erledigt</option></select></label>
+                <label class="field wide"><span>Empfohlene Maßnahme</span><textarea id="findingMeasure" rows="3" placeholder="Welcher nächste Schritt ist sinnvoll?"></textarea></label>
+                <label class="field"><span>Zuständigkeit</span><input id="findingResponsible" type="text" placeholder="z. B. technische Verwaltung"></label>
+                <label class="field"><span>Frist</span><input id="findingDeadline" type="date"></label>
+                <label class="field wide"><span>Interne Notiz</span><textarea id="findingInternalNote" rows="2" placeholder="Zusätzlicher interner Hinweis"></textarea></label>
+                <div class="field wide"><span>Bildnachweis</span><div class="file-box"><input id="findingPhotos" type="file" accept="image/*" multiple><p>Bilder werden komprimiert lokal in Ihrem Browser gespeichert (max. 4 pro Feststellung).</p><div class="photo-preview" id="findingPhotoPreview"><p class="photo-empty">Noch keine Bilder ausgewählt (max. 4).</p></div></div></div>
+                <input id="editingFindingId" type="hidden">
+                <div class="form-actions wide"><button class="button secondary" id="resetFindingButton" type="button">Eingabe leeren</button><button class="button primary" type="submit">Feststellung übernehmen</button></div>
+              </form>
+
+              <div class="finding-list-wrap">
+                <div class="list-toolbar"><strong>Erfasste Punkte</strong><select id="findingFilter" aria-label="Feststellungen filtern"><option value="Alle">Alle Prioritäten</option><option value="Hoch">Nur Hoch</option><option value="Mittel">Nur Mittel</option><option value="Niedrig">Nur Niedrig</option></select></div>
+                <div class="finding-list" id="findingList"><div class="empty-state"><strong>Noch keine Feststellungen</strong><p>Erfasse links den ersten Punkt.</p></div></div>
+              </div>
+            </div>
+            <div class="panel-actions"><button class="button secondary previous-step" type="button" data-previous="2">Zurück</button><button class="button primary next-step" type="button" data-next="4">Bericht ansehen</button></div>
+          </section>
+
+          <section class="tool-panel" data-panel="4">
+            <div class="panel-heading"><div><span class="panel-kicker">Schritt 4</span><h3>Berichtsvorschau</h3></div><div class="report-actions"><button class="button secondary small" id="copySummaryButton" type="button">Kurzfassung kopieren</button><button class="button primary small" id="printReportButton" type="button">Als PDF exportieren</button></div></div>
+            <div class="report-card" id="reportCard">
+              <div class="report-header"><div><span class="report-brand">Inspectora</span><h3 id="reportProjectName">Neues Objektprojekt</h3><p id="reportObjectMeta">Noch keine Objektdaten eingetragen</p></div><div class="report-id"><span>Projekt-ID</span><strong id="reportProjectId">Entwurf</strong></div></div>
+              <div class="report-summary-grid"><article><span>Bereiche</span><strong id="reportAreaTotal">0</strong></article><article><span>Feststellungen</span><strong id="reportFindingTotal">0</strong></article><article><span>Hohe Priorität</span><strong id="reportHighTotal">0</strong></article><article><span>Erledigt</span><strong id="reportDoneTotal">0</strong></article></div>
+              <section class="report-section"><h4>Objekt und Anlass</h4><dl class="report-details" id="reportDetails"></dl></section>
+              <section class="report-section"><h4>Bereiche</h4><div class="report-tags" id="reportAreas"></div></section>
+              <section class="report-section"><h4>Feststellungen und Maßnahmen</h4><div class="report-findings" id="reportFindings"></div></section>
+              <section class="report-section report-note"><h4>Hinweis</h4><p>Diese Übersicht dient der strukturierten Dokumentation. Sie ersetzt keine technische Begutachtung oder fachliche Prüfung.</p></section>
+            </div>
+            <div class="panel-actions"><button class="button secondary previous-step" type="button" data-previous="3">Zurück</button><button class="button primary" id="finishAndSaveButton" type="button">Projekt speichern</button></div>
+          </section>
+        </div>
+      </div>
+    </section>
+
+    <section class="section projects-section" id="projekte">
+      <div class="projects-heading">
+        <div class="section-heading reveal"><span class="eyebrow">Projektübersicht</span><h2>Meine Projekte</h2><p>Gespeicherte Projekte können auf diesem Gerät geöffnet, weiterbearbeitet, dupliziert oder gelöscht werden.</p></div>
+        <div class="project-toolbar"><input id="projectSearch" type="search" placeholder="Projekte durchsuchen"><select id="projectStatusFilter"><option value="Alle">Alle Status</option><option value="Entwurf">Entwurf</option><option value="In Bearbeitung">In Bearbeitung</option><option value="Zur Prüfung">Zur Prüfung</option><option value="Abgeschlossen">Abgeschlossen</option></select></div>
+      </div>
+      <div class="project-overview"><article><span>Gesamt</span><strong id="totalProjects">0</strong></article><article><span>In Bearbeitung</span><strong id="activeProjects">0</strong></article><article><span>Offene Punkte</span><strong id="openFindings">0</strong></article><article><span>Hohe Priorität</span><strong id="highFindings">0</strong></article></div>
+      <div class="project-list" id="projectList"><div class="empty-state large"><strong>Noch keine Projekte gespeichert</strong><p>Starte oben eine Objektaufnahme oder lade das Demoprojekt.</p><button class="button primary" id="emptyStartButton" type="button">Erstes Projekt anlegen</button></div></div>
+    </section>
 
     <section class="section area-section" id="einsatzgebiet">
       <div class="section-heading section-heading-wide">

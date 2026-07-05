@@ -1040,6 +1040,594 @@ wegInit();
 })();
 
 
+/* ── Eigenständiger WEG-Einladungs-Generator ─────────────────── */
+// Vollständig unabhängig von den anderen Tools: eigener Storage, eigener State,
+// eigene DOM-Referenzen, keine geteilten Funktionen oder IDs.
+(()=>{"use strict";
+const INV_STORAGE_KEY="inspectora_invitations_v1",INV_DRAFT_KEY="inspectora_invitation_draft_v1";
+const LADUNGSFRIST_MIN_DAYS=21;
+const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
+const esc=v=>String(v??"").replaceAll("&","&amp;").replaceAll("<","&lt;").replaceAll(">","&gt;").replaceAll('"',"&quot;").replaceAll("'","&#039;");
+const today=()=>new Date().toISOString().slice(0,10);
+const fmt=v=>v?new Intl.DateTimeFormat("de-DE").format(new Date(v+"T12:00:00")):"Nicht angegeben";
+
+const emptyInvTop=()=>({id:"",title:"",notes:""});
+const emptyInvitation=()=>({id:"",name:"",status:"Entwurf",type:"Ordentliche Eigentümerversammlung",date:"",time:"",location:"",host:"",sendDate:today(),tops:[],createdAt:"",updatedAt:"",draftText:""});
+
+function invTopId(){return`ITOP-${Date.now()}-${Math.random().toString(16).slice(2,7)}`}
+
+function invFristInfo(sendDate,meetingDate){
+  if(!meetingDate)return{days:null,level:"unknown"};
+  const send=sendDate||today();
+  const days=Math.round((new Date(meetingDate+"T00:00:00")-new Date(send+"T00:00:00"))/86400000);
+  if(!Number.isFinite(days))return{days:null,level:"unknown"};
+  if(days<0)return{days,level:"bad"};
+  if(days<LADUNGSFRIST_MIN_DAYS)return{days,level:"warn"};
+  return{days,level:"ok"};
+}
+
+let invitations=[];
+try{
+  invitations=JSON.parse(localStorage.getItem(INV_STORAGE_KEY)||"[]");
+  if(!Array.isArray(invitations))invitations=[];
+}catch{invitations=[]}
+
+const invState={step:1,current:emptyInvitation(),invitations,deleteTarget:null};
+
+const invRefs={
+  toast:$("#toast"),
+  name:$("#invName"),type:$("#invType"),host:$("#invHost"),date:$("#invDate"),time:$("#invTime"),
+  location:$("#invLocation"),sendDate:$("#invSendDate"),
+  fristBox:$("#invFristCheck"),fristTitle:$("#invFristTitle"),fristText:$("#invFristText"),
+  tool:$("#invTool"),
+  topTitle:$("#invTopTitle"),topNotes:$("#invTopNotes"),
+  editingTopId:$("#invEditingTopId"),topForm:$("#invTopForm"),resetTopButton:$("#resetInvTopButton"),
+  topList:$("#invTopList"),topCount:$("#invTopCount"),
+  reportName:$("#invReportName"),reportMeta:$("#invReportMeta"),reportId:$("#invReportId"),
+  reportTopTotal:$("#invReportTopTotal"),reportDays:$("#invReportDays"),
+  reportFristStatus:$("#invReportFristStatus"),reportType:$("#invReportType"),
+  reportDetails:$("#invReportDetails"),reportTops:$("#invReportTops"),
+  search:$("#invSearch"),statusFilter:$("#invStatusFilter"),list:$("#invList"),
+  totalCount:$("#invTotalCount"),draftCount:$("#invDraftCount"),topsCount:$("#invTopsCount"),fristWarnCount:$("#invFristWarnCount"),
+  draft:$("#invDraft"),
+  confirmModal:$("#invConfirmModal"),confirmDeleteButton:$("#invConfirmDeleteButton")
+};
+
+function invToast(msg){if(!invRefs.toast)return;invRefs.toast.textContent=msg;invRefs.toast.classList.add("show");clearTimeout(invToast.t);invToast.t=setTimeout(()=>invRefs.toast.classList.remove("show"),2600)}
+
+function invPersist(){
+  try{localStorage.setItem(INV_STORAGE_KEY,JSON.stringify(invState.invitations));return true}
+  catch{invToast("Speicher voll – bitte ältere Einladungen löschen und erneut speichern.");return false}
+}
+function invSaveDraft(){invSyncForm();try{localStorage.setItem(INV_DRAFT_KEY,JSON.stringify(invState.current))}catch{}}
+
+function invInvitationId(){
+  const y=new Date().getFullYear();
+  const nums=invState.invitations.map(p=>Number(String(p.id).split("-").pop())).filter(Number.isFinite);
+  return`INV-${y}-${String((nums.length?Math.max(...nums):0)+1).padStart(3,"0")}`;
+}
+
+function invGoTool(){invRefs.tool?.scrollIntoView({behavior:"smooth",block:"start"})}
+
+function invSetStep(n){
+  invState.step=Number(n);
+  $$('.inv-step').forEach(b=>b.classList.toggle('active',Number(b.dataset.step)===invState.step));
+  $$('.inv-panel').forEach(p=>p.classList.toggle('active',Number(p.dataset.panel)===invState.step));
+  if(invState.step===3){invSyncForm();invRenderReport();if(invRefs.draft&&!invRefs.draft.value.trim()){invRefs.draft.value=invGenerateText();invState.current.draftText=invRefs.draft.value;}}
+  invSaveDraft();
+}
+
+function invValidate(n){
+  if(Number(n)===1){
+    invSyncForm();
+    if(!invState.current.name){invToast("Bitte eine WEG-/Objektbezeichnung eintragen.");invRefs.name.focus();return false}
+    if(!invState.current.date){invToast("Bitte das Datum der Versammlung eintragen.");invRefs.date.focus();return false}
+    if(!invState.current.host){invToast("Bitte den Verwalter/Einladenden eintragen.");invRefs.host.focus();return false}
+  }
+  return true;
+}
+
+function invSyncForm(){
+  Object.assign(invState.current,{
+    name:invRefs.name.value.trim(),type:invRefs.type.value,host:invRefs.host.value.trim(),
+    date:invRefs.date.value,time:invRefs.time.value,location:invRefs.location.value.trim(),
+    sendDate:invRefs.sendDate.value
+  });
+  if(invRefs.draft)invState.current.draftText=invRefs.draft.value;
+  invRenderFristCheck();
+}
+
+function invSyncState(){
+  invRefs.name.value=invState.current.name||"";
+  invRefs.type.value=invState.current.type||"Ordentliche Eigentümerversammlung";
+  invRefs.host.value=invState.current.host||"";
+  invRefs.date.value=invState.current.date||"";
+  invRefs.time.value=invState.current.time||"";
+  invRefs.location.value=invState.current.location||"";
+  invRefs.sendDate.value=invState.current.sendDate||today();
+  if(invRefs.draft)invRefs.draft.value=invState.current.draftText||"";
+  invRenderFristCheck();
+  invRenderTops();
+  invRenderReport();
+}
+
+function invRenderFristCheck(){
+  const{date,sendDate}=invState.current;
+  const info=invFristInfo(sendDate,date);
+  invRefs.fristBox.classList.remove("inv-frist-ok","inv-frist-warn","inv-frist-bad");
+  if(info.level==="unknown"){
+    invRefs.fristTitle.textContent="Ladungsfrist-Hinweis";
+    invRefs.fristText.textContent="Bitte Versammlungsdatum eingeben, um die Ladungsfrist zu prüfen.";
+    return;
+  }
+  if(info.level==="bad"){
+    invRefs.fristBox.classList.add("inv-frist-bad");
+    invRefs.fristTitle.textContent="Datum prüfen";
+    invRefs.fristText.textContent="Das Versammlungsdatum liegt vor dem geplanten Versanddatum – bitte Angaben prüfen.";
+    return;
+  }
+  if(info.level==="warn"){
+    invRefs.fristBox.classList.add("inv-frist-warn");
+    invRefs.fristTitle.textContent="Ladungsfrist knapp oder unterschritten";
+    invRefs.fristText.textContent=`Nur ${info.days} ${info.days===1?"Tag":"Tage"} zwischen geplantem Versand und Versammlung – die häufig übliche gesetzliche Mindestfrist von drei Wochen (21 Tagen) wird voraussichtlich unterschritten.`;
+    return;
+  }
+  invRefs.fristBox.classList.add("inv-frist-ok");
+  invRefs.fristTitle.textContent="Ladungsfrist eingehalten";
+  invRefs.fristText.textContent=`${info.days} Tage zwischen geplantem Versand und Versammlung (empfohlene Mindestfrist: 21 Tage / drei Wochen).`;
+}
+
+function invResetTopForm(){
+  invRefs.topForm.reset();
+  invRefs.editingTopId.value="";
+}
+
+function invTopFromForm(){
+  return{
+    id:invRefs.editingTopId.value||invTopId(),
+    title:invRefs.topTitle.value.trim(),
+    notes:invRefs.topNotes.value.trim()
+  };
+}
+
+function invRenderTops(){
+  const tops=invState.current.tops;
+  invRefs.topCount.textContent=`${tops.length} ${tops.length===1?"TOP":"TOPs"}`;
+  if(!tops.length){
+    invRefs.topList.innerHTML=`<div class="empty-state"><strong>Noch keine TOPs</strong><p>Erfasse links den ersten Tagesordnungspunkt.</p></div>`;
+    return;
+  }
+  invRefs.topList.innerHTML=tops.map((t,i)=>
+    `<article class="finding-card"><div class="finding-card-top"><div><span class="finding-area">TOP ${i+1}</span><h4>${esc(t.title)}</h4></div></div>${t.notes?`<p>${esc(t.notes)}</p>`:""}<div class="finding-card-actions"><button type="button" data-edit-top="${esc(t.id)}">Bearbeiten</button><button type="button" data-delete-top="${esc(t.id)}">Löschen</button></div></article>`
+  ).join("");
+}
+
+function invEditTop(id){
+  const t=invState.current.tops.find(x=>x.id===id);
+  if(!t)return;
+  invRefs.topTitle.value=t.title;
+  invRefs.topNotes.value=t.notes;
+  invRefs.editingTopId.value=t.id;
+  invRefs.topTitle.focus();
+}
+
+function invDeleteTop(id){
+  invState.current.tops=invState.current.tops.filter(t=>t.id!==id);
+  invRenderTops();
+  invRenderReport();
+  invSaveDraft();
+  invToast("TOP gelöscht.");
+}
+
+function invRenderReport(){
+  const p=invState.current,tops=p.tops;
+  const info=invFristInfo(p.sendDate,p.date);
+  invRefs.reportName.textContent=p.name||"Neue Einladung";
+  invRefs.reportMeta.textContent=[p.date?fmt(p.date):"",p.time,p.location].filter(Boolean).join(" · ")||"Noch keine Versammlungsdaten eingetragen";
+  invRefs.reportId.textContent=p.id||"Entwurf";
+  invRefs.reportTopTotal.textContent=tops.length;
+  invRefs.reportDays.textContent=info.days===null?"–":info.days;
+  invRefs.reportFristStatus.textContent=info.level==="ok"?"Eingehalten":info.level==="warn"?"Knapp/unterschritten":info.level==="bad"?"Datum prüfen":"Unbekannt";
+  invRefs.reportType.textContent=/außerordentlich/i.test(p.type||"")?"Außerordentlich":"Ordentlich";
+
+  const details=[
+    ["Verwalter / Einladender",p.host],
+    ["Art der Versammlung",p.type],
+    ["Datum",p.date?fmt(p.date):""],
+    ["Uhrzeit",p.time],
+    ["Ort",p.location],
+    ["Geplantes Versanddatum",p.sendDate?fmt(p.sendDate):""],
+    ["Ladungsfrist-Hinweis",invRefs.fristText.textContent]
+  ].filter(([,v])=>v);
+  invRefs.reportDetails.innerHTML=details.length
+    ?details.map(([l,v])=>`<div><dt>${esc(l)}</dt><dd>${esc(v)}</dd></div>`).join("")
+    :`<div><dt>Hinweis</dt><dd>Noch keine Angaben vorhanden.</dd></div>`;
+
+  invRefs.reportTops.innerHTML=tops.length
+    ?tops.map((t,i)=>`<article class="report-finding"><div class="report-finding-aside"><strong>TOP ${i+1}</strong></div><div class="report-finding-main"><h5>${esc(t.title)}</h5>${t.notes?`<p>${esc(t.notes)}</p>`:""}</div></article>`).join("")
+    :`<div class="empty-state compact"><strong>Noch keine TOPs</strong><p>Erfasste Tagesordnungspunkte erscheinen hier automatisch.</p></div>`;
+}
+
+function invSaveCurrent(){
+  invSyncForm();
+  if(!invValidate(1))return false;
+  const now=new Date().toISOString();
+  if(!invState.current.id){invState.current.id=invInvitationId();invState.current.createdAt=now}
+  invState.current.updatedAt=now;
+  const i=invState.invitations.findIndex(p=>p.id===invState.current.id),copy=JSON.parse(JSON.stringify(invState.current));
+  if(i>=0)invState.invitations[i]=copy;else invState.invitations.unshift(copy);
+  if(!invPersist())return false;
+  localStorage.setItem(INV_DRAFT_KEY,JSON.stringify(invState.current));
+  invRenderList();
+  invRenderReport();
+  invToast(`Einladung ${invState.current.id} gespeichert.`);
+  return true;
+}
+
+function invNewInvitation(confirmReset=true){
+  const has=invState.current.name||invState.current.tops.length;
+  if(confirmReset&&has&&!window.confirm("Aktuellen Entwurf verwerfen und eine neue Einladung beginnen?"))return;
+  invState.current=emptyInvitation();
+  invSyncState();
+  invResetTopForm();
+  invSetStep(1);
+  localStorage.removeItem(INV_DRAFT_KEY);
+  invGoTool();
+  invToast("Neue Einladung gestartet.");
+}
+
+function invOpenInvitation(id){
+  const p=invState.invitations.find(x=>x.id===id);
+  if(!p)return;
+  invState.current=JSON.parse(JSON.stringify(p));
+  invSyncState();
+  invSetStep(1);
+  localStorage.setItem(INV_DRAFT_KEY,JSON.stringify(invState.current));
+  invGoTool();
+  invToast(`${id} geöffnet.`);
+}
+
+function invDuplicateInvitation(id){
+  const p=invState.invitations.find(x=>x.id===id);
+  if(!p)return;
+  const c=JSON.parse(JSON.stringify(p));
+  c.id=invInvitationId();
+  c.name+=` – Kopie`;
+  c.status="Entwurf";
+  c.createdAt=c.updatedAt=new Date().toISOString();
+  c.tops=c.tops.map(t=>({...t,id:invTopId()}));
+  invState.invitations.unshift(c);
+  invPersist();
+  invRenderList();
+  invToast(`Einladung als ${c.id} dupliziert.`);
+}
+
+function invRequestDelete(id){
+  invState.deleteTarget=id;
+  invRefs.confirmModal.classList.add("open");
+  invRefs.confirmModal.setAttribute("aria-hidden","false");
+  document.body.classList.add("modal-open");
+}
+
+function invCloseModal(){
+  invState.deleteTarget=null;
+  invRefs.confirmModal.classList.remove("open");
+  invRefs.confirmModal.setAttribute("aria-hidden","true");
+  document.body.classList.remove("modal-open");
+}
+
+function invConfirmDelete(){
+  if(!invState.deleteTarget)return;
+  invState.invitations=invState.invitations.filter(p=>p.id!==invState.deleteTarget);
+  if(invState.current.id===invState.deleteTarget){
+    invState.current=emptyInvitation();
+    invSyncState();
+    localStorage.removeItem(INV_DRAFT_KEY);
+  }
+  invPersist();
+  invRenderList();
+  invCloseModal();
+  invToast("Einladung gelöscht.");
+}
+
+function invChangeStatus(id,status){
+  const p=invState.invitations.find(x=>x.id===id);
+  if(!p)return;
+  p.status=status;
+  p.updatedAt=new Date().toISOString();
+  if(invState.current.id===id)invState.current.status=status;
+  invPersist();
+  invRenderList();
+  invToast(`Status auf „${status}“ gesetzt.`);
+}
+
+function invRenderList(){
+  const q=invRefs.search.value.trim().toLowerCase(),status=invRefs.statusFilter.value;
+  const filtered=invState.invitations.filter(p=>[p.id,p.name,p.location,p.host].join(" ").toLowerCase().includes(q)&&(status==="Alle"||p.status===status));
+  const allTops=invState.invitations.flatMap(p=>p.tops||[]);
+  const warnCount=invState.invitations.filter(p=>{const lvl=invFristInfo(p.sendDate,p.date).level;return lvl==="warn"||lvl==="bad"}).length;
+  invRefs.totalCount.textContent=invState.invitations.length;
+  invRefs.draftCount.textContent=invState.invitations.filter(p=>p.status==="Entwurf").length;
+  invRefs.topsCount.textContent=allTops.length;
+  invRefs.fristWarnCount.textContent=warnCount;
+
+  if(!filtered.length){
+    invRefs.list.innerHTML=`<div class="empty-state large"><strong>${invState.invitations.length?"Keine passenden Einladungen gefunden":"Noch keine Einladungen gespeichert"}</strong><p>${invState.invitations.length?"Passe Suche oder Filter an.":"Starte oben eine neue Versammlungseinladung."}</p>${invState.invitations.length?"":`<button class="button primary" id="invDynamicEmptyStartButton" type="button">Erste Einladung anlegen</button>`}</div>`;
+    $("#invDynamicEmptyStartButton")?.addEventListener("click",()=>invNewInvitation(false));
+    return;
+  }
+
+  invRefs.list.innerHTML=filtered.map(p=>{
+    const info=invFristInfo(p.sendDate,p.date);
+    const fristLabel=info.level==="ok"?"Frist ok":info.level==="warn"?"Frist knapp":info.level==="bad"?"Datum prüfen":"Frist unbekannt";
+    return`<article class="project-card"><div class="project-card-top"><div><span class="project-id">${esc(p.id)}</span><h3>${esc(p.name)}</h3><p>${esc([p.date?fmt(p.date):"",p.location].filter(Boolean).join(" · ")||"Keine weiteren Angaben")}</p></div><span class="status-badge">${esc(p.status)}</span></div><div class="project-card-meta"><div><span>TOPs</span><strong>${p.tops?.length||0}</strong></div><div><span>Tage bis Termin</span><strong>${info.days===null?"–":info.days}</strong></div><div><span>${esc(fristLabel)}</span><strong>&nbsp;</strong></div></div><div class="project-card-actions"><button type="button" data-open-inv="${esc(p.id)}">Öffnen</button><button type="button" data-duplicate-inv="${esc(p.id)}">Duplizieren</button><select data-status-inv="${esc(p.id)}" aria-label="Einladungsstatus ändern">${["Entwurf","Versendet","Abgeschlossen"].map(o=>`<option ${p.status===o?"selected":""}>${o}</option>`).join("")}</select><button type="button" data-delete-inv="${esc(p.id)}">Löschen</button></div></article>`;
+  }).join("");
+}
+
+function invGenerateText(){
+  invSyncForm();
+  const p=invState.current;
+  const info=invFristInfo(p.sendDate,p.date);
+  const isAusserordentlich=/außerordentlich/i.test(p.type||"");
+  const out=[];
+
+  out.push(`Einladung zur ${isAusserordentlich?"außerordentlichen":"ordentlichen"} Eigentümerversammlung`);
+  out.push(p.name||"[WEG-Bezeichnung eintragen]");
+  out.push("");
+  out.push("Sehr geehrte Damen und Herren,");
+  out.push("");
+
+  let intro=`hiermit laden wir Sie herzlich zur ${isAusserordentlich?"außerordentlichen":"ordentlichen"} Eigentümerversammlung der ${p.name||"[WEG-Bezeichnung]"} ein.`;
+  out.push(intro);
+  out.push("");
+
+  let details=`Termin: ${p.date?fmt(p.date):"[Datum]"}${p.time?`, ${p.time} Uhr`:""}`;
+  out.push(details);
+  out.push(`Ort: ${p.location||"[Ort eintragen]"}`);
+  out.push("");
+
+  if(!p.tops.length){
+    out.push("Tagesordnung:");
+    out.push("[Tagesordnungspunkte werden nach der Erfassung in Schritt 2 hier eingesetzt]");
+    out.push("");
+  } else {
+    out.push("Tagesordnung:");
+    out.push("");
+    p.tops.forEach((t,i)=>{
+      out.push(`TOP ${i+1}: ${t.title||"[Ohne Titel]"}`);
+      if(t.notes)out.push(t.notes);
+      out.push("");
+    });
+  }
+
+  out.push("Vertretung und Vollmacht: Falls Sie an der Versammlung nicht persönlich teilnehmen können, können Sie sich durch eine bevollmächtigte Person vertreten lassen. Wir empfehlen, hierfür eine schriftliche Vollmacht mitzugeben bzw. vorab einzureichen.");
+  out.push("");
+
+  if(info.level==="warn"||info.level==="bad"){
+    out.push(`Hinweis zur Ladungsfrist: ${invRefs.fristText.textContent}`);
+    out.push("");
+  }
+
+  out.push("Mit freundlichen Grüßen");
+  out.push("");
+  out.push(p.host||"[Verwalter/Einladender]");
+  out.push("");
+  out.push("─────────────────────────────────────────────────────────────────────────");
+  out.push("Hinweis: Automatisch erstellter Entwurf, unverbindlich und ohne Gewähr. Rechtliche Verantwortung liegt beim Verwalter/Einladenden.");
+  return out.join("\n");
+}
+
+function invCopyText(){
+  const text=invRefs.draft&&invRefs.draft.value.trim()?invRefs.draft.value:invGenerateText();
+  navigator.clipboard.writeText(text)
+    .then(()=>invToast("Einladungstext kopiert."))
+    .catch(()=>invToast("Kopieren wurde vom Browser nicht erlaubt."));
+}
+
+function invGeneratePdf(){
+  if(typeof window.jspdf==="undefined"){
+    invToast("PDF-Bibliothek konnte nicht geladen werden. Bitte Internetverbindung prüfen.");
+    return;
+  }
+  invSyncForm();
+  const p=invState.current;
+  const draftText=(invRefs.draft&&invRefs.draft.value.trim())?invRefs.draft.value:invGenerateText();
+  const{jsPDF}=window.jspdf;
+  const doc=new jsPDF({unit:"mm",format:"a4"});
+  const pageW=doc.internal.pageSize.getWidth();
+  const pageH=doc.internal.pageSize.getHeight();
+  const marginX=16,contentW=pageW-marginX*2,headerH=24,footerH=16;
+  let pageNum=1,cursorY=0;
+
+  function drawHeader(){
+    doc.setFillColor(36,87,214);
+    doc.roundedRect(marginX,8,9,9,2,2,"F");
+    doc.setTextColor(255,255,255);
+    doc.setFont("helvetica","bold");
+    doc.setFontSize(11);
+    doc.text("I",marginX+4.5,14.3,{align:"center"});
+    doc.setTextColor(16,32,57);
+    doc.setFontSize(13);
+    doc.text("Inspectora",marginX+13,13.5);
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(8);
+    doc.setTextColor(100,110,130);
+    doc.text(p.name||"Versammlungseinladung",marginX+13,18);
+    doc.text(`Einladungs-ID: ${p.id||"Entwurf"}`,pageW-marginX,11,{align:"right"});
+    doc.text(`Seite ${pageNum}`,pageW-marginX,16,{align:"right"});
+    doc.setDrawColor(220,228,238);
+    doc.line(marginX,headerH,pageW-marginX,headerH);
+  }
+
+  function drawFooter(){
+    doc.setDrawColor(220,228,238);
+    doc.line(marginX,pageH-footerH,pageW-marginX,pageH-footerH);
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(7);
+    doc.setTextColor(140,150,165);
+    const lines=doc.splitTextToSize("ENTWURF – Automatisch erstellt, unverbindlich und ohne Gewähr. Rechtliche Verantwortung liegt beim Verwalter/Einladenden.",contentW);
+    lines.forEach((line,i)=>doc.text(line,marginX,pageH-11+i*3.4));
+  }
+
+  function newPage(){
+    drawFooter();
+    doc.addPage();
+    pageNum++;
+    drawHeader();
+    cursorY=headerH+8;
+  }
+
+  function ensureSpace(h){
+    if(cursorY+h>pageH-footerH-4)newPage();
+  }
+
+  drawHeader();
+  cursorY=headerH+10;
+
+  const rawLines=draftText.split("\n");
+  const lineH=4.6;
+  let firstNonEmpty=true;
+
+  rawLines.forEach(rawLine=>{
+    const trimmed=rawLine.trimEnd();
+    if(!trimmed){cursorY+=2.5;return;}
+
+    if(/^Hinweis:/.test(trimmed)||/^─{3,}/.test(trimmed)){
+      ensureSpace(lineH+1);
+      doc.setFont("helvetica","italic");
+      doc.setFontSize(7.5);
+      doc.setTextColor(130,140,155);
+      const segs=doc.splitTextToSize(trimmed,contentW);
+      segs.forEach((l,li)=>doc.text(l,marginX,cursorY+li*lineH));
+      cursorY+=segs.length*lineH+1;
+      return;
+    }
+
+    if(firstNonEmpty){
+      firstNonEmpty=false;
+      ensureSpace(12);
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(15);
+      doc.setTextColor(16,32,57);
+      const segs=doc.splitTextToSize(trimmed,contentW);
+      segs.forEach((l,li)=>doc.text(l,marginX,cursorY+li*6.4));
+      cursorY+=segs.length*6.4+3;
+      return;
+    }
+
+    if(/^TOP \d+:/i.test(trimmed)){
+      ensureSpace(16);
+      cursorY+=3;
+      doc.setDrawColor(215,225,238);
+      doc.line(marginX,cursorY-2,marginX+contentW,cursorY-2);
+      doc.setFont("helvetica","bold");
+      doc.setFontSize(10.5);
+      doc.setTextColor(16,32,57);
+      const segs=doc.splitTextToSize(trimmed,contentW);
+      segs.forEach((l,li)=>doc.text(l,marginX,cursorY+li*5));
+      cursorY+=segs.length*5+2;
+      return;
+    }
+
+    ensureSpace(lineH+1);
+    doc.setFont("helvetica","normal");
+    doc.setFontSize(9);
+    doc.setTextColor(35,45,62);
+    const segs=doc.splitTextToSize(trimmed,contentW);
+    segs.forEach((l,li)=>doc.text(l,marginX,cursorY+li*lineH));
+    cursorY+=segs.length*lineH+0.6;
+  });
+
+  drawFooter();
+  doc.save(`Inspectora-Einladung-${p.id||"Entwurf"}-${today()}.pdf`);
+  invToast("PDF wurde erstellt.");
+}
+
+function invBind(){
+  $$('.inv-step').forEach(b=>b.addEventListener("click",()=>invSetStep(b.dataset.step)));
+  $$('.inv-next').forEach(b=>b.addEventListener("click",()=>{if(invValidate(invState.step))invSetStep(b.dataset.next)}));
+  $$('.inv-prev').forEach(b=>b.addEventListener("click",()=>invSetStep(b.dataset.previous)));
+
+  $("#newInvButton")?.addEventListener("click",()=>invNewInvitation(true));
+  $("#saveInvButton")?.addEventListener("click",invSaveCurrent);
+  $("#finishAndSaveInvButton")?.addEventListener("click",()=>{if(invSaveCurrent())$("#invProjekte")?.scrollIntoView({behavior:"smooth"})});
+
+  invRefs.topForm.addEventListener("submit",e=>{
+    e.preventDefault();
+    const t=invTopFromForm();
+    if(!t.title){invToast("Bitte einen Titel für den TOP eintragen.");return}
+    const i=invState.current.tops.findIndex(x=>x.id===t.id);
+    if(i>=0){invState.current.tops[i]=t;invToast("TOP aktualisiert.")}
+    else{invState.current.tops.push(t);invToast("TOP übernommen.")}
+    invResetTopForm();
+    invRenderTops();
+    invRenderReport();
+    invSaveDraft();
+  });
+  invRefs.resetTopButton.addEventListener("click",invResetTopForm);
+  invRefs.topList.addEventListener("click",e=>{
+    const ed=e.target.closest("[data-edit-top]"),de=e.target.closest("[data-delete-top]");
+    if(ed)invEditTop(ed.dataset.editTop);
+    if(de)invDeleteTop(de.dataset.deleteTop);
+  });
+
+  $("#printInvButton")?.addEventListener("click",invGeneratePdf);
+  $("#copyInvButton")?.addEventListener("click",invCopyText);
+  $("#regenerateInvButton")?.addEventListener("click",()=>{
+    if(!invRefs.draft)return;
+    if(invRefs.draft.value.trim()&&!window.confirm("Einladungstext neu generieren? Manuelle Änderungen gehen dabei verloren."))return;
+    invRefs.draft.value=invGenerateText();
+    invState.current.draftText=invRefs.draft.value;
+    invSaveDraft();
+  });
+  if(invRefs.draft){
+    invRefs.draft.addEventListener("input",()=>{
+      invState.current.draftText=invRefs.draft.value;
+      invSaveDraft();
+    });
+  }
+
+  invRefs.search.addEventListener("input",invRenderList);
+  invRefs.statusFilter.addEventListener("change",invRenderList);
+  invRefs.list.addEventListener("click",e=>{
+    const o=e.target.closest("[data-open-inv]"),u=e.target.closest("[data-duplicate-inv]"),d=e.target.closest("[data-delete-inv]");
+    if(o)invOpenInvitation(o.dataset.openInv);
+    if(u)invDuplicateInvitation(u.dataset.duplicateInv);
+    if(d)invRequestDelete(d.dataset.deleteInv);
+  });
+  invRefs.list.addEventListener("change",e=>{
+    const s=e.target.closest("[data-status-inv]");
+    if(s)invChangeStatus(s.dataset.statusInv,s.value);
+  });
+  $("#invEmptyStartButton")?.addEventListener("click",()=>invNewInvitation(false));
+
+  $$('[data-close-inv-modal]').forEach(x=>x.addEventListener("click",invCloseModal));
+  invRefs.confirmDeleteButton.addEventListener("click",invConfirmDelete);
+
+  [invRefs.name,invRefs.type,invRefs.host,invRefs.date,invRefs.time,invRefs.location,invRefs.sendDate].forEach(el=>{
+    el.addEventListener("input",invSaveDraft);
+    el.addEventListener("change",invSaveDraft);
+  });
+}
+
+function invInit(){
+  if(!invRefs.tool)return;
+  invBind();
+  try{
+    const d=JSON.parse(localStorage.getItem(INV_DRAFT_KEY)||"null");
+    if(d&&typeof d==="object"){
+      invState.current={...emptyInvitation(),...d};
+      localStorage.setItem(INV_DRAFT_KEY,JSON.stringify(invState.current));
+    }
+  }catch{}
+  invSyncState();
+  invRenderList();
+  invSetStep(1);
+}
+invInit();
+})();
+
+
 /* ── V7 WOW-Effekte: Scroll Reveal + Zahlen-Counter ─────────── */
 (function () {
   "use strict";
@@ -1907,4 +2495,72 @@ wegInit();
 
   hgInit();
 
+})();
+
+/* ── Gruppierte Navigation: Dropdowns + aktiver Bereich ─────────── */
+// Vollständig unabhängig von den Tool-Modulen oben: nur Navigations-Verhalten,
+// keine Tool-Funktionen oder geteilten IDs.
+(()=>{"use strict";
+const groups=[...document.querySelectorAll('[data-nav-group]')];
+if(!groups.length)return;
+
+function closeGroup(g){
+  g.classList.remove('open');
+  const trigger=g.querySelector('[data-nav-toggle]');
+  if(trigger)trigger.setAttribute('aria-expanded','false');
+}
+function closeAllGroups(except){
+  groups.forEach(g=>{if(g!==except)closeGroup(g)});
+}
+function toggleGroup(g){
+  const wasOpen=g.classList.contains('open');
+  closeAllGroups(g);
+  g.classList.toggle('open',!wasOpen);
+  const trigger=g.querySelector('[data-nav-toggle]');
+  if(trigger)trigger.setAttribute('aria-expanded',String(!wasOpen));
+}
+
+groups.forEach(g=>{
+  const trigger=g.querySelector('[data-nav-toggle]');
+  if(!trigger)return;
+  trigger.addEventListener('click',e=>{
+    e.stopPropagation();
+    toggleGroup(g);
+  });
+});
+
+document.addEventListener('click',e=>{
+  if(!e.target.closest('[data-nav-group]'))closeAllGroups();
+});
+document.addEventListener('keydown',e=>{
+  if(e.key==='Escape')closeAllGroups();
+});
+document.querySelectorAll('.nav-panel a').forEach(a=>a.addEventListener('click',()=>closeAllGroups()));
+document.getElementById('menuToggle')?.addEventListener('click',()=>closeAllGroups());
+
+/* Aktiven Bereich im Menü hervorheben */
+const navTargets=[...document.querySelectorAll('[data-nav-sections]')];
+if(navTargets.length&&'IntersectionObserver' in window){
+  const sectionMap=new Map();
+  navTargets.forEach(el=>{
+    (el.dataset.navSections||'').split(/\s+/).filter(Boolean).forEach(id=>{
+      if(!sectionMap.has(id))sectionMap.set(id,[]);
+      sectionMap.get(id).push(el);
+    });
+  });
+  const sections=[...sectionMap.keys()].map(id=>document.getElementById(id)).filter(Boolean);
+  let currentId=null;
+  function setCurrent(id){
+    if(id===currentId)return;
+    currentId=id;
+    navTargets.forEach(el=>el.classList.remove('nav-current'));
+    (sectionMap.get(id)||[]).forEach(el=>el.classList.add('nav-current'));
+  }
+  const observer=new IntersectionObserver(entries=>{
+    entries.forEach(entry=>{
+      if(entry.isIntersecting)setCurrent(entry.target.id);
+    });
+  },{rootMargin:'-40% 0px -55% 0px',threshold:0});
+  sections.forEach(s=>observer.observe(s));
+}
 })();
