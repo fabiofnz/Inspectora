@@ -858,7 +858,7 @@ main { padding-top: 0; }
 
 /* 2 · Nahtloser dunkler Übergang: Hero → erste helle Sektion */
 #ablauf {
-  padding-top: 200px;
+  padding-top: 150px;
   padding-bottom: 112px;
   background:
     radial-gradient(ellipse 70% 50% at 80% 80%, rgba(79,70,229,.04), transparent 60%),
@@ -870,11 +870,12 @@ main { padding-top: 0; }
   content: "";
   position: absolute;
   top: 0; left: 0; right: 0;
-  height: 210px;
+  height: 150px;
   background: linear-gradient(180deg,
     #060C16 0%,
-    rgba(6,12,22,.55) 40%,
-    transparent 100%
+    rgba(6,12,22,.4) 22%,
+    rgba(6,12,22,.12) 48%,
+    transparent 78%
   );
   pointer-events: none;
   z-index: 0;
@@ -896,6 +897,15 @@ main { padding-top: 0; }
 
 .projects-section {
   background: var(--surface);
+}
+
+/* Objektaufnahme-Projekte: eigener, dezenter Verlauf statt Reinweiß –
+   Pendant zum #ablauf-Übergang, WEG-Projektlisten bleiben unverändert */
+#projekte {
+  background: linear-gradient(165deg, #FFFFFF 0%, #F1F4FC 55%, #EEF2FF 100%);
+}
+#projekte .project-overview strong {
+  color: var(--text);
 }
 
 .area-section {
@@ -928,10 +938,10 @@ main { padding-top: 0; }
 /* 9 · Responsive */
 @media (max-width: 760px) {
   #ablauf {
-    padding-top: 150px;
+    padding-top: 110px;
     padding-bottom: 80px;
   }
-  #ablauf::before { height: 150px; }
+  #ablauf::before { height: 110px; }
 
   #ablauf,
   .value-section,
