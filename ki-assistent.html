@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <meta name="description" content="Inspectora – Immobilien-KI-Assistent für Mitarbeitende (interner Test).">
+  <title>Immobilien-KI-Assistent – Inspectora</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="assistant-body">
+  <header class="assistant-header">
+    <a class="assistant-brand" href="index.html" aria-label="Inspectora Startseite">
+      <span class="brand-mark">I</span>
+      <span><strong>Inspectora</strong><small>Immobilien-KI-Assistent</small></span>
+    </a>
+    <a class="button secondary small" href="index.html">Zurück zur Startseite</a>
+  </header>
+
+  <main class="assistant-main">
+    <div class="assistant-shell">
+      <div class="assistant-intro">
+        <h1>Immobilien-KI-Assistent</h1>
+        <p>Interner Test für Kolleginnen und Kollegen. Fachwissen zu Mietrecht-Grundlagen, WEG-Recht, Betriebskosten und Verwaltungsabläufen – keine Rechtsberatung, keine echten Mieterdaten eingeben.</p>
+      </div>
+
+      <div class="assistant-chat-card">
+        <div class="assistant-chat-toolbar">
+          <span>Verlauf wird nur lokal in diesem Browser gespeichert.</span>
+          <button class="button secondary small" id="assistantNewChatButton" type="button">Neuer Chat</button>
+        </div>
+
+        <div class="assistant-messages" id="assistantMessages" aria-live="polite">
+          <div class="assistant-empty" id="assistantEmptyState">Stelle eine Frage, um den Chat zu starten.</div>
+        </div>
+
+        <form class="assistant-input-row" id="assistantForm">
+          <textarea id="assistantInput" rows="1" placeholder="Nachricht schreiben… (Enter zum Senden, Shift+Enter für Zeilenumbruch)" aria-label="Nachricht an den KI-Assistenten"></textarea>
+          <button class="button primary" id="assistantSendButton" type="submit">Senden</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="assistant-gate" id="assistantGate">
+      <div class="assistant-gate-card">
+        <h2>Zugangscode erforderlich</h2>
+        <p>Dieses Tool ist im internen Test. Bitte den Zugangscode eingeben, den du von deinem Team erhalten hast.</p>
+        <form id="assistantGateForm">
+          <input type="password" id="assistantGateInput" placeholder="Zugangscode" autocomplete="off" aria-label="Zugangscode">
+          <button class="button primary" id="assistantGateButton" type="submit">Freischalten</button>
+        </form>
+        <p class="assistant-gate-error" id="assistantGateError" role="alert"></p>
+      </div>
+    </div>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+
+  <script src="assistant.js"></script>
+</body>
+</html>
