@@ -786,6 +786,40 @@ function wegGenerateText(){
   return out.join("\n");
 }
 
+async function wegGenerateWithAI(){
+  const button=$("#aiGenerateWegButton");
+  if(!wegRefs.draft||!button)return;
+  wegSyncForm();
+  if(wegRefs.draft.value.trim()&&!window.confirm("Protokolltext mit KI neu formulieren? Manuelle Änderungen gehen dabei verloren."))return;
+
+  const originalLabel=button.textContent;
+  button.disabled=true;
+  button.textContent="Wird formuliert…";
+
+  try{
+    const response=await fetch("/.netlify/functions/generate-protokoll",{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body:JSON.stringify(wegState.current)
+    });
+    let data=null;
+    try{data=await response.json()}catch{}
+    if(!response.ok||!data?.text){
+      wegToast(data?.error||"KI-Formulierung fehlgeschlagen – bitte erneut versuchen oder Text manuell bearbeiten.");
+      return;
+    }
+    wegRefs.draft.value=data.text;
+    wegState.current.draftText=data.text;
+    wegSaveDraft();
+    wegToast("Protokolltext mit KI formuliert.");
+  }catch{
+    wegToast("KI-Formulierung fehlgeschlagen – bitte Internetverbindung prüfen und erneut versuchen.");
+  }finally{
+    button.disabled=false;
+    button.textContent=originalLabel;
+  }
+}
+
 function wegProtocolText(){
   wegSyncForm();
   const p=wegState.current;
@@ -992,6 +1026,7 @@ function wegBind(){
     wegState.current.draftText=wegRefs.draft.value;
     wegSaveDraft();
   });
+  $("#aiGenerateWegButton")?.addEventListener("click",wegGenerateWithAI);
   if(wegRefs.draft){
     wegRefs.draft.addEventListener("input",()=>{
       wegState.current.draftText=wegRefs.draft.value;
