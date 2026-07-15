@@ -92,10 +92,10 @@
     setTyping(loading);
   }
 
-  async function callAssistant(messages) {
+  async function callAssistant(messages, codeOverride) {
     const response = await fetch("/.netlify/functions/assistant-chat", {
       method: "POST",
-      headers: { "Content-Type": "application/json", "x-access-code": accessCode },
+      headers: { "Content-Type": "application/json", "x-access-code": codeOverride ?? accessCode },
       body: JSON.stringify({ messages }),
     });
     let data = null;
@@ -120,7 +120,7 @@
     refs.gateButton.disabled = true;
     refs.gateError.textContent = "";
     try {
-      const { ok, status, data } = await callAssistant([]);
+      const { ok, status, data } = await callAssistant([], code);
       if (ok) {
         accessCode = code;
         try {
