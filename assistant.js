@@ -58,13 +58,20 @@
     } catch {}
   }
 
+  function renderContent(role, content) {
+    if (role === "assistant" && typeof marked !== "undefined" && typeof DOMPurify !== "undefined") {
+      return DOMPurify.sanitize(marked.parse(content));
+    }
+    return esc(content);
+  }
+
   function renderMessages() {
     refs.emptyState.style.display = history.length ? "none" : "block";
     refs.messages.querySelectorAll(".assistant-bubble").forEach((el) => el.remove());
     history.forEach((m) => {
       const bubble = document.createElement("div");
       bubble.className = `assistant-bubble ${m.role === "user" ? "assistant-bubble-user" : "assistant-bubble-assistant"}`;
-      bubble.innerHTML = esc(m.content);
+      bubble.innerHTML = renderContent(m.role, m.content);
       refs.messages.appendChild(bubble);
     });
     refs.messages.scrollTop = refs.messages.scrollHeight;
