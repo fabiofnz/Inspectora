@@ -89,6 +89,7 @@
   function setLoading(loading) {
     refs.input.disabled = loading;
     refs.sendButton.disabled = loading;
+    refs.sendButton.classList.toggle("loading", loading);
     setTyping(loading);
   }
 
@@ -153,6 +154,12 @@
         history.push({ role: "assistant", content: data.reply });
         renderMessages();
         saveHistory();
+        const bubbles = refs.messages.querySelectorAll(".assistant-bubble-assistant");
+        const last = bubbles[bubbles.length - 1];
+        if (last) {
+          last.classList.add("assistant-bubble--fresh");
+          last.addEventListener("animationend", () => last.classList.remove("assistant-bubble--fresh"), { once: true });
+        }
       } else if (status === 401) {
         accessCode = "";
         try {

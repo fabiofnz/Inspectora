@@ -889,7 +889,7 @@ main{padding-top:0}
 
 /* Typing indicator */
 .assistant-typing{
-  display:flex;align-items:center;gap:5px;
+  display:flex;align-items:center;gap:6px;
   padding:14px 18px;
   background:var(--surface-soft);
   border:1px solid var(--line);border-left:3px solid var(--primary-soft);
@@ -898,15 +898,34 @@ main{padding-top:0}
   animation:bubbleFadeIn .22s ease-out both;
 }
 .assistant-typing span{
-  width:8px;height:8px;border-radius:50%;
+  width:7px;height:7px;border-radius:50%;
   background:linear-gradient(135deg,var(--primary),var(--violet));
-  animation:assistantTypingBounce 1.1s infinite ease-in-out;
+  animation:assistantTypingPulse 1.4s infinite cubic-bezier(.4,0,.6,1);
 }
-.assistant-typing span:nth-child(2){animation-delay:.16s}
-.assistant-typing span:nth-child(3){animation-delay:.32s}
-@keyframes assistantTypingBounce{
-  0%,60%,100%{transform:translateY(0);opacity:.45}
-  30%{transform:translateY(-5px);opacity:1}
+.assistant-typing span:nth-child(2){animation-delay:.22s}
+.assistant-typing span:nth-child(3){animation-delay:.44s}
+@keyframes assistantTypingPulse{
+  0%,100%{transform:scale(.7);opacity:.35}
+  45%{transform:scale(1.15);opacity:1}
+  60%{transform:scale(1);opacity:.85}
+}
+
+/* Button loading state */
+.assistant-input-row .button.primary{
+  transition:opacity .18s,transform .18s,box-shadow .18s,background .18s;
+}
+.assistant-input-row .button.primary.loading{
+  opacity:.55;transform:scale(.96);cursor:wait;
+  box-shadow:none;
+}
+
+/* Fresh bubble settle highlight */
+@keyframes bubbleSettle{
+  0%{box-shadow:0 0 0 3px rgba(79,70,229,.22)}
+  100%{box-shadow:var(--shadow-sm)}
+}
+.assistant-bubble-assistant.assistant-bubble--fresh{
+  animation:bubbleFadeIn .22s ease-out both,bubbleSettle .7s .18s ease-out forwards;
 }
 
 /* Input row */
