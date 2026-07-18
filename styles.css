@@ -1030,9 +1030,6 @@ main{padding-top:0}
   0%{box-shadow:0 0 0 3px rgba(79,70,229,.22)}
   100%{box-shadow:var(--shadow-sm)}
 }
-.assistant-bubble-assistant.assistant-bubble--fresh{
-  animation:bubbleFadeIn .22s ease-out both,bubbleSettle .7s .18s ease-out forwards;
-}
 .assistant-bubble-assistant.assistant-bubble--settle{
   animation:bubbleSettle .7s ease-out forwards;
 }

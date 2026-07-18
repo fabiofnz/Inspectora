@@ -157,17 +157,19 @@
             chats    = [chat];
             activeId = chat.id;
 
-            // Write new format; intentionally do NOT delete OLD_CHAT_KEY (safety backup)
+            // Write new format first; only remove old key after verified success
             try {
               localStorage.setItem(CHATS_KEY, JSON.stringify(chats));
               localStorage.setItem(ACTIVE_KEY, activeId);
+              // New format confirmed saved – old key is now redundant
+              try { localStorage.removeItem(OLD_CHAT_KEY); } catch {}
             } catch (e) {
               if (e && (e.name === "QuotaExceededError" || e.code === 22)) {
                 toast(
                   "Migration fehlgeschlagen: Speicher voll. Dein alter Verlauf bleibt erhalten.",
                   6000
                 );
-                // Keep data in memory only; old key still exists as backup
+                // Keep data in memory only; old key preserved as backup
               }
             }
             return;
