@@ -4,6 +4,14 @@
   const CHAT_KEY = "inspectora_assistant_chat_v1";
   const CODE_KEY = "inspectora_assistant_code_v1";
 
+  // File upload limits
+  const PDF_MAX_BYTES = 10 * 1024 * 1024;        // 10 MB raw
+  const IMAGE_MAX_BYTES_AFTER = 3.5 * 1024 * 1024; // 3.5 MB after compression
+  const IMAGE_MAX_DIM = 2000;
+  const IMAGE_INITIAL_QUALITY = 0.85;
+  const IMAGE_MIN_QUALITY = 0.30;
+  const MAX_ATTACHMENTS = 5;
+
   const $ = (s, r = document) => r.querySelector(s);
   const esc = (v) =>
     String(v ?? "")
@@ -25,11 +33,16 @@
     input: $("#assistantInput"),
     sendButton: $("#assistantSendButton"),
     newChatButton: $("#assistantNewChatButton"),
+    attachButton: $("#assistantAttachButton"),
+    fileInput: $("#assistantFileInput"),
+    chips: $("#assistantChips"),
     toast: $("#toast"),
   };
 
   let history = [];
   let accessCode = "";
+  // pendingFiles: Array<{ name, mediaType, base64, isImage }>
+  let pendingFiles = [];
 
   function toast(msg) {
     if (!refs.toast) return;
@@ -129,6 +142,7 @@
   function setLoading(loading) {
     refs.input.disabled = loading;
     refs.sendButton.disabled = loading;
+    refs.attachButton.disabled = loading;
     refs.sendButton.classList.toggle("loading", loading);
     setTyping(loading);
   }
@@ -182,8 +196,186 @@
     }
   }
 
+  // --- File handling ---
+
+  function readAsDataURL(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+
+  function estimatePdfPages(arrayBuffer) {
+    try {
+      const text = new TextDecoder("latin1").decode(new Uint8Array(arrayBuffer));
+      const matches = text.match(/\/Count\s+(\d+)/g);
+      if (!matches) return null;
+      const counts = matches.map((m) => parseInt(m.replace(/\/Count\s+/, ""), 10)).filter((n) => !isNaN(n));
+      return counts.length ? Math.max(...counts) : null;
+    } catch {
+      return null;
+    }
+  }
+
+  async function compressImage(file) {
+    return new Promise((resolve, reject) => {
+      const url = URL.createObjectURL(file);
+      const img = new Image();
+      img.onload = () => {
+        URL.revokeObjectURL(url);
+        let { width, height } = img;
+        if (width > IMAGE_MAX_DIM || height > IMAGE_MAX_DIM) {
+          const ratio = Math.min(IMAGE_MAX_DIM / width, IMAGE_MAX_DIM / height);
+          width = Math.round(width * ratio);
+          height = Math.round(height * ratio);
+        }
+        const canvas = document.createElement("canvas");
+        canvas.width = width;
+        canvas.height = height;
+        canvas.getContext("2d").drawImage(img, 0, 0, width, height);
+
+        let quality = IMAGE_INITIAL_QUALITY;
+        let dataUrl;
+        do {
+          dataUrl = canvas.toDataURL("image/jpeg", quality);
+          const bytes = Math.round((dataUrl.length - dataUrl.indexOf(",") - 1) * 0.75);
+          if (bytes <= IMAGE_MAX_BYTES_AFTER || quality <= IMAGE_MIN_QUALITY) break;
+          quality = Math.max(IMAGE_MIN_QUALITY, quality - 0.10);
+        } while (true);
+
+        resolve(dataUrl);
+      };
+      img.onerror = reject;
+      img.src = url;
+    });
+  }
+
+  async function processFile(file) {
+    const name = file.name;
+    const isPdf = file.type === "application/pdf" || name.toLowerCase().endsWith(".pdf");
+    const isImage = file.type.startsWith("image/");
+
+    if (!isPdf && !isImage) {
+      toast(`${name}: Nur PDF und Bilddateien (JPEG, PNG, GIF, WebP) werden unterstützt.`);
+      return null;
+    }
+
+    if (isPdf) {
+      if (file.size > PDF_MAX_BYTES) {
+        toast(`${name}: PDF ist zu groß (max. 10 MB).`);
+        return null;
+      }
+      const arrayBuffer = await file.arrayBuffer();
+      const pages = estimatePdfPages(arrayBuffer);
+      if (pages !== null && pages > 100) {
+        toast(`${name}: Das PDF hat schätzungsweise ${pages} Seiten (Limit: 100). Bitte ein kürzeres Dokument verwenden.`);
+        return null;
+      }
+      const dataUrl = await readAsDataURL(file);
+      const base64 = dataUrl.split(",")[1];
+      return { name, mediaType: "application/pdf", base64, isImage: false };
+    }
+
+    if (isImage) {
+      let dataUrl;
+      try {
+        dataUrl = await compressImage(file);
+      } catch {
+        toast(`${name}: Bild konnte nicht verarbeitet werden.`);
+        return null;
+      }
+      const base64 = dataUrl.split(",")[1];
+      const bytes = Math.round(base64.length * 0.75);
+      if (bytes > IMAGE_MAX_BYTES_AFTER) {
+        toast(`${name}: Bild ist auch nach Komprimierung zu groß.`);
+        return null;
+      }
+      return { name, mediaType: "image/jpeg", base64, isImage: true };
+    }
+
+    return null;
+  }
+
+  function renderChips() {
+    refs.chips.innerHTML = "";
+    pendingFiles.forEach((f, i) => {
+      const chip = document.createElement("div");
+      chip.className = "file-chip";
+      const nameEl = document.createElement("span");
+      nameEl.className = "file-chip-name";
+      nameEl.textContent = f.name;
+      nameEl.title = f.name;
+      const removeBtn = document.createElement("button");
+      removeBtn.className = "file-chip-remove";
+      removeBtn.type = "button";
+      removeBtn.textContent = "×";
+      removeBtn.setAttribute("aria-label", `${f.name} entfernen`);
+      removeBtn.addEventListener("click", () => {
+        pendingFiles.splice(i, 1);
+        renderChips();
+      });
+      chip.appendChild(nameEl);
+      chip.appendChild(removeBtn);
+      refs.chips.appendChild(chip);
+    });
+  }
+
+  async function handleFiles(fileList) {
+    const remaining = MAX_ATTACHMENTS - pendingFiles.length;
+    if (remaining <= 0) {
+      toast(`Maximal ${MAX_ATTACHMENTS} Dateien pro Nachricht.`);
+      return;
+    }
+    const toProcess = Array.from(fileList).slice(0, remaining);
+    if (fileList.length > remaining) {
+      toast(`Es werden nur die ersten ${remaining} Dateien hinzugefügt (Limit: ${MAX_ATTACHMENTS}).`);
+    }
+    for (const file of toProcess) {
+      const result = await processFile(file);
+      if (result) pendingFiles.push(result);
+    }
+    renderChips();
+  }
+
+  // --- Send ---
+
+  function buildUserContent(text, files) {
+    if (!files.length) return text;
+    const parts = [];
+    for (const f of files) {
+      if (f.isImage) {
+        parts.push({
+          type: "image",
+          source: { type: "base64", media_type: f.mediaType, data: f.base64 },
+        });
+      } else {
+        parts.push({
+          type: "document",
+          source: { type: "base64", media_type: f.mediaType, data: f.base64 },
+        });
+      }
+    }
+    parts.push({ type: "text", text });
+    return parts;
+  }
+
+  function userContentToText(text, files) {
+    if (!files.length) return text;
+    const fileNames = files.map((f) => `[Datei: ${f.name}]`).join(" ");
+    return `${fileNames}\n${text}`;
+  }
+
   async function sendMessage(text) {
-    history.push({ role: "user", content: text });
+    const attachments = pendingFiles.slice();
+    pendingFiles = [];
+    renderChips();
+
+    const userContent = buildUserContent(text, attachments);
+    const userContentText = userContentToText(text, attachments);
+
+    history.push({ role: "user", content: userContentText });
     renderMessages();
     saveHistory();
     setLoading(true);
@@ -218,10 +410,15 @@
     }
 
     try {
+      const messagesPayload = [
+        ...history.slice(0, -1).map((m) => ({ role: m.role, content: m.content })),
+        { role: "user", content: userContent },
+      ];
+
       const response = await fetch("/.netlify/functions/assistant-chat", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-access-code": accessCode },
-        body: JSON.stringify({ messages: history }),
+        body: JSON.stringify({ messages: messagesPayload }),
       });
 
       if (!response.ok) {
@@ -233,6 +430,8 @@
           showGate(data?.error || "Zugangscode ist ungültig geworden. Bitte erneut freischalten.");
           setLoading(false);
           refs.input.focus();
+        } else if (response.status === 413 || response.status === 414) {
+          finishErr("Die Datei ist zu groß für den Upload. Bitte eine kleinere Datei verwenden.");
         } else {
           finishErr(data?.error || "Antwort fehlgeschlagen – bitte erneut senden.");
         }
@@ -269,7 +468,12 @@
               break outer;
             } else if (evt.type === "error") {
               terminated = true;
-              finishErr(evt.message || "Antwort fehlgeschlagen – bitte erneut senden.");
+              const errMsg = evt.message || "Antwort fehlgeschlagen – bitte erneut senden.";
+              if (errMsg.includes("page") || errMsg.includes("seiten") || errMsg.toLowerCase().includes("too many")) {
+                finishErr("Das PDF hat zu viele Seiten. Bitte ein kürzeres Dokument verwenden (max. 100 Seiten).");
+              } else {
+                finishErr(errMsg);
+              }
               break outer;
             }
           } catch {}
@@ -283,8 +487,12 @@
           finishErr("Verbindung unterbrochen – bitte erneut senden.");
         }
       }
-    } catch {
-      finishErr("Antwort fehlgeschlagen – bitte Internetverbindung prüfen und erneut senden.");
+    } catch (err) {
+      if (err && (err.name === "PayloadTooLargeError" || (err.message && err.message.includes("413")))) {
+        finishErr("Die Datei ist zu groß für den Upload. Bitte eine kleinere Datei verwenden.");
+      } else {
+        finishErr("Antwort fehlgeschlagen – bitte Internetverbindung prüfen und erneut senden.");
+      }
     }
   }
 
@@ -318,11 +526,22 @@
     });
     refs.input.addEventListener("input", resizeInput);
 
+    refs.attachButton.addEventListener("click", () => {
+      refs.fileInput.value = "";
+      refs.fileInput.click();
+    });
+
+    refs.fileInput.addEventListener("change", () => {
+      if (refs.fileInput.files.length) handleFiles(refs.fileInput.files);
+    });
+
     refs.newChatButton.addEventListener("click", () => {
       if (history.length && !window.confirm("Aktuellen Chatverlauf löschen?")) return;
       history = [];
       saveHistory();
       renderMessages();
+      pendingFiles = [];
+      renderChips();
     });
   }
 
@@ -354,7 +573,6 @@
         showGate(status === 401 ? "Zugangscode ist ungültig geworden. Bitte erneut eingeben." : "");
       }
     }).catch(() => {
-      // Netzwerkfehler beim Start: Gate zeigen, damit ein Retry über den Freischalt-Button möglich ist.
       accessCode = "";
       showGate("Verbindung fehlgeschlagen. Bitte Zugangscode erneut eingeben.");
     });

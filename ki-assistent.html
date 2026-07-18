@@ -37,10 +37,16 @@
           <div class="assistant-empty" id="assistantEmptyState">Stelle eine Frage, um den Chat zu starten.</div>
         </div>
 
+        <div class="assistant-chips" id="assistantChips"></div>
         <form class="assistant-input-row" id="assistantForm">
+          <button class="attach-btn" id="assistantAttachButton" type="button" aria-label="Datei anhängen (PDF oder Bild)">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21.44 11.05l-9.19 9.19a6 6 0 0 1-8.49-8.49l9.19-9.19a4 4 0 0 1 5.66 5.66L9.41 17.41a2 2 0 0 1-2.83-2.83l8.49-8.48"/></svg>
+          </button>
+          <input type="file" id="assistantFileInput" accept=".pdf,image/png,image/jpeg,image/gif,image/webp" multiple hidden aria-hidden="true">
           <textarea id="assistantInput" rows="1" placeholder="Nachricht schreiben… (Enter zum Senden, Shift+Enter für Zeilenumbruch)" aria-label="Nachricht an den KI-Assistenten"></textarea>
           <button class="button primary" id="assistantSendButton" type="submit">Senden</button>
         </form>
+        <p class="assistant-upload-hint">Dateien werden nur für diese Anfrage an die KI übertragen und nicht gespeichert.</p>
       </div>
     </div>
 

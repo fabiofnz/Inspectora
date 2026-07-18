@@ -16,6 +16,33 @@ Antworte immer auf Deutsch. Sei ehrlich, wenn du etwas nicht sicher weißt. Blei
 
 const MAX_MESSAGES = 60;
 const MAX_MESSAGE_LENGTH = 8000;
+const ALLOWED_MEDIA_TYPES = new Set(["application/pdf", "image/jpeg", "image/png", "image/gif", "image/webp"]);
+
+function isValidContent(content) {
+  if (typeof content === "string") {
+    return content.trim().length > 0 && content.length <= MAX_MESSAGE_LENGTH;
+  }
+  if (Array.isArray(content) && content.length > 0) {
+    return content.every((block) => {
+      if (!block || typeof block !== "object") return false;
+      if (block.type === "text") {
+        return typeof block.text === "string" && block.text.length <= MAX_MESSAGE_LENGTH;
+      }
+      if (block.type === "image" || block.type === "document") {
+        const src = block.source;
+        return (
+          src &&
+          src.type === "base64" &&
+          ALLOWED_MEDIA_TYPES.has(src.media_type) &&
+          typeof src.data === "string" &&
+          src.data.length > 0
+        );
+      }
+      return false;
+    });
+  }
+  return false;
+}
 
 function isValidMessages(messages) {
   if (!Array.isArray(messages)) return false;
@@ -25,9 +52,7 @@ function isValidMessages(messages) {
       m &&
       typeof m === "object" &&
       (m.role === "user" || m.role === "assistant") &&
-      typeof m.content === "string" &&
-      m.content.trim().length > 0 &&
-      m.content.length <= MAX_MESSAGE_LENGTH
+      isValidContent(m.content)
   );
 }
 
@@ -104,7 +129,10 @@ export default async (request) => {
         stream: true,
         system: SYSTEM_PROMPT,
         tools: [{ type: "web_search_20250305", name: "web_search" }],
-        messages: messages.map((m) => ({ role: m.role, content: m.content })),
+        messages: messages.map((m) => ({
+          role: m.role,
+          content: typeof m.content === "string" ? m.content : m.content,
+        })),
       }),
     });
   } catch {

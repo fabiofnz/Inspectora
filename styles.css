@@ -953,6 +953,44 @@ main{padding-top:0}
 .assistant-input-row textarea::placeholder{color:var(--muted)}
 .assistant-input-row .button{flex-shrink:0;align-self:flex-end;margin-bottom:1px}
 
+/* Attach button */
+.attach-btn{
+  flex-shrink:0;align-self:flex-end;margin-bottom:1px;
+  display:flex;align-items:center;justify-content:center;
+  width:40px;height:40px;border-radius:10px;
+  border:1px solid var(--line);background:var(--surface-soft);
+  color:var(--muted);cursor:pointer;transition:background .15s,color .15s,border-color .15s;
+}
+.attach-btn:hover{background:var(--primary-soft);color:var(--primary);border-color:var(--primary)}
+
+/* File chips */
+.assistant-chips{
+  display:flex;flex-wrap:wrap;gap:8px;
+  padding:10px 16px 0;
+}
+.assistant-chips:empty{display:none}
+.file-chip{
+  display:flex;align-items:center;gap:6px;
+  padding:5px 10px;border-radius:20px;
+  background:var(--primary-soft);color:var(--primary);
+  font-size:12px;font-weight:500;max-width:200px;
+}
+.file-chip-name{
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.file-chip-remove{
+  flex-shrink:0;background:none;border:none;padding:0;
+  cursor:pointer;color:var(--primary);opacity:.6;
+  font-size:14px;line-height:1;display:flex;align-items:center;
+}
+.file-chip-remove:hover{opacity:1}
+
+/* Upload DSGVO hint */
+.assistant-upload-hint{
+  margin:4px 16px 10px;
+  font-size:11px;color:var(--muted);line-height:1.4;
+}
+
 /* Access gate */
 .assistant-gate{
   display:none;position:fixed;inset:0;z-index:200;
