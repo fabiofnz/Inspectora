@@ -155,32 +155,116 @@
     saveHistory();
     setLoading(true);
 
-    try {
-      const { ok, status, data } = await callAssistant(history);
-      if (ok && data?.reply) {
-        history.push({ role: "assistant", content: data.reply });
-        renderMessages();
-        saveHistory();
-        const bubbles = refs.messages.querySelectorAll(".assistant-bubble-assistant");
-        const last = bubbles[bubbles.length - 1];
-        if (last) {
-          last.classList.add("assistant-bubble--fresh");
-          last.addEventListener("animationend", () => last.classList.remove("assistant-bubble--fresh"), { once: true });
-        }
-      } else if (status === 401) {
-        accessCode = "";
-        try {
-          localStorage.removeItem(CODE_KEY);
-        } catch {}
-        showGate(data?.error || "Zugangscode ist ungültig geworden. Bitte erneut freischalten.");
-      } else {
-        toast(data?.error || "Antwort fehlgeschlagen – bitte erneut senden.");
+    let bubble = null;
+    let fullText = "";
+    let rafPending = false;
+
+    function flushRender() {
+      if (!bubble) return;
+      bubble.innerHTML = renderContent("assistant", fullText);
+      refs.messages.scrollTop = refs.messages.scrollHeight;
+    }
+
+    function scheduleRender() {
+      if (rafPending) return;
+      rafPending = true;
+      requestAnimationFrame(() => { rafPending = false; flushRender(); });
+    }
+
+    function ensureBubble() {
+      if (bubble) return;
+      setTyping(false);
+      bubble = document.createElement("div");
+      bubble.className = "assistant-bubble assistant-bubble-assistant";
+      refs.messages.appendChild(bubble);
+    }
+
+    function finishOk() {
+      flushRender();
+      history.push({ role: "assistant", content: fullText });
+      saveHistory();
+      if (bubble) {
+        bubble.classList.add("assistant-bubble--settle");
+        bubble.addEventListener("animationend", () => bubble?.classList.remove("assistant-bubble--settle"), { once: true });
       }
-    } catch {
-      toast("Antwort fehlgeschlagen – bitte Internetverbindung prüfen und erneut senden.");
-    } finally {
       setLoading(false);
       refs.input.focus();
+    }
+
+    function finishErr(msg) {
+      if (bubble) bubble.remove();
+      toast(msg);
+      setLoading(false);
+      refs.input.focus();
+    }
+
+    try {
+      const response = await fetch("/.netlify/functions/assistant-chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-access-code": accessCode },
+        body: JSON.stringify({ messages: history }),
+      });
+
+      if (!response.ok) {
+        let data = null;
+        try { data = await response.json(); } catch {}
+        if (response.status === 401) {
+          accessCode = "";
+          try { localStorage.removeItem(CODE_KEY); } catch {}
+          showGate(data?.error || "Zugangscode ist ungültig geworden. Bitte erneut freischalten.");
+          setLoading(false);
+          refs.input.focus();
+        } else {
+          finishErr(data?.error || "Antwort fehlgeschlagen – bitte erneut senden.");
+        }
+        return;
+      }
+
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let buffer = "";
+      let terminated = false;
+
+      outer: while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        buffer += decoder.decode(value, { stream: true });
+        const lines = buffer.split("\n");
+        buffer = lines.pop() ?? "";
+
+        for (const line of lines) {
+          if (!line.startsWith("data: ")) continue;
+          const raw = line.slice(6).trim();
+          if (!raw) continue;
+          try {
+            const evt = JSON.parse(raw);
+            if (evt.type === "delta" && evt.text) {
+              ensureBubble();
+              fullText += evt.text;
+              scheduleRender();
+            } else if (evt.type === "done") {
+              terminated = true;
+              finishOk();
+              break outer;
+            } else if (evt.type === "error") {
+              terminated = true;
+              finishErr(evt.message || "Antwort fehlgeschlagen – bitte erneut senden.");
+              break outer;
+            }
+          } catch {}
+        }
+      }
+
+      if (!terminated) {
+        if (fullText) {
+          finishOk();
+        } else {
+          finishErr("Verbindung unterbrochen – bitte erneut senden.");
+        }
+      }
+    } catch {
+      finishErr("Antwort fehlgeschlagen – bitte Internetverbindung prüfen und erneut senden.");
     }
   }
 

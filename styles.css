@@ -927,6 +927,9 @@ main{padding-top:0}
 .assistant-bubble-assistant.assistant-bubble--fresh{
   animation:bubbleFadeIn .22s ease-out both,bubbleSettle .7s .18s ease-out forwards;
 }
+.assistant-bubble-assistant.assistant-bubble--settle{
+  animation:bubbleSettle .7s ease-out forwards;
+}
 
 /* Input row */
 .assistant-input-row{
