@@ -18,7 +18,7 @@ const AdmZip = require("adm-zip");
 
 const ZIEL_GESETZE = [
   { id: "WEG",         gesetz_lang: "Wohnungseigentumsgesetz",  suche: ["wohnungseigentumsgesetz", "wohnungseigentum"], filter: null },
-  { id: "BGB",         gesetz_lang: "Bürgerliches Gesetzbuch",  suche: ["bürgerliches gesetzbuch"],                    filter: { von: 535, bis: 580 } },
+  { id: "BGB",         gesetz_lang: "Bürgerliches Gesetzbuch",  suche: ["bürgerliches gesetzbuch"],                    filter: { von: 535, bis: 580 } }, // bis:580 → §§ 535–580a (Buchstaben-Zusätze wie 556a haben n=556 bzw. 580a hat n=580)
   { id: "BetrKV",      gesetz_lang: "Betriebskostenverordnung", suche: ["betriebskostenverordnung", "betriebskosten"],  filter: null },
   { id: "HeizkostenV", gesetz_lang: "Heizkostenverordnung",     suche: ["heizkostenverordnung", "heizkosten"],         filter: null },
   { id: "WoFlV",       gesetz_lang: "Wohnflächenverordnung",    suche: ["wohnflächenverordnung", "wohnfläche"],        filter: null },
@@ -489,6 +489,8 @@ async function main() {
 
   console.log(`\nGesamt: ${alle.length} Paragraphen → ${AUSGABE_PFAD}`);
   console.log("=================================\n");
+  console.log("WICHTIG: wissensbasis/gesetze.json bitte committen und pushen –");
+  console.log("         die Datei wird vom Edge-Function-Assistenten zur Laufzeit gelesen.");
 }
 
 main().catch((err) => {
