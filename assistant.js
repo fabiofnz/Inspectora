@@ -65,6 +65,38 @@
     return esc(content);
   }
 
+  function addCopyButton(bubble, text) {
+    const actions = document.createElement("div");
+    actions.className = "assistant-bubble-actions";
+    const btn = document.createElement("button");
+    btn.className = "copy-btn";
+    btn.textContent = "Kopieren";
+    btn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(text);
+        btn.textContent = "✓ Kopiert";
+        setTimeout(() => { btn.textContent = "Kopieren"; }, 1500);
+      } catch {
+        try {
+          const ta = document.createElement("textarea");
+          ta.value = text;
+          ta.style.cssText = "position:fixed;opacity:0;pointer-events:none";
+          document.body.appendChild(ta);
+          ta.select();
+          document.execCommand("copy");
+          document.body.removeChild(ta);
+          btn.textContent = "✓ Kopiert";
+          setTimeout(() => { btn.textContent = "Kopieren"; }, 1500);
+        } catch {
+          btn.textContent = "⚠ Nicht möglich";
+          setTimeout(() => { btn.textContent = "Kopieren"; }, 2000);
+        }
+      }
+    });
+    actions.appendChild(btn);
+    bubble.appendChild(actions);
+  }
+
   function renderMessages() {
     refs.emptyState.style.display = history.length ? "none" : "block";
     refs.messages.querySelectorAll(".assistant-bubble").forEach((el) => el.remove());
@@ -72,6 +104,7 @@
       const bubble = document.createElement("div");
       bubble.className = `assistant-bubble ${m.role === "user" ? "assistant-bubble-user" : "assistant-bubble-assistant"}`;
       bubble.innerHTML = renderContent(m.role, m.content);
+      if (m.role === "assistant") addCopyButton(bubble, m.content);
       refs.messages.appendChild(bubble);
     });
     refs.messages.scrollTop = refs.messages.scrollHeight;
@@ -157,19 +190,6 @@
 
     let bubble = null;
     let fullText = "";
-    let rafPending = false;
-
-    function flushRender() {
-      if (!bubble) return;
-      bubble.innerHTML = renderContent("assistant", fullText);
-      refs.messages.scrollTop = refs.messages.scrollHeight;
-    }
-
-    function scheduleRender() {
-      if (rafPending) return;
-      rafPending = true;
-      requestAnimationFrame(() => { rafPending = false; flushRender(); });
-    }
 
     function ensureBubble() {
       if (bubble) return;
@@ -180,13 +200,12 @@
     }
 
     function finishOk() {
-      flushRender();
+      bubble.innerHTML = renderContent("assistant", fullText);
+      addCopyButton(bubble, fullText);
       history.push({ role: "assistant", content: fullText });
       saveHistory();
-      if (bubble) {
-        bubble.classList.add("assistant-bubble--settle");
-        bubble.addEventListener("animationend", () => bubble?.classList.remove("assistant-bubble--settle"), { once: true });
-      }
+      bubble.classList.add("assistant-bubble--settle");
+      bubble.addEventListener("animationend", () => bubble?.classList.remove("assistant-bubble--settle"), { once: true });
       setLoading(false);
       refs.input.focus();
     }
@@ -242,7 +261,8 @@
             if (evt.type === "delta" && evt.text) {
               ensureBubble();
               fullText += evt.text;
-              scheduleRender();
+              bubble.textContent += evt.text;
+              refs.messages.scrollTop = refs.messages.scrollHeight;
             } else if (evt.type === "done") {
               terminated = true;
               finishOk();
