@@ -68,18 +68,26 @@ function fetchBuffer(url) {
 
 function headStatus(url) {
   return new Promise((resolve) => {
-    try {
-      const lib = url.startsWith("https") ? https : http;
-      const req = lib.request(url, { method: "HEAD", timeout: HEAD_TIMEOUT_MS }, (res) => {
-        res.resume();
-        resolve(res.statusCode);
-      });
-      req.on("timeout", () => { req.destroy(); resolve(0); });
-      req.on("error",   () => resolve(0));
-      req.end();
-    } catch {
-      resolve(0);
-    }
+    const attempt = (u, redirects) => {
+      if (redirects > 5) return resolve(0);
+      try {
+        const lib = u.startsWith("https") ? https : http; // Protokoll je Redirect-Ziel neu bestimmen
+        const req = lib.request(u, { method: "HEAD", timeout: HEAD_TIMEOUT_MS }, (res) => {
+          res.resume();
+          if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
+            const nextUrl = new URL(res.headers.location, u).toString();
+            return attempt(nextUrl, redirects + 1);
+          }
+          resolve(res.statusCode);
+        });
+        req.on("timeout", () => { req.destroy(); resolve(0); });
+        req.on("error",   () => resolve(0));
+        req.end();
+      } catch {
+        resolve(0);
+      }
+    };
+    attempt(url, 0);
   });
 }
 
@@ -174,6 +182,10 @@ function textOf(nodes) {
         break;
       }
       case "DL":
+        // Vor der Liste einen Umbruch erzwingen, falls der vorangehende Fließtext
+        // (z.B. "...vor, wenn ") noch nicht mit einem Zeilenumbruch endet – sonst
+        // verschmilzt er mit der ersten Aufzählungsziffer zu "...vor, wenn1.".
+        if (out && !/\n[ \t]*$/.test(out)) out = out.replace(/[ \t]+$/, "") + "\n";
         out += textOf(kids);
         out += "\n";
         break;
@@ -252,9 +264,11 @@ function findInToc(tocXml, slug) {
 // ---------------------------------------------------------------------------
 
 function baseUrl(gesetzLink) {
-  // z.B. "https://www.gesetze-im-internet.de/weg/index.html"
+  // z.B. "http://www.gesetze-im-internet.de/weg/index.html"
   //   → "https://www.gesetze-im-internet.de/weg/"
-  return gesetzLink.replace(/[^/]+$/, "");
+  // TOC liefert http-Links, die per Redirect auf https zeigen – Deep-Links
+  // daher von vornherein mit https:// aufbauen statt den Redirect zu provozieren.
+  return gesetzLink.replace(/^http:\/\//i, "https://").replace(/[^/]+$/, "");
 }
 
 function xmlZipUrl(gesetzLink) {
