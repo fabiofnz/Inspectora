@@ -1,3 +1,17 @@
+import gesetzeRaw from "../../wissensbasis/gesetze.json" with { type: "json" };
+
+// Defensiv: Falls die Datei fehlt/leer/kein Array ist, bleibt die Wissensbasis leer
+// und der Assistent antwortet ganz normal ohne Zusatzwissen statt abzustürzen.
+const GESETZE = Array.isArray(gesetzeRaw) ? gesetzeRaw : [];
+if (!Array.isArray(gesetzeRaw)) {
+  console.error("[assistant-chat] wissensbasis/gesetze.json ist kein Array – Wissensbasis deaktiviert.");
+}
+
+const ENTRIES_BY_ID = new Map(GESETZE.map((e) => [e.id, e]));
+const GESETZ_IDS = [...new Set(GESETZE.map((e) => e.gesetz))]; // z.B. ["WEG","BGB","BetrKV","HeizkostenV","WoFlV"]
+const GESETZ_ALTERNATION = GESETZ_IDS.map((g) => g.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("|");
+const MAX_KONTEXT_EINTRAEGE = 5;
+
 const SYSTEM_PROMPT = `Du bist ein schlaues, vielseitiges KI-Modell, das ZUSÄTZLICH fundiertes Fachwissen in der deutschen Immobilienwirtschaft mitbringt (Hausverwaltung, WEG-Verwaltung, Mietverwaltung, Makler). Du beantwortest allgemeine Fragen genauso souverän wie Immobilienthemen – das Immobilienwissen ist ein Plus, keine Einschränkung.
 
 TON: Natürlich, zugewandt, wie ein kompetenter Kollege, der gern weiterhilft – ruhig mit einer persönlichen, menschlichen Note. Du redest MIT dem Nutzer, nicht an ihm vorbei. Keine leeren Floskeln, kein "Das ist eine gute Frage!", keine langen Einleitungen. Direkt und warm zugleich. Die Wärme zeigt sich im Ton, nicht in der Länge.
@@ -13,6 +27,145 @@ WEB-SUCHE: Du hast Zugriff auf eine Web-Suche. Nutze sie gezielt bei Fragen zu a
 ENTWÜRFE: Kennzeichne entworfene Schreiben dezent als Entwurf – kurz, nicht mit langem Hinweistext.
 
 Antworte immer auf Deutsch. Sei ehrlich, wenn du etwas nicht sicher weißt. Bleib fokussiert auf die gestellte Frage, schweife nicht ab und überlade nicht mit unaufgefordertem Zusatzwissen.`;
+
+const WISSENSBASIS_ANWEISUNG = `Dir werden bei manchen Fragen passende Gesetzestexte im Volltext bereitgestellt. Nutze sie als verlässliche Wissensgrundlage – aber antworte weiterhin genau so wie bisher: natürlich, dialogisch, kurz und auf den Punkt. Die Gesetzestexte sind Hintergrundwissen, kein Antwortformat.
+
+Konkret:
+- Antworte in normaler Sprache, nicht im Gesetzesstil
+- Zitiere einen Paragraphen nur, wenn er für die Antwort wirklich wichtig ist – nicht bei jeder Gelegenheit und nicht als Beleg-Liste
+- Wenn du zitierst: knapp, im Fließtext, mit dem Link zur Quelle
+- Wiederhole niemals den kompletten bereitgestellten Gesetzestext, fasse in eigenen Worten zusammen
+- Erwähne die Wissensbasis nicht ('laut meiner Datenbank', 'in den mir vorliegenden Texten') – das interessiert niemanden
+- Steht etwas nicht in den bereitgestellten Texten, antworte normal aus deinem Wissen
+- Erfinde niemals einen Paragraphen oder Wortlaut. Wenn ein Text bereitgestellt wurde, gib ihn korrekt wieder.`;
+
+// ---------------------------------------------------------------------------
+// Wissensbasis: Passende Paragraphen zur Nutzerfrage finden
+// ---------------------------------------------------------------------------
+
+function baueId(gesetzId, nummer) {
+  return `${gesetzId.toLowerCase()}-${nummer.toLowerCase()}`;
+}
+
+// Erkennt explizite Paragraphen-Nennungen: "§ 24 WEG", "§ 556a", "Paragraph 543", "556a BGB".
+// Wird kein Gesetz genannt, wird über alle bekannten Gesetze nach einer passenden ID gesucht.
+function findeExpliziteParagraphen(text) {
+  const treffer = [];
+  if (!GESETZ_ALTERNATION) return treffer;
+
+  const gesetzRegex = new RegExp(`^(${GESETZ_ALTERNATION})$`, "i");
+  const paragraphZeichen = /§\s*(\d{1,4}[a-zA-Z]?)(?:\s*Abs(?:atz)?\.?\s*\d+[a-zA-Z]?)?\s*([A-Za-zÄÖÜäöüß]+)?/g;
+  const paragraphWort = /\bParagraph(?:en)?\s+(\d{1,4}[a-zA-Z]?)\s*([A-Za-zÄÖÜäöüß]+)?/gi;
+  const nummerGesetz = new RegExp(`\\b(\\d{1,4}[a-zA-Z]?)\\s+(${GESETZ_ALTERNATION})\\b`, "gi");
+
+  const sammeln = (regex) => {
+    let m;
+    while ((m = regex.exec(text)) !== null) {
+      const nummer = m[1];
+      const gesetzRoh = m[2];
+      const gesetzId = gesetzRoh && gesetzRegex.test(gesetzRoh)
+        ? GESETZ_IDS.find((g) => g.toLowerCase() === gesetzRoh.toLowerCase())
+        : null;
+      treffer.push({ nummer, gesetzId });
+    }
+  };
+
+  sammeln(paragraphZeichen);
+  sammeln(paragraphWort);
+  sammeln(nummerGesetz);
+
+  const ergebnisse = [];
+  const gesehen = new Set();
+  for (const { nummer, gesetzId } of treffer) {
+    const kandidatenGesetze = gesetzId ? [gesetzId] : GESETZ_IDS;
+    for (const g of kandidatenGesetze) {
+      const id = baueId(g, nummer);
+      if (gesehen.has(id)) continue;
+      const eintrag = ENTRIES_BY_ID.get(id);
+      if (eintrag) {
+        ergebnisse.push(eintrag);
+        gesehen.add(id);
+      }
+    }
+  }
+  return ergebnisse;
+}
+
+// Stichwort-Abgleich gegen die "themen"-Felder; nach Anzahl Treffern pro Eintrag sortiert.
+function findeUeberThemen(textLower, ausschluss) {
+  const treffer = [];
+  for (const eintrag of GESETZE) {
+    if (ausschluss.has(eintrag.id)) continue;
+    if (!Array.isArray(eintrag.themen) || eintrag.themen.length === 0) continue;
+    let score = 0;
+    for (const thema of eintrag.themen) {
+      if (thema && textLower.includes(thema.toLowerCase())) score++;
+    }
+    if (score > 0) treffer.push({ eintrag, score });
+  }
+  treffer.sort((a, b) => b.score - a.score);
+  return treffer.map((t) => t.eintrag);
+}
+
+// Fallback: Abgleich gegen den Paragraphen-Titel. Nur genutzt, wenn (a)+(b) nichts fanden.
+function findeUeberTitel(textLower, ausschluss) {
+  const treffer = [];
+  for (const eintrag of GESETZE) {
+    if (ausschluss.has(eintrag.id)) continue;
+    if (!eintrag.titel) continue;
+    if (textLower.includes(eintrag.titel.toLowerCase())) treffer.push(eintrag);
+  }
+  return treffer;
+}
+
+function findeKontext(userText) {
+  if (!userText || GESETZE.length === 0) return [];
+  const textLower = userText.toLowerCase();
+
+  const ergebnis = [];
+  const ids = new Set();
+  const hinzufuegen = (eintraege) => {
+    for (const e of eintraege) {
+      if (ids.size >= MAX_KONTEXT_EINTRAEGE) break;
+      if (ids.has(e.id)) continue;
+      ergebnis.push(e);
+      ids.add(e.id);
+    }
+  };
+
+  hinzufuegen(findeExpliziteParagraphen(userText));
+  if (ids.size < MAX_KONTEXT_EINTRAEGE) hinzufuegen(findeUeberThemen(textLower, ids));
+  if (ids.size === 0) hinzufuegen(findeUeberTitel(textLower, ids));
+
+  return ergebnis;
+}
+
+function baueKontextBlock(eintraege) {
+  return eintraege
+    .map((e) => `${e.gesetz} ${e.paragraph} – ${e.titel}\nQuelle: ${e.quelle}\n\n${e.text}`)
+    .join("\n\n---\n\n");
+}
+
+function extrahiereText(content) {
+  if (typeof content === "string") return content;
+  if (Array.isArray(content)) {
+    return content
+      .filter((b) => b && b.type === "text" && typeof b.text === "string")
+      .map((b) => b.text)
+      .join(" ");
+  }
+  return "";
+}
+
+function baueSystemPrompt(messages) {
+  const letzteNutzerNachricht = [...messages].reverse().find((m) => m.role === "user");
+  const nutzerText = letzteNutzerNachricht ? extrahiereText(letzteNutzerNachricht.content) : "";
+  const kontextEintraege = findeKontext(nutzerText);
+
+  if (kontextEintraege.length === 0) return SYSTEM_PROMPT;
+
+  return `${SYSTEM_PROMPT}\n\n${WISSENSBASIS_ANWEISUNG}\n\n=== Bereitgestellte Gesetzestexte ===\n\n${baueKontextBlock(kontextEintraege)}`;
+}
 
 const MAX_MESSAGES = 60;
 const MAX_MESSAGE_LENGTH = 8000;
@@ -127,7 +280,7 @@ export default async (request) => {
         model: "claude-sonnet-5",
         max_tokens: 2000,
         stream: true,
-        system: SYSTEM_PROMPT,
+        system: baueSystemPrompt(messages),
         tools: [{ type: "web_search_20250305", name: "web_search" }],
         messages: messages.map((m) => ({
           role: m.role,
