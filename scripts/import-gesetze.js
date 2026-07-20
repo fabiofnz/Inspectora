@@ -16,12 +16,16 @@ const AdmZip = require("adm-zip");
 // Konfiguration
 // ---------------------------------------------------------------------------
 
+// "slug" ist das eindeutige Verzeichnis-Kürzel auf gesetze-im-internet.de
+// (z.B. https://www.gesetze-im-internet.de/woeigg/xml.zip) – NICHT der Titeltext,
+// da Titelsuche zu unscharf ist (z.B. traf "WEG" fälschlich "zertverwv").
+// "erwartet" dient nur der nachgelagerten Plausibilitätsprüfung des im XML gefundenen Gesetzestitels.
 const ZIEL_GESETZE = [
-  { id: "WEG",         gesetz_lang: "Wohnungseigentumsgesetz",  suche: ["wohnungseigentumsgesetz", "wohnungseigentum"], filter: null },
-  { id: "BGB",         gesetz_lang: "Bürgerliches Gesetzbuch",  suche: ["bürgerliches gesetzbuch"],                    filter: { von: 535, bis: 580 } }, // bis:580 → §§ 535–580a (Buchstaben-Zusätze wie 556a haben n=556 bzw. 580a hat n=580)
-  { id: "BetrKV",      gesetz_lang: "Betriebskostenverordnung", suche: ["betriebskostenverordnung", "betriebskosten"],  filter: null },
-  { id: "HeizkostenV", gesetz_lang: "Heizkostenverordnung",     suche: ["heizkostenverordnung", "heizkosten"],         filter: null },
-  { id: "WoFlV",       gesetz_lang: "Wohnflächenverordnung",    suche: ["wohnflächenverordnung", "wohnfläche"],        filter: null },
+  { id: "WEG",         slug: "woeigg",     gesetz_lang: "Wohnungseigentumsgesetz",  erwartet: ["wohnungseigentum"],  filter: null },
+  { id: "BGB",         slug: "bgb",        gesetz_lang: "Bürgerliches Gesetzbuch",  erwartet: ["bürgerliches gesetzbuch"], filter: { von: 535, bis: 580 } }, // bis:580 → §§ 535–580a (Buchstaben-Zusätze wie 556a haben n=556 bzw. 580a hat n=580)
+  { id: "BetrKV",      slug: "betrkv",     gesetz_lang: "Betriebskostenverordnung", erwartet: ["betriebskosten"],    filter: null },
+  { id: "HeizkostenV", slug: "heizkostenv",gesetz_lang: "Heizkostenverordnung",     erwartet: ["heiz"],              filter: null },
+  { id: "WoFlV",       slug: "woflv",      gesetz_lang: "Wohnflächenverordnung",    erwartet: ["wohnfläche"],        filter: null },
 ];
 
 const TOC_URL      = "https://www.gesetze-im-internet.de/gii-toc.xml";
@@ -37,12 +41,14 @@ const HEAD_TIMEOUT_MS  = 8_000;
 
 function fetchBuffer(url) {
   return new Promise((resolve, reject) => {
-    const lib = url.startsWith("https") ? https : http;
     const attempt = (u, redirects) => {
       if (redirects > 5) return reject(new Error("Zu viele Redirects: " + u));
+      const lib = u.startsWith("https") ? https : http; // Protokoll je Redirect-Ziel neu bestimmen
       const req = lib.get(u, { timeout: FETCH_TIMEOUT_MS }, (res) => {
         if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
-          return attempt(res.headers.location, redirects + 1);
+          res.resume();
+          const nextUrl = new URL(res.headers.location, u).toString();
+          return attempt(nextUrl, redirects + 1);
         }
         if (res.statusCode !== 200) {
           res.resume();
@@ -219,20 +225,24 @@ function getText(nodes) {
 // TOC-Suche
 // ---------------------------------------------------------------------------
 
-function findInToc(tocXml, suchbegriffe) {
+// Extrahiert das Verzeichnis-Kürzel aus einer gesetze-im-internet.de-URL,
+// z.B. "https://www.gesetze-im-internet.de/woeigg/index.html" → "woeigg"
+function slugFromLink(link) {
+  const m = link.match(/gesetze-im-internet\.de\/([^/]+)\/[^/]*$/i);
+  return m ? m[1].toLowerCase() : null;
+}
+
+function findInToc(tocXml, slug) {
   // TOC-Format: <items><item><link>…</link><title>…</title></item>…</items>
+  // Abgleich erfolgt exakt über das Verzeichnis-Kürzel im Link, nicht über den Titeltext,
+  // da ein unscharfer Titel-Match versehentlich das falsche Gesetz treffen kann.
   const items = findAll(tocXml, "item");
-  for (const suchbegriff of suchbegriffe) {
-    const q = suchbegriff.toLowerCase();
-    for (const item of items) {
-      const titelNode = findFirst(children(item), "title");
-      if (!titelNode) continue;
-      const titelText = getText(children(titelNode)).toLowerCase();
-      if (titelText.includes(q)) {
-        const linkNode = findFirst(children(item), "link");
-        if (linkNode) return getText(children(linkNode)).trim();
-      }
-    }
+  const zielSlug = slug.toLowerCase();
+  for (const item of items) {
+    const linkNode = findFirst(children(item), "link");
+    if (!linkNode) continue;
+    const link = getText(children(linkNode)).trim();
+    if (slugFromLink(link) === zielSlug) return link;
   }
   return null;
 }
@@ -320,6 +330,26 @@ async function pruefeLinks(eintraege, gesetzId, basis, gesetzLink) {
 // Stand aus erstem Norm-Block
 // ---------------------------------------------------------------------------
 
+function extractTitel(normNodes) {
+  // Der amtliche Gesetzestitel steckt in den ersten Normen (meist der Eingangsformel)
+  // unter <metadaten><langue> (Langtitel) bzw. <kurzue> (Kurztitel).
+  for (let i = 0; i < Math.min(3, normNodes.length); i++) {
+    const metadaten = findFirst(children(normNodes[i]), "metadaten");
+    if (!metadaten) continue;
+    const langueNode = findFirst(children(metadaten), "langue");
+    if (langueNode) {
+      const text = getText(children(langueNode)).trim();
+      if (text) return text;
+    }
+    const kurzueNode = findFirst(children(metadaten), "kurzue");
+    if (kurzueNode) {
+      const text = getText(children(kurzueNode)).trim();
+      if (text) return text;
+    }
+  }
+  return "";
+}
+
 function extractStand(normNodes) {
   // In den ersten Normen steckt oft Metadaten ohne enbez
   for (let i = 0; i < Math.min(3, normNodes.length); i++) {
@@ -349,7 +379,7 @@ function extractStand(normNodes) {
 // ---------------------------------------------------------------------------
 
 async function verarbeiteGesetz(ziel, gesetzLink) {
-  const { id, gesetz_lang, filter } = ziel;
+  const { id, gesetz_lang, filter, erwartet } = ziel;
   const basis = baseUrl(gesetzLink);
   const zipUrl = xmlZipUrl(gesetzLink);
 
@@ -366,6 +396,19 @@ async function verarbeiteGesetz(ziel, gesetzLink) {
 
   // Alle <norm>-Knoten finden
   const normNodes = findAll(parsed, "norm");
+
+  const gefundenerTitel = extractTitel(normNodes);
+  console.log(`  Gesetzestitel (aus XML): ${gefundenerTitel || "(nicht gefunden)"}`);
+  const titelLower = gefundenerTitel.toLowerCase();
+  const plausibel = erwartet.some((kw) => titelLower.includes(kw));
+  if (!plausibel) {
+    console.error(`\nFEHLER: [${id}] Der im XML gefundene Gesetzestitel "${gefundenerTitel}" passt nicht`);
+    console.error(`  zu den erwarteten Begriffen (${erwartet.join(", ")}). Vermutlich falsches Gesetz geladen.`);
+    console.error(`  ZIP: ${zipUrl}`);
+    console.error("Abbruch – bitte manuell prüfen.");
+    process.exit(1);
+  }
+
   const stand = extractStand(normNodes);
   console.log(`  Stand: ${stand || "(nicht gefunden)"}`);
 
@@ -459,10 +502,10 @@ async function main() {
   const alle = [];
 
   for (const ziel of ZIEL_GESETZE) {
-    console.log(`\nSuche "${ziel.id}" im TOC…`);
-    const gesetzLink = findInToc(tocParsed, ziel.suche);
+    console.log(`\nSuche "${ziel.id}" im TOC (Kürzel: ${ziel.slug})…`);
+    const gesetzLink = findInToc(tocParsed, ziel.slug);
     if (!gesetzLink) {
-      console.error(`\nFEHLER: "${ziel.id}" (Suchbegriffe: ${ziel.suche.join(", ")}) wurde im TOC nicht gefunden.`);
+      console.error(`\nFEHLER: Kürzel "${ziel.slug}" (für ${ziel.id}) wurde im TOC nicht gefunden.`);
       console.error("Abbruch – bitte den TOC manuell prüfen: " + TOC_URL);
       process.exit(1);
     }
