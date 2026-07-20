@@ -30,6 +30,7 @@ const ZIEL_GESETZE = [
 
 const TOC_URL      = "https://www.gesetze-im-internet.de/gii-toc.xml";
 const AUSGABE_PFAD = path.resolve(__dirname, "../wissensbasis/gesetze.json");
+const THEMEN_MAPPING_PFAD = path.resolve(__dirname, "../wissensbasis/themen-mapping.json");
 const HINWEIS      = "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl.";
 const LINK_SAMPLE  = 5;   // Anzahl Stichproben für Link-Prüfung je Gesetz
 const FETCH_TIMEOUT_MS = 15_000;
@@ -483,6 +484,47 @@ async function verarbeiteGesetz(ziel, gesetzLink) {
 }
 
 // ---------------------------------------------------------------------------
+// Themen-Mapping
+// ---------------------------------------------------------------------------
+
+// Befüllt die "themen"-Felder in `alle` anhand von wissensbasis/themen-mapping.json.
+// Sicherheitsprinzip: Themen werden NUR gesetzt, wenn "titel_pruefung" (case-insensitive)
+// im tatsächlichen Titel des Paragraphen vorkommt – sonst lieber leer als eine falsche
+// Zuordnung, die den Assistenten auf den falschen Gesetzestext verweisen würde.
+function wendeThemenMappingAn(alle, mappingPfad) {
+  const mapping = JSON.parse(fs.readFileSync(mappingPfad, "utf8"));
+  const byId = new Map(alle.map((e) => [e.id, e]));
+
+  let gesetzt = 0;
+  const warnungen = [];
+
+  for (const [id, eintrag] of Object.entries(mapping)) {
+    if (id === "_hinweis") continue;
+
+    const ziel = byId.get(id);
+    if (!ziel) {
+      warnungen.push(`ID nicht in gesetze.json gefunden: "${id}"`);
+      continue;
+    }
+
+    const pruefung = (eintrag.titel_pruefung || "").toLowerCase();
+    const titelIst = (ziel.titel || "").toLowerCase();
+    if (!pruefung || !titelIst.includes(pruefung)) {
+      warnungen.push(
+        `${id}: Titel-Prüfung "${eintrag.titel_pruefung}" nicht im tatsächlichen Titel gefunden ` +
+        `– tatsächlicher Titel: "${ziel.titel}"`
+      );
+      continue;
+    }
+
+    ziel.themen = eintrag.themen || [];
+    gesetzt++;
+  }
+
+  return { gesetzt, warnungen };
+}
+
+// ---------------------------------------------------------------------------
 // Prüfbericht
 // ---------------------------------------------------------------------------
 
@@ -529,6 +571,10 @@ async function main() {
     for (const e of eintraege) alle.push(e);
   }
 
+  // Themen-Mapping anwenden
+  console.log(`\nLade Themen-Mapping: ${THEMEN_MAPPING_PFAD}`);
+  const { gesetzt: themenGesetzt, warnungen: themenWarnungen } = wendeThemenMappingAn(alle, THEMEN_MAPPING_PFAD);
+
   // Ausgabe schreiben
   const ausgabeDir = path.dirname(AUSGABE_PFAD);
   if (!fs.existsSync(ausgabeDir)) fs.mkdirSync(ausgabeDir, { recursive: true });
@@ -543,6 +589,16 @@ async function main() {
   console.log("\n--- Stichproben-Texte ---");
   druckeParagraph(alle, "WEG", "§ 24");
   druckeParagraph(alle, "BGB", "§ 543");
+
+  console.log("\n\n========== THEMEN-MAPPING ==========");
+  console.log(`${themenGesetzt} von ${alle.length} Paragraphen mit Themen versehen.`);
+  if (themenWarnungen.length) {
+    console.log(`\nWarnungen (${themenWarnungen.length}):`);
+    for (const w of themenWarnungen) console.log(`  - ${w}`);
+  } else {
+    console.log("Keine Warnungen.");
+  }
+  console.log("=====================================");
 
   console.log(`\nGesamt: ${alle.length} Paragraphen → ${AUSGABE_PFAD}`);
   console.log("=================================\n");
