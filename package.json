@@ -5,5 +5,12 @@
   "description": "Inspectora – WEG-Verwaltung digital. Statische Website mit Netlify Functions.",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.111.0"
+  },
+  "devDependencies": {
+    "adm-zip": "^0.6.0",
+    "fast-xml-parser": "^5.0.0"
+  },
+  "scripts": {
+    "import-gesetze": "node scripts/import-gesetze.js"
   }
 }
