@@ -1,0 +1,356 @@
+{
+  "_hinweis": "Zuordnung von Alltags-Suchbegriffen zu Paragraphen. 'titel_pruefung' ist eine Sicherung: Das Import-Skript darf die Themen nur setzen, wenn dieser Textteil im tatsaechlichen Titel des Paragraphen vorkommt. Sonst ueberspringen und melden.",
+
+  "weg-9a": {
+    "titel_pruefung": "Gemeinschaft",
+    "themen": ["gemeinschaft der wohnungseigentümer", "rechtsfähigkeit", "wer ist die weg", "gemeinschaft als eigentümer"]
+  },
+  "weg-9b": {
+    "titel_pruefung": "Vertretung",
+    "themen": ["vertretung", "wer vertritt die weg", "verwalter vertretungsmacht", "verträge abschließen"]
+  },
+  "weg-10": {
+    "titel_pruefung": "Grundsätze",
+    "themen": ["gemeinschaftsordnung", "vereinbarung", "teilungserklärung", "abweichende regelung"]
+  },
+  "weg-12": {
+    "titel_pruefung": "Veräußerung",
+    "themen": ["verkauf wohnung", "veräußerungsbeschränkung", "zustimmung verwalter verkauf", "eigentümerwechsel"]
+  },
+  "weg-13": {
+    "titel_pruefung": "Sondereigentum",
+    "themen": ["rechte eigentümer", "sondereigentum nutzen", "was darf ich in meiner wohnung"]
+  },
+  "weg-14": {
+    "titel_pruefung": "Pflichten",
+    "themen": ["pflichten eigentümer", "duldungspflicht", "zutritt gewähren", "rücksichtnahme"]
+  },
+  "weg-15": {
+    "titel_pruefung": "Dritter",
+    "themen": ["mieter pflichten weg", "nutzer pflichten", "dritte im gemeinschaftseigentum"]
+  },
+  "weg-16": {
+    "titel_pruefung": "Kosten",
+    "themen": ["kostenverteilung", "verteilerschlüssel", "miteigentumsanteile", "mea", "hausgeld verteilung", "kostenverteilungsschlüssel ändern"]
+  },
+  "weg-18": {
+    "titel_pruefung": "Verwaltung",
+    "themen": ["ordnungsmäßige verwaltung", "verwaltung gemeinschaftseigentum", "einsichtsrecht unterlagen"]
+  },
+  "weg-19": {
+    "titel_pruefung": "Beschluss",
+    "themen": ["hausordnung", "beschluss verwaltung", "erhaltungsrücklage beschließen", "gebrauchsregelung"]
+  },
+  "weg-20": {
+    "titel_pruefung": "bauliche",
+    "themen": ["bauliche veränderung", "umbau", "balkon verglasen", "wallbox", "barrierefreiheit", "modernisierung weg"]
+  },
+  "weg-21": {
+    "titel_pruefung": "Kosten",
+    "themen": ["kosten bauliche veränderung", "wer zahlt umbau", "nutzungen bauliche veränderung"]
+  },
+  "weg-23": {
+    "titel_pruefung": "versammlung",
+    "themen": ["eigentümerversammlung", "virtuelle versammlung", "online versammlung", "hybride versammlung", "umlaufbeschluss", "beschluss außerhalb versammlung"]
+  },
+  "weg-24": {
+    "titel_pruefung": "Einberufung",
+    "themen": ["einladung", "ladungsfrist", "versammlung einberufen", "wer lädt ein", "tagesordnung", "protokoll", "niederschrift", "beschluss-sammlung", "versammlungsleitung"]
+  },
+  "weg-25": {
+    "titel_pruefung": "Beschlussfassung",
+    "themen": ["abstimmung", "mehrheit", "stimmrecht", "beschlussfähigkeit", "kopfprinzip", "vollmacht abstimmung"]
+  },
+  "weg-26": {
+    "titel_pruefung": "Verwalter",
+    "themen": ["verwalter bestellen", "verwalter abberufen", "verwaltervertrag", "verwalterwechsel", "amtszeit verwalter", "zertifizierter verwalter"]
+  },
+  "weg-27": {
+    "titel_pruefung": "Verwalter",
+    "themen": ["aufgaben verwalter", "befugnisse verwalter", "was darf der verwalter", "eilmaßnahmen verwalter"]
+  },
+  "weg-28": {
+    "titel_pruefung": "Wirtschaftsplan",
+    "themen": ["wirtschaftsplan", "jahresabrechnung", "hausgeld", "vermögensbericht", "abrechnungsspitze", "nachschuss", "erhaltungsrücklage"]
+  },
+  "weg-29": {
+    "titel_pruefung": "Verwaltungsbeirat",
+    "themen": ["verwaltungsbeirat", "beirat", "aufgaben beirat", "beirat haftung"]
+  },
+  "weg-44": {
+    "titel_pruefung": "klage",
+    "themen": ["beschlussanfechtung", "anfechtungsfrist", "beschluss anfechten", "beschlussklage", "monatsfrist anfechtung"]
+  },
+
+  "bgb-535": {
+    "titel_pruefung": "Hauptpflichten",
+    "themen": ["mietvertrag grundlagen", "pflichten vermieter", "pflichten mieter", "gebrauchsüberlassung", "instandhaltungspflicht vermieter"]
+  },
+  "bgb-536": {
+    "titel_pruefung": "Mietminderung",
+    "themen": ["mietminderung", "mangel", "schimmel", "heizung defekt", "lärm minderung", "wohnfläche abweichung"]
+  },
+  "bgb-536a": {
+    "titel_pruefung": "Schadens",
+    "themen": ["schadensersatz mangel", "aufwendungsersatz", "selbstvornahme mieter", "mängelbeseitigung kosten"]
+  },
+  "bgb-536c": {
+    "titel_pruefung": "Mängelanzeige",
+    "themen": ["mängelanzeige", "mangel melden", "anzeigepflicht mieter"]
+  },
+  "bgb-538": {
+    "titel_pruefung": "Abnutzung",
+    "themen": ["normale abnutzung", "gebrauchsspuren", "schönheitsreparaturen abgrenzung"]
+  },
+  "bgb-540": {
+    "titel_pruefung": "Dritten",
+    "themen": ["untervermietung erlaubnis", "gebrauchsüberlassung dritte", "untermieter"]
+  },
+  "bgb-542": {
+    "titel_pruefung": "Ende",
+    "themen": ["ende mietverhältnis", "kündigung grundsatz", "befristung"]
+  },
+  "bgb-543": {
+    "titel_pruefung": "fristlose",
+    "themen": ["fristlose kündigung", "wichtiger grund", "zahlungsverzug", "mietrückstand", "kündigung wegen nichtzahlung", "vertragswidriger gebrauch"]
+  },
+  "bgb-546": {
+    "titel_pruefung": "Rückgabe",
+    "themen": ["rückgabe wohnung", "wohnungsübergabe", "räumung", "schlüsselrückgabe"]
+  },
+  "bgb-546a": {
+    "titel_pruefung": "Entschädigung",
+    "themen": ["nutzungsentschädigung", "verspätete rückgabe", "mieter zieht nicht aus"]
+  },
+  "bgb-548": {
+    "titel_pruefung": "Verjährung",
+    "themen": ["verjährung schadensersatz", "sechs monate frist", "ansprüche nach auszug"]
+  },
+  "bgb-550": {
+    "titel_pruefung": "Form",
+    "themen": ["schriftform mietvertrag", "formvorschrift", "mietvertrag über ein jahr"]
+  },
+  "bgb-551": {
+    "titel_pruefung": "Mietsicherheit",
+    "themen": ["kaution", "mietkaution", "drei monatsmieten", "kaution anlegen", "kaution ratenzahlung", "kaution rückzahlung"]
+  },
+  "bgb-553": {
+    "titel_pruefung": "Gestattung",
+    "themen": ["untervermietung anspruch", "berechtigtes interesse untermiete", "teiluntervermietung"]
+  },
+  "bgb-554": {
+    "titel_pruefung": "Barriere",
+    "themen": ["barrierefreiheit", "e-mobilität ladestation", "einbruchsschutz", "bauliche veränderung mieter"]
+  },
+  "bgb-555a": {
+    "titel_pruefung": "Erhaltung",
+    "themen": ["erhaltungsmaßnahme", "reparatur duldung", "instandsetzung ankündigung"]
+  },
+  "bgb-555b": {
+    "titel_pruefung": "Modernisierung",
+    "themen": ["modernisierung definition", "energetische modernisierung", "was ist modernisierung"]
+  },
+  "bgb-555c": {
+    "titel_pruefung": "Ankündigung",
+    "themen": ["modernisierungsankündigung", "drei monate ankündigung", "form ankündigung modernisierung"]
+  },
+  "bgb-555d": {
+    "titel_pruefung": "Duldung",
+    "themen": ["duldung modernisierung", "härtefall modernisierung", "widerspruch modernisierung"]
+  },
+  "bgb-555e": {
+    "titel_pruefung": "Sonderkündigung",
+    "themen": ["sonderkündigungsrecht modernisierung", "kündigung wegen modernisierung"]
+  },
+  "bgb-556": {
+    "titel_pruefung": "Betriebskosten",
+    "themen": ["betriebskosten", "nebenkosten", "abrechnungsfrist", "zwölf monate abrechnung", "vorauszahlung", "einwendungsfrist", "nebenkostenabrechnung verspätet"]
+  },
+  "bgb-556a": {
+    "titel_pruefung": "maßstab",
+    "themen": ["umlageschlüssel", "verteilerschlüssel betriebskosten", "abrechnung nach fläche", "abrechnung nach personen", "verbrauchsabhängig"]
+  },
+  "bgb-556b": {
+    "titel_pruefung": "Fälligkeit",
+    "themen": ["miete fällig", "dritter werktag", "aufrechnung miete", "zurückbehaltungsrecht"]
+  },
+  "bgb-556c": {
+    "titel_pruefung": "Wärmelieferung",
+    "themen": ["wärmelieferung", "contracting", "umstellung fernwärme", "wärmecontracting"]
+  },
+  "bgb-556d": {
+    "titel_pruefung": "Miethöhe",
+    "themen": ["mietpreisbremse", "zulässige miete bei mietbeginn", "angespannter wohnungsmarkt", "zehn prozent über vergleichsmiete"]
+  },
+  "bgb-556e": {
+    "titel_pruefung": "Vormiete",
+    "themen": ["vormiete", "mietpreisbremse ausnahme vormiete", "modernisierung vor vermietung"]
+  },
+  "bgb-556f": {
+    "titel_pruefung": "Ausnahme",
+    "themen": ["mietpreisbremse ausnahme", "neubau", "umfassende modernisierung"]
+  },
+  "bgb-556g": {
+    "titel_pruefung": "Auskunft",
+    "themen": ["rüge mietpreisbremse", "auskunftsanspruch miete", "rückforderung überhöhte miete"]
+  },
+  "bgb-557": {
+    "titel_pruefung": "Mieterhöhung",
+    "themen": ["mieterhöhung grundlagen", "mieterhöhung vereinbarung"]
+  },
+  "bgb-557a": {
+    "titel_pruefung": "Staffelmiete",
+    "themen": ["staffelmiete", "gestaffelte miete"]
+  },
+  "bgb-557b": {
+    "titel_pruefung": "Indexmiete",
+    "themen": ["indexmiete", "verbraucherpreisindex miete"]
+  },
+  "bgb-558": {
+    "titel_pruefung": "Vergleichsmiete",
+    "themen": ["mieterhöhung ortsübliche vergleichsmiete", "kappungsgrenze", "zwanzig prozent", "wartefrist mieterhöhung", "fünfzehn monate"]
+  },
+  "bgb-558a": {
+    "titel_pruefung": "Begründung",
+    "themen": ["mieterhöhungsschreiben", "begründung mieterhöhung", "form mieterhöhung", "vergleichswohnungen"]
+  },
+  "bgb-558b": {
+    "titel_pruefung": "Zustimmung",
+    "themen": ["zustimmung mieterhöhung", "überlegungsfrist", "zustimmungsklage"]
+  },
+  "bgb-558c": {
+    "titel_pruefung": "Mietspiegel",
+    "themen": ["mietspiegel", "einfacher mietspiegel"]
+  },
+  "bgb-558d": {
+    "titel_pruefung": "Mietspiegel",
+    "themen": ["qualifizierter mietspiegel"]
+  },
+  "bgb-559": {
+    "titel_pruefung": "Modernisierung",
+    "themen": ["modernisierungsumlage", "mieterhöhung nach modernisierung", "acht prozent", "kappungsgrenze modernisierung"]
+  },
+  "bgb-559a": {
+    "titel_pruefung": "Drittmitteln",
+    "themen": ["förderung anrechnung", "kfw mittel modernisierung", "zuschüsse abziehen"]
+  },
+  "bgb-559b": {
+    "titel_pruefung": "Erhöhung",
+    "themen": ["erhöhungserklärung modernisierung", "form modernisierungsumlage", "wirkung erhöhung"]
+  },
+  "bgb-560": {
+    "titel_pruefung": "Betriebskosten",
+    "themen": ["anpassung vorauszahlung", "betriebskostenpauschale", "vorauszahlung erhöhen"]
+  },
+  "bgb-561": {
+    "titel_pruefung": "Sonderkündigung",
+    "themen": ["sonderkündigungsrecht mieterhöhung", "kündigung nach mieterhöhung"]
+  },
+  "bgb-562": {
+    "titel_pruefung": "Pfandrecht",
+    "themen": ["vermieterpfandrecht"]
+  },
+  "bgb-566": {
+    "titel_pruefung": "Kauf",
+    "themen": ["kauf bricht nicht miete", "eigentümerwechsel mietvertrag", "verkauf vermietete wohnung"]
+  },
+  "bgb-568": {
+    "titel_pruefung": "Kündigung",
+    "themen": ["form kündigung", "schriftform kündigung", "hinweis widerspruch", "kündigungsschreiben"]
+  },
+  "bgb-569": {
+    "titel_pruefung": "fristlose",
+    "themen": ["fristlose kündigung wohnraum", "schonfristzahlung", "gesundheitsgefährdung", "hausfrieden störung", "nachzahlung kündigung unwirksam"]
+  },
+  "bgb-573": {
+    "titel_pruefung": "Kündigung",
+    "themen": ["ordentliche kündigung vermieter", "eigenbedarf", "berechtigtes interesse", "kündigungsgrund", "wirtschaftliche verwertung"]
+  },
+  "bgb-573a": {
+    "titel_pruefung": "Erleichterte",
+    "themen": ["zweifamilienhaus kündigung", "erleichterte kündigung", "einliegerwohnung"]
+  },
+  "bgb-573c": {
+    "titel_pruefung": "Fristen",
+    "themen": ["kündigungsfrist", "drei monate kündigung", "verlängerte kündigungsfrist", "fünf jahre neun monate"]
+  },
+  "bgb-574": {
+    "titel_pruefung": "Widerspruch",
+    "themen": ["widerspruch kündigung", "sozialklausel", "härtefall kündigung", "härtefallregelung"]
+  },
+  "bgb-574b": {
+    "titel_pruefung": "Widerspruch",
+    "themen": ["form widerspruch", "frist widerspruch kündigung", "zwei monate widerspruch"]
+  },
+  "bgb-575": {
+    "titel_pruefung": "Zeitmietvertrag",
+    "themen": ["zeitmietvertrag", "befristeter mietvertrag", "qualifizierte befristung"]
+  },
+  "bgb-577": {
+    "titel_pruefung": "Vorkaufsrecht",
+    "themen": ["vorkaufsrecht mieter", "umwandlung eigentumswohnung"]
+  },
+  "bgb-577a": {
+    "titel_pruefung": "Kündigungsbeschränkung",
+    "themen": ["kündigungssperrfrist", "umwandlung sperrfrist", "eigenbedarf nach umwandlung"]
+  },
+  "bgb-578": {
+    "titel_pruefung": "Grundstücke",
+    "themen": ["gewerbemietvertrag", "gewerbliche miete", "geschäftsraummiete"]
+  },
+  "bgb-580": {
+    "titel_pruefung": "Tod",
+    "themen": ["tod des mieters", "kündigung nach todesfall", "erben mietvertrag"]
+  },
+  "bgb-580a": {
+    "titel_pruefung": "Kündigungsfristen",
+    "themen": ["kündigungsfristen gewerbe", "kündigungsfrist grundstück", "quartalsfrist"]
+  },
+
+  "betrkv-1": {
+    "titel_pruefung": "Betriebskosten",
+    "themen": ["betriebskosten definition", "was sind betriebskosten", "nicht umlagefähig", "verwaltungskosten", "instandhaltungskosten"]
+  },
+  "betrkv-2": {
+    "titel_pruefung": "Aufstellung",
+    "themen": ["betriebskostenkatalog", "umlagefähige kosten", "welche nebenkosten umlagefähig", "grundsteuer", "hausmeister", "müllabfuhr", "gartenpflege", "aufzug", "gebäudereinigung", "sach- und haftpflichtversicherung"]
+  },
+
+  "heizkostenv-3": {
+    "titel_pruefung": "Anwendung",
+    "themen": ["anwendungsbereich heizkostenverordnung", "wohnungseigentum heizkosten"]
+  },
+  "heizkostenv-6": {
+    "titel_pruefung": "Verteilung",
+    "themen": ["verteilung heizkosten", "verbrauchserfassung", "abrechnungsmaßstab heizung"]
+  },
+  "heizkostenv-7": {
+    "titel_pruefung": "Verteilung",
+    "themen": ["heizkosten verteilung", "fünfzig bis siebzig prozent", "grundkosten heizung", "verbrauchskosten heizung"]
+  },
+  "heizkostenv-8": {
+    "titel_pruefung": "Verteilung",
+    "themen": ["warmwasserkosten verteilung", "warmwasser abrechnung"]
+  },
+  "heizkostenv-9": {
+    "titel_pruefung": "verbundene",
+    "themen": ["verbundene anlage", "trennung heizung warmwasser", "wärmemengenzähler"]
+  },
+  "heizkostenv-12": {
+    "titel_pruefung": "Kürzung",
+    "themen": ["kürzungsrecht", "fünfzehn prozent kürzung", "abrechnung nicht verbrauchsabhängig", "kürzung heizkosten"]
+  },
+
+  "woflv-2": {
+    "titel_pruefung": "Grundflächen",
+    "themen": ["wohnfläche berechnen", "was zählt zur wohnfläche", "keller wohnfläche", "dachschräge"]
+  },
+  "woflv-3": {
+    "titel_pruefung": "Ermittlung",
+    "themen": ["wohnflächenermittlung", "messung wohnfläche"]
+  },
+  "woflv-4": {
+    "titel_pruefung": "Anrechnung",
+    "themen": ["balkon anrechnung", "terrasse wohnfläche", "vierundzwanzig prozent", "dachschräge anrechnung", "wintergarten"]
+  }
+}
