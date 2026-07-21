@@ -64,6 +64,7 @@ export default async (req) => {
     const random = Math.random().toString(36).slice(2, 8);
     const key = `feedback:${entry.timestamp}-${random}`;
     await store.setJSON(key, entry);
+    console.log("[feedback] gespeichert:", key);
   } catch (err) {
     // Nur serverseitig loggen – niemals an den Client durchreichen.
     console.error("[feedback] Speichern fehlgeschlagen:", err);

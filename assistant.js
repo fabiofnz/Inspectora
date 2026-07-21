@@ -411,6 +411,9 @@
   }
 
   // Fire-and-forget: a failed save must never disrupt the chat or the UI.
+  // On a 5xx (e.g. a cold-start 503) or network error, retry exactly once after
+  // ~1.5 s – feedback from someone returning after a pause is especially worth
+  // keeping. Fully silent and non-blocking either way.
   function sendFeedback(msg, question, rating, comment) {
     const payload = {
       rating,
@@ -421,14 +424,27 @@
       kbIds:         msg.meta?.kbIds         ?? [],
       webSearchUsed: msg.meta?.webSearchUsed ?? null,
     };
-    try {
-      fetch("/.netlify/functions/feedback", {
+    const body = JSON.stringify(payload);
+
+    async function attempt() {
+      const res = await fetch("/.netlify/functions/feedback", {
         method: "POST",
         headers: { "Content-Type": "application/json", "x-access-code": accessCode },
-        body: JSON.stringify(payload),
+        body,
         keepalive: true,
-      }).catch(() => {}); // silent
-    } catch { /* silent */ }
+      });
+      if (res.status >= 500) throw new Error("retryable"); // 5xx → retry
+      return res;
+    }
+
+    (async () => {
+      try {
+        await attempt();
+      } catch {
+        await new Promise((r) => setTimeout(r, 1500));
+        try { await attempt(); } catch { /* give up silently */ }
+      }
+    })();
   }
 
   function copyText(btn, text) {
@@ -835,6 +851,10 @@
     }
 
     function finishOk() {
+      // No text at all (e.g. a response that only ran a web search) → treat as a
+      // failed turn instead of dereferencing a possibly-null bubble.
+      if (!fullText) { finishErr("Keine Antwort erhalten – bitte erneut senden."); return; }
+      ensureBubble();
       bubble.innerHTML = renderContent("assistant", fullText);
       const assistantMsg = { role: "assistant", content: fullText, meta: { ...streamMeta } };
       const target = chats.find((c) => c.id === streamChatId);
