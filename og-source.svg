@@ -1,0 +1,28 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#060C16"/>
+      <stop offset="1" stop-color="#0B1220"/>
+    </linearGradient>
+    <radialGradient id="glow" cx="0.82" cy="0.18" r="0.7">
+      <stop offset="0" stop-color="#4F46E5" stop-opacity="0.55"/>
+      <stop offset="0.5" stop-color="#7C3AED" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#7C3AED" stop-opacity="0"/>
+    </radialGradient>
+    <linearGradient id="mark" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7C3AED"/>
+      <stop offset="1" stop-color="#4F46E5"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#glow)"/>
+  <rect x="0" y="0" width="1200" height="8" fill="url(#mark)"/>
+  <g transform="translate(90,150)">
+    <rect x="0" y="0" width="96" height="96" rx="24" fill="url(#mark)"/>
+    <text x="48" y="70" font-family="Segoe UI, Arial, sans-serif" font-size="60" font-weight="800" fill="#FFFFFF" text-anchor="middle">I</text>
+    <text x="128" y="72" font-family="Segoe UI, Arial, sans-serif" font-size="82" font-weight="800" fill="#FFFFFF">Inspectora</text>
+  </g>
+  <text x="90" y="360" font-family="Segoe UI, Arial, sans-serif" font-size="46" font-weight="700" fill="#FFFFFF">Werkzeuge für die WEG- &amp; Mietverwaltung</text>
+  <text x="90" y="424" font-family="Segoe UI, Arial, sans-serif" font-size="46" font-weight="700" fill="#A5B4FC">+ KI-Assistent Inspector</text>
+  <text x="90" y="520" font-family="Segoe UI, Arial, sans-serif" font-size="27" font-weight="500" fill="rgba(255,255,255,0.62)">Einladung · Protokoll · Wirtschaftsplan · Immobilien-Fachwissen</text>
+</svg>
