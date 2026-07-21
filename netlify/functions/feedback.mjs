@@ -1,5 +1,8 @@
-const { getStore } = require("@netlify/blobs");
+import { getStore } from "@netlify/blobs";
 
+// Netlify Functions v2 (Web Request/Response). In diesem Format stellt Netlify
+// die Blobs-Umgebung automatisch bereit – ohne Zusatzkonfiguration.
+//
 // Nimmt Rückmeldungen zu Assistenten-Antworten entgegen und legt sie in einem
 // Netlify-Blob-Store ab. Es geht ausschließlich um die Antwortqualität:
 // KEINE Nutzerkennung, KEINE IP werden gespeichert.
@@ -13,33 +16,33 @@ const MAX_TEXT_LENGTH = 20000; // Frage / Antwort
 const MAX_COMMENT_LENGTH = 2000;
 const MAX_KB_IDS = 30;
 
-const NO_CONTENT = { statusCode: 204, body: "" };
+const noContent = () => new Response(null, { status: 204 });
 
 function clip(value, max) {
   return typeof value === "string" ? value.slice(0, max) : "";
 }
 
-exports.handler = async (event) => {
-  if (event.httpMethod !== "POST") {
-    return { statusCode: 405, body: "" };
+export default async (req) => {
+  if (req.method !== "POST") {
+    return new Response(null, { status: 405 });
   }
 
   // Leichte Bremse gegen offenes Zumüllen: gleicher Zugangscode wie der Chat.
   const expected = process.env.ASSISTANT_ACCESS_CODE;
-  const provided = event.headers["x-access-code"] || event.headers["X-Access-Code"] || "";
+  const provided = req.headers.get("x-access-code") || "";
   if (!expected || provided !== expected) {
-    return NO_CONTENT; // still ablehnen – kein Hinweis nach außen
+    return noContent(); // still ablehnen – kein Hinweis nach außen
   }
 
   let data;
   try {
-    data = JSON.parse(event.body || "{}");
+    data = await req.json();
   } catch {
-    return NO_CONTENT;
+    return noContent();
   }
 
-  const rating = data.rating === "positiv" || data.rating === "negativ" ? data.rating : null;
-  if (!rating) return NO_CONTENT; // ohne gültige Bewertung nichts speichern
+  const rating = data?.rating === "positiv" || data?.rating === "negativ" ? data.rating : null;
+  if (!rating) return noContent(); // ohne gültige Bewertung nichts speichern
 
   const entry = {
     timestamp: new Date().toISOString(),
@@ -67,5 +70,5 @@ exports.handler = async (event) => {
   }
 
   // Aus Sicht des Nutzers immer erfolgreich und ohne Inhalt.
-  return NO_CONTENT;
+  return noContent();
 };
