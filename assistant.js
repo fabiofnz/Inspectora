@@ -6,6 +6,7 @@
   const ACTIVE_KEY   = "inspectora_active_chat_v1";
   const OLD_CHAT_KEY = "inspectora_assistant_chat_v1"; // legacy – kept as backup, never deleted here
   const CODE_KEY     = "inspectora_assistant_code_v1";
+  const FB_HINT_KEY  = "inspectora_feedback_hint_v1"; // once-shown transparency note
 
   // File upload limits
   const PDF_MAX_BYTES          = 10 * 1024 * 1024;
@@ -391,13 +392,47 @@
     return esc(content);
   }
 
-  function addCopyButton(bubble, text) {
-    const actions = document.createElement("div");
-    actions.className = "assistant-bubble-actions";
-    const btn = document.createElement("button");
-    btn.className  = "copy-btn";
-    btn.textContent = "Kopieren";
-    btn.addEventListener("click", async () => {
+  // ── Feedback ─────────────────────────────────────────────────────────────
+  const ICON_THUMB_UP =
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M7 10v11"/><path d="M15 5.88 14 10h5.83a2 2 0 0 1 1.92 2.56l-2.33 8A2 2 0 0 1 17.5 22H4a2 2 0 0 1-2-2v-8a2 2 0 0 1 2-2h2.76a2 2 0 0 0 1.79-1.11L12 2a3.13 3.13 0 0 1 3 3.88Z"/></svg>`;
+  const ICON_THUMB_DOWN =
+    `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M17 14V3"/><path d="M9 18.12 10 14H4.17a2 2 0 0 1-1.92-2.56l2.33-8A2 2 0 0 1 6.5 2H20a2 2 0 0 1 2 2v8a2 2 0 0 1-2 2h-2.76a2 2 0 0 0-1.79 1.11L12 22a3.13 3.13 0 0 1-3-3.88Z"/></svg>`;
+
+  // Transparency note – shown once on the very first feedback interaction.
+  // Returns true if the hint was shown (caller then skips the "Danke!" toast so
+  // the hint isn't immediately overwritten in the shared toast element).
+  function maybeShowFeedbackHint() {
+    try {
+      if (localStorage.getItem(FB_HINT_KEY)) return false;
+      localStorage.setItem(FB_HINT_KEY, "1");
+    } catch { return false; }
+    toast("Rückmeldungen werden mit Frage und Antwort gespeichert, um den Assistenten zu verbessern.", 5500);
+    return true;
+  }
+
+  // Fire-and-forget: a failed save must never disrupt the chat or the UI.
+  function sendFeedback(msg, question, rating, comment) {
+    const payload = {
+      rating,
+      question: question || "",
+      answer: msg.content || "",
+      comment: comment || "",
+      kbUsed:        msg.meta?.kbUsed        ?? null,
+      kbIds:         msg.meta?.kbIds         ?? [],
+      webSearchUsed: msg.meta?.webSearchUsed ?? null,
+    };
+    try {
+      fetch("/.netlify/functions/feedback", {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "x-access-code": accessCode },
+        body: JSON.stringify(payload),
+        keepalive: true,
+      }).catch(() => {}); // silent
+    } catch { /* silent */ }
+  }
+
+  function copyText(btn, text) {
+    (async () => {
       try {
         await navigator.clipboard.writeText(text);
         btn.textContent = "✓ Kopiert";
@@ -418,9 +453,122 @@
           setTimeout(() => { btn.textContent = "Kopieren"; }, 2000);
         }
       }
-    });
-    actions.appendChild(btn);
+    })();
+  }
+
+  // Actions bar under an assistant bubble: copy + thumbs up/down (+ optional
+  // comment field on thumbs-down). `msg` is the stored message object so the
+  // chosen rating persists in localStorage and stays visibly set & changeable.
+  function addBubbleActions(bubble, msg, question) {
+    const actions = document.createElement("div");
+    actions.className = "assistant-bubble-actions";
+
+    const copyBtn = document.createElement("button");
+    copyBtn.className = "copy-btn";
+    copyBtn.type      = "button";
+    copyBtn.textContent = "Kopieren";
+    copyBtn.addEventListener("click", () => copyText(copyBtn, msg.content));
+    actions.appendChild(copyBtn);
+
+    const group = document.createElement("div");
+    group.className = "feedback-group";
+
+    const upBtn = document.createElement("button");
+    upBtn.type      = "button";
+    upBtn.className  = "feedback-btn feedback-up";
+    upBtn.title      = "Hilfreich";
+    upBtn.setAttribute("aria-label", "Daumen hoch – hilfreiche Antwort");
+    upBtn.innerHTML  = ICON_THUMB_UP;
+
+    const downBtn = document.createElement("button");
+    downBtn.type     = "button";
+    downBtn.className = "feedback-btn feedback-down";
+    downBtn.title     = "Nicht hilfreich";
+    downBtn.setAttribute("aria-label", "Daumen runter – nicht hilfreiche Antwort");
+    downBtn.innerHTML = ICON_THUMB_DOWN;
+
+    group.appendChild(upBtn);
+    group.appendChild(downBtn);
+    actions.appendChild(group);
     bubble.appendChild(actions);
+
+    let commentWrap = null;
+
+    function reflect() {
+      const r = msg.feedback?.rating || null;
+      upBtn.classList.toggle("is-active", r === "positiv");
+      downBtn.classList.toggle("is-active", r === "negativ");
+    }
+
+    function pop(btn) {
+      btn.classList.remove("feedback-btn--pop");
+      // reflow to restart the animation on repeated clicks
+      void btn.offsetWidth;
+      btn.classList.add("feedback-btn--pop");
+      btn.addEventListener("animationend", () => btn.classList.remove("feedback-btn--pop"), { once: true });
+    }
+
+    function showCommentBox() {
+      if (commentWrap) { commentWrap.hidden = false; return; }
+      commentWrap = document.createElement("div");
+      commentWrap.className = "feedback-comment";
+
+      const ta = document.createElement("textarea");
+      ta.className   = "feedback-comment-input";
+      ta.rows        = 2;
+      ta.maxLength   = 2000;
+      ta.placeholder = "Was war falsch? (optional)";
+      if (msg.feedback?.comment) ta.value = msg.feedback.comment;
+
+      const sendBtn = document.createElement("button");
+      sendBtn.type      = "button";
+      sendBtn.className  = "button secondary small feedback-comment-send";
+      sendBtn.textContent = "Absenden";
+      sendBtn.addEventListener("click", () => {
+        const text = ta.value.trim();
+        msg.feedback = { rating: "negativ", comment: text };
+        saveChats();
+        sendFeedback(msg, question, "negativ", text);
+        commentWrap.hidden = true;
+        toast("Danke für den Hinweis!");
+      });
+
+      commentWrap.appendChild(ta);
+      commentWrap.appendChild(sendBtn);
+      bubble.appendChild(commentWrap);
+    }
+
+    function hideCommentBox() { if (commentWrap) commentWrap.hidden = true; }
+
+    function choose(btn, rating) {
+      pop(btn);
+      const changed = msg.feedback?.rating !== rating;
+      if (changed) {
+        const hintShown = maybeShowFeedbackHint();
+        msg.feedback = { rating, comment: msg.feedback?.comment || "" };
+        reflect();
+        saveChats();
+        sendFeedback(msg, question, rating, msg.feedback.comment);
+        if (!hintShown) toast("Danke!", 1800);
+      }
+      if (rating === "negativ") showCommentBox();
+      else hideCommentBox();
+    }
+
+    upBtn.addEventListener("click",   () => choose(upBtn, "positiv"));
+    downBtn.addEventListener("click", () => choose(downBtn, "negativ"));
+
+    // Restore a previously given rating (visible & changeable after reload).
+    reflect();
+    if (msg.feedback?.rating === "negativ") showCommentBox();
+  }
+
+  // The question for an assistant answer is the nearest preceding user message.
+  function questionFor(history, index) {
+    for (let i = index - 1; i >= 0; i--) {
+      if (history[i].role === "user") return history[i].content;
+    }
+    return "";
   }
 
   function renderMessages() {
@@ -428,11 +576,11 @@
     const history = chat?.messages || [];
     refs.emptyState.style.display = history.length ? "none" : "block";
     refs.messages.querySelectorAll(".assistant-bubble").forEach((el) => el.remove());
-    history.forEach((m) => {
+    history.forEach((m, i) => {
       const bubble = document.createElement("div");
       bubble.className = `assistant-bubble ${m.role === "user" ? "assistant-bubble-user" : "assistant-bubble-assistant"}`;
       bubble.innerHTML = renderContent(m.role, m.content);
-      if (m.role === "assistant") addCopyButton(bubble, m.content);
+      if (m.role === "assistant") addBubbleActions(bubble, m, questionFor(history, i));
       refs.messages.appendChild(bubble);
     });
     refs.messages.scrollTop = refs.messages.scrollHeight;
@@ -676,6 +824,7 @@
 
     let bubble   = null;
     let fullText = "";
+    const streamMeta = { kbUsed: null, kbIds: [], webSearchUsed: null };
 
     function ensureBubble() {
       if (bubble) return;
@@ -687,12 +836,13 @@
 
     function finishOk() {
       bubble.innerHTML = renderContent("assistant", fullText);
-      addCopyButton(bubble, fullText);
+      const assistantMsg = { role: "assistant", content: fullText, meta: { ...streamMeta } };
       const target = chats.find((c) => c.id === streamChatId);
       if (target) {
-        target.messages.push({ role: "assistant", content: fullText });
+        target.messages.push(assistantMsg);
         target.updatedAt = Date.now();
       }
+      addBubbleActions(bubble, assistantMsg, userContentText);
       saveChats();
       bubble.classList.add("assistant-bubble--settle");
       bubble.addEventListener("animationend", () => bubble?.classList.remove("assistant-bubble--settle"), { once: true });
@@ -761,7 +911,11 @@
               fullText            += evt.text;
               bubble.textContent  += evt.text;
               refs.messages.scrollTop = refs.messages.scrollHeight;
+            } else if (evt.type === "meta") {
+              streamMeta.kbUsed = !!evt.kbUsed;
+              streamMeta.kbIds  = Array.isArray(evt.kbIds) ? evt.kbIds : [];
             } else if (evt.type === "done") {
+              streamMeta.webSearchUsed = !!evt.webSearchUsed;
               terminated = true; finishOk(); break outer;
             } else if (evt.type === "error") {
               terminated = true;

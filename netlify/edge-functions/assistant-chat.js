@@ -157,11 +157,14 @@ function extrahiereText(content) {
   return "";
 }
 
-function baueSystemPrompt(messages) {
+// Ermittelt die zur letzten Nutzerfrage passenden Wissensbasis-Einträge.
+function ermittleKontextEintraege(messages) {
   const letzteNutzerNachricht = [...messages].reverse().find((m) => m.role === "user");
   const nutzerText = letzteNutzerNachricht ? extrahiereText(letzteNutzerNachricht.content) : "";
-  const kontextEintraege = findeKontext(nutzerText);
+  return findeKontext(nutzerText);
+}
 
+function baueSystemPrompt(kontextEintraege) {
   if (kontextEintraege.length === 0) return SYSTEM_PROMPT;
 
   return `${SYSTEM_PROMPT}\n\n${WISSENSBASIS_ANWEISUNG}\n\n=== Bereitgestellte Gesetzestexte ===\n\n${baueKontextBlock(kontextEintraege)}`;
@@ -266,6 +269,11 @@ export default async (request) => {
     );
   }
 
+  // Wissensbasis-Treffer einmal ermitteln: fließt in den System-Prompt UND
+  // wird dem Client als Metadaten mitgegeben (für den Feedback-Mechanismus).
+  const kontextEintraege = ermittleKontextEintraege(messages);
+  const kbIds = kontextEintraege.map((e) => e.id);
+
   let anthropicResponse;
   try {
     anthropicResponse = await fetch("https://api.anthropic.com/v1/messages", {
@@ -280,7 +288,7 @@ export default async (request) => {
         model: "claude-sonnet-5",
         max_tokens: 2000,
         stream: true,
-        system: baueSystemPrompt(messages),
+        system: baueSystemPrompt(kontextEintraege),
         tools: [{ type: "web_search_20250305", name: "web_search" }],
         messages: messages.map((m) => ({
           role: m.role,
@@ -310,10 +318,15 @@ export default async (request) => {
   const stream = new ReadableStream({
     async start(controller) {
       let buffer = "";
+      let webSearchUsed = false;
 
       function send(obj) {
         controller.enqueue(encoder.encode(`data: ${JSON.stringify(obj)}\n\n`));
       }
+
+      // Metadaten der Wissensbasis vorab senden – der Client hängt sie an die
+      // Antwort, damit sie später mit einer Rückmeldung gespeichert werden können.
+      send({ type: "meta", kbUsed: kbIds.length > 0, kbIds });
 
       try {
         while (true) {
@@ -336,13 +349,20 @@ export default async (request) => {
                 evt.delta.text
               ) {
                 send({ type: "delta", text: evt.delta.text });
+              } else if (evt.type === "content_block_start") {
+                // Web-Suche erkennen: Anthropic sendet dafür server_tool_use /
+                // web_search_tool_result als eigene Content-Blöcke.
+                const blockType = evt.content_block?.type;
+                if (blockType === "server_tool_use" || blockType === "web_search_tool_result") {
+                  webSearchUsed = true;
+                }
               }
             } catch {
               // ignore malformed SSE event
             }
           }
         }
-        send({ type: "done" });
+        send({ type: "done", webSearchUsed });
       } catch {
         send({ type: "error", message: "Stream unterbrochen. Bitte erneut versuchen." });
       } finally {
