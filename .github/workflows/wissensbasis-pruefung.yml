@@ -1,0 +1,67 @@
+name: Wissensbasis-Pruefung
+
+# Offline-Pruefungen der Wissensbasis: Ist gesetze.json in sich stimmig, und
+# passt themen-mapping.json dazu?
+#
+# HIER FINDET KEIN ABGLEICH MIT gesetze-im-internet.de STATT.
+# Das war urspruenglich der Zweck dieses Workflows, ist aber von GitHub Actions
+# aus nicht moeglich: Gemessen am 26.08.2026 (Run 32902121662) kommt vom Runner
+# keine TCP-Verbindung zu 195.74.94.216 zustande - weder ueber Port 443 noch
+# ueber Port 80, auch nicht direkt ueber die IP. Die Pakete werden verworfen,
+# nicht abgelehnt. DNS loest korrekt auf, andere deutsche Hosts antworten in
+# 400ms, und curl scheitert genauso wie Node. Es liegt also nicht an unserer
+# Anfrage, sondern an einer Sperre gegen die Cloud-Adressen des Runners.
+#
+# Der Quellabgleich laeuft deshalb woechentlich lokal ueber die Windows-
+# Aufgabenplanung: scripts/aufgabe-einrichten.ps1 richtet ihn ein, er ruft
+# scripts/aktualitaet-pruefen.ps1 auf. Nicht hier einen weiteren Anlauf
+# nehmen - die Ursache ist gemessen, nicht vermutet.
+#
+# Kein Zeitplan: Diese Pruefungen haengen nur an den Dateien im Repo und
+# aendern sich nicht von selbst. Ein woechentlicher Lauf haette nichts zu
+# melden, was ein Push nicht schon gemeldet haette.
+
+on:
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/**"
+      - "wissensbasis/**"
+      - "package.json"
+      - ".github/workflows/wissensbasis-pruefung.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  pruefen:
+    name: Wissensbasis pruefen
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Node einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Abhaengigkeiten installieren
+        run: npm ci
+
+      # Reihenfolge ist Absicht:
+      # Erst der Nachweis, dass eine Pruefung ueberhaupt anschlagen kann, dann die
+      # Pruefung selbst. Ein gruener Lauf einer Pruefung ohne diesen Nachweis
+      # behauptet eine Abdeckung, die es vielleicht nicht gibt.
+      - name: Negativkontrolle Konsistenzpruefung
+        run: npm run --silent pruefe-wissensbasis:negativkontrolle
+
+      - name: Konsistenzpruefung (offline)
+        run: npm run --silent pruefe-wissensbasis
+
+      # Laeuft ohne Netz gegen kuenstliche Daten und gehoert deshalb hierher,
+      # obwohl die Pruefung selbst, die sie absichert, lokal laeuft.
+      - name: Negativkontrolle Aktualitaetspruefung
+        run: npm run --silent pruefe-aktualitaet:negativkontrolle
