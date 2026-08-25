@@ -47,6 +47,40 @@ const HINWEIS          = "Konsolidierte Fassung, nicht die amtliche Fassung des 
 const FETCH_TIMEOUT_MS = 15_000;
 const HEAD_TIMEOUT_MS  = 8_000;
 
+// Wir fragen eine oeffentliche Quelle regelmaessig ab - dann soll auch erkennbar
+// sein, wer da fragt.
+const USER_AGENT = "Inspectora/1.0 (+https://inspectora.tech; Wissensbasis-Abgleich)";
+
+// family: 4 erzwingt IPv4.
+//
+// Grund: Der erste Lauf auf einem GitHub-Actions-Runner (26.08.2026) lief nach 16s
+// in den 15s-Timeout, ohne dass die Gegenstelle abgelehnt haette. Node bevorzugt
+// seit v17 die vom Resolver zuerst gelieferte Adresse (verbatim), und die AAAA-
+// Adresse von gesetze-im-internet.de war vom Runner offenbar nicht routbar - die
+// Pakete liefen ins Leere statt auf ein Refused.
+//
+// Bewusst je Request und nicht global ueber dns.setDefaultResultOrder("ipv4first"):
+// Ein Modul soll die Namensaufloesung des gesamten Prozesses nicht umstellen. Der
+// Aufrufer koennte anderes ueber IPv6 erreichen wollen.
+const REQUEST_BASIS = {
+  family: 4,
+  headers: { "User-Agent": USER_AGENT },
+};
+
+// Fehlerarten, damit "Timeout" und "HTTP 403" nicht gleich aussehen. Sie stehen
+// fuer verschiedene Probleme und brauchen verschiedene naechste Schritte.
+function netzFehlerArt(err) {
+  const code = err && err.code ? String(err.code) : "";
+  if (/^(ENOTFOUND|EAI_AGAIN)$/.test(code)) return "DNS";
+  if (/^(ECONNREFUSED|ECONNRESET|EHOSTUNREACH|ENETUNREACH|EPIPE|ECONNABORTED)$/.test(code)) return "VERBINDUNG";
+  if (/^(CERT_|ERR_TLS|UNABLE_TO_|SELF_SIGNED|DEPTH_ZERO)/.test(code)) return "TLS";
+  return "NETZ";
+}
+
+function fehler(art, nachricht, extra = {}) {
+  return Object.assign(new Error(nachricht), { art, ...extra });
+}
+
 // Fehler beim Erreichen oder Lesen der Quelle. Eigene Klasse, damit der Aufrufer
 // "Quelle nicht erreichbar" von "Gesetz hat sich geaendert" unterscheiden kann.
 // Beides als dasselbe zu melden waere die gefaehrlichste Verwechslung ueberhaupt:
@@ -56,6 +90,10 @@ class QuellFehler extends Error {
     super(message);
     this.name = "QuellFehler";
     this.ursache = ursache;
+    // Art der Ursache durchreichen, damit der Aufrufer im Bericht zwischen
+    // Timeout, HTTP-Status, DNS und TLS unterscheiden kann.
+    this.art = (ursache && ursache.art) || "UNBEKANNT";
+    if (ursache && ursache.status) this.status = ursache.status;
   }
 }
 
@@ -66,9 +104,9 @@ class QuellFehler extends Error {
 function fetchBuffer(url) {
   return new Promise((resolve, reject) => {
     const attempt = (u, redirects) => {
-      if (redirects > 5) return reject(new Error("Zu viele Redirects: " + u));
+      if (redirects > 5) return reject(fehler("REDIRECT", "Zu viele Redirects: " + u));
       const lib = u.startsWith("https") ? https : http; // Protokoll je Redirect-Ziel neu bestimmen
-      const req = lib.get(u, { timeout: FETCH_TIMEOUT_MS }, (res) => {
+      const req = lib.get(u, { ...REQUEST_BASIS, timeout: FETCH_TIMEOUT_MS }, (res) => {
         if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
           res.resume();
           const nextUrl = new URL(res.headers.location, u).toString();
@@ -76,15 +114,15 @@ function fetchBuffer(url) {
         }
         if (res.statusCode !== 200) {
           res.resume();
-          return reject(new Error(`HTTP ${res.statusCode} für ${u}`));
+          return reject(fehler("HTTP_STATUS", `HTTP ${res.statusCode} für ${u}`, { status: res.statusCode }));
         }
         const chunks = [];
         res.on("data", (c) => chunks.push(c));
         res.on("end",  () => resolve(Buffer.concat(chunks)));
-        res.on("error", reject);
+        res.on("error", (e) => reject(fehler(netzFehlerArt(e), `${e.code || e.message}: ${u}`)));
       });
-      req.on("timeout", () => { req.destroy(); reject(new Error("Timeout: " + u)); });
-      req.on("error", reject);
+      req.on("timeout", () => { req.destroy(); reject(fehler("TIMEOUT", "Timeout: " + u)); });
+      req.on("error", (e) => reject(fehler(netzFehlerArt(e), `${e.code || e.message}: ${u}`)));
     };
     attempt(url, 0);
   });
@@ -96,7 +134,7 @@ function headStatus(url) {
       if (redirects > 5) return resolve(0);
       try {
         const lib = u.startsWith("https") ? https : http; // Protokoll je Redirect-Ziel neu bestimmen
-        const req = lib.request(u, { method: "HEAD", timeout: HEAD_TIMEOUT_MS }, (res) => {
+        const req = lib.request(u, { ...REQUEST_BASIS, method: "HEAD", timeout: HEAD_TIMEOUT_MS }, (res) => {
           res.resume();
           if (res.statusCode >= 300 && res.statusCode < 400 && res.headers.location) {
             const nextUrl = new URL(res.headers.location, u).toString();
@@ -167,16 +205,6 @@ function findFirst(nodes, tag) {
     }
   }
   return null;
-}
-
-// Unbenutzt, aber beim Herausloesen aus import-gesetze.js mituebernommen, damit
-// dieser Schritt rein mechanisch bleibt. Kandidat zum Loeschen - bewusst nicht
-// nebenbei entfernt.
-function directText(nodes) {
-  return nodes
-    .filter((n) => "#text" in n)
-    .map((n) => n["#text"])
-    .join("");
 }
 
 // ---------------------------------------------------------------------------
@@ -573,7 +601,7 @@ module.exports = {
   // XML
   parser, xmlParserOpts,
   // Traversal
-  tagName, children, findAll, findFirst, directText,
+  tagName, children, findAll, findFirst,
   // Text
   textOf, tableText, getText,
   // TOC

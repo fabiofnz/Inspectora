@@ -49,6 +49,43 @@ const LINK_PARALLEL = 8;
 const DIFF_ZEILEN   = 6;    // wie viele geaenderte Zeilen je Paragraph gezeigt werden
 const DIFF_BREITE   = 220;  // wie lang eine gezeigte Zeile hoechstens ist
 
+// Ein Timeout und ein HTTP 403 sind verschiedene Probleme und brauchen
+// verschiedene naechste Schritte. Sie duerfen im Bericht nicht gleich aussehen.
+const DIAGNOSE = {
+  TIMEOUT: [
+    "Die Gegenstelle hat weder geantwortet noch abgelehnt - die Anfrage lief ins Leere.",
+    "Typisch fuer eine nicht routbare Adresse (z.B. IPv6 ohne Route) oder eine Firewall,",
+    "die Pakete verwirft statt sie abzulehnen. Pruefen: Kommt man ueber IPv4 durch?",
+  ],
+  HTTP_STATUS: [
+    "Die Gegenstelle hat geantwortet, aber mit einem Fehlerstatus.",
+    "403/429: Zugriff abgelehnt oder gedrosselt - vermutlich Filterung nach Herkunft.",
+    "404: Die URL-Struktur der Quelle hat sich geaendert - dann muss gii.js angepasst werden.",
+  ],
+  DNS: [
+    "Der Hostname liess sich nicht aufloesen.",
+    "Pruefen: DNS-Server der Umgebung, Tippfehler in der URL, Domain umgezogen.",
+  ],
+  VERBINDUNG: [
+    "Die Verbindung wurde abgelehnt oder abgebrochen.",
+    "Im Unterschied zum Timeout hat hier etwas geantwortet - meist ein Proxy oder eine Firewall.",
+  ],
+  TLS: [
+    "Das Zertifikat der Gegenstelle wurde nicht akzeptiert.",
+    "Pruefen: abgelaufenes Zertifikat, TLS-aufbrechender Proxy, veraltetes Wurzelzertifikat.",
+  ],
+  REDIRECT: [
+    "Die Quelle leitet im Kreis oder zu oft weiter.",
+    "Pruefen: Hat sich die URL-Struktur geaendert?",
+  ],
+  NETZ: [
+    "Netzwerkfehler ohne genauere Einordnung - siehe Fehlercode oben.",
+  ],
+  UNBEKANNT: [
+    "Die Ursache liess sich nicht einordnen - siehe Meldung oben.",
+  ],
+};
+
 // ---------------------------------------------------------------------------
 // Hilfen
 // ---------------------------------------------------------------------------
@@ -150,19 +187,26 @@ async function main() {
     quelle = await holeQuelle();
   } catch (err) {
     // Genau hier trennen sich Netzproblem und Gesetzesaenderung.
+    const art = err.art || (err instanceof QuellFehler ? err.art : "UNBEKANNT");
+    const grund = err.ursache ? `${err.message} (${err.ursache.message})` : err.message;
+
     console.error("\n=================================");
     console.error("FEHLER: Die Quelle konnte nicht gelesen werden.");
+    console.error(`  Art:     ${art}${err.status ? ` (HTTP ${err.status})` : ""}`);
     console.error(`  ${err.message}`);
-    if (err instanceof QuellFehler && err.ursache) {
-      console.error(`  Ursache: ${err.ursache.message}`);
-    }
+    if (err.ursache) console.error(`  Ursache: ${err.ursache.message}`);
+    console.error("");
+    for (const zeile of DIAGNOSE[art] || DIAGNOSE.UNBEKANNT) console.error(`  ${zeile}`);
     console.error("");
     console.error("Das ist KEIN Befund. Es ist NICHT festgestellt, dass sich ein Gesetz");
     console.error("geaendert hat - es ist ueberhaupt nichts festgestellt. Der Bestand");
     console.error("kann veraltet sein, ohne dass dieser Lauf es zeigen wuerde.");
-    console.error("Moegliche Ursachen: kein Netzzugang, gesetze-im-internet.de nicht");
-    console.error("erreichbar, geaenderte URL-Struktur.");
     console.error("=================================");
+
+    // Maschinenlesbar fuer den Workflow, damit Annotation und Job-Summary den
+    // konkreten Grund nennen koennen, ohne dass jemand das Log oeffnen muss.
+    console.error(`AKTUALITAET_FEHLERART=${art}`);
+    console.error(`AKTUALITAET_FEHLERGRUND=${grund.replace(/\s+/g, " ").trim()}`);
     process.exit(EXIT_FEHLER);
   }
 
