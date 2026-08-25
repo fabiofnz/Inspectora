@@ -188,13 +188,16 @@ async function main() {
   } catch (err) {
     // Genau hier trennen sich Netzproblem und Gesetzesaenderung.
     const art = err.art || (err instanceof QuellFehler ? err.art : "UNBEKANNT");
-    const grund = err.ursache ? `${err.message} (${err.ursache.message})` : err.message;
+    // err.message enthaelt die Ursache bei QuellFehler bereits - nicht doppelt anhaengen.
+    const grund = err.message;
 
     console.error("\n=================================");
     console.error("FEHLER: Die Quelle konnte nicht gelesen werden.");
     console.error(`  Art:     ${art}${err.status ? ` (HTTP ${err.status})` : ""}`);
     console.error(`  ${err.message}`);
-    if (err.ursache) console.error(`  Ursache: ${err.ursache.message}`);
+    if (err.ursache && !err.message.includes(err.ursache.message)) {
+      console.error(`  Ursache: ${err.ursache.message}`);
+    }
     console.error("");
     for (const zeile of DIAGNOSE[art] || DIAGNOSE.UNBEKANNT) console.error(`  ${zeile}`);
     console.error("");

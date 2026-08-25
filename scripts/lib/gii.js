@@ -51,17 +51,22 @@ const HEAD_TIMEOUT_MS  = 8_000;
 // sein, wer da fragt.
 const USER_AGENT = "Inspectora/1.0 (+https://inspectora.tech; Wissensbasis-Abgleich)";
 
-// family: 4 erzwingt IPv4.
+// family: 4 ist gegen diese Quelle WIRKUNGSLOS und steht hier nur, damit die
+// Anfrage nicht von den Voreinstellungen des Resolvers abhaengt.
 //
-// Grund: Der erste Lauf auf einem GitHub-Actions-Runner (26.08.2026) lief nach 16s
-// in den 15s-Timeout, ohne dass die Gegenstelle abgelehnt haette. Node bevorzugt
-// seit v17 die vom Resolver zuerst gelieferte Adresse (verbatim), und die AAAA-
-// Adresse von gesetze-im-internet.de war vom Runner offenbar nicht routbar - die
-// Pakete liefen ins Leere statt auf ein Refused.
+// Zur Geschichte, damit niemand denselben Weg noch einmal geht:
+// Abrufe von einem GitHub-Actions-Runner laufen in den Timeout (26.08.2026,
+// Runs 32900138736 und 32901119879) - die Gegenstelle antwortet nicht und lehnt
+// auch nicht ab. Die erste Vermutung war IPv6: Node bevorzugt seit v17 die vom
+// Resolver zuerst gelieferte Adresse, und eine nicht routbare AAAA-Adresse haette
+// genau so ausgesehen. Diese Vermutung ist WIDERLEGT: www.gesetze-im-internet.de
+// hat ueberhaupt keinen AAAA-Eintrag, nur A 195.74.94.216. Es lief also von
+// Anfang an ueber IPv4, und family: 4 hat am Fehlerbild erwartungsgemaess nichts
+// geaendert.
 //
+// Die Ursache ist derzeit UNGEKLAERT. Lokal funktioniert derselbe Abruf.
 // Bewusst je Request und nicht global ueber dns.setDefaultResultOrder("ipv4first"):
-// Ein Modul soll die Namensaufloesung des gesamten Prozesses nicht umstellen. Der
-// Aufrufer koennte anderes ueber IPv6 erreichen wollen.
+// Ein Modul soll die Namensaufloesung des gesamten Prozesses nicht umstellen.
 const REQUEST_BASIS = {
   family: 4,
   headers: { "User-Agent": USER_AGENT },

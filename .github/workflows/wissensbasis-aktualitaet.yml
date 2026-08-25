@@ -59,6 +59,63 @@ jobs:
       - name: Negativkontrolle Aktualitaetspruefung
         run: npm run --silent pruefe-aktualitaet:negativkontrolle
 
+      # TEMPORAER - Messung, kein Fix.
+      #
+      # Abrufe der Quelle laufen vom Runner in den Timeout, lokal nicht. Die
+      # IPv6-Vermutung ist widerlegt (kein AAAA-Eintrag, siehe gii.js). Es bleiben
+      # zwei Erklaerungen, die entgegengesetzte Konsequenzen haben:
+      #   A) Die Verbindung wird auf Netzebene verworfen (Sperre gegen Cloud-IPs).
+      #      Dann ist mit Actions nichts zu machen, egal welche Zeitlimits.
+      #   B) Der Server braucht von hier aus laenger als 15s bis zum ersten Byte.
+      #      Dann waeren laengeres Zeitlimit und Wiederholung der richtige Weg.
+      # Der Unterschied ist messbar: Kommt die TCP-Verbindung zustande? Steht TLS?
+      # Wann kommt das erste Byte? Ergebnisse als ::notice, damit sie ueber die
+      # Annotations-API lesbar sind, ohne das Log zu oeffnen.
+      #
+      # Dieser Schritt darf den Lauf nicht abbrechen - er soll messen, nicht werten.
+      - name: Diagnose Erreichbarkeit der Quelle (temporaer)
+        continue-on-error: true
+        run: |
+          set +e
+
+          probe() {
+            name="$1"; url="$2"; shift 2
+            out=$(curl -sS -o /dev/null --connect-timeout 10 --max-time 30 \
+                  -w 'dns=%{time_namelookup}s tcp=%{time_connect}s tls=%{time_appconnect}s firstbyte=%{time_starttransfer}s total=%{time_total}s http=%{http_code}' \
+                  "$@" "$url" 2>&1 | tr '\n' ' ')
+            rc=$?
+            case $rc in
+              0)  deutung="Antwort erhalten" ;;
+              6)  deutung="DNS-Aufloesung fehlgeschlagen" ;;
+              7)  deutung="TCP-Verbindung nicht moeglich (abgelehnt/unerreichbar)" ;;
+              28) deutung="TIMEOUT - keine Antwort" ;;
+              35) deutung="TLS-Fehler" ;;
+              *)  deutung="curl-Exit $rc" ;;
+            esac
+            echo "[$name] rc=$rc ($deutung) $out"
+            echo "::notice title=Probe ${name}::rc=${rc} (${deutung}) ${out}"
+          }
+
+          aufloesung=$(getent hosts www.gesetze-im-internet.de | tr '\n' ' ')
+          echo "DNS auf dem Runner: ${aufloesung:-(nichts)}"
+          echo "::notice title=DNS auf dem Runner::${aufloesung:-keine Aufloesung}"
+
+          # Die Quelle selbst, ueber Name, ueber Port 80 und direkt ueber die IP.
+          # Stimmen alle drei im Fehlerbild ueberein, liegt es nicht am Namen.
+          probe "Quelle-HTTPS"    "https://www.gesetze-im-internet.de/gii-toc.xml"
+          probe "Quelle-HTTP80"   "http://www.gesetze-im-internet.de/gii-toc.xml"
+          probe "Quelle-per-IP"   "https://195.74.94.216/gii-toc.xml" -k -H "Host: www.gesetze-im-internet.de"
+
+          # Kontrollen: Trennen "dieser Host sperrt uns" von "deutsche Hosts
+          # unerreichbar" und von "Runner hat gar kein Netz".
+          probe "Kontrolle-DE"    "https://www.bund.de/"
+          probe "Kontrolle-Basis" "https://example.com/"
+
+          # Wichtigster Vergleich: curl kommt durch, Node nicht -> dann ist es
+          # keine Netzsperre, sondern etwas an unserer Anfrage. Umgekehrt genauso.
+          echo "Der Node-Abruf folgt im naechsten Schritt - Ergebnisse vergleichen."
+          exit 0
+
       # Der einzige Schritt, der ins Netz geht.
       #
       # Exit 1 und Exit 2 duerfen nie verwechselt werden:
