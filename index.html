@@ -94,7 +94,9 @@
           <p>Stell Inspector deine Fragen aus dem Verwaltungsalltag – zu Mietrecht, WEG-Recht, Betriebskosten und Abläufen.</p>
           <ul class="inspector-features">
             <li>Fundiertes Immobilien-Fachwissen</li>
-            <li>Gesetzestexte mit Quellenangabe (WEG, BGB, BetrKV …)</li>
+            <!-- Der Text ohne Zahl ist der Fallback und muss für sich korrekt
+                 bleiben: app.js ersetzt ihn nur, wenn die Zahl wirklich da ist. -->
+            <li>Gesetzestexte mit Quellenangabe – <span id="kbCount">WEG, BGB, BetrKV und weitere</span></li>
             <li>Web-Suche für aktuelle Urteile, Fristen und Werte</li>
             <li>Liest PDFs und Bilder und wertet sie aus</li>
           </ul>

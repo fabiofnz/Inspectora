@@ -2195,4 +2195,28 @@ if(navTargets.length&&'IntersectionObserver' in window){
   },{rootMargin:'-40% 0px -55% 0px',threshold:0});
   sections.forEach(s=>observer.observe(s));
 }
+
+// Wissensbasis-Zahl im Inspector-Panel. Holt die tatsächliche Anzahl der
+// Paragraphen aus der Netlify Function, damit die Angabe nicht veraltet.
+// Ohne JavaScript oder bei einem Fehler bleibt der Fallback-Text aus dem HTML
+// stehen – der ist bewusst ohne Zahl formuliert und deshalb auch dann richtig.
+// Grundsatz: lieber ungenauer als eine Zahl, die nicht belegt ist.
+const kbCount=$("#kbCount");
+if(kbCount){
+  fetch("/.netlify/functions/wissensbasis-status")
+    .then(r=>r.ok?r.json():Promise.reject(new Error("HTTP "+r.status)))
+    .then(data=>{
+      const anzahl=data&&data.paragraphen,gesetze=data&&data.gesetze;
+      if(typeof anzahl!=="number"||!(anzahl>0))throw new Error("keine gültige Anzahl");
+      if(!Array.isArray(gesetze)||!gesetze.length)throw new Error("keine Gesetze in der Antwort");
+      const kuerzel=gesetze.map(g=>g&&g.kuerzel).filter(Boolean);
+      if(!kuerzel.length)throw new Error("keine Kürzel in der Antwort");
+      kbCount.textContent=`${anzahl} Paragraphen aus ${kuerzel.join(", ")}`;
+      // Aufschlüsselung und Quelle als Tooltip – die verbindliche Quellenangabe
+      // steht weiterhin an den Antworten des Assistenten selbst.
+      const details=gesetze.filter(g=>g&&g.kuerzel).map(g=>`${g.kuerzel} ${g.paragraphen}`).join(" · ");
+      kbCount.title=data.quelle?`${details} – Quelle: ${data.quelle}`:details;
+    })
+    .catch(err=>console.warn("[kbCount] Zahl nicht geladen, Fallback-Text bleibt stehen:",err));
+}
 })();
