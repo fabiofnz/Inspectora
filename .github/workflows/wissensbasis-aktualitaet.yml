@@ -1,0 +1,104 @@
+name: Wissensbasis-Aktualitaet
+
+# Woechentlicher Abgleich der Wissensbasis mit gesetze-im-internet.de.
+#
+# Warum: Am 25.08.2026 standen drei BGB-Paragraphen rund einen Monat lang veraltet
+# im Bestand (§ 559f neu, §§ 555b und 559e geaendert). Aufgefallen ist das nur,
+# weil der Import aus einem anderen Grund neu lief. Nichts hat es angezeigt.
+#
+# Absichtlich GitHub Actions und nicht Netlify: Dieser Lauf fasst die Website nicht
+# an und soll keine Netlify-Credits kosten. Auf einem oeffentlichen Repo ist Actions
+# kostenlos, und ein fehlgeschlagener Lauf ist bereits die Benachrichtigung.
+
+on:
+  schedule:
+    # Montags 06:00 UTC. Cron in Actions laeuft in UTC und kann sich bei hoher
+    # Last um einige Minuten verspaeten - fuer eine Wochenpruefung belanglos.
+    - cron: "0 6 * * 1"
+  workflow_dispatch:
+  push:
+    branches: ["main"]
+    paths:
+      - "scripts/**"
+      - "wissensbasis/**"
+      - "package.json"
+      - ".github/workflows/wissensbasis-aktualitaet.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  pruefen:
+    name: Wissensbasis pruefen
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Repository auschecken
+        uses: actions/checkout@v4
+
+      - name: Node einrichten
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+
+      - name: Abhaengigkeiten installieren
+        run: npm ci
+
+      # Reihenfolge ist Absicht:
+      # Erst der Nachweis, dass eine Pruefung ueberhaupt anschlagen kann, dann die
+      # Pruefung selbst. Ein gruener Lauf einer Pruefung ohne diesen Nachweis
+      # behauptet eine Abdeckung, die es vielleicht nicht gibt.
+      - name: Negativkontrolle Konsistenzpruefung
+        run: npm run --silent pruefe-wissensbasis:negativkontrolle
+
+      # Vor dem Quellvergleich: Wenn der Bestand schon mit sich selbst nicht
+      # stimmig ist, muss das zuerst geklaert werden.
+      - name: Konsistenzpruefung (offline)
+        run: npm run --silent pruefe-wissensbasis
+
+      - name: Negativkontrolle Aktualitaetspruefung
+        run: npm run --silent pruefe-aktualitaet:negativkontrolle
+
+      # Der einzige Schritt, der ins Netz geht.
+      #
+      # Exit 1 und Exit 2 duerfen nie verwechselt werden:
+      #   1 = die Quelle hat sich geaendert (Gesetzesaenderung, echter Befund)
+      #   2 = die Quelle war nicht erreichbar (kein Befund - nichts festgestellt)
+      # Beides laesst den Lauf fehlschlagen, aber die Annotation sagt, welches
+      # von beidem es war. Ein roter Lauf ohne Netz darf nicht wie eine
+      # Gesetzesaenderung aussehen.
+      - name: Aktualitaetspruefung gegen gesetze-im-internet.de
+        run: |
+          set +e
+          npm run --silent pruefe-aktualitaet
+          code=$?
+          set -e
+          if [ "$code" -eq 0 ]; then
+            echo "### ✅ Wissensbasis ist aktuell" >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$code" -eq 1 ]; then
+            echo "::error title=Gesetzesaenderung festgestellt::Die Quelle weicht vom Bestand ab. Lokal 'npm run import-gesetze' laufen lassen, Diff pruefen, committen. Neue Paragraphen brauchen zusaetzlich einen Eintrag in themen-mapping.json."
+            {
+              echo "### ⚠️ Gesetzesaenderung festgestellt"
+              echo ""
+              echo "Die Quelle war erreichbar und weicht vom Bestand ab. **Das ist ein echter Befund.**"
+              echo ""
+              echo "Naechster Schritt: \`npm run import-gesetze\` lokal, Diff pruefen, committen."
+              echo "Neue Paragraphen brauchen ausserdem einen Eintrag in \`themen-mapping.json\`,"
+              echo "sonst sind sie fuer den Assistenten nicht erreichbar."
+            } >> "$GITHUB_STEP_SUMMARY"
+          elif [ "$code" -eq 2 ]; then
+            echo "::error title=Quelle nicht erreichbar - KEIN Befund::gesetze-im-internet.de war nicht erreichbar oder nicht lesbar. Es ist nicht festgestellt, dass sich etwas geaendert hat - es ist gar nichts festgestellt."
+            {
+              echo "### ✖️ Quelle nicht erreichbar"
+              echo ""
+              echo "**Das ist kein Befund.** Es ist nicht festgestellt, dass sich ein Gesetz"
+              echo "geaendert hat - es ist ueberhaupt nichts festgestellt. Der Bestand kann"
+              echo "veraltet sein, ohne dass dieser Lauf es zeigen wuerde."
+              echo ""
+              echo "Moegliche Ursachen: gesetze-im-internet.de nicht erreichbar, kein"
+              echo "Netzzugang vom Runner, geaenderte URL-Struktur."
+            } >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "::error title=Unerwarteter Exit-Code::pruefe-aktualitaet.js endete mit $code."
+          fi
+          exit $code
