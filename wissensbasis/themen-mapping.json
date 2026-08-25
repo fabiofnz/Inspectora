@@ -1,5 +1,5 @@
 {
-  "_hinweis": "Zuordnung von Alltags-Suchbegriffen zu Paragraphen. 'titel_pruefung' ist eine Sicherung: Das Import-Skript darf die Themen nur setzen, wenn dieser Textteil im tatsaechlichen Titel des Paragraphen vorkommt. Sonst ueberspringen und melden.",
+  "_hinweis": "Zuordnung von Alltags-Suchbegriffen zu Paragraphen. 'titel_pruefung' ist eine Sicherung: Das Import-Skript darf die Themen nur setzen, wenn dieser Textteil im tatsaechlichen Titel des Paragraphen vorkommt. Sonst ueberspringen und melden. — Das optionale Feld 'luecke' markiert Eintraege, bei denen der Paragraph zwar der richtige Anlaufpunkt ist, die Antwort aber NICHT enthaelt: weil die Regel aufgehoben wurde oder weil sie Rechtsprechung ist. Diese Faelle sind gefaehrlicher als eine falsche Zuordnung, denn es steht ein echter Paragraph im Kontext — eine aus dem Modellgedaechtnis ergaenzte Antwort wirkt dadurch belegt. 'luecke' wird derzeit nur von scripts/pruefe-wissensbasis.js gelesen und aendert das Verhalten des Assistenten nicht; der eigentliche Fix waere ein Marker, den der Assistent zur Laufzeit auswertet.",
 
   "weg-9a": {
     "titel_pruefung": "Gemeinschaft",
@@ -59,11 +59,16 @@
   },
   "weg-25": {
     "titel_pruefung": "Beschlussfassung",
-    "themen": ["abstimmung", "mehrheit", "stimmrecht", "beschlussfähigkeit", "kopfprinzip", "vollmacht abstimmung"]
+    "themen": ["abstimmung", "mehrheit", "stimmrecht", "beschlussfähigkeit", "kopfprinzip", "vollmacht abstimmung"],
+    "luecke": "Beschlussfähigkeit: Das frühere Quorum (§ 25 Abs. 3 a.F. – mehr als die Hälfte der Miteigentumsanteile) ist mit der WEG-Reform zum 1.12.2020 entfallen. § 25 enthält dazu heute keine Regelung; die Versammlung ist immer beschlussfähig. Der Suchbegriff bleibt bewusst hier, weil § 25 der richtige Anlaufpunkt ist – die richtige Antwort ist aber eine Abwesenheit, und vorreformiertes WEG-Recht ist in Trainingsdaten stark vertreten."
   },
   "weg-26": {
     "titel_pruefung": "Verwalter",
-    "themen": ["verwalter bestellen", "verwalter abberufen", "verwaltervertrag", "verwalterwechsel", "amtszeit verwalter", "zertifizierter verwalter"]
+    "themen": ["verwalter bestellen", "verwalter abberufen", "verwaltervertrag", "verwalterwechsel", "amtszeit verwalter"]
+  },
+  "weg-26a": {
+    "titel_pruefung": "Zertifizierter",
+    "themen": ["zertifizierter verwalter", "verwalter zertifizierung", "prüfung verwalter", "befreiung von der prüfung"]
   },
   "weg-27": {
     "titel_pruefung": "Verwalter",
@@ -79,7 +84,40 @@
   },
   "weg-44": {
     "titel_pruefung": "klage",
-    "themen": ["beschlussanfechtung", "anfechtungsfrist", "beschluss anfechten", "beschlussklage", "monatsfrist anfechtung"]
+    "themen": ["beschlussanfechtung", "beschluss anfechten", "beschlussklage"]
+  },
+  "weg-45": {
+    "titel_pruefung": "Anfechtungsklage",
+    "themen": ["anfechtungsfrist", "monatsfrist anfechtung", "frist beschlussanfechtung", "begründungsfrist anfechtung", "zwei monate begründung"]
+  },
+
+  "bgb-187": {
+    "titel_pruefung": "Fristbeginn",
+    "themen": ["fristbeginn", "wann beginnt die frist", "fristberechnung", "tag des ereignisses nicht mitgerechnet"]
+  },
+  "bgb-188": {
+    "titel_pruefung": "Fristende",
+    "themen": ["fristende", "wann endet die frist", "frist nach monaten", "frist nach wochen"]
+  },
+  "bgb-189": {
+    "titel_pruefung": "Berechnung",
+    "themen": ["halbes jahr frist", "vierteljahr frist", "halber monat", "15 tage"]
+  },
+  "bgb-190": {
+    "titel_pruefung": "Fristverlängerung",
+    "themen": ["fristverlängerung", "verlängerte frist berechnen"]
+  },
+  "bgb-191": {
+    "titel_pruefung": "Zeiträumen",
+    "themen": ["monat zu 30 tagen", "jahr zu 365 tagen", "zeitraum berechnen"]
+  },
+  "bgb-192": {
+    "titel_pruefung": "Monats",
+    "themen": ["anfang des monats", "mitte des monats", "ende des monats"]
+  },
+  "bgb-193": {
+    "titel_pruefung": "Sonnabend",
+    "themen": ["werktag", "nächster werktag", "frist fällt auf samstag", "frist fällt auf sonntag", "frist fällt auf feiertag", "sonnabend"]
   },
 
   "bgb-535": {
@@ -100,7 +138,8 @@
   },
   "bgb-538": {
     "titel_pruefung": "Abnutzung",
-    "themen": ["normale abnutzung", "gebrauchsspuren", "schönheitsreparaturen abgrenzung"]
+    "themen": ["normale abnutzung", "gebrauchsspuren", "schönheitsreparaturen abgrenzung"],
+    "luecke": "Schönheitsreparaturen: § 538 regelt nur, dass der Mieter vertragsgemäße Abnutzung nicht zu vertreten hat. Ob eine Schönheitsreparaturklausel wirksam ist, steht in keinem Paragraphen dieser Wissensbasis – das ist AGB-Rechtsprechung zu § 535 Abs. 1 Satz 2."
   },
   "bgb-540": {
     "titel_pruefung": "Dritte",
@@ -132,7 +171,8 @@
   },
   "bgb-551": {
     "titel_pruefung": "Mietsicherheit",
-    "themen": ["kaution", "mietkaution", "drei monatsmieten", "kaution anlegen", "kaution ratenzahlung", "kaution rückzahlung"]
+    "themen": ["kaution", "mietkaution", "drei monatsmieten", "kaution anlegen", "kaution ratenzahlung", "kaution rückzahlung"],
+    "luecke": "Rückzahlung der Kaution: § 551 regelt nur Höchstbetrag, Ratenzahlung und Anlage. Wann die Kaution nach Mietende fällig wird und wie lange der Vermieter sie einbehalten darf, steht in keinem Paragraphen dieser Wissensbasis – das ist Rechtsprechung. § 566a betrifft nur den Erwerberfall."
   },
   "bgb-553": {
     "titel_pruefung": "Gestattung",
@@ -238,6 +278,10 @@
     "titel_pruefung": "Erhöhung",
     "themen": ["erhöhungserklärung modernisierung", "form modernisierungsumlage", "wirkung erhöhung"]
   },
+  "bgb-559f": {
+    "titel_pruefung": "Wärmepumpe",
+    "themen": ["wärmepumpe mieterhöhung", "jahresarbeitszahl", "jahresarbeitszahl 2,5", "vorlauftemperatur", "nachweis fachunternehmer", "hälfte der aufgewendeten kosten"]
+  },
   "bgb-560": {
     "titel_pruefung": "Betriebskosten",
     "themen": ["anpassung vorauszahlung", "betriebskostenpauschale", "vorauszahlung erhöhen"]
@@ -272,7 +316,7 @@
   },
   "bgb-573c": {
     "titel_pruefung": "Fristen",
-    "themen": ["kündigungsfrist", "drei monate kündigung", "verlängerte kündigungsfrist", "fünf jahre neun monate"]
+    "themen": ["kündigungsfrist", "drei monate kündigung", "verlängerte kündigungsfrist", "nach fünf jahren", "nach acht jahren", "jeweils drei monate"]
   },
   "bgb-574": {
     "titel_pruefung": "Widerspruch",
@@ -343,7 +387,7 @@
 
   "woflv-2": {
     "titel_pruefung": "Grundflächen",
-    "themen": ["wohnfläche berechnen", "was zählt zur wohnfläche", "keller wohnfläche", "dachschräge"]
+    "themen": ["wohnfläche berechnen", "was zählt zur wohnfläche", "keller wohnfläche"]
   },
   "woflv-3": {
     "titel_pruefung": "Ermittlung",
@@ -351,6 +395,6 @@
   },
   "woflv-4": {
     "titel_pruefung": "Anrechnung",
-    "themen": ["balkon anrechnung", "terrasse wohnfläche", "vierundzwanzig prozent", "dachschräge anrechnung", "wintergarten"]
+    "themen": ["balkon anrechnung", "terrasse wohnfläche", "einem viertel", "zur hälfte", "dachschräge", "dachschräge anrechnung", "wintergarten"]
   }
 }

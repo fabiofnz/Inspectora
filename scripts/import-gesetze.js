@@ -22,7 +22,11 @@ const AdmZip = require("adm-zip");
 // "erwartet" dient nur der nachgelagerten Plausibilitätsprüfung des im XML gefundenen Gesetzestitels.
 const ZIEL_GESETZE = [
   { id: "WEG",         slug: "woeigg",     gesetz_lang: "Wohnungseigentumsgesetz",  erwartet: ["wohnungseigentum"],  filter: null },
-  { id: "BGB",         slug: "bgb",        gesetz_lang: "Bürgerliches Gesetzbuch",  erwartet: ["bürgerliches gesetzbuch"], filter: { von: 535, bis: 580 } }, // bis:580 → §§ 535–580a (Buchstaben-Zusätze wie 556a haben n=556 bzw. 580a hat n=580)
+  // filter = Liste von Nummernbereichen. §§ 187–193 sind die Fristberechnung
+  // (Fristbeginn, Fristende, § 193 Sonn-/Feiertag und Sonnabend) – jede Frist im
+  // Bestand hängt daran, deshalb gehören sie mit in die Wissensbasis.
+  // bis:580 → §§ 535–580a (Buchstaben-Zusätze wie 556a haben n=556 bzw. 580a hat n=580)
+  { id: "BGB",         slug: "bgb",        gesetz_lang: "Bürgerliches Gesetzbuch",  erwartet: ["bürgerliches gesetzbuch"], filter: [{ von: 187, bis: 193 }, { von: 535, bis: 580 }] },
   { id: "BetrKV",      slug: "betrkv",     gesetz_lang: "Betriebskostenverordnung", erwartet: ["betriebskosten"],    filter: null },
   { id: "HeizkostenV", slug: "heizkostenv",gesetz_lang: "Heizkostenverordnung",     erwartet: ["heiz"],              filter: null },
   { id: "WoFlV",       slug: "woflv",      gesetz_lang: "Wohnflächenverordnung",    erwartet: ["wohnfläche"],        filter: null },
@@ -33,6 +37,10 @@ const AUSGABE_PFAD = path.resolve(__dirname, "../wissensbasis/gesetze.json");
 const THEMEN_MAPPING_PFAD = path.resolve(__dirname, "../wissensbasis/themen-mapping.json");
 const HINWEIS      = "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl.";
 const LINK_SAMPLE  = 5;   // Anzahl Stichproben für Link-Prüfung je Gesetz
+
+// Paragraphen, die es in der Quelle gibt, die aber keinen Text haben und deshalb
+// nicht in gesetze.json landen. Wird im Prüfbericht namentlich ausgegeben.
+const UEBERSPRUNGEN = [];
 const FETCH_TIMEOUT_MS = 15_000;
 const HEAD_TIMEOUT_MS  = 8_000;
 
@@ -204,6 +212,16 @@ function textOf(nodes) {
       case "Footnotes":
         // Fußnoten-Anker und Fußnoten weglassen
         break;
+      case "IMG":
+      case "img":
+        // Formeln und Abbildungen liegen in der Quelle teils nur als Grafik vor
+        // (z.B. B = Q/Hi in HeizkostenV § 9 Abs. 3) und lassen sich nicht in Text
+        // überführen. Nicht stillschweigend verschlucken: Sonst bleibt an ihrer
+        // Stelle nur der Satzpunkt stehen und liest sich wie ein vollständiger Satz.
+        // Bewusst neutrale Klammer-Notiz, keine Gesetzessprache – sie darf nicht
+        // mit Normtext verwechselt werden.
+        out += "[Grafik in der Quelle – nicht als Text verfügbar]";
+        break;
       case "Title":
       case "Subtitle":
         out += textOf(kids).trim() + "\n\n";
@@ -215,18 +233,32 @@ function textOf(nodes) {
   return out;
 }
 
+// Zwei Tabellen-Dialekte: HTML (tr/td/th) und CALS (row/entry). gesetze-im-internet.de
+// liefert z.B. die Heizwerttabellen der HeizkostenV als CALS. Ohne row/entry findet
+// die Zeilensuche nichts, der Fallback textOf() klebt alle Zellen ohne Trenner
+// aneinander ("je LiterSchweres Heizöl10,9Kilowattstunden…") und die Werte sind
+// unlesbar. Beide Dialekte behandeln, damit der Fallback nur noch für echte
+// Nicht-Tabellen greift.
 function tableText(nodes) {
-  const rows = findAll(nodes, "tr").concat(findAll(nodes, "TR"));
-  if (!rows.length) return textOf(nodes);
-  return rows
-    .map((row) => {
-      const cells = (row["tr"] || row["TR"] || []);
-      const cols = findAll(cells, "td")
-        .concat(findAll(cells, "TD"))
-        .concat(findAll(cells, "th"))
-        .concat(findAll(cells, "TH"));
-      return cols.map((c) => textOf(children(c)).trim()).join(" | ");
+  const zeilen = [
+    ...findAll(nodes, "tr"),   ...findAll(nodes, "TR"),
+    ...findAll(nodes, "row"),  ...findAll(nodes, "ROW"),
+  ];
+  if (!zeilen.length) return textOf(nodes);
+  return zeilen
+    .map((zeile) => {
+      const inhalt = children(zeile);
+      const zellen = [
+        ...findAll(inhalt, "td"),    ...findAll(inhalt, "TD"),
+        ...findAll(inhalt, "th"),    ...findAll(inhalt, "TH"),
+        ...findAll(inhalt, "entry"), ...findAll(inhalt, "ENTRY"),
+      ];
+      // Zeilenumbrüche innerhalb einer Zelle zu Leerzeichen: Sonst ist "\n" mal
+      // Zeilenwechsel der Tabelle und mal Umbruch im Zellinhalt, und die Zeilen-
+      // grenzen sind nicht mehr erkennbar ("Kilowattstunden\nje Liter\nSchweres Heizöl").
+      return zellen.map((z) => textOf(children(z)).replace(/\s+/g, " ").trim()).join(" | ");
     })
+    .filter((zeile) => zeile.replace(/\|/g, "").trim())
     .join("\n");
 }
 
@@ -290,11 +322,11 @@ function konstruiereParUrl(basis, enbez) {
 // BGB-Filterbereich
 // ---------------------------------------------------------------------------
 
-function inBgbRange(enbez, von, bis) {
+function inBereichen(enbez, bereiche) {
   const m = enbez.match(/^§\s*(\d+)/);
   if (!m) return false;
   const n = parseInt(m[1], 10);
-  return n >= von && n <= bis;
+  return bereiche.some(({ von, bis }) => n >= von && n <= bis);
 }
 
 // ---------------------------------------------------------------------------
@@ -441,7 +473,7 @@ async function verarbeiteGesetz(ziel, gesetzLink) {
     if (!enbez) continue;
 
     // BGB-Filter
-    if (filter && !inBgbRange(enbez, filter.von, filter.bis)) continue;
+    if (filter && !inBereichen(enbez, filter)) continue;
 
     // Nur Normen mit §-Bezeichnung (keine Einleitungsnormen ohne §)
     if (!enbez.match(/^§/)) continue;
@@ -478,9 +510,27 @@ async function verarbeiteGesetz(ziel, gesetzLink) {
 
   console.log(`  ${eintraege.length} Paragraphen gefunden.`);
 
-  await pruefeLinks(eintraege, id, basis, gesetzLink);
+  // Paragraphen ohne Text nicht ausliefern. Manche Normen sind in der Quelle nur
+  // noch leere Hüllen (<Content><P/></Content>), z.B. HeizkostenV § 13 Berlin-Klausel
+  // und § 14 Inkrafttreten. Aufgenommen sähen sie im Assistenten-Kontext aus wie
+  // gültige Fundstellen – mit echtem Titel und echtem Quell-Link, aber ohne Inhalt –
+  // und belegten einen der wenigen Kontext-Plätze. Nicht still verwerfen: Jeder
+  // übersprungene Paragraph steht namentlich im Prüfbericht.
+  const mitText = [];
+  for (const e of eintraege) {
+    if (!e.text || !e.text.trim()) {
+      UEBERSPRUNGEN.push({ gesetz: id, paragraph: e.paragraph, titel: e.titel, quelle: e._parUrl || gesetzLink });
+    } else {
+      mitText.push(e);
+    }
+  }
+  if (mitText.length !== eintraege.length) {
+    console.log(`  ${eintraege.length - mitText.length} ohne Text in der Quelle – übersprungen (siehe Prüfbericht).`);
+  }
 
-  return eintraege;
+  await pruefeLinks(mitText, id, basis, gesetzLink);
+
+  return mitText;
 }
 
 // ---------------------------------------------------------------------------
@@ -499,7 +549,9 @@ function wendeThemenMappingAn(alle, mappingPfad) {
   const warnungen = [];
 
   for (const [id, eintrag] of Object.entries(mapping)) {
-    if (id === "_hinweis") continue;
+    // Alle Schlüssel mit führendem "_" sind Kommentar-/Metafelder, keine Paragraphen-IDs.
+    // Ohne diese Regel würde ein zusätzlicher Kommentarschlüssel als fehlende ID gemeldet.
+    if (id.startsWith("_")) continue;
 
     const ziel = byId.get(id);
     if (!ziel) {
@@ -584,6 +636,16 @@ async function main() {
   console.log("\n\n========== PRÜFBERICHT ==========");
   for (const ziel of ZIEL_GESETZE) {
     druckeBerichtFuerGesetz(ziel.id, alle.filter((e) => e.gesetz === ziel.id));
+  }
+
+  console.log("\n--- Übersprungene Paragraphen (in der Quelle ohne Text) ---");
+  if (UEBERSPRUNGEN.length) {
+    for (const u of UEBERSPRUNGEN) {
+      console.log(`  - ${u.gesetz} ${u.paragraph} "${u.titel}" → ${u.quelle}`);
+    }
+    console.log(`  ${UEBERSPRUNGEN.length} Paragraph(en) nicht in gesetze.json aufgenommen.`);
+  } else {
+    console.log("  Keine.");
   }
 
   console.log("\n--- Stichproben-Texte ---");

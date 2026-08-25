@@ -12,6 +12,8 @@
     "fast-xml-parser": "^5.0.0"
   },
   "scripts": {
-    "import-gesetze": "node scripts/import-gesetze.js"
+    "import-gesetze": "node scripts/import-gesetze.js",
+    "pruefe-wissensbasis": "node scripts/pruefe-wissensbasis.js",
+    "pruefe-wissensbasis:negativkontrolle": "node scripts/pruefe-wissensbasis-negativkontrolle.js"
   }
 }

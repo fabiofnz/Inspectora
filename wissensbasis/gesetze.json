@@ -419,8 +419,7 @@
       "verwalter abberufen",
       "verwaltervertrag",
       "verwalterwechsel",
-      "amtszeit verwalter",
-      "zertifizierter verwalter"
+      "amtszeit verwalter"
     ],
     "stand": "Neugefasst durch Bek. v. 12.1.2021 I 34;",
     "quelle": "https://www.gesetze-im-internet.de/woeigg/__26.html",
@@ -433,7 +432,12 @@
     "paragraph": "§ 26a",
     "titel": "Zertifizierter Verwalter",
     "text": "(1) Als zertifizierter Verwalter darf sich bezeichnen, wer vor einer Industrie- und Handelskammer durch eine Prüfung nachgewiesen hat, dass er über die für die Tätigkeit als Verwalter notwendigen rechtlichen, kaufmännischen und technischen Kenntnisse verfügt.\n\n(2) Das Bundesministerium der Justiz wird ermächtigt, durch Rechtsverordnung nähere Bestimmungen über die Prüfung zum zertifizierten Verwalter zu erlassen. In der Rechtsverordnung nach Satz 1 können insbesondere festgelegt werden:\n1. nähere Bestimmungen zu Inhalt und Verfahren der Prüfung;\n2. Bestimmungen über das zu erteilende Zertifikat;\n3. Voraussetzungen, unter denen sich juristische Personen und Personengesellschaften als zertifizierte Verwalter bezeichnen dürfen;\n4. Bestimmungen, wonach Personen aufgrund anderweitiger Qualifikationen von der Prüfung befreit sind, insbesondere weil sie die Befähigung zum Richteramt, einen Hochschulabschluss mit immobilienwirtschaftlichem Schwerpunkt, eine abgeschlossene Berufsausbildung zum Immobilienkaufmann oder zur Immobilienkauffrau oder einen vergleichbaren Berufsabschluss besitzen.",
-    "themen": [],
+    "themen": [
+      "zertifizierter verwalter",
+      "verwalter zertifizierung",
+      "prüfung verwalter",
+      "befreiung von der prüfung"
+    ],
     "stand": "Neugefasst durch Bek. v. 12.1.2021 I 34;",
     "quelle": "https://www.gesetze-im-internet.de/woeigg/__26a.html",
     "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
@@ -669,10 +673,8 @@
     "text": "(1) Das Gericht kann auf Klage eines Wohnungseigentümers einen Beschluss für ungültig erklären (Anfechtungsklage) oder seine Nichtigkeit feststellen (Nichtigkeitsklage). Unterbleibt eine notwendige Beschlussfassung, kann das Gericht auf Klage eines Wohnungseigentümers den Beschluss fassen (Beschlussersetzungsklage).\n\n(2) Die Klagen sind gegen die Gemeinschaft der Wohnungseigentümer zu richten. Der Verwalter hat den Wohnungseigentümern die Erhebung einer Klage unverzüglich bekannt zu machen. Mehrere Prozesse sind zur gleichzeitigen Verhandlung und Entscheidung zu verbinden.\n\n(3) Das Urteil wirkt für und gegen alle Wohnungseigentümer, auch wenn sie nicht Partei sind.\n\n(4) Die durch eine Nebenintervention verursachten Kosten gelten nur dann als notwendig zur zweckentsprechenden Rechtsverteidigung im Sinne des § 91 der Zivilprozessordnung, wenn die Nebenintervention geboten war.",
     "themen": [
       "beschlussanfechtung",
-      "anfechtungsfrist",
       "beschluss anfechten",
-      "beschlussklage",
-      "monatsfrist anfechtung"
+      "beschlussklage"
     ],
     "stand": "Neugefasst durch Bek. v. 12.1.2021 I 34;",
     "quelle": "https://www.gesetze-im-internet.de/woeigg/__44.html",
@@ -685,7 +687,13 @@
     "paragraph": "§ 45",
     "titel": "Fristen der Anfechtungsklage",
     "text": "Die Anfechtungsklage muss innerhalb eines Monats nach der Beschlussfassung erhoben und innerhalb zweier Monate nach der Beschlussfassung begründet werden. Die §§ 233 bis 238 der Zivilprozessordnung gelten entsprechend.",
-    "themen": [],
+    "themen": [
+      "anfechtungsfrist",
+      "monatsfrist anfechtung",
+      "frist beschlussanfechtung",
+      "begründungsfrist anfechtung",
+      "zwei monate begründung"
+    ],
     "stand": "Neugefasst durch Bek. v. 12.1.2021 I 34;",
     "quelle": "https://www.gesetze-im-internet.de/woeigg/__45.html",
     "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
@@ -736,6 +744,123 @@
     "themen": [],
     "stand": "Neugefasst durch Bek. v. 12.1.2021 I 34;",
     "quelle": "https://www.gesetze-im-internet.de/woeigg/__49.html",
+    "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
+  },
+  {
+    "id": "bgb-187",
+    "gesetz": "BGB",
+    "gesetz_lang": "Bürgerliches Gesetzbuch",
+    "paragraph": "§ 187",
+    "titel": "Fristbeginn",
+    "text": "(1) Ist für den Anfang einer Frist ein Ereignis oder ein in den Lauf eines Tages fallender Zeitpunkt maßgebend, so wird bei der Berechnung der Frist der Tag nicht mitgerechnet, in welchen das Ereignis oder der Zeitpunkt fällt.\n\n(2) Ist der Beginn eines Tages der für den Anfang einer Frist maßgebende Zeitpunkt, so wird dieser Tag bei der Berechnung der Frist mitgerechnet. Das Gleiche gilt von dem Tage der Geburt bei der Berechnung des Lebensalters.",
+    "themen": [
+      "fristbeginn",
+      "wann beginnt die frist",
+      "fristberechnung",
+      "tag des ereignisses nicht mitgerechnet"
+    ],
+    "stand": "Neugefasst durch Bek. v. 2.1.2002 I 42, 2909; 2003, 738;",
+    "quelle": "https://www.gesetze-im-internet.de/bgb/__187.html",
+    "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
+  },
+  {
+    "id": "bgb-188",
+    "gesetz": "BGB",
+    "gesetz_lang": "Bürgerliches Gesetzbuch",
+    "paragraph": "§ 188",
+    "titel": "Fristende",
+    "text": "(1) Eine nach Tagen bestimmte Frist endigt mit dem Ablauf des letzten Tages der Frist.\n\n(2) Eine Frist, die nach Wochen, nach Monaten oder nach einem mehrere Monate umfassenden Zeitraum - Jahr, halbes Jahr, Vierteljahr - bestimmt ist, endigt im Falle des § 187 Abs. 1 mit dem Ablauf desjenigen Tages der letzten Woche oder des letzten Monats, welcher durch seine Benennung oder seine Zahl dem Tage entspricht, in den das Ereignis oder der Zeitpunkt fällt, im Falle des § 187 Abs. 2 mit dem Ablauf desjenigen Tages der letzten Woche oder des letzten Monats, welcher dem Tage vorhergeht, der durch seine Benennung oder seine Zahl dem Anfangstag der Frist entspricht.\n\n(3) Fehlt bei einer nach Monaten bestimmten Frist in dem letzten Monat der für ihren Ablauf maßgebende Tag, so endigt die Frist mit dem Ablauf des letzten Tages dieses Monats.",
+    "themen": [
+      "fristende",
+      "wann endet die frist",
+      "frist nach monaten",
+      "frist nach wochen"
+    ],
+    "stand": "Neugefasst durch Bek. v. 2.1.2002 I 42, 2909; 2003, 738;",
+    "quelle": "https://www.gesetze-im-internet.de/bgb/__188.html",
+    "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
+  },
+  {
+    "id": "bgb-189",
+    "gesetz": "BGB",
+    "gesetz_lang": "Bürgerliches Gesetzbuch",
+    "paragraph": "§ 189",
+    "titel": "Berechnung einzelner Fristen",
+    "text": "(1) Unter einem halben Jahr wird eine Frist von sechs Monaten, unter einem Vierteljahr eine Frist von drei Monaten, unter einem halben Monat eine Frist von 15 Tagen verstanden.\n\n(2) Ist eine Frist auf einen oder mehrere ganze Monate und einen halben Monat gestellt, so sind die 15 Tage zuletzt zu zählen.",
+    "themen": [
+      "halbes jahr frist",
+      "vierteljahr frist",
+      "halber monat",
+      "15 tage"
+    ],
+    "stand": "Neugefasst durch Bek. v. 2.1.2002 I 42, 2909; 2003, 738;",
+    "quelle": "https://www.gesetze-im-internet.de/bgb/__189.html",
+    "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
+  },
+  {
+    "id": "bgb-190",
+    "gesetz": "BGB",
+    "gesetz_lang": "Bürgerliches Gesetzbuch",
+    "paragraph": "§ 190",
+    "titel": "Fristverlängerung",
+    "text": "Im Falle der Verlängerung einer Frist wird die neue Frist von dem Ablauf der vorigen Frist an berechnet.",
+    "themen": [
+      "fristverlängerung",
+      "verlängerte frist berechnen"
+    ],
+    "stand": "Neugefasst durch Bek. v. 2.1.2002 I 42, 2909; 2003, 738;",
+    "quelle": "https://www.gesetze-im-internet.de/bgb/__190.html",
+    "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
+  },
+  {
+    "id": "bgb-191",
+    "gesetz": "BGB",
+    "gesetz_lang": "Bürgerliches Gesetzbuch",
+    "paragraph": "§ 191",
+    "titel": "Berechnung von Zeiträumen",
+    "text": "Ist ein Zeitraum nach Monaten oder nach Jahren in dem Sinne bestimmt, dass er nicht zusammenhängend zu verlaufen braucht, so wird der Monat zu 30, das Jahr zu 365 Tagen gerechnet.",
+    "themen": [
+      "monat zu 30 tagen",
+      "jahr zu 365 tagen",
+      "zeitraum berechnen"
+    ],
+    "stand": "Neugefasst durch Bek. v. 2.1.2002 I 42, 2909; 2003, 738;",
+    "quelle": "https://www.gesetze-im-internet.de/bgb/__191.html",
+    "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
+  },
+  {
+    "id": "bgb-192",
+    "gesetz": "BGB",
+    "gesetz_lang": "Bürgerliches Gesetzbuch",
+    "paragraph": "§ 192",
+    "titel": "Anfang, Mitte, Ende des Monats",
+    "text": "Unter Anfang des Monats wird der erste, unter Mitte des Monats der 15., unter Ende des Monats der letzte Tag des Monats verstanden.",
+    "themen": [
+      "anfang des monats",
+      "mitte des monats",
+      "ende des monats"
+    ],
+    "stand": "Neugefasst durch Bek. v. 2.1.2002 I 42, 2909; 2003, 738;",
+    "quelle": "https://www.gesetze-im-internet.de/bgb/__192.html",
+    "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
+  },
+  {
+    "id": "bgb-193",
+    "gesetz": "BGB",
+    "gesetz_lang": "Bürgerliches Gesetzbuch",
+    "paragraph": "§ 193",
+    "titel": "Sonn- und Feiertag; Sonnabend",
+    "text": "Ist an einem bestimmten Tage oder innerhalb einer Frist eine Willenserklärung abzugeben oder eine Leistung zu bewirken und fällt der bestimmte Tag oder der letzte Tag der Frist auf einen Sonntag, einen am Erklärungs- oder Leistungsort staatlich anerkannten allgemeinen Feiertag oder einen Sonnabend, so tritt an die Stelle eines solchen Tages der nächste Werktag.",
+    "themen": [
+      "werktag",
+      "nächster werktag",
+      "frist fällt auf samstag",
+      "frist fällt auf sonntag",
+      "frist fällt auf feiertag",
+      "sonnabend"
+    ],
+    "stand": "Neugefasst durch Bek. v. 2.1.2002 I 42, 2909; 2003, 738;",
+    "quelle": "https://www.gesetze-im-internet.de/bgb/__193.html",
     "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
   },
   {
@@ -1158,7 +1283,7 @@
     "gesetz_lang": "Bürgerliches Gesetzbuch",
     "paragraph": "§ 555b",
     "titel": "Modernisierungsmaßnahmen",
-    "text": "Modernisierungsmaßnahmen sind bauliche Veränderungen,\n1. durch die in Bezug auf die Mietsache Endenergie nachhaltig eingespart wird (energetische Modernisierung),\n1a. durch die mittels Einbaus oder Aufstellung einer Heizungsanlage zum Zwecke der Inbetriebnahme in einem Gebäude die Anforderungen des § 71 des Gebäudeenergiegesetzes erfüllt werden,\n2. durch die nicht erneuerbare Primärenergie nachhaltig eingespart oder das Klima nachhaltig geschützt wird, sofern nicht bereits eine energetische Modernisierung nach Nummer 1 vorliegt,\n3. durch die der Wasserverbrauch nachhaltig reduziert wird,\n4. durch die der Gebrauchswert der Mietsache nachhaltig erhöht wird,\n4a. durch die die Mietsache erstmalig mittels Glasfaser an ein öffentliches Netz mit sehr hoher Kapazität im Sinne des § 3 Nummer 33 des Telekommunikationsgesetzes angeschlossen wird,\n5. durch die die allgemeinen Wohnverhältnisse auf Dauer verbessert werden,\n6. die auf Grund von Umständen durchgeführt werden, die der Vermieter nicht zu vertreten hat, und die keine Erhaltungsmaßnahmen nach § 555a sind, oder\n7. durch die neuer Wohnraum geschaffen wird.",
+    "text": "Modernisierungsmaßnahmen sind bauliche Veränderungen,\n1. durch die in Bezug auf die Mietsache Endenergie nachhaltig eingespart wird (energetische Modernisierung),\n1a. durch die eine Heizungsanlage im Sinne des § 42 des Gebäudemodernisierungsgesetzes vom 8. August 2020 (BGBl. I S. 1728), das zuletzt durch Artikel 4 des Gesetzes vom 23. Juli 2026 (BGBl. 2026 I Nr. 226) geändert worden ist, in der jeweils geltenden Fassung, eingebaut oder aufgestellt wird,\n2. durch die nicht erneuerbare Primärenergie nachhaltig eingespart oder das Klima nachhaltig geschützt wird, sofern nicht bereits eine energetische Modernisierung nach Nummer 1 vorliegt,\n3. durch die der Wasserverbrauch nachhaltig reduziert wird,\n4. durch die der Gebrauchswert der Mietsache nachhaltig erhöht wird,\n4a. durch die die Mietsache erstmalig mittels Glasfaser an ein öffentliches Netz mit sehr hoher Kapazität im Sinne des § 3 Nummer 33 des Telekommunikationsgesetzes angeschlossen wird,\n5. durch die die allgemeinen Wohnverhältnisse auf Dauer verbessert werden,\n6. die auf Grund von Umständen durchgeführt werden, die der Vermieter nicht zu vertreten hat, und die keine Erhaltungsmaßnahmen nach § 555a sind, oder\n7. durch die neuer Wohnraum geschaffen wird.",
     "themen": [
       "modernisierung definition",
       "energetische modernisierung",
@@ -1580,10 +1705,29 @@
     "gesetz_lang": "Bürgerliches Gesetzbuch",
     "paragraph": "§ 559e",
     "titel": "Mieterhöhung nach Einbau oder Aufstellung einer Heizungsanlage",
-    "text": "(1) Hat der Vermieter Modernisierungsmaßnahmen nach § 555b Nummer 1a durchgeführt, welche die Voraussetzungen für Zuschüsse aus öffentlichen Haushalten dem Grunde nach erfüllen, und dabei Drittmittel nach § 559a in Anspruch genommen, so kann er die jährliche Miete um 10 Prozent der für die Wohnung aufgewendeten Kosten abzüglich der in Anspruch genommenen Drittmittel erhöhen. Wenn eine Förderung nicht erfolgt, obwohl die Voraussetzungen für eine Förderung dem Grunde nach erfüllt sind, kann der Vermieter die jährliche Miete nach Maßgabe des § 559 erhöhen.\n\n(2) § 559 Absatz 2 Satz 1 ist mit der Maßgabe anwendbar, dass Kosten, die für Erhaltungsmaßnahmen erforderlich gewesen wären, pauschal in Höhe von 15 Prozent nicht zu den aufgewendeten Kosten gehören.\n\n(3) § 559 Absatz 3a Satz 1 ist mit der Maßgabe anwendbar, dass sich im Hinblick auf eine Modernisierungsmaßnahme nach § 555b Nummer 1a die monatliche Miete um nicht mehr als 0,50 Euro je Quadratmeter Wohnfläche innerhalb von sechs Jahren erhöhen darf. Ist der Vermieter daneben zu Mieterhöhungen nach § 559 Absatz 1 berechtigt, so dürfen die in § 559 Absatz 3a Satz 1 und 2 genannten Grenzen nicht überschritten werden.\n\n(4) § 559 Absatz 3, 4 und 5 sowie die §§ 559b bis 559d gelten entsprechend.\n\n(5) Eine zum Nachteil des Mieters abweichende Vereinbarung ist unwirksam.",
+    "text": "(1) Hat der Vermieter Modernisierungsmaßnahmen nach § 555b Nummer 1a durchgeführt, welche die Voraussetzungen für Zuschüsse aus öffentlichen Haushalten dem Grunde nach erfüllen, und dabei Drittmittel nach § 559a in Anspruch genommen, so kann er die jährliche Miete um 10 Prozent der für die Wohnung aufgewendeten Kosten abzüglich der in Anspruch genommenen Drittmittel erhöhen. Wenn eine Förderung nicht erfolgt, obwohl die Voraussetzungen für eine Förderung dem Grunde nach erfüllt sind, kann der Vermieter die jährliche Miete nach Maßgabe des § 559 erhöhen.\n\n(2) § 559 Absatz 2 Satz 1 ist mit der Maßgabe anwendbar, dass Kosten, die für Erhaltungsmaßnahmen erforderlich gewesen wären, pauschal in Höhe von 15 Prozent nicht zu den aufgewendeten Kosten gehören. Dies gilt nicht, soweit Kosten durch den Einbau einer Heizungsanlage im Sinne des § 43 des Gebäudemodernisierungsgesetzes entstanden sind.\n\n(3) § 559 Absatz 3a Satz 1 ist mit der Maßgabe anwendbar, dass sich im Hinblick auf eine Modernisierungsmaßnahme nach § 555b Nummer 1a die monatliche Miete um nicht mehr als 0,50 Euro je Quadratmeter Wohnfläche innerhalb von sechs Jahren erhöhen darf. Ist der Vermieter daneben zu Mieterhöhungen nach § 559 Absatz 1 berechtigt, so dürfen die in § 559 Absatz 3a Satz 1 und 2 genannten Grenzen nicht überschritten werden.\n\n(4) § 559 Absatz 3, 4 und 5 sowie die §§ 559b bis 559d gelten entsprechend.\n\n(5) Eine zum Nachteil des Mieters abweichende Vereinbarung ist unwirksam.",
     "themen": [],
     "stand": "Neugefasst durch Bek. v. 2.1.2002 I 42, 2909; 2003, 738;",
     "quelle": "https://www.gesetze-im-internet.de/bgb/__559e.html",
+    "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
+  },
+  {
+    "id": "bgb-559f",
+    "gesetz": "BGB",
+    "gesetz_lang": "Bürgerliches Gesetzbuch",
+    "paragraph": "§ 559f",
+    "titel": "Mieterhöhung nach Einbau oder Aufstellung einer Wärmepumpe",
+    "text": "(1) Der Vermieter kann beim Einbau oder bei der Aufstellung einer Wärmepumpe eine Mieterhöhung aufgrund einer Modernisierungsmaßnahme nach § 559 Absatz 1 oder § 559e Absatz 1 in voller Höhe nur verlangen, wenn er den Nachweis erbracht hat, dass die Jahresarbeitszahl der Wärmepumpe bei mindestens 2,5 liegt. Dieser Nachweis ist nicht erforderlich, wenn das Gebäude\n1. nach 1996 errichtet worden ist,\n2. mindestens nach den Vorgaben der Wärmeschutzverordnung vom 16. August 1994 (BGBl. I S. 2121) in der bis zum Ablauf des 31. Januar 2002 geltenden Fassung erbaut worden ist oder der Gebäudeeigentümer nachweist, dass der Jahres-Heizwärmebedarf die Anforderungen nach der Wärmeschutzverordnung vom 16. August 1994 (BGBl. I S. 2121) in der bis zum Ablauf des 31. Januar 2002 geltenden Fassung nicht überschreitet,\n3. nach einer Sanierung mindestens den Anforderungen des § 38 des Gebäudemodernisierungsgesetzes entspricht oder\n4. mit einer Vorlauftemperatur beheizt werden kann, die nicht mehr als 55 Grad Celsius bei lokaler Norm-Außentemperatur beträgt.\n\nDer Nachweis nach Satz 1 muss von einem Fachunternehmer erbracht werden. Die Ermittlung der Jahresarbeitszahl erfolgt auf der Grundlage der Richtlinie VDI 4650 Blatt 1 Berichtigung 2024-08 oder eines vergleichbaren Verfahrens in der Regel vor der Inbetriebnahme der Anlage und nicht anhand von den Werten im Betrieb.\n\n(2) Sofern der Nachweis nach Absatz 1 Satz 1 nicht erbracht wird, kann der Vermieter für eine Mieterhöhung nach § 559 Absatz 1 oder § 559e Absatz 1 nur die Hälfte der für die Wohnung aufgewendeten Kosten zugrunde legen.",
+    "themen": [
+      "wärmepumpe mieterhöhung",
+      "jahresarbeitszahl",
+      "jahresarbeitszahl 2,5",
+      "vorlauftemperatur",
+      "nachweis fachunternehmer",
+      "hälfte der aufgewendeten kosten"
+    ],
+    "stand": "Neugefasst durch Bek. v. 2.1.2002 I 42, 2909; 2003, 738;",
+    "quelle": "https://www.gesetze-im-internet.de/bgb/__559f.html",
     "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
   },
   {
@@ -1979,7 +2123,9 @@
       "kündigungsfrist",
       "drei monate kündigung",
       "verlängerte kündigungsfrist",
-      "fünf jahre neun monate"
+      "nach fünf jahren",
+      "nach acht jahren",
+      "jeweils drei monate"
     ],
     "stand": "Neugefasst durch Bek. v. 2.1.2002 I 42, 2909; 2003, 738;",
     "quelle": "https://www.gesetze-im-internet.de/bgb/__573c.html",
@@ -2415,7 +2561,7 @@
     "gesetz_lang": "Heizkostenverordnung",
     "paragraph": "§ 9",
     "titel": "Verteilung der Kosten der Versorgung mit Wärme und Warmwasser bei verbundenen Anlagen",
-    "text": "(1) Ist die zentrale Anlage zur Versorgung mit Wärme mit der zentralen Warmwasserversorgungsanlage verbunden, so sind die einheitlich entstandenen Kosten des Betriebs aufzuteilen. Die Anteile an den einheitlich entstandenen Kosten sind bei Anlagen mit Heizkesseln nach den Anteilen am Brennstoffverbrauch oder am Energieverbrauch, bei Wärmepumpen oder und bei eigenständiger gewerblicher Wärmelieferung nach den Anteilen am Wärmeverbrauch zu bestimmen. Kosten, die nicht einheitlich entstanden sind, sind dem Anteil an den einheitlich entstandenen Kosten hinzuzurechnen. Der Anteil der zentralen Anlage zur Versorgung mit Wärme ergibt sich aus dem gesamten Verbrauch nach Abzug des Verbrauchs der zentralen Warmwasserversorgungsanlage. Bei Anlagen, die nicht ausschließlich durch Heizkessel, durch Wärmepumpen oder durch eigenständige gewerbliche Wärmelieferung mit Wärme versorgt werden, können anerkannte Regeln der Technik zur Aufteilung der Kosten verwendet werden. Der Anteil der zentralen Warmwasserversorgungsanlage am Wärmeverbrauch ist nach Absatz 2, der Anteil am Brennstoffverbrauch nach Absatz 3 zu ermitteln.\n\n(2) Die auf die zentrale Warmwasserversorgungsanlage entfallende Wärmemenge (Q) ist mit einem Wärmezähler zu messen. Kann die Wärmemenge nur mit einem unzumutbar hohen Aufwand gemessen werden, kann sie nach folgender Zahlenwertgleichung als Ergebnis in Kilowattstunden pro Jahr bestimmt werden:\nQ = 2,5 x V x (tw-10).\nDabei sind zu Grunde zu legen:\n1. der Wert 2,5 für die Erzeugeraufwandszahl des Wärmeerzeugers, die mittlere spezifische Wärmekapazität des Wassers, die Wärmeverluste für Warmwasserspeicher, Verteilung einschließlich Zirkulation, Messdatenerhebungen zum Warmwasserverbrauch,\n2. das gemessene Volumen des verbrauchten Warmwassers (V) in Kubikmetern,\n3. die gemessene oder geschätzte mittlere Temperatur des Warmwassers (tw) in Grad Celsius und\n4. der Wert 10 für die übliche Kaltwassereintrittstemperatur in die Warmwasserversorgungsanlage in Grad Celsius.\n\nWenn in Ausnahmefällen weder die Wärmemenge noch das Volumen des verbrauchten Warmwassers gemessen werden können, kann die Wärmemenge, die auf die zentrale Warmwasserversorgungsanlage entfällt, nach folgender Zahlenwertgleichung als Ergebnis in Kilowattstunden pro Jahr bestimmt werden:\nQ = 32 x AWohn.\nDabei sind zu Grunde zu legen:\n1. der Wert 32 für den Nutzwärmebedarf für Warmwasser, die Erzeugeraufwandszahl des Wärmeerzeugers, Messdatenerhebungen zum Warmwasserverbrauch und\n2. die durch die zentrale Anlage mit Warmwasser versorgte Wohn- oder Nutzfläche (AWohn) in Quadratmeter.\n\nDie nach den Zahlenwertgleichungen in Satz 2 oder 4 bestimmte Wärmemenge (Q) ist\n1. bei brennwertbezogener Abrechnung von Erdgas mit 1,11 zu multiplizieren,\n2. bei eigenständiger gewerblicher Wärmelieferung durch 1,15 zu dividieren und\n3. bei dem Betrieb einer monovalenten Wärmepumpe mit 0,30 zu multiplizieren.\n\n(3) Bei Anlagen mit Heizkesseln ist der Brennstoffverbrauch der zentralen Warmwasserversorgungsanlage (B) in Litern, Kubikmetern oder Kilogramm nach folgender Gleichung zu bestimmen:\n\n.\n\nDabei sind zu Grunde zu legen\n1. die auf die zentrale Warmwasserversorgungsanlage entfallende Wärmemenge (Q) nach Absatz 2 in kWh;\n2. der Heizwert des verbrauchten Brennstoffes (Hi) in Kilowattstunden je Liter, Kubikmeter oder Kilogramm.\n\nAls Heizwerte nach Satz 2 Nummer 2 sind die in den Abrechnungsunterlagen des Energieversorgungsunternehmens oder Brennstofflieferanten angegebenen Heizwerte zu verwenden. Wenn diese vom Energieversorgungsunternehmen oder Brennstofflieferanten nicht angegeben werden, können hilfsweise folgende Werte verwendet werden:\n\nHeiz-\nwert HiEinheitLeichtes Heizöl\nextra leichtflüssig10Kilowattstunden\nje LiterSchweres Heizöl10,9Kilowattstunden\nje LiterErdgas H10Kilowattstunden\nje KubikmeterErdgas L9Kilowattstunden\nje KubikmeterFlüssiggas13Kilowattstunden\nje KilogrammKoks8Kilowattstunden\nje KilogrammBraunkohle5,5Kilowattstunden\nje KilogrammSteinkohle8Kilowattstunden\nje KilogrammBrennholz\n(lufttrocken)4,1Kilowattstunden\nje KilogrammHolzpellets5Kilowattstunden\nje KilogrammHolzhackschnitzel\n(lufttrocken)4Kilowattstunden\nje Kilogramm\n\nSoweit die Abrechnung über Kilowattstunden-Werte erfolgt, ist eine Umrechnung in Brennstoffverbrauch nicht erforderlich. Als Hi-Werte können verwendet werden für\nLeichtes Heizöl EL10kWh/lSchweres Heizöl10,9kWh/lErdgas H10kWh/m3Erdgas L9kWh/m3Flüssiggas13kWh/kgKoks8kWh/kgBraunkohle5,5kWh/kgSteinkohle8kWh/kgHolz (lufttrocken)4,1kWh/kgHolzpellets5kWh/kgHolzhackschnitzel650kWh/SRm.\n\nEnthalten die Abrechnungsunterlagen des Energieversorgungsunternehmens oder Brennstofflieferanten Hi-Werte, so sind diese zu verwenden. Soweit die Abrechnung über kWh-Werte erfolgt, ist eine Umrechnung in Brennstoffverbrauch nicht erforderlich.\n\n(4) Der Anteil an den Kosten der Versorgung mit Wärme ist nach § 7 Absatz 1, der Anteil an den Kosten der Versorgung mit Warmwasser nach § 8 Absatz 1 zu verteilen, soweit diese Verordnung nichts anderes bestimmt oder zulässt.",
+    "text": "(1) Ist die zentrale Anlage zur Versorgung mit Wärme mit der zentralen Warmwasserversorgungsanlage verbunden, so sind die einheitlich entstandenen Kosten des Betriebs aufzuteilen. Die Anteile an den einheitlich entstandenen Kosten sind bei Anlagen mit Heizkesseln nach den Anteilen am Brennstoffverbrauch oder am Energieverbrauch, bei Wärmepumpen oder und bei eigenständiger gewerblicher Wärmelieferung nach den Anteilen am Wärmeverbrauch zu bestimmen. Kosten, die nicht einheitlich entstanden sind, sind dem Anteil an den einheitlich entstandenen Kosten hinzuzurechnen. Der Anteil der zentralen Anlage zur Versorgung mit Wärme ergibt sich aus dem gesamten Verbrauch nach Abzug des Verbrauchs der zentralen Warmwasserversorgungsanlage. Bei Anlagen, die nicht ausschließlich durch Heizkessel, durch Wärmepumpen oder durch eigenständige gewerbliche Wärmelieferung mit Wärme versorgt werden, können anerkannte Regeln der Technik zur Aufteilung der Kosten verwendet werden. Der Anteil der zentralen Warmwasserversorgungsanlage am Wärmeverbrauch ist nach Absatz 2, der Anteil am Brennstoffverbrauch nach Absatz 3 zu ermitteln.\n\n(2) Die auf die zentrale Warmwasserversorgungsanlage entfallende Wärmemenge (Q) ist mit einem Wärmezähler zu messen. Kann die Wärmemenge nur mit einem unzumutbar hohen Aufwand gemessen werden, kann sie nach folgender Zahlenwertgleichung als Ergebnis in Kilowattstunden pro Jahr bestimmt werden:\nQ = 2,5 x V x (tw-10).\nDabei sind zu Grunde zu legen:\n1. der Wert 2,5 für die Erzeugeraufwandszahl des Wärmeerzeugers, die mittlere spezifische Wärmekapazität des Wassers, die Wärmeverluste für Warmwasserspeicher, Verteilung einschließlich Zirkulation, Messdatenerhebungen zum Warmwasserverbrauch,\n2. das gemessene Volumen des verbrauchten Warmwassers (V) in Kubikmetern,\n3. die gemessene oder geschätzte mittlere Temperatur des Warmwassers (tw) in Grad Celsius und\n4. der Wert 10 für die übliche Kaltwassereintrittstemperatur in die Warmwasserversorgungsanlage in Grad Celsius.\n\nWenn in Ausnahmefällen weder die Wärmemenge noch das Volumen des verbrauchten Warmwassers gemessen werden können, kann die Wärmemenge, die auf die zentrale Warmwasserversorgungsanlage entfällt, nach folgender Zahlenwertgleichung als Ergebnis in Kilowattstunden pro Jahr bestimmt werden:\nQ = 32 x AWohn.\nDabei sind zu Grunde zu legen:\n1. der Wert 32 für den Nutzwärmebedarf für Warmwasser, die Erzeugeraufwandszahl des Wärmeerzeugers, Messdatenerhebungen zum Warmwasserverbrauch und\n2. die durch die zentrale Anlage mit Warmwasser versorgte Wohn- oder Nutzfläche (AWohn) in Quadratmeter.\n\nDie nach den Zahlenwertgleichungen in Satz 2 oder 4 bestimmte Wärmemenge (Q) ist\n1. bei brennwertbezogener Abrechnung von Erdgas mit 1,11 zu multiplizieren,\n2. bei eigenständiger gewerblicher Wärmelieferung durch 1,15 zu dividieren und\n3. bei dem Betrieb einer monovalenten Wärmepumpe mit 0,30 zu multiplizieren.\n\n(3) Bei Anlagen mit Heizkesseln ist der Brennstoffverbrauch der zentralen Warmwasserversorgungsanlage (B) in Litern, Kubikmetern oder Kilogramm nach folgender Gleichung zu bestimmen:\n\n[Grafik in der Quelle – nicht als Text verfügbar].\n\nDabei sind zu Grunde zu legen\n1. die auf die zentrale Warmwasserversorgungsanlage entfallende Wärmemenge (Q) nach Absatz 2 in kWh;\n2. der Heizwert des verbrauchten Brennstoffes (Hi) in Kilowattstunden je Liter, Kubikmeter oder Kilogramm.\n\nAls Heizwerte nach Satz 2 Nummer 2 sind die in den Abrechnungsunterlagen des Energieversorgungsunternehmens oder Brennstofflieferanten angegebenen Heizwerte zu verwenden. Wenn diese vom Energieversorgungsunternehmen oder Brennstofflieferanten nicht angegeben werden, können hilfsweise folgende Werte verwendet werden:\n\n | Heiz- wert Hi | Einheit\nLeichtes Heizöl extra leichtflüssig | 10 | Kilowattstunden je Liter\nSchweres Heizöl | 10,9 | Kilowattstunden je Liter\nErdgas H | 10 | Kilowattstunden je Kubikmeter\nErdgas L | 9 | Kilowattstunden je Kubikmeter\nFlüssiggas | 13 | Kilowattstunden je Kilogramm\nKoks | 8 | Kilowattstunden je Kilogramm\nBraunkohle | 5,5 | Kilowattstunden je Kilogramm\nSteinkohle | 8 | Kilowattstunden je Kilogramm\nBrennholz (lufttrocken) | 4,1 | Kilowattstunden je Kilogramm\nHolzpellets | 5 | Kilowattstunden je Kilogramm\nHolzhackschnitzel (lufttrocken) | 4 | Kilowattstunden je Kilogramm\n\nSoweit die Abrechnung über Kilowattstunden-Werte erfolgt, ist eine Umrechnung in Brennstoffverbrauch nicht erforderlich. Als Hi-Werte können verwendet werden für\nLeichtes Heizöl EL | 10 | kWh/l\nSchweres Heizöl | 10,9 | kWh/l\nErdgas H | 10 | kWh/m3\nErdgas L | 9 | kWh/m3\nFlüssiggas | 13 | kWh/kg\nKoks | 8 | kWh/kg\nBraunkohle | 5,5 | kWh/kg\nSteinkohle | 8 | kWh/kg\nHolz (lufttrocken) | 4,1 | kWh/kg\nHolzpellets | 5 | kWh/kg\nHolzhackschnitzel | 650 | kWh/SRm.\n\nEnthalten die Abrechnungsunterlagen des Energieversorgungsunternehmens oder Brennstofflieferanten Hi-Werte, so sind diese zu verwenden. Soweit die Abrechnung über kWh-Werte erfolgt, ist eine Umrechnung in Brennstoffverbrauch nicht erforderlich.\n\n(4) Der Anteil an den Kosten der Versorgung mit Wärme ist nach § 7 Absatz 1, der Anteil an den Kosten der Versorgung mit Warmwasser nach § 8 Absatz 1 zu verteilen, soweit diese Verordnung nichts anderes bestimmt oder zulässt.",
     "themen": [
       "verbundene anlage",
       "trennung heizung warmwasser",
@@ -2491,30 +2637,6 @@
     "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
   },
   {
-    "id": "heizkostenv-13",
-    "gesetz": "HeizkostenV",
-    "gesetz_lang": "Heizkostenverordnung",
-    "paragraph": "§ 13",
-    "titel": "(Berlin-Klausel)",
-    "text": "",
-    "themen": [],
-    "stand": "Neugefasst durch Bek. v. 5.10.2009 I 3250;",
-    "quelle": "https://www.gesetze-im-internet.de/heizkostenv/__13.html",
-    "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
-  },
-  {
-    "id": "heizkostenv-14",
-    "gesetz": "HeizkostenV",
-    "gesetz_lang": "Heizkostenverordnung",
-    "paragraph": "§ 14",
-    "titel": "(Inkrafttreten)",
-    "text": "",
-    "themen": [],
-    "stand": "Neugefasst durch Bek. v. 5.10.2009 I 3250;",
-    "quelle": "https://www.gesetze-im-internet.de/heizkostenv/__14.html",
-    "hinweis": "Konsolidierte Fassung, nicht die amtliche Fassung des BGBl."
-  },
-  {
     "id": "woflv-1",
     "gesetz": "WoFlV",
     "gesetz_lang": "Wohnflächenverordnung",
@@ -2536,8 +2658,7 @@
     "themen": [
       "wohnfläche berechnen",
       "was zählt zur wohnfläche",
-      "keller wohnfläche",
-      "dachschräge"
+      "keller wohnfläche"
     ],
     "stand": "",
     "quelle": "https://www.gesetze-im-internet.de/woflv/__2.html",
@@ -2568,7 +2689,9 @@
     "themen": [
       "balkon anrechnung",
       "terrasse wohnfläche",
-      "vierundzwanzig prozent",
+      "einem viertel",
+      "zur hälfte",
+      "dachschräge",
       "dachschräge anrechnung",
       "wintergarten"
     ],
