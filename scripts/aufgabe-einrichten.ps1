@@ -42,13 +42,51 @@ if ($Entfernen) {
 }
 
 if ($Status) {
-    if (-not (Vorhanden)) { Write-Host "Aufgabe '$AufgabeName' ist NICHT eingerichtet."; return }
+    if (-not (Vorhanden)) {
+        Write-Host "Aufgabe '$AufgabeName' ist NICHT eingerichtet."
+        Write-Host "Es wird nichts geprueft. Einrichten mit: scripts\aufgabe-einrichten.ps1"
+        return
+    }
     $a = Get-ScheduledTask -TaskName $AufgabeName
     $i = Get-ScheduledTaskInfo -TaskName $AufgabeName
     Write-Host "Aufgabe:        $AufgabeName"
     Write-Host "Zustand:        $($a.State)"
     Write-Host "Naechster Lauf: $($i.NextRunTime)"
-    Write-Host "Letzter Lauf:   $($i.LastRunTime)  Ergebnis: $($i.LastTaskResult)"
+    Write-Host "Letzter Start:  $($i.LastRunTime)  (Ergebnis des Planers: $($i.LastTaskResult))"
+    Write-Host ""
+
+    # Der Planer sagt nur, ob er das Skript gestartet hat. Was die Pruefung
+    # ergeben hat - und ob sie ueberhaupt durchlief - steht in der Statusdatei.
+    $statusDatei = Join-Path $env:LOCALAPPDATA "Inspectora\aktualitaet\letzter-lauf.json"
+    if (-not (Test-Path $statusDatei)) {
+        Write-Host "ERGEBNIS: Es liegt noch kein Lauf vor."
+        Write-Host "Bis zum ersten Lauf ist ueber die Aktualitaet der Wissensbasis nichts bekannt."
+        return
+    }
+
+    $s = Get-Content $statusDatei -Raw | ConvertFrom-Json
+    $alter = (Get-Date) - [datetime]$s.zeitpunkt
+    $tage = [math]::Round($alter.TotalDays, 1)
+
+    Write-Host ("Letzte Pruefung: {0:yyyy-MM-dd HH:mm}  (vor {1} Tagen)" -f [datetime]$s.zeitpunkt, $tage)
+    Write-Host "Ergebnis:        $($s.ergebnis)"
+    Write-Host "Protokoll:       $($s.protokoll)"
+    Write-Host ""
+
+    # Ein leerer Desktop allein sagt nichts. Erst das Alter des letzten Laufs
+    # trennt "sauber durchgelaufen" von "laeuft seit Wochen nicht mehr".
+    if ($alter.TotalDays -gt 10) {
+        Write-Host "URTEIL: UEBERFAELLIG - der letzte Lauf ist mehr als 10 Tage her."
+        Write-Host "Die Aufgabe feuert offenbar nicht. Pruefen: Zustand oben, Anmeldung"
+        Write-Host "am Montag, Aufgabe ggf. neu einrichten. Bis dahin ist NICHT bekannt,"
+        Write-Host "ob die Wissensbasis aktuell ist."
+    } elseif ($s.exitCode -eq 0) {
+        Write-Host "URTEIL: in Ordnung - zuletzt geprueft und deckungsgleich."
+    } elseif ($s.exitCode -eq 1) {
+        Write-Host "URTEIL: FUND offen - die Quelle hatte sich geaendert. Siehe Desktop-Datei."
+    } else {
+        Write-Host "URTEIL: letzte Pruefung lief nicht durch (kein Fund, nichts festgestellt)."
+    }
     Write-Host ""
     Write-Host "Exit-Codes: 0 = aktuell | 1 = Gesetzesaenderung (Fund) | 2 = Quelle nicht erreichbar (kein Fund)"
     return
@@ -63,12 +101,34 @@ if ($JetztAusfuehren) {
 
 if (-not (Test-Path $skript)) { throw "Nicht gefunden: $skript" }
 
-$aktion = New-ScheduledTaskAction -Execute "powershell.exe" `
-    -Argument ("-NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File `"{0}`"" -f $skript)
+$argBasis = "-NoProfile -NonInteractive -ExecutionPolicy Bypass -WindowStyle Hidden -File `"{0}`"" -f $skript
 
-# Montags 09:00. Bewusst nicht nachts: Der Rechner soll an sein, und ein Fund
-# soll gesehen werden, wenn jemand davorsitzt.
-$ausloeser = New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 9am
+# Zwei Ausloeser, zwei verschiedene Aufgaben:
+#
+# 1. Montags 09:00 - der eigentliche Termin. Bewusst nicht nachts: Der Rechner
+#    soll an sein, und ein Fund soll gesehen werden, wenn jemand davorsitzt.
+# 2. Bei der Anmeldung, aber mit -NurWennFaellig, also nur wenn seit dem letzten
+#    Lauf mehr als sechs Tage vergangen sind.
+#
+# Der zweite Ausloeser schliesst die Luecke "Rechner war am Montag aus". Zwar holt
+# StartWhenAvailable einen verpassten Termin nach, aber nur solange der Termin im
+# Zeitfenster des Planers liegt. Der Anmelde-Ausloeser macht daraus eine Pruefung,
+# die spaetestens beim naechsten Einschalten nachgeholt wird - und dank Drosselung
+# nicht bei jeder Anmeldung erneut laeuft.
+# Eine Aufgabe hat Ausloeser UND Aktionen, aber die Aktionen haengen nicht am
+# einzelnen Ausloeser - bei jedem Ausloeser laufen alle Aktionen. Deshalb laeuft
+# auch der Montagstermin mit -NurWennFaellig. Das passt: Die Drosselung greift bei
+# sechs Tagen, der Termin kommt alle sieben - der Montagslauf ist also immer faellig,
+# ausser es hat kurz vorher schon ein Anmeldelauf geprueft. Dann ist es ohnehin
+# frisch geprueft und ein zweiter Lauf waere reine Wiederholung.
+$aktion = New-ScheduledTaskAction -Execute "powershell.exe" -Argument ($argBasis + " -NurWennFaellig")
+
+$ausloeser = @(
+    (New-ScheduledTaskTrigger -Weekly -DaysOfWeek Monday -At 9am),
+    (New-ScheduledTaskTrigger -AtLogOn -User $env:USERNAME)
+)
+# Nach der Anmeldung kurz warten, damit Netz und Anmeldevorgang stehen.
+$ausloeser[1].Delay = "PT5M"
 
 $einstellungen = New-ScheduledTaskSettingsSet `
     -StartWhenAvailable `
@@ -76,6 +136,11 @@ $einstellungen = New-ScheduledTaskSettingsSet `
     -DontStopIfGoingOnBatteries `
     -ExecutionTimeLimit (New-TimeSpan -Minutes 15) `
     -MultipleInstances IgnoreNew
+
+# Leerlauf darf den Lauf weder ausloesen noch abbrechen: Die Pruefung soll
+# stattfinden, egal ob am Rechner gerade gearbeitet wird.
+$einstellungen.RunOnlyIfIdle = $false
+$einstellungen.IdleSettings.StopOnIdleEnd = $false
 
 Register-ScheduledTask -TaskName $AufgabeName `
     -Action $aktion -Trigger $ausloeser -Settings $einstellungen -Force `

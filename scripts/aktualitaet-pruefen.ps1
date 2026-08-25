@@ -25,20 +25,49 @@
 #>
 
 [CmdletBinding()]
-param()
+param(
+    # Nur laufen, wenn seit dem letzten Lauf mindestens $FaelligNachTagen vergangen
+    # sind. Der Anmelde-Ausloeser benutzt das: Er holt einen verpassten Montag nach,
+    # ohne bei jeder Anmeldung erneut zu pruefen.
+    [switch]$NurWennFaellig
+)
 
 $ErrorActionPreference = "Continue"
+
+$FaelligNachTagen = 6
 
 $repo    = Split-Path -Parent $PSScriptRoot
 $logDir  = Join-Path $env:LOCALAPPDATA "Inspectora\aktualitaet"
 $desktop = [Environment]::GetFolderPath("Desktop")
 
+# Wird bei JEDEM Lauf geschrieben, auch bei Erfolg, und nie geloescht.
+#
+# Grund: Ein erfolgreicher Lauf raeumt die Desktop-Markierungen weg. Ohne diese
+# Datei waere ein leerer Desktop mehrdeutig - "sauber durchgelaufen" und "seit
+# Wochen gar nicht gelaufen" saehen gleich aus. Genau die Verwechslung, gegen die
+# die ganze Pruefkette gebaut ist, nur eine Ebene hoeher: nicht "Fund gegen
+# Fehler", sondern "geprueft gegen ungeprueft".
+$statusDatei = Join-Path $logDir "letzter-lauf.json"
+
 $markeFund   = Join-Path $desktop "INSPECTORA - Gesetzesaenderung.txt"
 $markeFehler = Join-Path $desktop "INSPECTORA - Aktualitaetspruefung fehlgeschlagen.txt"
 
 if (-not (Test-Path $logDir)) { New-Item -ItemType Directory -Force -Path $logDir | Out-Null }
-$stamp = Get-Date -Format "yyyy-MM-dd_HH-mm"
+$stamp = Get-Date -Format "yyyy-MM-dd_HH-mm-ss"
 $log   = Join-Path $logDir "$stamp.log"
+
+if ($NurWennFaellig -and (Test-Path $statusDatei)) {
+    try {
+        $letzter = Get-Content $statusDatei -Raw | ConvertFrom-Json
+        $alter = (Get-Date) - [datetime]$letzter.zeitpunkt
+        if ($alter.TotalDays -lt $FaelligNachTagen) {
+            Write-Host ("Uebersprungen: letzter Lauf vor {0:N1} Tagen (faellig nach {1})." -f $alter.TotalDays, $FaelligNachTagen)
+            exit 0
+        }
+    } catch {
+        # Statusdatei unlesbar - dann lieber pruefen als ueberspringen.
+    }
+}
 
 Push-Location $repo
 try {
@@ -120,6 +149,22 @@ switch ($code) {
         ) | Out-File -FilePath $markeFehler -Encoding utf8
     }
 }
+
+$ergebnisText = switch ($code) {
+    0       { "aktuell - Bestand deckt sich mit der Quelle" }
+    1       { "FUND - die Quelle hat sich geaendert" }
+    2       { "FEHLER - Quelle nicht erreichbar, nichts festgestellt" }
+    default { "unerwarteter Exit-Code $code" }
+}
+
+# Immer schreiben, auch bei Erfolg. Diese Datei ist der Beleg, DASS geprueft wurde.
+[pscustomobject]@{
+    zeitpunkt  = (Get-Date).ToString("o")
+    exitCode   = $code
+    ergebnis   = $ergebnisText
+    protokoll  = $log
+    repo       = $repo
+} | ConvertTo-Json | Out-File -FilePath $statusDatei -Encoding utf8
 
 # Protokolle aelter als ein halbes Jahr aufraeumen.
 Get-ChildItem -Path $logDir -Filter "*.log" -ErrorAction SilentlyContinue |
