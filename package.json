@@ -15,6 +15,8 @@
     "import-gesetze": "node scripts/import-gesetze.js",
     "pruefe-wissensbasis": "node scripts/pruefe-wissensbasis.js",
     "pruefe-wissensbasis:negativkontrolle": "node scripts/pruefe-wissensbasis-negativkontrolle.js",
+    "pruefe-betriebskosten": "node scripts/pruefe-betriebskosten.js",
+    "pruefe-betriebskosten:negativkontrolle": "node scripts/pruefe-betriebskosten-negativkontrolle.js",
     "pruefe-aktualitaet": "node scripts/pruefe-aktualitaet.js",
     "pruefe-aktualitaet:negativkontrolle": "node scripts/pruefe-aktualitaet-negativkontrolle.js",
     "aktualitaet:status": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/aufgabe-einrichten.ps1 -Status"

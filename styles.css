@@ -1098,3 +1098,133 @@ main{padding-top:0}
   .assistant-intro h1{font-size:24px}
   .assistant-intro{margin-bottom:14px}
 }
+
+/* ==========================================================================
+   14 · Betriebskosten-Pruefer (betriebskosten-pruefer.html)
+   Teil A: Abrechnungsfrist nach § 556 Abs. 3 BGB.
+   Nutzt ausschliesslich die vorhandenen Variablen aus :root - keine neuen
+   Farbwerte. Die Zustandsfarben sind bewusst die gleichen wie ueberall sonst
+   auf der Seite (--success / --warning / --danger), damit "gewahrt" hier
+   dasselbe signalisiert wie in den anderen Werkzeugen.
+   ========================================================================== */
+
+/* Solange die Wissensbasis nicht geladen ist, ist der Knopf gesperrt. Ohne eigene
+   Regel saehe er trotzdem aus wie ein anklickbarer Knopf - ein Klick, der nichts
+   tut, wirkt fuer den Nutzer wie ein Fehler der Seite. Bewusst nur auf diesen
+   Knopf begrenzt, um das gemeinsame .button nicht seitenweit zu veraendern. */
+#bkSubmitButton:disabled,
+#bkSubmitButton:disabled:hover{
+  opacity:.45;cursor:not-allowed;box-shadow:none;transform:none;
+  background:linear-gradient(135deg,var(--primary) 0%,var(--violet) 100%);
+}
+
+.bk-karte{
+  margin-top:18px;padding:26px;
+  border:1px solid var(--line);border-radius:var(--radius-lg);
+  background:var(--surface);box-shadow:var(--shadow-sm);
+}
+.bk-karte>h2{font-size:19px;font-weight:800;letter-spacing:-.02em;color:var(--text)}
+.bk-karte>h2+p{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.6}
+
+.bk-grundlage{
+  display:inline-block;margin-top:10px;padding:3px 9px;
+  border:1px solid rgba(79,70,229,.22);border-radius:999px;
+  color:#4338CA;background:var(--primary-soft);
+  font-size:11px;font-weight:800;
+}
+
+/* Die beiden Fristenden stehen immer nebeneinander - nie eines allein.
+   Welches gilt, entscheidet dieses Werkzeug nicht. */
+.bk-daten{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
+.bk-datum-box{
+  padding:15px 16px;border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--surface-soft);
+}
+.bk-datum-box.ist-verschoben{border-color:rgba(217,119,6,.3);background:var(--warning-soft)}
+.bk-label{display:block;color:var(--muted);font-size:10px;font-weight:800;
+  letter-spacing:.06em;text-transform:uppercase}
+.bk-datum-wert{display:block;margin-top:7px;color:var(--text);font-size:19px;
+  font-weight:800;letter-spacing:-.02em}
+.bk-datum-box p{margin-top:7px;color:var(--muted);font-size:11px;line-height:1.6}
+
+.bk-verdikt{
+  display:flex;align-items:baseline;flex-wrap:wrap;gap:4px 8px;margin-top:18px;
+  padding:10px 14px;border-radius:var(--radius);
+  border:1px solid var(--line);background:var(--surface-soft);
+  font-size:13px;font-weight:800;color:var(--text);
+}
+.bk-verdikt.ist-gewahrt{border-color:rgba(5,150,105,.28);background:var(--success-soft);color:var(--success)}
+.bk-verdikt.ist-abhaengig{border-color:rgba(217,119,6,.28);background:var(--warning-soft);color:var(--warning)}
+.bk-verdikt.ist-versaeumt{border-color:rgba(220,38,38,.28);background:var(--danger-soft);color:var(--danger)}
+.bk-verdikt strong{white-space:nowrap}
+.bk-verdikt span{flex:1 1 260px;font-weight:600;color:var(--text)}
+
+.bk-schritte{margin-top:20px;list-style:none;counter-reset:bk-schritt}
+.bk-schritt{
+  counter-increment:bk-schritt;position:relative;
+  padding:0 0 0 16px;margin-top:14px;border-left:2px solid var(--line);
+}
+.bk-schritt strong{display:block;color:var(--text);font-size:12px;font-weight:800}
+.bk-schritt p{margin-top:4px;color:var(--muted);font-size:12px;line-height:1.65}
+
+.bk-quelle{
+  display:inline-block;margin-top:5px;
+  color:var(--primary);font-size:11px;font-weight:700;text-decoration:none;
+}
+.bk-quelle:hover{color:var(--primary-dark);text-decoration:underline}
+
+/* Herkunftsmarke fuer alles, was NICHT aus der Wissensbasis stammt.
+   Die Feiertage sind der einzige solche Fall - und muessen als solcher
+   sichtbar bleiben. */
+.bk-herkunft{
+  display:inline-flex;align-items:center;gap:6px;margin-top:12px;
+  padding:8px 12px;border:1px dashed rgba(217,119,6,.4);border-radius:var(--radius);
+  color:var(--warning);background:var(--warning-soft);
+  font-size:11px;font-weight:700;line-height:1.55;
+}
+
+.bk-feiertagsfrage{
+  display:flex;align-items:flex-start;gap:10px;margin-top:14px;padding:13px 15px;
+  border:1px solid var(--line);border-radius:var(--radius);background:var(--surface-soft);
+  color:var(--text);font-size:12px;line-height:1.6;cursor:pointer;
+}
+.bk-feiertagsfrage input{margin-top:2px;flex:0 0 auto;accent-color:var(--primary)}
+.bk-feiertagsfrage small{display:block;margin-top:4px;color:var(--muted);font-size:11px}
+
+.bk-beleg{margin-top:10px;border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--surface)}
+.bk-beleg summary{padding:11px 14px;color:var(--text);font-size:12px;font-weight:700;
+  cursor:pointer;list-style:none}
+.bk-beleg summary::-webkit-details-marker{display:none}
+.bk-beleg summary::before{content:"▸ ";color:var(--muted)}
+.bk-beleg[open] summary::before{content:"▾ "}
+.bk-beleg-text{
+  padding:0 14px 14px;margin:0;white-space:pre-wrap;
+  color:var(--muted);font-size:12px;line-height:1.7;
+}
+.bk-beleg-fuss{padding:0 14px 14px;color:var(--muted);font-size:10px;line-height:1.6}
+
+/* Ausfall der Wissensbasis. Ohne Beleg zeigt die Seite keine Regel - dieser
+   Kasten ist dann das Ergebnis, nicht ein Zusatz zu einem Ergebnis. */
+.bk-ausfall{
+  margin-top:18px;padding:20px 22px;
+  border:1px solid rgba(220,38,38,.3);border-radius:var(--radius-lg);
+  background:var(--danger-soft);color:var(--text);
+}
+.bk-ausfall strong{display:block;color:var(--danger);font-size:14px}
+.bk-ausfall p{margin-top:7px;font-size:12px;line-height:1.65}
+.bk-ausfall ul{margin-top:9px;padding-left:18px;font-size:12px;line-height:1.7}
+
+.bk-fehlerliste{margin-top:14px;padding:13px 15px;
+  border:1px solid rgba(220,38,38,.3);border-radius:var(--radius);
+  background:var(--danger-soft);color:var(--danger);font-size:12px;line-height:1.7}
+.bk-fehlerliste ul{margin:0;padding-left:18px}
+
+.bk-fuss{margin-top:22px;color:var(--muted);font-size:11px;line-height:1.7}
+.bk-fuss a{color:var(--primary);text-decoration:none;font-weight:700}
+.bk-fuss a:hover{text-decoration:underline}
+
+@media (max-width:720px){
+  .bk-daten{grid-template-columns:1fr}
+  .bk-karte{padding:20px 16px}
+}

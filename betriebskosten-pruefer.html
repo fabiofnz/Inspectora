@@ -1,0 +1,98 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Betriebskostenabrechnung: Frist prüfen – Inspectora</title>
+  <meta name="description" content="Abrechnungsfrist und Einwendungsfrist nach § 556 Abs. 3 BGB berechnen – mit Rechenweg nach §§ 187, 188 und 193 BGB und Link auf den Gesetzestext. Alle Eingaben bleiben im Browser.">
+  <link rel="canonical" href="https://inspectora.tech/betriebskosten-pruefer">
+
+  <!-- Open Graph / Link-Vorschau -->
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="Inspectora">
+  <meta property="og:title" content="Betriebskostenabrechnung: Frist prüfen">
+  <meta property="og:description" content="Abrechnungsfrist und Einwendungsfrist nach § 556 Abs. 3 BGB berechnen – mit Rechenweg und Quelle. Alle Eingaben bleiben im Browser.">
+  <meta property="og:url" content="https://inspectora.tech/betriebskosten-pruefer">
+  <meta property="og:image" content="https://inspectora.tech/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="assistant-body">
+  <header class="assistant-header">
+    <a class="assistant-brand" href="index.html" aria-label="Inspectora Startseite">
+      <span class="brand-mark">I</span>
+      <span><strong>Inspectora</strong><small>Betriebskosten-Prüfer</small></span>
+    </a>
+    <a class="button secondary small" href="index.html">Zurück zur Startseite</a>
+  </header>
+
+  <main class="assistant-main">
+    <div class="assistant-intro">
+      <h1>Betriebskostenabrechnung: Fristen prüfen</h1>
+      <p class="assistant-notice">
+        Die Berechnung läuft vollständig in Ihrem Browser. Es wird nichts übertragen, nichts
+        gespeichert und nichts an eine KI geschickt. Dies ist keine Rechtsberatung – das
+        Werkzeug rechnet Fristen nach dem Gesetzeswortlaut aus und nennt zu jedem Schritt
+        die Vorschrift.
+      </p>
+    </div>
+
+    <noscript>
+      <div class="bk-ausfall">
+        <strong>Ohne JavaScript rechnet diese Seite nicht.</strong>
+        <p>Die Fristberechnung findet im Browser statt – ohne Server, damit keine Daten das
+        Gerät verlassen. Dafür wird JavaScript benötigt.</p>
+      </div>
+    </noscript>
+
+    <!-- Zustand der Wissensbasis. Laedt gesetze.json nicht, bleibt das Formular
+         gesperrt: Ohne Beleg zeigt diese Seite keine Regel an. -->
+    <div id="bkStatus" aria-live="polite"></div>
+
+    <section class="bk-karte">
+      <h2>Angaben zur Abrechnung</h2>
+      <p>Es werden nur zwei Datumsangaben gebraucht. Name, Anschrift, Wohnung oder Beträge
+      gehören hier nicht hinein und werden auch nicht abgefragt.</p>
+
+      <form id="bkForm">
+        <div class="form-grid">
+          <label class="field">
+            <span>Ende des Abrechnungszeitraums *</span>
+            <input type="date" id="bkZeitraumEnde" required>
+          </label>
+          <label class="field">
+            <span>Zugang der Abrechnung beim Mieter</span>
+            <input type="date" id="bkZugang">
+          </label>
+        </div>
+        <p class="panel-intro">
+          Ohne Zugangsdatum wird nur das Ende der Abrechnungsfrist berechnet. Mit
+          Zugangsdatum kommt die Einwendungsfrist des Mieters dazu.
+        </p>
+        <div class="panel-actions">
+          <button class="button secondary" id="bkResetButton" type="button">Eingaben leeren</button>
+          <button class="button primary" id="bkSubmitButton" type="submit" disabled>Fristen berechnen</button>
+        </div>
+      </form>
+    </section>
+
+    <div id="bkErgebnis" aria-live="polite"></div>
+
+    <p class="bk-fuss">
+      Rechtsgrundlagen aus der Wissensbasis von Inspectora, importiert von
+      <a href="https://www.gesetze-im-internet.de/" target="_blank" rel="noopener noreferrer">gesetze-im-internet.de</a>.
+      Jeder Rechenschritt auf dieser Seite nennt seine Vorschrift und verlinkt sie.
+      Maßgeblich ist immer der amtliche Text.
+    </p>
+  </main>
+
+  <script type="module" src="betriebskosten-pruefer.js"></script>
+</body>
+</html>
