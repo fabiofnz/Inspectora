@@ -3,15 +3,15 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Nebenkostenabrechnung: Frist prüfen – kostenloser Rechner mit Gesetzestext</title>
-  <meta name="description" content="Prüfen Sie in 10 Sekunden, ob die 12-Monats-Frist nach § 556 Abs. 3 BGB gewahrt ist. Rechenweg mit Gesetzestext und Quelle. Keine Anmeldung, nichts wird übertragen.">
+  <title>Nebenkostenabrechnung prüfen: Frist und Positionen – mit Gesetzestext</title>
+  <meta name="description" content="Prüfen Sie, ob die 12-Monats-Frist nach § 556 Abs. 3 BGB gewahrt ist und welche Positionen im Katalog der BetrKV stehen. Rechenweg und Gesetzestext mit Quelle. Keine Anmeldung, nichts wird übertragen.">
   <link rel="canonical" href="https://inspectora.tech/nebenkostenabrechnung-frist-pruefen">
 
   <!-- Open Graph / Link-Vorschau -->
   <meta property="og:type" content="website">
   <meta property="og:site_name" content="Inspectora">
-  <meta property="og:title" content="Nebenkostenabrechnung: Frist prüfen – kostenloser Rechner mit Gesetzestext">
-  <meta property="og:description" content="Prüfen Sie in 10 Sekunden, ob die 12-Monats-Frist nach § 556 Abs. 3 BGB gewahrt ist. Rechenweg mit Gesetzestext und Quelle. Keine Anmeldung, nichts wird übertragen.">
+  <meta property="og:title" content="Nebenkostenabrechnung prüfen: Frist und Positionen – mit Gesetzestext">
+  <meta property="og:description" content="Prüfen Sie, ob die 12-Monats-Frist nach § 556 Abs. 3 BGB gewahrt ist und welche Positionen im Katalog der BetrKV stehen. Rechenweg und Gesetzestext mit Quelle. Keine Anmeldung, nichts wird übertragen.">
   <meta property="og:url" content="https://inspectora.tech/nebenkostenabrechnung-frist-pruefen">
   <meta property="og:image" content="https://inspectora.tech/og-image.png">
   <meta property="og:image:width" content="1200">
@@ -35,7 +35,7 @@
 
   <main class="assistant-main">
     <div class="assistant-intro">
-      <h1>Nebenkostenabrechnung: Frist prüfen</h1>
+      <h1>Nebenkostenabrechnung prüfen</h1>
       <p class="bk-begriff">
         Nebenkostenabrechnung und Betriebskostenabrechnung meinen dasselbe. Im Gesetz heißt es
         Betriebskosten – § 556 BGB und die Betriebskostenverordnung (BetrKV).
@@ -59,6 +59,8 @@
     <!-- Zustand der Wissensbasis. Laedt gesetze.json nicht, bleibt das Formular
          gesperrt: Ohne Beleg zeigt diese Seite keine Regel an. -->
     <div id="bkStatus" aria-live="polite"></div>
+
+    <h2 class="bk-abschnitt">1. Abrechnungsfrist</h2>
 
     <section class="bk-karte">
       <h2>Angaben zur Abrechnung</h2>
@@ -89,6 +91,47 @@
     </section>
 
     <div id="bkErgebnis" aria-live="polite"></div>
+
+    <h2 class="bk-abschnitt">2. Positionen der Abrechnung</h2>
+
+    <!-- Zustand der Begriffsdatei. Teil B laeuft unabhaengig von Teil A: Faellt
+         die Zuordnungsdatei aus, bleibt die Fristberechnung oben benutzbar. -->
+    <div id="bkPositionenStatus" aria-live="polite"></div>
+
+    <section class="bk-karte">
+      <h2>Positionen eintragen</h2>
+      <p>Eine Position pro Zeile, so wie sie in der Abrechnung steht. Beträge dürfen
+      dranbleiben – sie werden abgetrennt und nicht weiter verwendet. Überschriften und
+      Summenzeilen dürfen ebenfalls stehen bleiben.</p>
+
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Bitte keine personenbezogenen Daten:</strong> Name, Anschrift, Wohnungsnummer
+        oder Mietvertragsnummer gehören hier nicht hinein. Zwar verlässt nichts von dem, was
+        Sie eingeben, Ihren Browser – aber was gar nicht erst eingegeben wird, kann auch nicht
+        versehentlich weitergegeben werden.
+      </div>
+
+      <label class="field wide bk-textfeld">
+        <span>Positionsliste *</span>
+        <textarea id="bkPositionen" rows="10" placeholder="Grundsteuer 245,80&#10;Müllabfuhr 180,00&#10;Gartenpflege 320,50&#10;Hausmeister 620,00&#10;Verwaltervergütung 240,00"></textarea>
+      </label>
+
+      <label class="bk-feiertagsfrage">
+        <input type="checkbox" id="bkAlleZeilen">
+        <span>Alle Zeilen als Position prüfen
+          <small>Normalerweise werden Zeilen, die keiner Position zugeordnet werden konnten und
+          nach Überschrift, Summe, Datum oder Seitenzahl aussehen, aussortiert – sichtbar und
+          mit Grund, nie gelöscht. Diese Einstellung schaltet das Aussortieren ab.</small>
+        </span>
+      </label>
+
+      <div class="panel-actions">
+        <button class="button secondary" id="bkPositionenReset" type="button">Liste leeren</button>
+        <button class="button primary" id="bkPositionenButton" type="button" disabled>Positionen prüfen</button>
+      </div>
+    </section>
+
+    <div id="bkPositionenErgebnis" aria-live="polite"></div>
 
     <p class="bk-fuss">
       Rechtsgrundlagen aus der Wissensbasis von Inspectora, importiert von

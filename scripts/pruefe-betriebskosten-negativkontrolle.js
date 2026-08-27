@@ -23,12 +23,13 @@ const os   = require("os");
 const path = require("path");
 const { spawnSync } = require("child_process");
 
-const ROOT         = path.resolve(__dirname, "..");
-const KERN_QUELLE  = path.join(ROOT, "kern");
-const GESETZE_PFAD = path.join(ROOT, "wissensbasis/gesetze.json");
-const PRUEFER      = path.join(ROOT, "scripts/pruefe-betriebskosten.js");
+const ROOT          = path.resolve(__dirname, "..");
+const KERN_QUELLE   = path.join(ROOT, "kern");
+const GESETZE_PFAD  = path.join(ROOT, "wissensbasis/gesetze.json");
+const BEGRIFFE_PFAD = path.join(ROOT, "wissensbasis/betriebskosten-begriffe.json");
+const PRUEFER       = path.join(ROOT, "scripts/pruefe-betriebskosten.js");
 
-const KERN_DATEIEN = ["datum.mjs", "feiertage.mjs", "frist.mjs"];
+const KERN_DATEIEN = ["datum.mjs", "feiertage.mjs", "frist.mjs", "katalog.mjs"];
 
 // Jede Mutation bricht genau eine Pruefung. "erwartet" ist die Ueberschrift, unter
 // der pruefe-betriebskosten.js den Befund melden muss.
@@ -145,6 +146,80 @@ const MUTATIONEN = [
     suchen: "  if (!geladen.ok) {",
     ersetzen: "  if (false) {",
   },
+  // --- Teil B: Positionspruefung ---------------------------------------------
+  {
+    name: "Katalog verliert die zweistelligen Nummern",
+    erwartet: "Katalog aus § 2 BetrKV geparst",
+    datei: "katalog.mjs",
+    suchen: "const treffer = /^(\\d{1,2})\\.\\s+(.*)$/.exec(zeile);",
+    ersetzen: "const treffer = /^(\\d{1})\\.\\s+(.*)$/.exec(zeile);",
+  },
+  {
+    name: "Schlusssatz faellt in Nr. 17 (falsche Fundstelle mit echtem Link)",
+    erwartet: "Katalog aus § 2 BetrKV geparst",
+    datei: "katalog.mjs",
+    suchen: "      if (istOder(folgt) || istUnterpunkt(folgt) || istNummer(folgt)) { i++; continue; }",
+    ersetzen: "      { i++; continue; }",
+  },
+  {
+    name: "Ausschluss verliert seinen Vorrang vor dem Katalog",
+    erwartet: "Zuordnung der Positionen",
+    datei: "katalog.mjs",
+    suchen: "      if (verdikt === null) {\n        verdikt = IMMER_MIT_VORBEHALT[item.nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;\n      }",
+    ersetzen: "      verdikt = IMMER_MIT_VORBEHALT[item.nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;",
+  },
+  {
+    name: "Nr. 14 verliert ihren Vorbehalt",
+    erwartet: "Zuordnung der Positionen",
+    datei: "katalog.mjs",
+    suchen: "export const IMMER_MIT_VORBEHALT = {\n  14:",
+    ersetzen: "export const IMMER_MIT_VORBEHALT = {\n  914:",
+  },
+  {
+    name: "Aussortierte Zeile wird weggeworfen statt gemeldet",
+    erwartet: "Nichts verschwindet",
+    datei: "katalog.mjs",
+    suchen: "      if (grund) { nichtGewertet.push({ rohzeile: rohzeile.trim(), grund }); continue; }",
+    ersetzen: "      if (grund) { continue; }",
+  },
+  {
+    name: "Filter greift vor der Zuordnung und verschluckt einen Treffer",
+    erwartet: "Nichts verschwindet",
+    datei: "katalog.mjs",
+    suchen: "    if (zuordnung.verdikt === VERDIKT.UNBEKANNT && !alleZeilenPruefen) {",
+    ersetzen: "    if (!alleZeilenPruefen) {",
+  },
+  {
+    name: "Begriffsdatei: Suchbegriff zeigt auf die falsche Nummer",
+    erwartet: "Zuordnung der Positionen",
+    begriffe: (datei) => {
+      // Umhaengen, nicht kopieren: Bleibt der Begriff in beiden Eintraegen, meldet
+      // der Pruefer "Begriff in zwei Eintraegen" statt der falschen Zuordnung -
+      // rot waere er dann zwar, aber an der falschen Stelle.
+      datei["betrkv-2-1"].begriffe = datei["betrkv-2-1"].begriffe.filter((b) => b !== "Grundsteuer");
+      datei["betrkv-2-3"].begriffe = [...datei["betrkv-2-3"].begriffe, "Grundsteuer"];
+      return datei;
+    },
+  },
+  {
+    name: "Begriffsdatei: titel_pruefung ankert nicht mehr",
+    erwartet: "Begriffsdatei",
+    begriffe: (datei) => {
+      datei["betrkv-2-14"].titel_pruefung = "Concierge";
+      return datei;
+    },
+  },
+  {
+    name: "Wissensbasis: BetrKV § 2 hat keinen Quell-Link mehr",
+    erwartet: "Belege fuer die Positionspruefung",
+    daten: (korpus) => korpus.map((p) =>
+      p.gesetz === "BetrKV" && p.paragraph === "§ 2" ? { ...p, quelle: "" } : p),
+  },
+  {
+    name: "Wissensbasis: BetrKV § 1 fehlt",
+    erwartet: "Belege fuer die Positionspruefung",
+    daten: (korpus) => korpus.filter((p) => !(p.gesetz === "BetrKV" && p.paragraph === "§ 1")),
+  },
   {
     name: "Wissensbasis: § 193 hat keinen Quell-Link mehr",
     erwartet: "Belege vorhanden und amtlich verlinkt",
@@ -168,16 +243,19 @@ function baueArbeitskopie(zielVerzeichnis) {
   }
   const gesetzeZiel = path.join(zielVerzeichnis, "gesetze.json");
   fs.copyFileSync(GESETZE_PFAD, gesetzeZiel);
-  return { kernZiel, gesetzeZiel };
+  const begriffeZiel = path.join(zielVerzeichnis, "betriebskosten-begriffe.json");
+  fs.copyFileSync(BEGRIFFE_PFAD, begriffeZiel);
+  return { kernZiel, gesetzeZiel, begriffeZiel };
 }
 
-function fuehrePrueferAus(kernZiel, gesetzeZiel) {
+function fuehrePrueferAus(kernZiel, gesetzeZiel, begriffeZiel) {
   const lauf = spawnSync(process.execPath, [PRUEFER], {
     encoding: "utf8",
     env: {
       ...process.env,
       BETRIEBSKOSTEN_KERN: kernZiel,
       WISSENSBASIS_GESETZE: gesetzeZiel,
+      BETRIEBSKOSTEN_BEGRIFFE: begriffeZiel,
     },
   });
   return { code: lauf.status, ausgabe: (lauf.stdout || "") + (lauf.stderr || "") };
@@ -197,8 +275,8 @@ function main() {
   // dann meldet der Pruefer eben immer etwas.
   {
     const arbeit = path.join(arbeitsWurzel, "unveraendert");
-    const { kernZiel, gesetzeZiel } = baueArbeitskopie(arbeit);
-    const { code } = fuehrePrueferAus(kernZiel, gesetzeZiel);
+    const { kernZiel, gesetzeZiel, begriffeZiel } = baueArbeitskopie(arbeit);
+    const { code } = fuehrePrueferAus(kernZiel, gesetzeZiel, begriffeZiel);
     if (code === 0) {
       console.log("OK    Kontrolllauf ohne Mutation ist gruen");
     } else {
@@ -210,7 +288,7 @@ function main() {
 
   MUTATIONEN.forEach((mutation, index) => {
     const arbeit = path.join(arbeitsWurzel, "mutation-" + index);
-    const { kernZiel, gesetzeZiel } = baueArbeitskopie(arbeit);
+    const { kernZiel, gesetzeZiel, begriffeZiel } = baueArbeitskopie(arbeit);
 
     if (mutation.datei) {
       const pfad = path.join(kernZiel, mutation.datei);
@@ -237,7 +315,19 @@ function main() {
       fs.writeFileSync(gesetzeZiel, JSON.stringify(veraendert, null, 2), "utf8");
     }
 
-    const { code, ausgabe } = fuehrePrueferAus(kernZiel, gesetzeZiel);
+    if (mutation.begriffe) {
+      const original = fs.readFileSync(begriffeZiel, "utf8");
+      const veraendert = mutation.begriffe(JSON.parse(original));
+      if (JSON.stringify(veraendert) === JSON.stringify(JSON.parse(original))) {
+        console.log(`FEHL  ${mutation.name}`);
+        console.log("      Die Mutation hat die Begriffsdatei nicht veraendert.");
+        gescheitert++;
+        return;
+      }
+      fs.writeFileSync(begriffeZiel, JSON.stringify(veraendert, null, 2), "utf8");
+    }
+
+    const { code, ausgabe } = fuehrePrueferAus(kernZiel, gesetzeZiel, begriffeZiel);
     const gemeldet = ausgabe.includes("FEHL  " + mutation.erwartet);
 
     if (code !== 0 && gemeldet) {

@@ -27,6 +27,8 @@ const KERN_VERZEICHNIS = process.env.BETRIEBSKOSTEN_KERN
   || path.resolve(__dirname, "../kern");
 const GESETZE_PFAD = process.env.WISSENSBASIS_GESETZE
   || path.resolve(__dirname, "../wissensbasis/gesetze.json");
+const BEGRIFFE_PFAD = process.env.BETRIEBSKOSTEN_BEGRIFFE
+  || path.resolve(__dirname, "../wissensbasis/betriebskosten-begriffe.json");
 
 const QUELLE_PRAEFIX = "https://www.gesetze-im-internet.de/";
 
@@ -467,6 +469,372 @@ async function main() {
       { zeitraumEndeIso: "2024-12-31", zugangIso: "2024-06-01" }, korpus);
     if (!e.ok) return "Berechnung abgebrochen statt angemerkt";
     return e.hinweise.some((h) => h.includes("vor dem Ende")) ? true : "Hinweis fehlt";
+  });
+
+  // =========================================================================
+  // TEIL B - Positionspruefung gegen den Katalog der BetrKV
+  // =========================================================================
+
+  const Katalog = await laden("katalog.mjs");
+  const begriffsdatei = JSON.parse(fs.readFileSync(BEGRIFFE_PFAD, "utf8"));
+  const belegeB = Katalog.belegeLaden(korpus);
+  const katalog = belegeB.ok ? Katalog.parseKatalog(belegeB.belege["betrkv-2"].text) : { items: [] };
+  const ausschluesse = belegeB.ok
+    ? Katalog.parseAusschluesse(belegeB.belege["betrkv-1"].text) : { posten: [] };
+
+  // -------------------------------------------------------------------------
+  const P_BELEGE_B = "Belege fuer die Positionspruefung";
+  // -------------------------------------------------------------------------
+
+  pruefe(P_BELEGE_B, "BetrKV vollstaendig", () =>
+    belegeB.ok ? true : "fehlende Belege: " + JSON.stringify(belegeB.fehlend));
+
+  pruefe(P_BELEGE_B, "ohne Wissensbasis kein Ergebnis", () => {
+    const e = Katalog.pruefePositionen({ text: "Grundsteuer" }, [], begriffsdatei);
+    if (e.ok !== false) return "leere Wissensbasis wurde akzeptiert";
+    if (e.positionen.length !== 0) return "trotzdem wurden Positionen ausgegeben";
+    return true;
+  });
+
+  pruefe(P_BELEGE_B, "ohne Begriffsdatei kein Ergebnis", () => {
+    const e = Katalog.pruefePositionen({ text: "Grundsteuer" }, korpus, {});
+    if (e.ok !== false) return "leere Begriffsdatei wurde akzeptiert";
+    if (e.positionen.length !== 0) return "trotzdem wurden Positionen ausgegeben";
+    return true;
+  });
+
+  // -------------------------------------------------------------------------
+  const P_KATALOG = "Katalog aus § 2 BetrKV geparst";
+  // -------------------------------------------------------------------------
+  //
+  // Der Katalog wird nicht abgeschrieben, sondern geparst. Deshalb muss hier
+  // stehen, WAS dabei herauskommen soll - sonst faellt eine Textaenderung beim
+  // naechsten Import erst auf der Seite auf, mit echtem Paragraphen und echtem
+  // Link neben der falschen Nummer.
+
+  const ERWARTETE_KURZTITEL = {
+    1: "die laufenden öffentlichen Lasten des Grundstücks",
+    2: "die Kosten der Wasserversorgung",
+    3: "die Kosten der Entwässerung",
+    4: "die Kosten des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage",
+    5: "die Kosten des Betriebs der zentralen Warmwasserversorgungsanlage",
+    6: "die Kosten verbundener Heizungs- und Warmwasserversorgungsanlagen",
+    7: "die Kosten des Betriebs des Personen- oder Lastenaufzugs",
+    8: "die Kosten der Straßenreinigung und Müllbeseitigung",
+    9: "die Kosten der Gebäudereinigung und Ungezieferbekämpfung",
+    10: "die Kosten der Gartenpflege",
+    11: "die Kosten der Beleuchtung",
+    12: "die Kosten der Schornsteinreinigung",
+    13: "die Kosten der Sach- und Haftpflichtversicherung",
+    14: "die Kosten für den Hauswart",
+    15: "die Kosten des Betriebs der Gemeinschafts-Antennenanlage",
+    16: "die Kosten des Betriebs der Einrichtungen für die Wäschepflege",
+    17: "sonstige Betriebskosten",
+  };
+
+  pruefe(P_KATALOG, "genau 17 Nummern", () =>
+    gleich(katalog.items.length, 17, "Anzahl der Katalognummern"));
+
+  pruefe(P_KATALOG, "Nummern 1 bis 17 lueckenlos", () => {
+    const nummern = katalog.items.map((i) => i.nr).join(",");
+    return gleich(nummern, "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17", "Nummernfolge");
+  });
+
+  for (const [nr, soll] of Object.entries(ERWARTETE_KURZTITEL)) {
+    pruefe(P_KATALOG, "Nr. " + nr, () => {
+      const item = katalog.items.find((i) => i.nr === Number(nr));
+      if (!item) return "Nummer fehlt im geparsten Katalog";
+      return gleich(item.kurztitel, soll, "Kurztitel Nr. " + nr);
+    });
+  }
+
+  // Der Schlusssatz gehoert zu keiner Nummer. Haengt er an Nr. 17, wird er als
+  // Bestandteil der "sonstigen Betriebskosten" zitiert - eine falsche Fundstelle,
+  // die mit echtem Paragraphen und echtem Link daherkommt.
+  pruefe(P_KATALOG, "Schlusssatz getrennt erfasst", () => {
+    if (!katalog.schlusssatz.startsWith("Für Anlagen")) {
+      return "Schlusssatz fehlt oder beginnt anders: " + JSON.stringify(katalog.schlusssatz.slice(0, 40));
+    }
+    return true;
+  });
+
+  pruefe(P_KATALOG, "Schlusssatz steht nicht in Nr. 17", () => {
+    const nr17 = katalog.items.find((i) => i.nr === 17);
+    if (nr17.text.includes("Für Anlagen")) return "Der Schlusssatz wurde Nr. 17 zugeschlagen";
+    return gleich(nr17.zeilen.length, 2, "Zeilen in Nr. 17");
+  });
+
+  pruefe(P_KATALOG, "Nr. 15 behaelt ihre Unterpunkte", () => {
+    const nr15 = katalog.items.find((i) => i.nr === 15);
+    return gleich(nr15.unterpunkte.length, 3, "Unterpunkte in Nr. 15");
+  });
+
+  pruefe(P_KATALOG, "§ 1 Abs. 2 ergibt zwei Ausschluesse", () => {
+    if (ausschluesse.posten.length !== 2) {
+      return "Anzahl der Ausschluesse: " + ausschluesse.posten.length;
+    }
+    const eins = gleich(ausschluesse.posten[0].kurztitel, "Verwaltungskosten", "Ausschluss Nr. 1");
+    if (eins !== true) return eins;
+    return gleich(ausschluesse.posten[1].kurztitel,
+      "Instandhaltungs- und Instandsetzungskosten", "Ausschluss Nr. 2");
+  });
+
+  // -------------------------------------------------------------------------
+  const P_BEGRIFFE = "Begriffsdatei";
+  // -------------------------------------------------------------------------
+  //
+  // titel_pruefung ist dieselbe Sicherung wie in themen-mapping.json: Der
+  // Suchbegriff darf nur dann auf eine Nummer zeigen, wenn dieser Textteil auch
+  // wirklich in GENAU DIESER Nummer steht.
+
+  const begriffsEintraege = Katalog.begriffeAufbereiten(begriffsdatei);
+
+  pruefe(P_BEGRIFFE, "Eintraege werden erkannt", () =>
+    begriffsEintraege.length >= 19 ? true
+      : "nur " + begriffsEintraege.length + " Eintraege erkannt");
+
+  pruefe(P_BEGRIFFE, "kein Eintrag ohne Begriffe", () => {
+    const leer = Object.entries(begriffsdatei)
+      .filter(([k, v]) => !k.startsWith("_") && (!v.begriffe || v.begriffe.length === 0))
+      .map(([k]) => k);
+    return leer.length === 0 ? true : "ohne Begriffe: " + leer.join(", ");
+  });
+
+  for (const eintrag of begriffsEintraege) {
+    pruefe(P_BEGRIFFE, "Anker " + eintrag.schluessel, () => {
+      if (!eintrag.titel_pruefung) return "titel_pruefung fehlt";
+      const ziel = eintrag.art === "katalog"
+        ? katalog.items.find((i) => i.nr === eintrag.nr)
+        : ausschluesse.posten.find((p) => p.nr === eintrag.nr);
+      if (!ziel) return "Nummer " + eintrag.nr + " gibt es nicht";
+      if (!Katalog.falte(ziel.text).includes(Katalog.falte(eintrag.titel_pruefung))) {
+        return `titel_pruefung ${JSON.stringify(eintrag.titel_pruefung)} kommt im Text von `
+          + `Nr. ${eintrag.nr} nicht vor - die Zuordnung zeigt woandershin`;
+      }
+      return true;
+    });
+  }
+
+  pruefe(P_BEGRIFFE, "kein Begriff kuerzer als vier Zeichen", () => {
+    const kurz = [];
+    for (const e of begriffsEintraege) {
+      for (const b of e.begriffe) if (Katalog.falte(b).length < 4) kurz.push(e.schluessel + ": " + b);
+    }
+    return kurz.length === 0 ? true : "zu kurz und damit zu unscharf: " + kurz.join(", ");
+  });
+
+  pruefe(P_BEGRIFFE, "kein Begriff in zwei Eintraegen", () => {
+    const gesehen = new Map();
+    const doppelt = [];
+    for (const e of begriffsEintraege) {
+      for (const b of e.begriffe) {
+        const schluessel = Katalog.falte(b);
+        if (gesehen.has(schluessel)) doppelt.push(`${b} (${gesehen.get(schluessel)} und ${e.schluessel})`);
+        else gesehen.set(schluessel, e.schluessel);
+      }
+    }
+    return doppelt.length === 0 ? true : "mehrdeutig: " + doppelt.join(", ");
+  });
+
+  // -------------------------------------------------------------------------
+  const P_ZUORDNUNG = "Zuordnung der Positionen";
+  // -------------------------------------------------------------------------
+
+  const ordne = (zeile, optionen) =>
+    Katalog.pruefePositionen({ text: zeile, ...(optionen || {}) }, korpus, begriffsdatei).positionen[0];
+
+  const ZUORDNUNGEN = [
+    { zeile: "Grundsteuer 245,80 EUR", verdikt: "im-katalog", nr: 1, art: "katalog" },
+    { zeile: "Müllabfuhr 180,00", verdikt: "im-katalog", nr: 8, art: "katalog" },
+    { zeile: "Gartenpflege 320,50 €", verdikt: "im-katalog", nr: 10, art: "katalog" },
+    { zeile: "Aufzug 410,00", verdikt: "im-katalog", nr: 7, art: "katalog" },
+    { zeile: "Verwaltervergütung 240,00", verdikt: "nicht-umlagefaehig", nr: 1, art: "ausschluss" },
+    { zeile: "Reparatur Heizung 890,00", verdikt: "nicht-umlagefaehig", nr: 2, art: "ausschluss" },
+    { zeile: "Hausmeister 620,00", verdikt: "mietvertrag-erforderlich", nr: 14, art: "katalog" },
+    { zeile: "Sonstige Betriebskosten 95,00", verdikt: "mietvertrag-erforderlich", nr: 17, art: "katalog" },
+  ];
+
+  for (const fall of ZUORDNUNGEN) {
+    pruefe(P_ZUORDNUNG, fall.zeile, () => {
+      const p = ordne(fall.zeile);
+      if (!p) return "keine Position erzeugt";
+      const v = gleich(p.verdikt, fall.verdikt, "Urteil");
+      if (v !== true) return v;
+      const erste = p.fundstellen[0];
+      if (!erste) return "kein Fundstelle angegeben";
+      const a = gleich(erste.art, fall.art, "Art der ersten Fundstelle");
+      if (a !== true) return a;
+      return gleich(erste.nr, fall.nr, "Nummer der ersten Fundstelle");
+    });
+  }
+
+  // Der Ausschluss geht dem Katalog vor - siehe Begruendung im Kopf von
+  // kern/katalog.mjs (§ 2 Nr. 14 nimmt Instandhaltung selbst aus). Trifft eine
+  // Zeile beides, muss trotzdem BEIDES sichtbar bleiben.
+  pruefe(P_ZUORDNUNG, "Doppeltreffer zeigt beide Fundstellen", () => {
+    const p = ordne("Reparatur Heizung 890,00");
+    if (p.fundstellen.length !== 2) {
+      return "Fundstellen: " + p.fundstellen.map((f) => f.bezeichnung).join(", ");
+    }
+    if (p.fundstellen[0].art !== "ausschluss") return "der Ausschluss steht nicht vorn";
+    if (p.fundstellen[1].art !== "katalog") return "der Katalogtreffer fehlt";
+    return true;
+  });
+
+  pruefe(P_ZUORDNUNG, "Nr. 14 traegt den Vorbehalt", () => {
+    const p = ordne("Hausmeister 620,00");
+    return p.vorbehalte.some((v) => v.nr === 14) ? true : "Vorbehalt zu Nr. 14 fehlt";
+  });
+
+  pruefe(P_ZUORDNUNG, "Nr. 17 traegt den Vorbehalt", () => {
+    const p = ordne("Sonstige Betriebskosten 95,00");
+    return p.vorbehalte.some((v) => v.nr === 17) ? true : "Vorbehalt zu Nr. 17 fehlt";
+  });
+
+  // Ein unbekanntes Wort darf KEINE Nummer bekommen. "Nicht zuordenbar" ist eine
+  // Aussage ueber dieses Werkzeug, nicht ueber die Position.
+  pruefe(P_ZUORDNUNG, "unbekanntes Wort behauptet nichts", () => {
+    const p = ordne("Blubberdings 12,00");
+    if (!p) return "die Zeile wurde stillschweigend verworfen";
+    const v = gleich(p.verdikt, "nicht-zuordenbar", "Urteil");
+    if (v !== true) return v;
+    if (p.fundstellen.length !== 0) return "es wurde trotzdem eine Fundstelle genannt";
+    if (p.vorbehalte.length !== 0) return "es wurde trotzdem ein Vorbehalt genannt";
+    return true;
+  });
+
+  pruefe(P_ZUORDNUNG, "Betrag wird abgetrennt und nicht verrechnet", () => {
+    const p = ordne("Grundsteuer 245,80 EUR");
+    const b = gleich(p.bezeichnung, "Grundsteuer", "Bezeichnung ohne Betrag");
+    if (b !== true) return b;
+    const e = Katalog.pruefePositionen(
+      { text: "Grundsteuer 245,80 EUR\nMüllabfuhr 180,00" }, korpus, begriffsdatei);
+    // Es darf nirgends eine Summe entstehen - dieses Werkzeug rechnet nicht.
+    const alsText = JSON.stringify(e.zusammenfassung);
+    if (/245|180|425/.test(alsText)) return "im Ergebnis taucht ein Betrag auf: " + alsText;
+    return true;
+  });
+
+  pruefe(P_ZUORDNUNG, "jede Fundstelle traegt eine amtliche Quelle", () => {
+    const e = Katalog.pruefePositionen({
+      text: ZUORDNUNGEN.map((f) => f.zeile).join("\n"),
+    }, korpus, begriffsdatei);
+    for (const p of e.positionen) {
+      for (const f of p.fundstellen) {
+        if (!f.quelle || !f.quelle.startsWith(QUELLE_PRAEFIX)) {
+          return "Fundstelle ohne amtliche Quelle: " + p.bezeichnung + " -> " + f.bezeichnung;
+        }
+        if (!f.text || f.text.length < 20) return "Fundstelle ohne Gesetzestext: " + f.bezeichnung;
+      }
+    }
+    return true;
+  });
+
+  // Die Oberflaeche schreibt bei einem Wortlaut-Treffer "steht so im Gesetz".
+  // Dann muss der genannte Begriff auch wirklich so im Text stehen - sonst ist
+  // die Beschriftung selbst die Unwahrheit. (Erste Fassung zeigte die intern
+  // gefaltete Form "muellabfuhr", die in keinem Gesetzestext vorkommt.)
+  pruefe(P_ZUORDNUNG, "Wortlaut-Treffer steht wirklich im Gesetzestext", () => {
+    const e = Katalog.pruefePositionen({
+      text: "Grundsteuer\nMüllabfuhr\nGartenpflege\nAufzug\nEntwässerung\nGebäudereinigung",
+    }, korpus, begriffsdatei);
+    for (const p of e.positionen) {
+      for (const f of p.fundstellen) {
+        if (f.treffer.art !== "wortlaut") continue;
+        if (!f.text.toLowerCase().includes(f.treffer.begriff.toLowerCase())) {
+          return `"${f.treffer.begriff}" wird als Wortlaut ausgewiesen, kommt in `
+            + `${f.bezeichnung} aber nicht so vor`;
+        }
+      }
+    }
+    return true;
+  });
+
+  pruefe(P_ZUORDNUNG, "Tabellenkopf wird nicht als Position gelesen", () => {
+    const e = Katalog.pruefePositionen(
+      { text: "Kostenart          Betrag          Anteil" }, korpus, begriffsdatei);
+    if (e.positionen.length !== 0) return "die Kopfzeile wurde als Position gewertet";
+    return gleich(e.nichtGewertet.length, 1, "aussortierte Zeilen");
+  });
+
+  pruefe(P_ZUORDNUNG, "Suchbegriff-Treffer ist als solcher gekennzeichnet", () => {
+    const wortlaut = ordne("Grundsteuer 245,80").fundstellen[0].treffer;
+    const synonym = ordne("Hausmeister 620,00").fundstellen[0].treffer;
+    if (wortlaut.art !== "wortlaut") return "Grundsteuer steht im Gesetz, gilt aber als Suchbegriff";
+    if (synonym.art !== "suchbegriff") return "Hausmeister steht nicht im Gesetz, gilt aber als Wortlaut";
+    // In deutscher Schreibweise, so wie es in der Oberflaeche steht.
+    return gleich(synonym.begriff, "Hausmeister", "genannter Suchbegriff");
+  });
+
+  // -------------------------------------------------------------------------
+  const P_FILTER = "Nichts verschwindet";
+  // -------------------------------------------------------------------------
+  //
+  // Die wichtigste Eigenschaft von Teil B. Zeilen, die keine Position sind,
+  // werden aussortiert - aber sichtbar und gezaehlt. Eine still verschluckte
+  // Position waere die gefaehrlichste Ausgabe: eine Seite ohne Befund sieht aus
+  // wie eine Seite ohne Problem.
+
+  const GEMISCHT = [
+    "Kostenart",
+    "Grundsteuer 245,80",
+    "Zwischensumme Wasser 120,00",
+    "Summe 3.133,30",
+    "Abrechnungszeitraum 01.01.2024 - 31.12.2024",
+    "Seite 2",
+    "- 3 -",
+    "Blubberdings 12,00",
+  ].join("\n");
+
+  pruefe(P_FILTER, "keine Zeile geht verloren", () => {
+    const e = Katalog.pruefePositionen({ text: GEMISCHT }, korpus, begriffsdatei);
+    const summe = e.positionen.length + e.nichtGewertet.length;
+    return gleich(summe, e.zusammenfassung.zeilenGesamt,
+      "Positionen + aussortierte Zeilen gegen eingegebene Zeilen");
+  });
+
+  // Der Filter greift erst NACH der Zuordnung. Deshalb kann ein Filterwort
+  // niemals einen Befund unterdruecken.
+  pruefe(P_FILTER, "Filterwort unterdrueckt keinen Treffer", () => {
+    const e = Katalog.pruefePositionen({ text: GEMISCHT }, korpus, begriffsdatei);
+    const treffer = e.positionen.find((p) => p.rohzeile.startsWith("Zwischensumme Wasser"));
+    if (!treffer) return "\"Zwischensumme Wasser\" wurde aussortiert, obwohl sie § 2 Nr. 2 trifft";
+    return gleich(treffer.fundstellen[0].nr, 2, "Nummer der Fundstelle");
+  });
+
+  pruefe(P_FILTER, "aussortierte Zeilen nennen ihren Grund", () => {
+    const e = Katalog.pruefePositionen({ text: GEMISCHT }, korpus, begriffsdatei);
+    if (e.nichtGewertet.length === 0) return "es wurde gar nichts aussortiert";
+    for (const n of e.nichtGewertet) {
+      if (!n.grund || n.grund.length < 5) return "Zeile ohne Grund: " + n.rohzeile;
+      if (!n.rohzeile) return "aussortierte Zeile ohne Text";
+    }
+    return true;
+  });
+
+  pruefe(P_FILTER, "nur Zeilen ohne Treffer werden aussortiert", () => {
+    const e = Katalog.pruefePositionen({ text: GEMISCHT }, korpus, begriffsdatei);
+    for (const n of e.nichtGewertet) {
+      const geprueft = Katalog.pruefePositionen(
+        { text: n.rohzeile, alleZeilenPruefen: true }, korpus, begriffsdatei).positionen[0];
+      if (geprueft && geprueft.verdikt !== "nicht-zuordenbar") {
+        return "aussortiert, obwohl zuordenbar: " + n.rohzeile + " -> " + geprueft.verdikt;
+      }
+    }
+    return true;
+  });
+
+  pruefe(P_FILTER, "Filter laesst sich abschalten", () => {
+    const e = Katalog.pruefePositionen(
+      { text: GEMISCHT, alleZeilenPruefen: true }, korpus, begriffsdatei);
+    if (e.nichtGewertet.length !== 0) return "trotz abgeschaltetem Filter wurde aussortiert";
+    return gleich(e.positionen.length, e.zusammenfassung.zeilenGesamt, "gepruefte Zeilen");
+  });
+
+  pruefe(P_FILTER, "Leerzeilen erzeugen keinen Befund", () => {
+    const e = Katalog.pruefePositionen(
+      { text: "Grundsteuer\n\n   \n\nMüllabfuhr" }, korpus, begriffsdatei);
+    return gleich(e.positionen.length, 2, "Positionen aus zwei Zeilen mit Text");
   });
 
   // -------------------------------------------------------------------------

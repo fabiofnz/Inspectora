@@ -1,0 +1,220 @@
+{
+  "_hinweis": "Zuordnung von Alltags-Begriffen aus Nebenkostenabrechnungen zu den Nummern des BetrKV-Katalogs (§ 2) und zu den Ausschluessen (§ 1 Abs. 2). Schluessel: betrkv-2-<Nr> fuer den Katalog, betrkv-1-<Nr> fuer die Ausschluesse. 'titel_pruefung' ist die Sicherung: Das Pruefskript meldet einen Fehler, wenn dieser Textteil im geparsten Text GENAU DIESER Nummer nicht vorkommt. Damit zeigt eine Zuordnung nie auf die falsche Nummer, ohne dass es auffaellt. — Diese Datei ist redaktionell, nicht amtlich: 'Hausmeister' steht in keinem Gesetz, 'Hauswart' schon. Ein Treffer ueber einen Suchbegriff wird in der Oberflaeche deshalb ausdruecklich als Suchbegriff-Treffer gekennzeichnet und immer zusammen mit dem Gesetzeswortlaut gezeigt, damit der Nutzer die Zuordnung pruefen kann, statt sie zu glauben.",
+  "_bewusste_luecken": "Nicht aufgenommen sind Positionen, deren Umlagefaehigkeit sich nicht aus dem Gesetzestext, sondern aus der Rechtsprechung ergibt - vor allem Winterdienst/Schneeraeumung (wird zu § 2 Nr. 8 gerechnet) und Rauchwarnmelder, Dachrinnenreinigung oder Wartungspauschalen (werden zu Nr. 17 gerechnet). Sie kommen deshalb als 'nicht zuordenbar' heraus. Das ist Absicht: Dieses Werkzeug gibt nur wieder, was im Gesetz steht. Eine Zuordnung aus der Rechtsprechung waere hier eine Rechtsauskunft mit einem Paragraphen daneben, der sie nicht traegt - und genau das soll die Seite nicht tun. Bei Nr. 17 sind nur Begriffe aufgenommen, die sich selbst als 'sonstige' bezeichnen.",
+  "betrkv-2-1": {
+    "titel_pruefung": "Grundsteuer",
+    "begriffe": [
+      "Grundsteuer",
+      "Öffentliche Lasten",
+      "Laufende öffentliche Lasten",
+      "Grundabgaben"
+    ]
+  },
+  "betrkv-2-2": {
+    "titel_pruefung": "Wasserversorgung",
+    "begriffe": [
+      "Wasserversorgung",
+      "Kaltwasser",
+      "Frischwasser",
+      "Trinkwasser",
+      "Wasserzähler",
+      "Wasseruhr",
+      "Wasser"
+    ]
+  },
+  "betrkv-2-3": {
+    "titel_pruefung": "Entwaesserung",
+    "begriffe": [
+      "Entwässerung",
+      "Abwasser",
+      "Schmutzwasser",
+      "Niederschlagswasser",
+      "Regenwasser",
+      "Kanalgebühren",
+      "Kanalbenutzungsgebühren"
+    ]
+  },
+  "betrkv-2-4": {
+    "titel_pruefung": "Heizungsanlage",
+    "begriffe": [
+      "Heizung",
+      "Heizkosten",
+      "Heizungsanlage",
+      "Brennstoff",
+      "Heizöl",
+      "Erdgas",
+      "Fernwärme",
+      "Wärmelieferung",
+      "Wärmekosten"
+    ]
+  },
+  "betrkv-2-5": {
+    "titel_pruefung": "Warmwasserversorgungsanlage",
+    "begriffe": [
+      "Warmwasser",
+      "Warmwasserversorgung",
+      "Warmwasserbereitung"
+    ]
+  },
+  "betrkv-2-6": {
+    "titel_pruefung": "verbundener Heizungs",
+    "begriffe": [
+      "Verbundene Anlage",
+      "Verbundene Heizungs- und Warmwasserversorgungsanlage"
+    ]
+  },
+  "betrkv-2-7": {
+    "titel_pruefung": "Lastenaufzugs",
+    "begriffe": [
+      "Aufzug",
+      "Aufzugskosten",
+      "Aufzugswartung",
+      "Fahrstuhl",
+      "Personenaufzug",
+      "Lastenaufzug",
+      "Lift"
+    ]
+  },
+  "betrkv-2-8": {
+    "titel_pruefung": "Strassenreinigung und Muellbeseitigung",
+    "begriffe": [
+      "Müllabfuhr",
+      "Müllbeseitigung",
+      "Müllentsorgung",
+      "Müllgebühren",
+      "Restmüll",
+      "Biotonne",
+      "Papiertonne",
+      "Abfallentsorgung",
+      "Abfallgebühren",
+      "Straßenreinigung",
+      "Müll"
+    ]
+  },
+  "betrkv-2-9": {
+    "titel_pruefung": "Gebaeudereinigung und Ungezieferbekaempfung",
+    "begriffe": [
+      "Gebäudereinigung",
+      "Treppenhausreinigung",
+      "Hausreinigung",
+      "Ungezieferbekämpfung",
+      "Schädlingsbekämpfung",
+      "Ungeziefer",
+      "Reinigung"
+    ]
+  },
+  "betrkv-2-10": {
+    "titel_pruefung": "Gartenpflege",
+    "begriffe": [
+      "Gartenpflege",
+      "Grünpflege",
+      "Grünanlagen",
+      "Außenanlagen",
+      "Rasenpflege",
+      "Spielplatz",
+      "Garten"
+    ]
+  },
+  "betrkv-2-11": {
+    "titel_pruefung": "Beleuchtung",
+    "begriffe": [
+      "Beleuchtung",
+      "Allgemeinstrom",
+      "Hausstrom",
+      "Außenbeleuchtung",
+      "Treppenhausbeleuchtung",
+      "Strom für Außenbeleuchtung"
+    ]
+  },
+  "betrkv-2-12": {
+    "titel_pruefung": "Schornsteinreinigung",
+    "begriffe": [
+      "Schornsteinreinigung",
+      "Schornsteinfeger",
+      "Kaminkehrer",
+      "Kehrgebühren"
+    ]
+  },
+  "betrkv-2-13": {
+    "titel_pruefung": "Sach- und Haftpflichtversicherung",
+    "begriffe": [
+      "Gebäudeversicherung",
+      "Haftpflichtversicherung",
+      "Sachversicherung",
+      "Glasversicherung",
+      "Elementarschäden",
+      "Feuerversicherung",
+      "Versicherung"
+    ]
+  },
+  "betrkv-2-14": {
+    "titel_pruefung": "Hauswart",
+    "begriffe": [
+      "Hauswart",
+      "Hauswartkosten",
+      "Hausmeister",
+      "Hausmeisterservice",
+      "Hausmeisterdienst"
+    ]
+  },
+  "betrkv-2-15": {
+    "titel_pruefung": "Gemeinschafts-Antennenanlage",
+    "begriffe": [
+      "Antennenanlage",
+      "Gemeinschaftsantenne",
+      "Kabelfernsehen",
+      "Kabelanschluss",
+      "Breitbandanschluss",
+      "Breitbandkabel",
+      "Glasfaser",
+      "Antenne"
+    ]
+  },
+  "betrkv-2-16": {
+    "titel_pruefung": "Waeschepflege",
+    "begriffe": [
+      "Wäschepflege",
+      "Waschküche",
+      "Waschmaschine",
+      "Trockner",
+      "Wascheinrichtung"
+    ]
+  },
+  "betrkv-2-17": {
+    "titel_pruefung": "sonstige Betriebskosten",
+    "begriffe": [
+      "Sonstige Betriebskosten",
+      "Sonstige Kosten",
+      "Sonstiges"
+    ]
+  },
+  "betrkv-1-1": {
+    "titel_pruefung": "Verwaltungskosten",
+    "begriffe": [
+      "Verwaltungskosten",
+      "Verwaltervergütung",
+      "Verwalterhonorar",
+      "Verwaltergebühr",
+      "Hausverwaltung",
+      "Geschäftsführung",
+      "Aufsicht",
+      "Verwaltung"
+    ]
+  },
+  "betrkv-1-2": {
+    "titel_pruefung": "Instandhaltungs- und Instandsetzungskosten",
+    "begriffe": [
+      "Instandhaltung",
+      "Instandsetzung",
+      "Instandhaltungsrücklage",
+      "Erhaltungsrücklage",
+      "Reparatur",
+      "Reparaturen",
+      "Sanierung",
+      "Modernisierung",
+      "Erneuerung",
+      "Malerarbeiten",
+      "Schönheitsreparaturen"
+    ]
+  }
+}

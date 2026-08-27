@@ -19,9 +19,11 @@
 
 import { pruefeFristen } from "./kern/frist.mjs";
 import { formatiereMitWochentag } from "./kern/datum.mjs";
+import { pruefePositionen, VERDIKT } from "./kern/katalog.mjs";
 
 const LOG = "[betriebskosten-pruefer]";
 const WISSENSBASIS = "wissensbasis/gesetze.json";
+const BEGRIFFE = "wissensbasis/betriebskosten-begriffe.json";
 
 const form         = document.getElementById("bkForm");
 const eingabeEnde  = document.getElementById("bkZeitraumEnde");
@@ -31,9 +33,18 @@ const knopfLeeren  = document.getElementById("bkResetButton");
 const statusBereich = document.getElementById("bkStatus");
 const ergebnisBereich = document.getElementById("bkErgebnis");
 
+// Teil B
+const eingabePositionen  = document.getElementById("bkPositionen");
+const schalterAlleZeilen = document.getElementById("bkAlleZeilen");
+const knopfPositionen    = document.getElementById("bkPositionenButton");
+const knopfPositionenLeeren = document.getElementById("bkPositionenReset");
+const positionenStatus   = document.getElementById("bkPositionenStatus");
+const positionenErgebnis = document.getElementById("bkPositionenErgebnis");
+
 // Zustand der Seite. Vom Nutzer bestaetigte Feiertage werden hier gehalten und bei
 // jeder Neuberechnung mitgegeben - sie gehoeren zur Eingabe, nicht zur Anzeige.
 let korpus = null;
+let begriffe = null;
 let feiertageBestaetigt = [];
 
 // ---------------------------------------------------------------------------
@@ -99,10 +110,45 @@ async function ladeWissensbasis() {
     knopfSenden.disabled = false;
     zeigeStatus("bereit");
     console.log(LOG, `Wissensbasis geladen: ${daten.length} Paragraphen, Fristmodul einsatzbereit.`);
+
+    await ladeBegriffe();
   } catch (fehler) {
     korpus = null;
     zeigeStatus("ausfall", null, fehler.message);
     console.error(LOG, "Wissensbasis konnte nicht geladen werden:", fehler);
+  }
+}
+
+// Teil B haengt an zwei Dateien: der Wissensbasis (Gesetzestext) und der
+// Begriffsdatei (Zuordnung der Alltagswoerter). Faellt eine davon aus, bleibt
+// die Positionspruefung gesperrt - die Fristberechnung oben laeuft weiter.
+// Die beiden Teile sind bewusst unabhaengig voneinander.
+async function ladeBegriffe() {
+  try {
+    const antwort = await fetch(BEGRIFFE, { cache: "no-cache" });
+    if (!antwort.ok) throw new Error("HTTP " + antwort.status);
+    const daten = await antwort.json();
+
+    const probe = pruefePositionen({ text: "Grundsteuer" }, korpus, daten);
+    if (!probe.ok) throw new Error("Probelauf fehlgeschlagen: " + probe.grund);
+
+    begriffe = daten;
+    knopfPositionen.disabled = false;
+    leere(positionenStatus);
+    console.log(LOG, "Begriffsdatei geladen, Positionspruefung einsatzbereit.");
+  } catch (fehler) {
+    begriffe = null;
+    knopfPositionen.disabled = true;
+    leere(positionenStatus);
+    const kasten = el("div", "bk-ausfall");
+    kasten.appendChild(el("strong", null, "Die Positionsprüfung ist nicht verfügbar."));
+    kasten.appendChild(el("p", null,
+      "Der Katalog der Betriebskostenverordnung konnte nicht geladen werden. Diese Seite "
+      + "zeigt keine Zuordnung an, die sie nicht belegen kann. Die Fristberechnung oben "
+      + "ist davon nicht betroffen."));
+    kasten.appendChild(el("p", null, "Technischer Hinweis: " + fehler.message));
+    positionenStatus.appendChild(kasten);
+    console.error(LOG, "Begriffsdatei konnte nicht geladen werden:", fehler);
   }
 }
 
@@ -410,6 +456,172 @@ function berechne() {
 }
 
 // ---------------------------------------------------------------------------
+// Teil B - Ausgabe der Positionspruefung
+// ---------------------------------------------------------------------------
+
+const URTEIL = {
+  [VERDIKT.KATALOG]: { klasse: "ist-katalog", text: "Im Katalog" },
+  [VERDIKT.AUSGESCHLOSSEN]: { klasse: "ist-ausschluss", text: "Nicht umlagefähig" },
+  [VERDIKT.MIETVERTRAG]: { klasse: "ist-vertrag", text: "Mietvertrag erforderlich" },
+  [VERDIKT.UNBEKANNT]: { klasse: "ist-unbekannt", text: "Nicht zuordenbar" },
+};
+
+function baueFundstelle(fundstelle) {
+  const block = el("div", "bk-fundstelle");
+  block.appendChild(el("div", "bk-fundstelle-kopf", fundstelle.bezeichnung));
+  block.appendChild(el("div", "bk-fundstelle-kurz", fundstelle.kurztitel));
+
+  // Woran der Treffer haengt. Ein Suchbegriff ist eine redaktionelle Zuordnung
+  // und wird als solche benannt - samt dem Wort, das ihn ausgeloest hat.
+  const marke = el("span", "bk-treffer "
+    + (fundstelle.treffer.art === "wortlaut" ? "ist-wortlaut" : "ist-suchbegriff"));
+  marke.textContent = fundstelle.treffer.art === "wortlaut"
+    ? `Wortlaut: „${fundstelle.treffer.begriff}“ steht so im Gesetz`
+    : `Suchbegriff: „${fundstelle.treffer.begriff}“ – Zuordnung von Inspectora, nicht aus dem Gesetz`;
+  block.appendChild(marke);
+
+  const text = document.createElement("details");
+  text.className = "bk-beleg";
+  const kopf = document.createElement("summary");
+  kopf.textContent = "Wortlaut der Vorschrift";
+  text.appendChild(kopf);
+  text.appendChild(el("pre", "bk-beleg-text", fundstelle.text));
+  const fuss = el("div", "bk-beleg-fuss");
+  fuss.appendChild(link(fundstelle.quelle, "Amtliche Quelle öffnen"));
+  text.appendChild(fuss);
+  block.appendChild(text);
+
+  return block;
+}
+
+function bauePosition(position) {
+  const urteil = URTEIL[position.verdikt];
+  const karte = el("div", "bk-position " + urteil.klasse);
+
+  const kopf = el("div", "bk-position-kopf");
+  kopf.appendChild(el("span", "bk-position-name", position.bezeichnung || position.rohzeile));
+  kopf.appendChild(el("span", "bk-position-urteil " + urteil.klasse, urteil.text));
+  karte.appendChild(kopf);
+
+  for (const fundstelle of position.fundstellen) karte.appendChild(baueFundstelle(fundstelle));
+
+  for (const vorbehalt of position.vorbehalte) {
+    const kasten = el("div", "bk-vorbehalt");
+    kasten.appendChild(el("strong", null, `Nr. ${vorbehalt.nr} ist nicht allein aus dem Gesetz zu entscheiden: `));
+    kasten.appendChild(document.createTextNode(vorbehalt.text));
+    karte.appendChild(kasten);
+  }
+
+  // "Nicht zuordenbar" ist eine Aussage ueber dieses Werkzeug, nicht ueber die
+  // Position. Der Text sagt genau das - und nichts darueber hinaus.
+  if (position.verdikt === VERDIKT.UNBEKANNT) {
+    karte.appendChild(el("div", "bk-unbekannt-text",
+      "Dieser Begriff ist keiner Nummer des Katalogs und keinem Ausschluss zugeordnet. "
+      + "Das heißt nicht, dass die Position unzulässig ist – es heißt, dass dieses Werkzeug "
+      + "sie nicht einordnen kann."));
+  }
+
+  return karte;
+}
+
+function baueZaehler(z) {
+  const leiste = el("div", "bk-zaehler");
+  const zeige = (klasse, wert, text) => {
+    const span = el("span", klasse || null);
+    span.appendChild(el("b", null, String(wert)));
+    span.appendChild(document.createTextNode(text));
+    leiste.appendChild(span);
+  };
+  zeige("ist-katalog", z.imKatalog, "im Katalog");
+  zeige("ist-ausschluss", z.nichtUmlagefaehig, "nicht umlagefähig");
+  zeige("ist-vertrag", z.mietvertrag, "Mietvertrag erforderlich");
+  zeige(null, z.nichtZuordenbar, "nicht zuordenbar");
+  zeige(null, z.nichtGewertet, "nicht als Position gewertet");
+  return leiste;
+}
+
+function pruefeListe() {
+  leere(positionenErgebnis);
+
+  if (!korpus || !begriffe) {
+    console.warn(LOG, "Positionspruefung abgelehnt: Katalog oder Begriffsdatei fehlt.");
+    return;
+  }
+
+  const text = eingabePositionen.value;
+  if (text.trim() === "") {
+    const kasten = el("div", "bk-fehlerliste");
+    kasten.textContent = "Bitte zuerst die Positionen aus der Abrechnung eintragen.";
+    positionenErgebnis.appendChild(kasten);
+    return;
+  }
+
+  const ergebnis = pruefePositionen(
+    { text, alleZeilenPruefen: schalterAlleZeilen.checked }, korpus, begriffe);
+
+  if (!ergebnis.ok) {
+    const kasten = el("div", "bk-ausfall");
+    kasten.appendChild(el("strong", null, "Die Positionsprüfung ist nicht verfügbar."));
+    kasten.appendChild(el("p", null,
+      "Ohne den Katalog aus der Betriebskostenverordnung wird hier nichts zugeordnet."));
+    positionenErgebnis.appendChild(kasten);
+    console.error(LOG, "Positionspruefung nicht moeglich:", ergebnis.grund);
+    return;
+  }
+
+  const karte = el("section", "bk-karte");
+  karte.appendChild(el("h2", null, "Ergebnis der Positionsprüfung"));
+  karte.appendChild(el("p", null,
+    `${ergebnis.zusammenfassung.zeilenGesamt} Zeilen gelesen, `
+    + `${ergebnis.zusammenfassung.geprueft} davon als Position geprüft. Geprüft wird gegen den `
+    + `Katalog in § 2 BetrKV und die Ausschlüsse in § 1 Abs. 2 BetrKV.`));
+  karte.appendChild(baueZaehler(ergebnis.zusammenfassung));
+
+  for (const position of ergebnis.positionen) karte.appendChild(bauePosition(position));
+
+  // Aussortierte Zeilen: eingeklappt, aber vollstaendig und mit Grund. Nichts
+  // wird geloescht - eine still verschwundene Zeile waere eine Position, die
+  // niemand geprueft hat, auf einer Seite, die aussieht, als waere alles geprueft.
+  if (ergebnis.nichtGewertet.length > 0) {
+    const block = document.createElement("details");
+    block.className = "bk-aussortiert";
+    const kopf = document.createElement("summary");
+    kopf.textContent = `${ergebnis.nichtGewertet.length} Zeilen nicht als Position gewertet `
+      + "– nichts davon wurde gelöscht";
+    block.appendChild(kopf);
+    const liste = el("ul");
+    for (const zeile of ergebnis.nichtGewertet) {
+      const eintrag = el("li");
+      eintrag.appendChild(el("span", null, zeile.rohzeile));
+      eintrag.appendChild(document.createTextNode(" – " + zeile.grund));
+      liste.appendChild(eintrag);
+    }
+    block.appendChild(liste);
+    karte.appendChild(block);
+  }
+
+  positionenErgebnis.appendChild(karte);
+
+  const hinweisKarte = el("section", "bk-karte");
+  const kasten = el("div", "hg-hint-box hg-hint-warn");
+  kasten.appendChild(el("strong", null, "Keine Rechtsberatung. "));
+  kasten.appendChild(document.createTextNode(
+    "Diese Prüfung sagt, ob eine Bezeichnung im Katalog der Betriebskostenverordnung steht "
+    + "oder von ihm ausgenommen ist – mit dem Wortlaut daneben. Sie sagt nicht, ob die "
+    + "Position in Ihrem Fall zu Recht abgerechnet wurde und was daraus folgt. Ob eine "
+    + "Umlage wirksam vereinbart ist, steht im Mietvertrag; alles Weitere ist eine "
+    + "rechtliche Bewertung, die ein Mensch treffen muss."));
+  hinweisKarte.appendChild(kasten);
+  positionenErgebnis.appendChild(hinweisKarte);
+
+  const z = ergebnis.zusammenfassung;
+  console.log(LOG, "Positionen geprueft.",
+    `${z.geprueft} Positionen, ${z.imKatalog} im Katalog, ${z.nichtUmlagefaehig} ausgeschlossen, `
+    + `${z.mietvertrag} mit Vertragsvorbehalt, ${z.nichtZuordenbar} nicht zuordenbar, `
+    + `${z.nichtGewertet} nicht gewertet.`);
+}
+
+// ---------------------------------------------------------------------------
 // Ereignisse
 // ---------------------------------------------------------------------------
 
@@ -426,6 +638,19 @@ knopfLeeren.addEventListener("click", () => {
   eingabeZugang.value = "";
   feiertageBestaetigt = [];
   leere(ergebnisBereich);
+});
+
+knopfPositionen.addEventListener("click", pruefeListe);
+
+// Der Schalter aendert das Ergebnis, also wird sofort neu geprueft - aber nur,
+// wenn schon ein Ergebnis dasteht. Sonst waere es ein Klick ins Leere.
+schalterAlleZeilen.addEventListener("change", () => {
+  if (positionenErgebnis.childElementCount > 0) pruefeListe();
+});
+
+knopfPositionenLeeren.addEventListener("click", () => {
+  eingabePositionen.value = "";
+  leere(positionenErgebnis);
 });
 
 ladeWissensbasis();
