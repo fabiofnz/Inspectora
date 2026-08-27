@@ -38,6 +38,20 @@
 
     <nav class="site-nav" id="siteNav" aria-label="Hauptnavigation">
       <div class="nav-links">
+        <!-- Werkzeuge: eigenstaendige Seiten, nicht Abschnitte dieser Seite.
+             Deshalb ohne data-nav-sections - die Hervorhebung des aktiven
+             Abschnitts in app.js gilt nur fuer Anker auf dieser Seite. -->
+        <div class="nav-group" data-nav-group>
+          <button class="nav-trigger" type="button" aria-expanded="false" aria-haspopup="true" data-nav-toggle>
+            Werkzeuge
+            <svg class="nav-chevron" width="10" height="6" viewBox="0 0 10 6" aria-hidden="true"><path d="M1 1l4 4 4-4" stroke="currentColor" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+          </button>
+          <div class="nav-panel" role="menu" aria-label="Werkzeuge">
+            <span class="nav-panel-label">Nebenkosten &amp; Mietrecht</span>
+            <a href="nebenkostenabrechnung-frist-pruefen.html" role="menuitem"><strong>Nebenkosten-Frist</strong><span>Frist der Abrechnung nach § 556 BGB prüfen</span></a>
+          </div>
+        </div>
+
         <div class="nav-group" data-nav-group>
           <button class="nav-trigger" type="button" aria-expanded="false" aria-haspopup="true" data-nav-toggle data-nav-sections="invTool invProjekte wegTool wegProjekte hgTool hgProjekte">
             WEG-Verwaltung
@@ -108,8 +122,8 @@
 
     <section class="section" id="werkzeuge">
       <div class="section-heading reveal">
-        <span class="eyebrow">Die Werkzeuge</span>
-        <h2>Drei Generatoren für den Verwaltungsalltag</h2>
+        <span class="eyebrow">Für die WEG-Verwaltung</span>
+        <h2>WEG-Generatoren</h2>
         <p>Alles läuft im Browser, ohne Cloud-Zwang – die Eingaben bleiben auf deinem Gerät.</p>
       </div>
       <div class="value-grid reveal-stagger">

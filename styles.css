@@ -1108,6 +1108,14 @@ main{padding-top:0}
    dasselbe signalisiert wie in den anderen Werkzeugen.
    ========================================================================== */
 
+/* Begriffsklaerung unter der Ueberschrift. "Nebenkosten" ist das Wort, das Mieter
+   suchen; "Betriebskosten" ist das Wort des Gesetzes. Beide stehen auf der Seite,
+   damit weder die Suche noch die Fachsprache leidet. */
+.bk-begriff{
+  max-width:640px;margin:0 auto 14px;
+  color:var(--muted);font-size:12px;line-height:1.65;text-align:left;
+}
+
 /* Solange die Wissensbasis nicht geladen ist, ist der Knopf gesperrt. Ohne eigene
    Regel saehe er trotzdem aus wie ein anklickbarer Knopf - ein Klick, der nichts
    tut, wirkt fuer den Nutzer wie ein Fehler der Seite. Bewusst nur auf diesen

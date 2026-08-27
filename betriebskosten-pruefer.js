@@ -204,7 +204,7 @@ function baueFeiertagsfrage(iso, anzeige, bereitsGesetzt) {
   return label;
 }
 
-function baueFristKarte(frist, belege) {
+function baueFristKarte(frist, belege, zitate) {
   const karte = el("section", "bk-karte");
   karte.appendChild(el("h2", null, frist.titel));
 
@@ -246,11 +246,12 @@ function baueFristKarte(frist, belege) {
   // Der Grund, warum hier zwei Daten stehen und nicht eines.
   const zweiDaten = el("div", "hg-hint-box");
   zweiDaten.appendChild(el("strong", null, "Warum zwei Daten? "));
+  // Der Tatbestand des § 193 BGB kommt aus dem Kern und wird dort gegen die
+  // Wissensbasis geprueft - nicht hier aus dem Gedaechtnis getippt.
   zweiDaten.appendChild(document.createTextNode(
-    "§ 193 BGB gilt, wenn eine Willenserklärung abzugeben oder eine Leistung zu bewirken "
-    + "ist. Ob das auf diese Frist zutrifft, ist eine Auslegungsfrage und nicht durch "
-    + "Rechnen zu klären. Dieses Werkzeug zeigt deshalb beide Daten und entscheidet "
-    + "nicht, welches gilt."));
+    `§ 193 BGB gilt, wenn ${zitate.paragraf193Voraussetzung} ist. Ob das auf diese Frist `
+    + "zutrifft, ist eine Auslegungsfrage und nicht durch Rechnen zu klären. Dieses "
+    + "Werkzeug zeigt deshalb beide Daten und entscheidet nicht, welches gilt."));
   karte.appendChild(zweiDaten);
 
   // Herkunftsmarke, sobald ein Feiertag im Spiel ist.
@@ -385,10 +386,12 @@ function berechne() {
   }
 
   if (ergebnis.abrechnungsfrist) {
-    ergebnisBereich.appendChild(baueFristKarte(ergebnis.abrechnungsfrist, ergebnis.belege));
+    ergebnisBereich.appendChild(
+      baueFristKarte(ergebnis.abrechnungsfrist, ergebnis.belege, ergebnis.zitate));
   }
   if (ergebnis.einwendungsfrist) {
-    ergebnisBereich.appendChild(baueFristKarte(ergebnis.einwendungsfrist, ergebnis.belege));
+    ergebnisBereich.appendChild(
+      baueFristKarte(ergebnis.einwendungsfrist, ergebnis.belege, ergebnis.zitate));
   }
 
   ergebnisBereich.appendChild(baueBelegKarte(ergebnis.belege));

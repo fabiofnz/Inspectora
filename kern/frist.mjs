@@ -40,6 +40,21 @@ const QUELLE_PRAEFIX = "https://www.gesetze-im-internet.de/";
 
 export const FRIST_MONATE = 12;
 
+// Wortlaut-Bausteine, die die Oberflaeche anzeigt.
+//
+// Warum das hier steht und nicht in betriebskosten-pruefer.js: Die Seite erklaert,
+// WANN § 193 BGB ueberhaupt gilt, und gibt dafuer den Tatbestand der Vorschrift
+// wieder. Stand dieser Teilsatz im Oberflaechen-Code, pruefte ihn nichts - er waere
+// beim naechsten Import der Gesetze unbemerkt falsch geworden, waehrend der
+// vollstaendige Text direkt darunter richtig gewesen waere. Genau diese Sorte
+// stiller Abweichung ist gefaehrlich, weil sie belegt aussieht.
+//
+// Als Teil des Ergebnisses wird der Baustein gegen den Text aus gesetze.json
+// geprueft (scripts/pruefe-betriebskosten.js) - wie der Wortlaut des § 556.
+export const ZITATE = {
+  paragraf193Voraussetzung: "eine Willenserklärung abzugeben oder eine Leistung zu bewirken",
+};
+
 // Welche Paragraphen dieses Modul braucht. Die Liste ist zugleich die Pruefliste
 // beim Laden - was hier steht, muss in der Wissensbasis vorhanden sein.
 export const BENOETIGTE_BELEGE = [
@@ -325,6 +340,7 @@ export function pruefeFristen(eingabe, korpus) {
   return {
     ok: true,
     belege: geladen.belege,
+    zitate: ZITATE,
     hinweise,
     feiertagsabdeckung: { abdeckung: ABDECKUNG, nichtAbgedeckt: NICHT_ABGEDECKT },
     abrechnungsfrist,

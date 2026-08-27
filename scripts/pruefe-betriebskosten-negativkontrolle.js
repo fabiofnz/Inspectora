@@ -125,6 +125,13 @@ const MUTATIONEN = [
     ersetzen: 'satz: "Die Abrechnung ist dem Mieter spätestens bis zum Ablauf des sechsten Monats "',
   },
   {
+    name: "Tatbestand des § 193 weicht vom Gesetzestext ab",
+    erwartet: "Jeder Rechenschritt haengt an einem Beleg",
+    datei: "frist.mjs",
+    suchen: 'paragraf193Voraussetzung: "eine Willenserklärung abzugeben oder eine Leistung zu bewirken",',
+    ersetzen: 'paragraf193Voraussetzung: "eine Willenserklärung abzugeben oder eine Zahlung zu leisten",',
+  },
+  {
     name: "Ungueltiges Datum wird durchgelassen",
     erwartet: "Ungueltige Eingaben werden zurueckgewiesen",
     datei: "datum.mjs",

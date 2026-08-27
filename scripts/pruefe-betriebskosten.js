@@ -419,6 +419,17 @@ async function main() {
           + JSON.stringify(frist.satz);
       }
     }
+
+    // Dasselbe fuer den Tatbestand des § 193 BGB. Die Seite erklaert damit, wann
+    // § 193 ueberhaupt gilt - eine Aussage ueber den Gesetzestext, also gehoert
+    // sie an den Gesetzestext gebunden und nicht in den Oberflaechen-Code.
+    if (!e.zitate || !e.zitate.paragraf193Voraussetzung) {
+      return "Der Baustein zum Tatbestand des § 193 BGB fehlt im Ergebnis";
+    }
+    if (!e.belege["bgb-193"].text.includes(e.zitate.paragraf193Voraussetzung)) {
+      return "Der zitierte Tatbestand kommt in § 193 BGB nicht wörtlich vor: "
+        + JSON.stringify(e.zitate.paragraf193Voraussetzung);
+    }
     return true;
   });
 
