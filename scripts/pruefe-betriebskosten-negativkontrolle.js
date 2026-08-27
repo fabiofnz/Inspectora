@@ -165,8 +165,8 @@ const MUTATIONEN = [
     name: "Ausschluss verliert seinen Vorrang vor dem Katalog",
     erwartet: "Zuordnung der Positionen",
     datei: "katalog.mjs",
-    suchen: "      if (verdikt === null) {\n        verdikt = IMMER_MIT_VORBEHALT[item.nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;\n      }",
-    ersetzen: "      verdikt = IMMER_MIT_VORBEHALT[item.nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;",
+    suchen: "        if (verdikt === null) {\n          verdikt = IMMER_MIT_VORBEHALT[item.nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;\n        }",
+    ersetzen: "        verdikt = IMMER_MIT_VORBEHALT[item.nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;",
   },
   {
     name: "Nr. 14 verliert ihren Vorbehalt",
@@ -208,6 +208,34 @@ const MUTATIONEN = [
       datei["betrkv-2-14"].titel_pruefung = "Concierge";
       return datei;
     },
+  },
+  {
+    name: "Bekannte Luecke wird zum normalen Katalogtreffer",
+    erwartet: "Bekannte Luecken sind keine Fundstellen",
+    begriffe: (datei) => {
+      // Genau der Fehler, gegen den das fuenfte Urteil gebaut ist: Winterdienst
+      // kaeme mit echtem Paragraphen und echtem Link zurueck, obwohl § 2 ihn
+      // nicht nennt.
+      datei["betrkv-2-8"].begriffe = [...datei["betrkv-2-8"].begriffe, "Winterdienst"];
+      delete datei["luecke-winterdienst"];
+      return datei;
+    },
+  },
+  {
+    name: "Luecken-Hinweis bekommt einen Quell-Link",
+    erwartet: "Bekannte Luecken sind keine Fundstellen",
+    datei: "katalog.mjs",
+    suchen: "  return {\n    begriff,\n    praxisNr: eintrag.praxisNr,",
+    ersetzen: "  return {\n    begriff,\n    quelle: \"https://www.gesetze-im-internet.de/betrkv/__2.html\",\n"
+      + "    praxisNr: eintrag.praxisNr,",
+  },
+  {
+    name: "Luecke verliert den Wettbewerb gegen den Katalogbegriff",
+    erwartet: "Bekannte Luecken sind keine Fundstellen",
+    datei: "katalog.mjs",
+    suchen: "  const trefferKatalogUndLuecke = sucheBegriffe(gefaltet, [...katalogEintraege, ...lueckenEintraege]);",
+    ersetzen: "  const trefferKatalogUndLuecke = sucheBegriffe(gefaltet, katalogEintraege)\n"
+      + "    .concat(sucheBegriffe(gefaltet, lueckenEintraege));",
   },
   {
     name: "Wissensbasis: BetrKV § 2 hat keinen Quell-Link mehr",

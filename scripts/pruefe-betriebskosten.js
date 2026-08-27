@@ -603,9 +603,13 @@ async function main() {
   for (const eintrag of begriffsEintraege) {
     pruefe(P_BEGRIFFE, "Anker " + eintrag.schluessel, () => {
       if (!eintrag.titel_pruefung) return "titel_pruefung fehlt";
-      const ziel = eintrag.art === "katalog"
-        ? katalog.items.find((i) => i.nr === eintrag.nr)
-        : ausschluesse.posten.find((p) => p.nr === eintrag.nr);
+      // Luecken-Eintraege ankern wie Katalog-Eintraege: Ihre praxis_nr zeigt auf
+      // eine Nummer des Katalogs. Der Anker behauptet dabei NICHT, dass der
+      // Begriff dort vorkommt - er sichert nur, dass die genannte Nummer noch
+      // die Vorschrift ist, die gemeint war.
+      const ziel = eintrag.art === "ausschluss"
+        ? ausschluesse.posten.find((p) => p.nr === eintrag.nr)
+        : katalog.items.find((i) => i.nr === eintrag.nr);
       if (!ziel) return "Nummer " + eintrag.nr + " gibt es nicht";
       if (!Katalog.falte(ziel.text).includes(Katalog.falte(eintrag.titel_pruefung))) {
         return `titel_pruefung ${JSON.stringify(eintrag.titel_pruefung)} kommt im Text von `
@@ -764,6 +768,112 @@ async function main() {
     if (synonym.art !== "suchbegriff") return "Hausmeister steht nicht im Gesetz, gilt aber als Wortlaut";
     // In deutscher Schreibweise, so wie es in der Oberflaeche steht.
     return gleich(synonym.begriff, "Hausmeister", "genannter Suchbegriff");
+  });
+
+  // -------------------------------------------------------------------------
+  const P_LUECKEN = "Bekannte Luecken sind keine Fundstellen";
+  // -------------------------------------------------------------------------
+  //
+  // Positionen wie Winterdienst nennt § 2 BetrKV nicht; ihre Zuordnung stammt aus
+  // der Rechtsprechung. Sie bekommen ein eigenes Urteil - und ausdruecklich keinen
+  // Beleg. Der gefaehrliche Fall waere nicht die fehlende Fundstelle, sondern eine
+  // vorhandene: eine Zuordnung aus der Rechtsprechung, ausgegeben mit echtem
+  // Paragraphen und echtem Link, also nicht als Rechtsauskunft erkennbar.
+
+  const lueckenEintraege = begriffsEintraege.filter((e) => e.art === "luecke");
+
+  pruefe(P_LUECKEN, "es gibt Luecken-Eintraege", () =>
+    lueckenEintraege.length >= 3 ? true
+      : "nur " + lueckenEintraege.length + " Luecken-Eintraege erkannt");
+
+  for (const eintrag of lueckenEintraege) {
+    for (const begriff of eintrag.begriffe) {
+      pruefe(P_LUECKEN, eintrag.schluessel + " / " + begriff, () => {
+        const p = ordne(begriff + " 210,00");
+        if (!p) return "die Zeile wurde stillschweigend verworfen";
+
+        const v = gleich(p.verdikt, "im-gesetz-nicht-genannt", "Urteil");
+        if (v !== true) return v;
+
+        // Der Kern der Sache: keine Fundstelle, kein Vorbehalt, nur der Hinweis.
+        if (p.fundstellen.length !== 0) {
+          return "es wurde eine Fundstelle ausgegeben: "
+            + p.fundstellen.map((f) => f.bezeichnung).join(", ");
+        }
+        if (p.luecken.length !== 1) return "Anzahl der Hinweise: " + p.luecken.length;
+
+        const hinweis = p.luecken[0];
+        if (hinweis.praxisNr !== eintrag.praxisNr) {
+          return `genannte Nummer ${hinweis.praxisNr} statt ${eintrag.praxisNr}`;
+        }
+        if (!katalog.items.some((i) => i.nr === hinweis.praxisNr)) {
+          return "die genannte Nummer gibt es im Katalog nicht";
+        }
+        return true;
+      });
+    }
+  }
+
+  // Kein quelle- und kein text-Feld. Nicht "wird nicht angezeigt", sondern gibt es
+  // nicht: Woraus kein Link gebaut werden kann, daraus wird auch versehentlich
+  // keiner gebaut.
+  pruefe(P_LUECKEN, "Hinweis hat weder quelle noch text", () => {
+    const e = Katalog.pruefePositionen({
+      text: lueckenEintraege.flatMap((l) => l.begriffe).join("\n"),
+    }, korpus, begriffsdatei);
+    for (const p of e.positionen) {
+      for (const hinweis of p.luecken) {
+        const schluessel = Object.keys(hinweis);
+        if (schluessel.includes("quelle")) return "der Hinweis hat ein quelle-Feld";
+        if (schluessel.includes("text")) return "der Hinweis hat ein text-Feld";
+      }
+      const alsText = JSON.stringify(p);
+      if (p.verdikt === "im-gesetz-nicht-genannt" && alsText.includes("gesetze-im-internet.de")) {
+        return "im Ergebnis steht trotzdem ein Quell-Link: " + p.bezeichnung;
+      }
+    }
+    return true;
+  });
+
+  // Die volle Zitierform ist auf der Seite das Kennzeichen eines echten Belegs -
+  // im Hinweistext darf sie deshalb nicht auftauchen.
+  pruefe(P_LUECKEN, "Hinweis nennt nur die Nummer, nicht die Zitierform", () => {
+    const p = ordne("Winterdienst 210,00");
+    const hinweis = p.luecken[0].hinweis;
+    if (/§\s*2/.test(hinweis)) return "der Hinweis zitiert wie ein Beleg: " + hinweis;
+    if (!hinweis.includes("Nr. " + p.luecken[0].praxisNr)) return "die Nummer wird nicht genannt";
+    return true;
+  });
+
+  // Der Grund, warum Luecken und Katalog im selben Wettbewerb antreten muessen.
+  pruefe(P_LUECKEN, "Dachrinnenreinigung schlaegt den Katalogbegriff Reinigung", () => {
+    const p = ordne("Dachrinnenreinigung 130,00");
+    if (p.verdikt !== "im-gesetz-nicht-genannt") {
+      return "Urteil " + p.verdikt + ", Fundstellen: "
+        + p.fundstellen.map((f) => f.bezeichnung).join(", ");
+    }
+    return gleich(p.fundstellen.length, 0, "Fundstellen");
+  });
+
+  pruefe(P_LUECKEN, "Luecke bleibt vom Ausschluss unterscheidbar", () => {
+    // "Reparatur Dachrinnenreinigung" trifft beides. Das Urteil richtet sich nach
+    // dem Ausschluss, der Luecken-Hinweis bleibt trotzdem sichtbar.
+    const p = ordne("Reparatur Dachrinnenreinigung 80,00");
+    if (p.verdikt !== "nicht-umlagefaehig") return "Urteil: " + p.verdikt;
+    if (p.luecken.length !== 1) return "der Luecken-Hinweis fehlt";
+    for (const f of p.fundstellen) {
+      if (f.art === "katalog") return "es wurde trotzdem eine Katalog-Fundstelle gebaut";
+    }
+    return true;
+  });
+
+  pruefe(P_LUECKEN, "unbekanntes Wort bleibt nicht zuordenbar", () => {
+    // Die Abgrenzung, um die es geht: "nicht zuordenbar" heisst, das Werkzeug
+    // kennt das Wort nicht. "Im Gesetz nicht genannt" heisst, es kennt es.
+    const p = ordne("Blubberdings 12,00");
+    const v = gleich(p.verdikt, "nicht-zuordenbar", "Urteil");
+    if (v !== true) return v;
+    return gleich(p.luecken.length, 0, "Hinweise");
   });
 
   // -------------------------------------------------------------------------

@@ -1255,6 +1255,7 @@ main{padding-top:0}
 .bk-zaehler span.ist-katalog b{color:var(--success)}
 .bk-zaehler span.ist-ausschluss b{color:var(--danger)}
 .bk-zaehler span.ist-vertrag b{color:var(--warning)}
+.bk-zaehler span.ist-luecke b{color:#0369A1}
 
 .bk-position{
   margin-top:12px;padding:16px 18px;
@@ -1264,6 +1265,7 @@ main{padding-top:0}
 .bk-position.ist-katalog{border-left-color:var(--success)}
 .bk-position.ist-ausschluss{border-left-color:var(--danger)}
 .bk-position.ist-vertrag{border-left-color:var(--warning)}
+.bk-position.ist-luecke{border-left-color:var(--cyan)}
 .bk-position.ist-unbekannt{border-left-color:var(--muted)}
 
 .bk-position-kopf{display:flex;flex-wrap:wrap;align-items:baseline;justify-content:space-between;gap:10px}
@@ -1276,6 +1278,10 @@ main{padding-top:0}
 .bk-position-urteil.ist-katalog{border-color:rgba(5,150,105,.28);background:var(--success-soft);color:var(--success)}
 .bk-position-urteil.ist-ausschluss{border-color:rgba(220,38,38,.28);background:var(--danger-soft);color:var(--danger)}
 .bk-position-urteil.ist-vertrag{border-color:rgba(217,119,6,.28);background:var(--warning-soft);color:var(--warning)}
+/* Fuenfter Zustand: bekannte Position, im Gesetzestext nicht genannt. Cyan ist
+   auf dieser Seite sonst nirgends im Einsatz - der Zustand muss sich sowohl von
+   "Im Katalog" (gruen) als auch von "Nicht zuordenbar" (grau) unterscheiden. */
+.bk-position-urteil.ist-luecke{border-color:rgba(14,165,233,.3);background:rgba(14,165,233,.12);color:#0369A1}
 
 .bk-fundstelle{margin-top:12px;padding-left:14px;border-left:2px solid var(--line)}
 .bk-fundstelle-kopf{color:var(--text);font-size:12px;font-weight:800}
@@ -1297,6 +1303,18 @@ main{padding-top:0}
   background:var(--warning-soft);color:#92400E;font-size:11px;line-height:1.65;
 }
 .bk-vorbehalt strong{color:#78350F}
+
+/* Hinweis zu einer bekannten Luecke. Bewusst OHNE die Aufmachung einer
+   Fundstelle: kein Rahmen links wie bei .bk-fundstelle, keine Zitierzeile,
+   und im Markup gibt es hier kein <a>. Es ist kein Beleg und darf keinen
+   Moment lang wie einer aussehen. */
+.bk-luecke{
+  margin-top:12px;padding:12px 14px;
+  border:1px solid rgba(14,165,233,.28);border-radius:var(--radius);
+  background:rgba(14,165,233,.08);color:var(--text);
+  font-size:12px;line-height:1.65;
+}
+.bk-luecke strong{display:block;margin-bottom:3px;color:#0369A1;font-size:11px}
 
 .bk-unbekannt-text{margin-top:8px;color:var(--muted);font-size:12px;line-height:1.65}
 

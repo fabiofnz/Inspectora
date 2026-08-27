@@ -1,6 +1,33 @@
 {
   "_hinweis": "Zuordnung von Alltags-Begriffen aus Nebenkostenabrechnungen zu den Nummern des BetrKV-Katalogs (§ 2) und zu den Ausschluessen (§ 1 Abs. 2). Schluessel: betrkv-2-<Nr> fuer den Katalog, betrkv-1-<Nr> fuer die Ausschluesse. 'titel_pruefung' ist die Sicherung: Das Pruefskript meldet einen Fehler, wenn dieser Textteil im geparsten Text GENAU DIESER Nummer nicht vorkommt. Damit zeigt eine Zuordnung nie auf die falsche Nummer, ohne dass es auffaellt. — Diese Datei ist redaktionell, nicht amtlich: 'Hausmeister' steht in keinem Gesetz, 'Hauswart' schon. Ein Treffer ueber einen Suchbegriff wird in der Oberflaeche deshalb ausdruecklich als Suchbegriff-Treffer gekennzeichnet und immer zusammen mit dem Gesetzeswortlaut gezeigt, damit der Nutzer die Zuordnung pruefen kann, statt sie zu glauben.",
-  "_bewusste_luecken": "Nicht aufgenommen sind Positionen, deren Umlagefaehigkeit sich nicht aus dem Gesetzestext, sondern aus der Rechtsprechung ergibt - vor allem Winterdienst/Schneeraeumung (wird zu § 2 Nr. 8 gerechnet) und Rauchwarnmelder, Dachrinnenreinigung oder Wartungspauschalen (werden zu Nr. 17 gerechnet). Sie kommen deshalb als 'nicht zuordenbar' heraus. Das ist Absicht: Dieses Werkzeug gibt nur wieder, was im Gesetz steht. Eine Zuordnung aus der Rechtsprechung waere hier eine Rechtsauskunft mit einem Paragraphen daneben, der sie nicht traegt - und genau das soll die Seite nicht tun. Bei Nr. 17 sind nur Begriffe aufgenommen, die sich selbst als 'sonstige' bezeichnen.",
+  "_bewusste_luecken": "Die Eintraege mit dem Praefix 'luecke-' sind haeufige Positionen, die der Wortlaut des § 2 BetrKV NICHT nennt; ihre Zuordnung stammt aus der Rechtsprechung. Sie bekommen deshalb ein eigenes Urteil ('Im Gesetz nicht genannt') und ausdruecklich KEINE Fundstelle: kein Paragraph, kein Quell-Link, keine Zitierform. Im Hinweistext steht nur 'Nr. 8' und nicht '§ 2 Nr. 8 BetrKV', weil die volle Zitierform auf der Seite das Kennzeichen eines echten Belegs ist. Der Sinn des Urteils ist die Unterscheidung von 'nicht zuordenbar': Dort kennt das Werkzeug den Begriff nicht, hier kennt es ihn - und weiss, dass das Gesetz ihn nicht nennt. 'praxis_nr' ist deshalb kein Beleg, sondern eine Angabe im Fliesstext. 'titel_pruefung' sichert weiterhin ab, dass die genannte Nummer noch die Vorschrift ist, die gemeint war. Aufgenommen wird hier nur, was sich einer Nummer eindeutig zurechnen laesst - Sammelbegriffe wie 'Wartungspauschale' bleiben draussen und kommen als 'nicht zuordenbar' heraus. Bei Nr. 17 des Katalogs sind nur Begriffe aufgenommen, die sich selbst als 'sonstige' bezeichnen.",
+
+  "luecke-winterdienst": {
+    "praxis_nr": 8,
+    "titel_pruefung": "Strassenreinigung und Muellbeseitigung",
+    "begriffe": [
+      "Winterdienst",
+      "Schneeräumung",
+      "Schneebeseitigung",
+      "Streudienst"
+    ]
+  },
+  "luecke-rauchwarnmelder": {
+    "praxis_nr": 17,
+    "titel_pruefung": "sonstige Betriebskosten",
+    "begriffe": [
+      "Rauchwarnmelder",
+      "Rauchmelder"
+    ]
+  },
+  "luecke-dachrinnenreinigung": {
+    "praxis_nr": 17,
+    "titel_pruefung": "sonstige Betriebskosten",
+    "begriffe": [
+      "Dachrinnenreinigung",
+      "Dachrinne"
+    ]
+  },
   "betrkv-2-1": {
     "titel_pruefung": "Grundsteuer",
     "begriffe": [

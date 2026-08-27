@@ -463,6 +463,7 @@ const URTEIL = {
   [VERDIKT.KATALOG]: { klasse: "ist-katalog", text: "Im Katalog" },
   [VERDIKT.AUSGESCHLOSSEN]: { klasse: "ist-ausschluss", text: "Nicht umlagefähig" },
   [VERDIKT.MIETVERTRAG]: { klasse: "ist-vertrag", text: "Mietvertrag erforderlich" },
+  [VERDIKT.LUECKE]: { klasse: "ist-luecke", text: "Im Gesetz nicht genannt" },
   [VERDIKT.UNBEKANNT]: { klasse: "ist-unbekannt", text: "Nicht zuordenbar" },
 };
 
@@ -505,6 +506,16 @@ function bauePosition(position) {
 
   for (const fundstelle of position.fundstellen) karte.appendChild(baueFundstelle(fundstelle));
 
+  // Luecken-Hinweis. Hier wird bewusst KEIN link() aufgerufen und kein
+  // Wortlaut-Block gebaut: Die genannte Nummer ist keine Fundstelle, sondern
+  // eine Angabe darueber, wie die Praxis mit der Position umgeht.
+  for (const gap of position.luecken) {
+    const kasten = el("div", "bk-luecke");
+    kasten.appendChild(el("strong", null, `„${gap.begriff}“`));
+    kasten.appendChild(document.createTextNode(gap.hinweis));
+    karte.appendChild(kasten);
+  }
+
   for (const vorbehalt of position.vorbehalte) {
     const kasten = el("div", "bk-vorbehalt");
     kasten.appendChild(el("strong", null, `Nr. ${vorbehalt.nr} ist nicht allein aus dem Gesetz zu entscheiden: `));
@@ -535,6 +546,7 @@ function baueZaehler(z) {
   zeige("ist-katalog", z.imKatalog, "im Katalog");
   zeige("ist-ausschluss", z.nichtUmlagefaehig, "nicht umlagefähig");
   zeige("ist-vertrag", z.mietvertrag, "Mietvertrag erforderlich");
+  zeige("ist-luecke", z.nichtGenannt, "im Gesetz nicht genannt");
   zeige(null, z.nichtZuordenbar, "nicht zuordenbar");
   zeige(null, z.nichtGewertet, "nicht als Position gewertet");
   return leiste;
@@ -617,7 +629,8 @@ function pruefeListe() {
   const z = ergebnis.zusammenfassung;
   console.log(LOG, "Positionen geprueft.",
     `${z.geprueft} Positionen, ${z.imKatalog} im Katalog, ${z.nichtUmlagefaehig} ausgeschlossen, `
-    + `${z.mietvertrag} mit Vertragsvorbehalt, ${z.nichtZuordenbar} nicht zuordenbar, `
+    + `${z.mietvertrag} mit Vertragsvorbehalt, ${z.nichtGenannt} im Gesetz nicht genannt, `
+    + `${z.nichtZuordenbar} nicht zuordenbar, `
     + `${z.nichtGewertet} nicht gewertet.`);
 }
 

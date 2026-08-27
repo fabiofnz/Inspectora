@@ -52,6 +52,10 @@ export const VERDIKT = {
   KATALOG: "im-katalog",
   AUSGESCHLOSSEN: "nicht-umlagefaehig",
   MIETVERTRAG: "mietvertrag-erforderlich",
+  // Bekannte Position, die im Wortlaut des § 2 nicht vorkommt. Der Unterschied zu
+  // UNBEKANNT ist inhaltlich: Dort kennt das Werkzeug das Wort nicht, hier kennt
+  // es das Wort - und weiss, dass das Gesetz es nicht nennt.
+  LUECKE: "im-gesetz-nicht-genannt",
   UNBEKANNT: "nicht-zuordenbar",
 };
 
@@ -329,21 +333,48 @@ function fundstelleAusschluss(posten, begriff, wortlaut, beleg) {
   };
 }
 
+// Der Hinweis zu einer bekannten Luecke. ER HAT BEWUSST KEIN quelle- UND KEIN
+// text-FELD. Das ist keine Nachlaessigkeit und auch keine Zusage der Oberflaeche,
+// nichts zu verlinken, sondern eine Eigenschaft des Objekts: Woraus kein Link
+// gebaut werden kann, daraus wird auch versehentlich keiner gebaut. Die Zuordnung
+// zu einer Nummer stammt hier aus der Rechtsprechung, nicht aus dem Gesetzestext -
+// sie darf deshalb nirgends wie eine Fundstelle aussehen. Aus demselben Grund wird
+// nur "Nr. 8" genannt und nicht "§ 2 Nr. 8 BetrKV": Die volle Zitierform ist auf
+// dieser Seite das Kennzeichen eines echten Belegs.
+function luecke(eintrag, begriff) {
+  return {
+    begriff,
+    praxisNr: eintrag.praxisNr,
+    hinweis: "Häufige Position, im Wortlaut der Betriebskostenverordnung aber nicht "
+      + `genannt. In der Praxis wird sie Nr. ${eintrag.praxisNr} zugerechnet; diese `
+      + "Zuordnung stammt aus der Rechtsprechung, nicht aus dem Wortlaut. Dieses "
+      + "Werkzeug ordnet nur nach dem Gesetzestext zu.",
+  };
+}
+
 export function ordneZeileZu(bezeichnung, katalog, ausschluesse, begriffe, belege) {
   const gefaltet = falte(bezeichnung);
-  if (gefaltet === "") return { verdikt: VERDIKT.UNBEKANNT, fundstellen: [] };
+  if (gefaltet === "") return { verdikt: VERDIKT.UNBEKANNT, fundstellen: [], luecken: [] };
 
   const katalogEintraege = [];
   const ausschlussEintraege = [];
+  const lueckenEintraege = [];
   for (const eintrag of begriffe) {
     if (eintrag.art === "katalog") katalogEintraege.push(eintrag);
+    else if (eintrag.art === "luecke") lueckenEintraege.push(eintrag);
     else ausschlussEintraege.push(eintrag);
   }
 
   const ausschlussTreffer = sucheBegriffe(gefaltet, ausschlussEintraege);
-  const katalogTreffer = sucheBegriffe(gefaltet, katalogEintraege);
+
+  // Katalog und Luecken treten im SELBEN Wettbewerb an, laengster Begriff gewinnt.
+  // Getrennte Durchlaeufe waeren hier ein Fehler mit Ansage: "Dachrinnenreinigung"
+  // enthaelt "reinigung" und wuerde sonst als § 2 Nr. 9 durchgehen - eine
+  // dokumentierte Luecke, ausgegeben mit echtem Paragraphen und echtem Link.
+  const trefferKatalogUndLuecke = sucheBegriffe(gefaltet, [...katalogEintraege, ...lueckenEintraege]);
 
   const fundstellen = [];
+  const luecken = [];
 
   // Ausschluss zuerst - Begruendung im Kopf dieser Datei.
   let verdikt = null;
@@ -357,19 +388,25 @@ export function ordneZeileZu(bezeichnung, katalog, ausschluesse, begriffe, beleg
     }
   }
 
-  if (katalogTreffer.length > 0) {
-    const best = katalogTreffer[0];
-    const item = katalog.items.find((it) => it.nr === best.eintrag.nr);
-    if (item) {
-      const wortlaut = falte(item.text).includes(falte(best.begriff));
-      fundstellen.push(fundstelleKatalog(item, best.begriff, wortlaut, belege["betrkv-2"]));
-      if (verdikt === null) {
-        verdikt = IMMER_MIT_VORBEHALT[item.nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;
+  if (trefferKatalogUndLuecke.length > 0) {
+    const best = trefferKatalogUndLuecke[0];
+
+    if (best.eintrag.art === "luecke") {
+      luecken.push(luecke(best.eintrag, best.begriff));
+      if (verdikt === null) verdikt = VERDIKT.LUECKE;
+    } else {
+      const item = katalog.items.find((it) => it.nr === best.eintrag.nr);
+      if (item) {
+        const wortlaut = falte(item.text).includes(falte(best.begriff));
+        fundstellen.push(fundstelleKatalog(item, best.begriff, wortlaut, belege["betrkv-2"]));
+        if (verdikt === null) {
+          verdikt = IMMER_MIT_VORBEHALT[item.nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;
+        }
       }
     }
   }
 
-  if (verdikt === null) return { verdikt: VERDIKT.UNBEKANNT, fundstellen: [] };
+  if (verdikt === null) return { verdikt: VERDIKT.UNBEKANNT, fundstellen: [], luecken: [] };
 
   // Nr. 14 und Nr. 17 tragen ihren Vorbehalt immer, auch wenn das Urteil wegen
   // eines Ausschlusses schon anders lautet.
@@ -377,7 +414,7 @@ export function ordneZeileZu(bezeichnung, katalog, ausschluesse, begriffe, beleg
     .filter((f) => f.art === "katalog" && IMMER_MIT_VORBEHALT[f.nr])
     .map((f) => ({ nr: f.nr, text: IMMER_MIT_VORBEHALT[f.nr] }));
 
-  return { verdikt, fundstellen, vorbehalte };
+  return { verdikt, fundstellen, luecken, vorbehalte };
 }
 
 // ---------------------------------------------------------------------------
@@ -424,6 +461,7 @@ export function pruefePositionen(eingabe, korpus, begriffsdatei) {
       bezeichnung,
       verdikt: zuordnung.verdikt,
       fundstellen: zuordnung.fundstellen,
+      luecken: zuordnung.luecken || [],
       vorbehalte: zuordnung.vorbehalte || [],
     });
   }
@@ -443,6 +481,7 @@ export function pruefePositionen(eingabe, korpus, begriffsdatei) {
       imKatalog: zaehle(VERDIKT.KATALOG),
       nichtUmlagefaehig: zaehle(VERDIKT.AUSGESCHLOSSEN),
       mietvertrag: zaehle(VERDIKT.MIETVERTRAG),
+      nichtGenannt: zaehle(VERDIKT.LUECKE),
       nichtZuordenbar: zaehle(VERDIKT.UNBEKANNT),
       nichtGewertet: nichtGewertet.length,
     },
@@ -458,6 +497,24 @@ export function begriffeAufbereiten(datei) {
   for (const [schluessel, wert] of Object.entries(datei)) {
     if (schluessel.startsWith("_") || !wert || typeof wert !== "object") continue;
     if (!Array.isArray(wert.begriffe) || wert.begriffe.length === 0) continue;
+
+    // Bekannte Luecken: eigener Schluesselraum, damit sie nie als Katalog- oder
+    // Ausschlusseintrag durchgehen koennen. "praxis_nr" ist die Nummer, der die
+    // Praxis die Position zurechnet - kein Beleg, nur eine Angabe im Hinweistext.
+    const luecke = /^luecke-[a-z0-9-]+$/.exec(schluessel);
+    if (luecke) {
+      if (!Number.isInteger(wert.praxis_nr)) continue;
+      eintraege.push({
+        schluessel,
+        art: "luecke",
+        nr: wert.praxis_nr,
+        praxisNr: wert.praxis_nr,
+        titel_pruefung: wert.titel_pruefung || "",
+        begriffe: wert.begriffe,
+      });
+      continue;
+    }
+
     const treffer = /^betrkv-(1|2)-(\d{1,2})$/.exec(schluessel);
     if (!treffer) continue;
     eintraege.push({
