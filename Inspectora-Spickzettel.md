@@ -56,7 +56,8 @@ git pull
 
 **Eigene Änderungen hochladen:**
 ```powershell
-git add .
+git status
+git add <datei>
 git commit -m "Beschreibung der Änderung"
 git push
 ```

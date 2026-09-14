@@ -1,3 +1,4 @@
 node_modules/
 .netlify/
 import-log.txt
+benchmark/PLAN.md
