@@ -1,9 +1,16 @@
 // benchmark/run.mjs
 // Stellt Benchmark-Fragen an ein Modell und speichert die Antworten WORTWOERTLICH.
 //
-// Aufruf:
-//   node benchmark/run.mjs --modell claude-sonnet-5               Trockenlauf (Standard)
-//   node benchmark/run.mjs --modell claude-sonnet-5 --ausfuehren  echter Lauf, kostet Geld
+// Aufruf (ohne --ausfuehren immer Trockenlauf, keine Anfrage, keine Kosten):
+//   node benchmark/run.mjs --modell claude-sonnet-5 --fragen fristen
+//       Testauswahl (20 feste Fragen, nur fristen)
+//   node benchmark/run.mjs --modell claude-sonnet-5 --fragen umlage --voll
+//       alle Fragen der Fragendatei
+//   node benchmark/run.mjs --modell claude-sonnet-5 --fragen fristen --voll --ausfuehren --kostenlimit 15
+//       echter Lauf, kostet Geld. --kostenlimit (USD, geschaetzt) ist bei --voll Pflicht.
+//   node benchmark/run.mjs --modell claude-sonnet-5 --fragen fristen --voll --ausfuehren --kostenlimit 15 \
+//       --fortsetzen benchmark/ergebnisse/2026-09-14-claude-sonnet-5-fristen-voll.json
+//       setzt einen abgebrochenen Lauf fort
 //
 // Laeuft nur lokal, nie auf Netlify. Der Schluessel kommt ausschliesslich aus der
 // Umgebungsvariablen BENCHMARK_ANTHROPIC_API_KEY - es gibt keinen Rueckfall auf andere
@@ -12,7 +19,8 @@
 //
 // Dieses Skript INTERPRETIERT NICHTS und BEWERTET NICHTS. Es zieht nicht einmal die
 // "ANTWORT:"-Zeile aus der Antwort - das ist Aufgabe des Scorers. Die Ergebnisdatei ist
-// das Beweisstueck; was darin steht, ist genau das, was die API geliefert hat.
+// das Beweisstueck; was darin steht, ist genau das, was die API geliefert hat. Auch der
+// Zwischenstand zeigt nur Tatsachen der Antworten (stop_reason, Token), keine Wertung.
 //
 // ---------------------------------------------------------------------------
 // WIE GEFRAGT WIRD
@@ -23,6 +31,7 @@
 //     darf das Modell frei begruenden. Platzhalter "TT.MM.JJJJ", kein Beispieldatum, damit
 //     kein Datum als Anker wirkt.
 //   - Keine Beispiele, kein Gespraechsverlauf: jede Frage ist eine eigene Anfrage.
+//   - Eine Anfrage nach der anderen, nie parallel - gleiche Bedingungen wie im Testlauf.
 //   - Vor der ersten Anfrage wird geprueft, dass jede Nachricht ohne die Frage exakt die
 //     Vorlage ihres Antworttyps ist. Weicht eine ab, bricht das Skript ab.
 //   - KEINE fallbacks: Ein Rueckfall auf ein anderes Modell wuerde eine Antwort dem
@@ -42,6 +51,24 @@
 //   - Die vollstaendige Konfiguration je Modell steht in der Ergebnisdatei und spaeter
 //     auf der Methodenseite.
 //   - Eine Konfiguration laeuft erst, wenn sie freigegeben ist.
+//
+// ---------------------------------------------------------------------------
+// ABBRUCH, FEHLER, FORTSETZUNG
+// ---------------------------------------------------------------------------
+//   - Die Ergebnisdatei wird nach JEDER Antwort neu geschrieben. Was gelaufen ist, bleibt.
+//   - Strg+C: Der Lauf endet nach der Antwort, die gerade laeuft (status "abgebrochen").
+//     Ein zweites Strg+C bricht sofort ab - die laufende Antwort fehlt dann.
+//   - Kostenlimit erreicht: Vor der naechsten Frage Schluss, status "abgebrochen".
+//   - API-Fehler: Das SDK wiederholt eine Anfrage selbst bis zu zweimal (gleiches Modell).
+//     Scheitert sie trotzdem, bleibt ein fehler-Eintrag stehen. Es gibt KEINE weitere
+//     Wiederholung - auch --fortsetzen laesst diese Fragen unangetastet. Ein spaeterer
+//     Versuch waere ein zweiter Wurf unter anderen Bedingungen; ihn still als "die"
+//     Antwort zu speichern, waere eine stille Auswahl.
+//   - --fortsetzen fragt nur Fragen ohne jeden Eintrag. Vorher muessen Modell, Parameter,
+//     Vorlagen, Laufart, Fragendatei und ihr SHA-256 exakt zum urspruenglichen Lauf passen.
+//     Jede Fortsetzung wird in der Datei unter "fortsetzungen" vermerkt.
+//   - Ein echter Lauf startet nur, wenn benchmark/run.mjs committet ist - sonst bezeichnet
+//     git_commit nicht den Code, der gelaufen ist.
 
 "use strict";
 
@@ -49,16 +76,24 @@ import fs from "node:fs";
 import path from "node:path";
 import crypto from "node:crypto";
 import { execSync } from "node:child_process";
+import { isDeepStrictEqual } from "node:util";
 import { fileURLToPath } from "node:url";
 
 import Anthropic from "@anthropic-ai/sdk";
 
 const LOG = "[run]";
 const HIER = path.dirname(fileURLToPath(import.meta.url));
-const FRAGEN_PFAD = path.resolve(HIER, "fragen-fristen.json");
+const WURZEL = path.resolve(HIER, "..");
 const ERGEBNIS_VERZEICHNIS = path.resolve(HIER, "ergebnisse");
 const SDK_PAKET = path.resolve(HIER, "../node_modules/@anthropic-ai/sdk/package.json");
 const SCHLUESSEL_VARIABLE = "BENCHMARK_ANTHROPIC_API_KEY";
+
+const FRAGENDATEIEN = {
+  fristen: "fragen-fristen.json",
+  umlage: "fragen-umlage.json",
+};
+
+const ZWISCHENSTAND_ALLE = 25;
 
 // ---------------------------------------------------------------------------
 // Modelle und ihre Konfiguration
@@ -78,6 +113,9 @@ const MODELLE = {
     anmerkung: "Variante A: weder thinking noch output_config gesetzt, nur das Pflichtfeld "
       + "max_tokens. Laut API-Dokumentation laeuft Claude Sonnet 5 dann mit adaptivem Denken "
       + "und effort high. Die Anbieter-Vorgabe ist der Messgegenstand.",
+    // Nur fuer Zwischenstand und Kostenlimit - eine Schaetzung, keine Abrechnung.
+    // Wird nicht an die API geschickt.
+    preis_usd_pro_mio_token: { input: 2, output: 10 },
   },
 };
 
@@ -90,10 +128,12 @@ const FORMATZEILE = {
   "ja-nein": "Letzte Zeile deiner Antwort genau in dieser Form: ANTWORT: ja oder ANTWORT: nein",
 };
 
+const NACHRICHTENAUFBAU = "<frage unveraendert>\\n\\n<formatzeile des antworttyps>";
+
 const baueNachricht = (frage) => `${frage.frage}\n\n${FORMATZEILE[frage.antwort_typ]}`;
 
 // ---------------------------------------------------------------------------
-// Feste Auswahl - kein Zufall
+// Feste Auswahl fuer den Testlauf - kein Zufall
 // ---------------------------------------------------------------------------
 //
 // Kontingente je (Kategorie, Antworttyp, Antwort). Bei Ja/Nein-Fragen ist die Antwort
@@ -118,6 +158,8 @@ const AUSWAHL_VERFAHREN = "Je Kontingent (Kategorie, Antworttyp, bei Ja/Nein auc
   + "die Gruppe nach ID sortieren und die Positionen round(i*(n-1)/(k-1)) nehmen, "
   + "i = 0..k-1; bei k = 1 die Mitte floor((n-1)/2). Kein Zufall.";
 
+const AUSWAHL_VERFAHREN_VOLL = "Alle Fragen der Fragendatei, in der Reihenfolge der Datei. Keine Auswahl.";
+
 function waehleFragen(alle) {
   const auswahl = [];
   for (const k of KONTINGENT) {
@@ -139,7 +181,10 @@ function waehleFragen(alle) {
 // Jede Nachricht muss ohne ihre Frage exakt die Vorlage ihres Antworttyps sein.
 function pruefeVorlagen(fragen) {
   const probleme = [];
+  const ids = new Set();
   for (const f of fragen) {
+    if (ids.has(f.id)) probleme.push(`${f.id}: doppelt`);
+    ids.add(f.id);
     if (!FORMATZEILE[f.antwort_typ]) { probleme.push(`${f.id}: unbekannter Antworttyp`); continue; }
     const nachricht = baueNachricht(f);
     if (!nachricht.startsWith(f.frage)) probleme.push(`${f.id}: Frage nicht unveraendert am Anfang`);
@@ -149,6 +194,41 @@ function pruefeVorlagen(fragen) {
     if (/ANTWORT:/.test(f.frage)) probleme.push(`${f.id}: Frage enthaelt schon eine Formatzeile`);
   }
   return probleme;
+}
+
+// Eine Fortsetzung muss exakt der urspruengliche Lauf sein - sonst stuenden Antworten
+// unter verschiedenen Bedingungen in einer Datei.
+function pruefeFortsetzung(ergebnis, soll) {
+  if (!Array.isArray(ergebnis.antworten)) return ["Datei ohne antworten-Liste"];
+  const p = [];
+  if (ergebnis.status === "abgeschlossen") p.push("Lauf ist bereits abgeschlossen");
+  if (ergebnis.lauf !== soll.laufArt) p.push(`Laufart "${ergebnis.lauf}", angefragt "${soll.laufArt}"`);
+  if (ergebnis.modell?.angefragt !== soll.modellId) {
+    p.push(`Modell "${ergebnis.modell?.angefragt}", angefragt "${soll.modellId}"`);
+  }
+  if (!isDeepStrictEqual(ergebnis.konfiguration?.parameter, soll.parameter)) p.push("Parameter weichen ab");
+  if (ergebnis.konfiguration?.systemprompt !== null) p.push("systemprompt weicht ab");
+  if (ergebnis.konfiguration?.fallbacks !== null) p.push("fallbacks weichen ab");
+  if (!isDeepStrictEqual(ergebnis.vorlagen, FORMATZEILE)) p.push("Vorlagen weichen ab");
+  if (ergebnis.nachrichtenaufbau !== NACHRICHTENAUFBAU) p.push("Nachrichtenaufbau weicht ab");
+  if (soll.laufArt === "testlauf" && !isDeepStrictEqual(ergebnis.auswahl?.kontingent, KONTINGENT)) {
+    p.push("Kontingent der Testauswahl weicht ab");
+  }
+  if (ergebnis.herkunft?.fragendatei !== soll.fragendatei) {
+    p.push(`Fragendatei "${ergebnis.herkunft?.fragendatei}", angefragt "${soll.fragendatei}"`);
+  }
+  if (ergebnis.herkunft?.fragendatei_sha256 !== soll.fragenHash) p.push("SHA-256 der Fragendatei weicht ab");
+
+  const nachId = new Map(soll.fragen.map((f) => [f.id, f]));
+  const gesehen = new Set();
+  for (const a of ergebnis.antworten) {
+    const f = nachId.get(a.frage_id);
+    if (!f) { p.push(`${a.frage_id}: nicht in der Auswahl`); continue; }
+    if (gesehen.has(a.frage_id)) p.push(`${a.frage_id}: doppelt`);
+    gesehen.add(a.frage_id);
+    if (a.nachricht !== baueNachricht(f)) p.push(`${a.frage_id}: gespeicherte Nachricht weicht ab`);
+  }
+  return p;
 }
 
 // ---------------------------------------------------------------------------
@@ -168,120 +248,299 @@ function lokalesDatum() {
 
 function gitCommit() {
   try {
-    return execSync("git rev-parse HEAD", { cwd: HIER, encoding: "utf8" }).trim();
+    return execSync("git rev-parse HEAD", { cwd: HIER, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
   } catch {
     return null;
   }
 }
 
+// true nur, wenn git laeuft und run.mjs keine uncommitteten Aenderungen hat.
+function runMjsCommittet() {
+  try {
+    const status = execSync("git status --porcelain -- run.mjs", {
+      cwd: HIER, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"],
+    });
+    return status.trim() === "";
+  } catch {
+    return false;
+  }
+}
+
+const sha256 = (bytes) => crypto.createHash("sha256").update(bytes).digest("hex");
+
+function dauerText(ms) {
+  const s = Math.max(0, Math.round(ms / 1000));
+  return `${Math.floor(s / 3600)}:${String(Math.floor(s / 60) % 60).padStart(2, "0")}:${String(s % 60).padStart(2, "0")}`;
+}
+
+// Geschaetzte Kosten aus usage. Keine Abrechnung - die steht nur im Konto.
+function kostenAus(antworten, preis) {
+  let usd = 0;
+  for (const a of antworten) {
+    const u = a.usage;
+    if (!u) continue;
+    const input = (u.input_tokens ?? 0) + (u.cache_creation_input_tokens ?? 0) + (u.cache_read_input_tokens ?? 0);
+    usd += (input * preis.input + (u.output_tokens ?? 0) * preis.output) / 1e6;
+  }
+  return usd;
+}
+
+const usdText = (usd) => `~$${usd.toFixed(2)}`;
+
+// Alles, was waehrend eines echten Laufs gemeldet wird, geht auch in die .log-Datei.
+let logPfad = null;
+function melde(text) {
+  console.log(text);
+  if (logPfad) fs.appendFileSync(logPfad, text + "\n", "utf8");
+}
+function meldeFehler(text) {
+  console.error(text);
+  if (logPfad) fs.appendFileSync(logPfad, text + "\n", "utf8");
+}
+
 function abbruch(text) {
-  console.error(`${LOG} Abbruch: ${text}`);
+  meldeFehler(`${LOG} Abbruch: ${text}`);
   process.exit(1);
 }
 
-// Die Datei wird nach JEDER Antwort neu geschrieben. Bricht der Lauf mittendrin ab,
-// bleibt das bis dahin Gelieferte als Beweisstueck erhalten - mit status "laeuft".
 function schreibe(pfad, daten) {
   fs.writeFileSync(pfad, JSON.stringify(daten, null, 2) + "\n", "utf8");
+}
+
+function fehlerAus(fehler) {
+  return fehler instanceof Anthropic.APIError
+    ? { status: fehler.status, typ: fehler.name, meldung: fehler.message }
+    : { typ: "unbekannt", meldung: String(fehler) };
+}
+
+// Laufender echter Lauf - fuer Strg+C und unerwartete Fehler.
+let laufend = null;
+let stopAngefordert = false;
+
+function beende(status, abbruchInfo = null) {
+  laufend.ergebnis.status = status;
+  laufend.ergebnis.beendet = new Date().toISOString();
+  laufend.ergebnis.abbruch = abbruchInfo;
+  schreibe(laufend.pfad, laufend.ergebnis);
 }
 
 // ---------------------------------------------------------------------------
 
 async function main() {
   const modellId = argument("--modell");
+  const fragenName = argument("--fragen");
+  const voll = process.argv.includes("--voll");
   const ausfuehren = process.argv.includes("--ausfuehren");
+  const fortsetzenArg = argument("--fortsetzen");
+  const kostenlimitArg = argument("--kostenlimit");
+
   if (!modellId) abbruch("--modell fehlt. Bekannt: " + Object.keys(MODELLE).join(", "));
   const modell = MODELLE[modellId];
   if (!modell) abbruch(`Unbekanntes Modell "${modellId}". Bekannt: ${Object.keys(MODELLE).join(", ")}`);
+  if (!FRAGENDATEIEN[fragenName]) abbruch(`--fragen fehlt oder unbekannt. Bekannt: ${Object.keys(FRAGENDATEIEN).join(", ")}`);
+  const kostenlimit = kostenlimitArg === null ? null : Number(kostenlimitArg);
+  if (kostenlimitArg !== null && !(kostenlimit > 0)) abbruch(`--kostenlimit "${kostenlimitArg}" ist keine positive Zahl.`);
 
-  const rohdaten = fs.readFileSync(FRAGEN_PFAD);
+  const fragenPfad = path.resolve(HIER, FRAGENDATEIEN[fragenName]);
+  const fragendateiRelativ = path.relative(WURZEL, fragenPfad).replace(/\\/g, "/");
+  const rohdaten = fs.readFileSync(fragenPfad);
+  const fragenHash = sha256(rohdaten);
   const alle = JSON.parse(rohdaten.toString("utf8"));
-  const fragen = waehleFragen(alle);
+
+  if (!voll && fragenName !== "fristen") abbruch("Eine Testauswahl gibt es nur fuer fristen. Fuer umlage: --voll.");
+  const laufArt = voll ? "voll" : "testlauf";
+  const fragen = voll ? alle : waehleFragen(alle);
 
   const probleme = pruefeVorlagen(fragen);
   if (probleme.length > 0) abbruch("Vorlagenpruefung: " + probleme.join(" | "));
 
-  const zielPfad = path.join(ERGEBNIS_VERZEICHNIS, `${lokalesDatum()}-${modellId}.json`);
-  const ja = fragen.filter((f) => f.antwort === "ja").length;
-  const nein = fragen.filter((f) => f.antwort === "nein").length;
+  let zielPfad;
+  let bestehend = null;
+  let offen = fragen;
+  if (fortsetzenArg) {
+    zielPfad = path.resolve(fortsetzenArg);
+    if (!fs.existsSync(zielPfad)) abbruch(`${fortsetzenArg} existiert nicht.`);
+    bestehend = JSON.parse(fs.readFileSync(zielPfad, "utf8"));
+    const p = pruefeFortsetzung(bestehend, {
+      laufArt, modellId, parameter: modell.parameter, fragendatei: fragendateiRelativ, fragenHash, fragen,
+    });
+    if (p.length > 0) abbruch("Fortsetzung nicht moeglich: " + p.join(" | "));
+    const vorhanden = new Set(bestehend.antworten.map((a) => a.frage_id));
+    offen = fragen.filter((f) => !vorhanden.has(f.id));
+  } else {
+    zielPfad = path.join(ERGEBNIS_VERZEICHNIS,
+      `${lokalesDatum()}-${modellId}-${fragenName}-${voll ? "voll" : "test"}.json`);
+  }
+
+  const anzahl = (filter) => fragen.filter(filter).length;
+  const kategorien = {};
+  for (const f of fragen) kategorien[`${f.kategorie} | ${f.antwort_typ}`] = (kategorien[`${f.kategorie} | ${f.antwort_typ}`] ?? 0) + 1;
 
   console.log(`${LOG} Modell: ${modellId} (${modell.anbieter}), freigegeben: ${modell.freigegeben}`);
   console.log(`${LOG} Parameter: ${JSON.stringify(modell.parameter)}`);
-  console.log(`${LOG} Auswahl: ${fragen.length} Fragen, ${fragen.length - ja - nein} Datum, `
-    + `${ja} ja, ${nein} nein, ${fragen.filter((f) => f.kategorie === "frist-193-verschiebung").length} aus frist-193-verschiebung`);
-  console.log(`${LOG} Vorlagenpruefung: bestanden`);
+  console.log(`${LOG} Fragendatei: ${fragendateiRelativ}, SHA-256 ${fragenHash}`);
+  console.log(`${LOG} Lauf: ${laufArt}, ${fragen.length} Fragen: ${anzahl((f) => f.antwort_typ === "datum")} Datum, `
+    + `${anzahl((f) => f.antwort === "ja")} ja, ${anzahl((f) => f.antwort === "nein")} nein`);
+  for (const [k, n] of Object.entries(kategorien)) console.log(`${LOG}   ${k}: ${n}`);
+  console.log(`${LOG} Vorlagenpruefung: bestanden (${fragen.length} Nachrichten)`);
   console.log(`${LOG} Zieldatei: ${path.relative(process.cwd(), zielPfad)}`
-    + (fs.existsSync(zielPfad) ? " - EXISTIERT BEREITS" : ""));
+    + (!bestehend && fs.existsSync(zielPfad) ? " - EXISTIERT BEREITS" : ""));
+  if (bestehend) {
+    const fehlerEintraege = bestehend.antworten.filter((a) => a.fehler).length;
+    console.log(`${LOG} Fortsetzung: ${bestehend.antworten.length} Eintraege vorhanden (davon ${fehlerEintraege} `
+      + `fehler - bleiben unangetastet), ${offen.length} offen, bisheriger Status "${bestehend.status}"`);
+  }
+  console.log(`${LOG} Kostenlimit: ${kostenlimit === null ? "keins" : `$${kostenlimit}`}`);
   console.log(`${LOG} ${SCHLUESSEL_VARIABLE} gesetzt: ${process.env[SCHLUESSEL_VARIABLE] ? "ja" : "nein"}`);
+  console.log(`${LOG} run.mjs committet: ${runMjsCommittet() ? "ja" : "nein"}`);
 
   if (!ausfuehren) {
-    console.log(`${LOG} TROCKENLAUF - keine Anfrage gesendet. Nachrichten, wie sie gesendet wuerden:`);
-    for (const f of fragen) {
-      console.log(`\n--- ${f.id}\n${baueNachricht(f)}`);
+    if (bestehend) {
+      console.log(`${LOG} TROCKENLAUF - keine Anfrage gesendet. Offene Fragen, wie sie gefragt wuerden:`);
+      for (const f of offen) console.log(`  ${f.id}`);
+      return;
     }
+    const zeigen = fragen.length <= 50 ? fragen : fragen.slice(0, 3);
+    console.log(`${LOG} TROCKENLAUF - keine Anfrage gesendet. Nachrichten, wie sie gesendet wuerden`
+      + (zeigen.length < fragen.length ? ` (die ersten ${zeigen.length} von ${fragen.length}; geprueft sind alle):` : ":"));
+    for (const f of zeigen) console.log(`\n--- ${f.id}\n${baueNachricht(f)}`);
     return;
   }
 
   // Ab hier: echter Lauf. Jede Voraussetzung wird VOR der ersten Anfrage geprueft.
   if (!modell.freigegeben) abbruch(`Die Konfiguration fuer ${modellId} ist nicht freigegeben.`);
+  if (voll && kostenlimit === null) abbruch("--kostenlimit fehlt. Bei --voll ist es Pflicht.");
   const schluessel = process.env[SCHLUESSEL_VARIABLE];
   if (!schluessel) abbruch(`${SCHLUESSEL_VARIABLE} ist nicht gesetzt.`);
-  if (fs.existsSync(zielPfad)) abbruch(`${zielPfad} existiert bereits - wird nicht ueberschrieben.`);
+  if (!runMjsCommittet()) {
+    abbruch("benchmark/run.mjs hat nicht committete Aenderungen - git_commit wuerde nicht den Code bezeichnen, der laeuft.");
+  }
+  if (!bestehend && fs.existsSync(zielPfad)) abbruch(`${zielPfad} existiert bereits - wird nicht ueberschrieben.`);
+  if (offen.length === 0) {
+    console.log(`${LOG} Keine offenen Fragen - nichts zu tun. Datei unveraendert.`);
+    return;
+  }
   fs.mkdirSync(ERGEBNIS_VERZEICHNIS, { recursive: true });
+  logPfad = zielPfad.replace(/\.json$/, ".log");
 
   // authToken ausdruecklich null: sonst koennte das SDK zusaetzlich einen Token aus der
   // Umgebung mitschicken, und es waere wieder unklar, womit gefragt wurde.
   const client = new Anthropic({ apiKey: schluessel, authToken: null });
+  const sdkVersion = `@anthropic-ai/sdk ${JSON.parse(fs.readFileSync(SDK_PAKET, "utf8")).version}`;
+  const commit = gitCommit();
+  const jetzt = new Date().toISOString();
 
-  const ergebnis = {
-    lauf: "testlauf",
-    status: "laeuft",
-    gestartet: new Date().toISOString(),
-    beendet: null,
-    modell: {
-      angefragt: modellId,
-      anbieter: modell.anbieter,
-      info: null,
-    },
-    konfiguration: {
-      parameter: modell.parameter,
-      systemprompt: null,
-      fallbacks: null,
-      anmerkung: modell.anmerkung,
-    },
-    vorlagen: FORMATZEILE,
-    nachrichtenaufbau: "<frage unveraendert>\\n\\n<formatzeile des antworttyps>",
-    auswahl: { verfahren: AUSWAHL_VERFAHREN, kontingent: KONTINGENT },
-    herkunft: {
-      fragendatei: path.relative(path.resolve(HIER, ".."), FRAGEN_PFAD).replace(/\\/g, "/"),
-      fragendatei_sha256: crypto.createHash("sha256").update(rohdaten).digest("hex"),
-      git_commit: gitCommit(),
-      sdk: `@anthropic-ai/sdk ${JSON.parse(fs.readFileSync(SDK_PAKET, "utf8")).version}`,
+  let ergebnis;
+  if (bestehend) {
+    ergebnis = bestehend;
+    if (ergebnis.herkunft.git_commit !== commit) {
+      melde(`${LOG} HINWEIS: Urspruenglicher Lauf auf Commit ${ergebnis.herkunft.git_commit}, Fortsetzung auf ${commit}. `
+        + "Wird in der Datei vermerkt.");
+    }
+    ergebnis.fortsetzungen ??= [];
+    ergebnis.fortsetzungen.push({
+      gestartet: jetzt,
+      vorheriger_status: ergebnis.status,
+      vorheriger_abbruch: ergebnis.abbruch ?? null,
+      vorheriges_ende: ergebnis.beendet ?? null,
+      eintraege_vor_start: ergebnis.antworten.length,
+      offen_vor_start: offen.length,
+      git_commit: commit,
+      run_mjs_committet: true,
+      sdk: sdkVersion,
       node: process.version,
-    },
-    antworten: [],
-  };
-
-  try {
-    const info = await client.models.retrieve(modellId);
-    ergebnis.modell.info = { id: info.id, display_name: info.display_name, created_at: info.created_at };
-    console.log(`${LOG} Modellinfo abgerufen: ${info.display_name}`);
-  } catch (fehler) {
-    ergebnis.modell.info = { fehler: fehler instanceof Anthropic.APIError
-      ? { status: fehler.status, typ: fehler.name, meldung: fehler.message }
-      : { typ: "unbekannt", meldung: String(fehler) } };
-    console.error(`${LOG} Modellinfo nicht abrufbar:`, fehler.message);
+      kostenlimit_usd: kostenlimit,
+    });
+    ergebnis.status = "laeuft";
+    ergebnis.beendet = null;
+    ergebnis.abbruch = null;
+  } else {
+    ergebnis = {
+      lauf: laufArt,
+      status: "laeuft",
+      gestartet: jetzt,
+      beendet: null,
+      abbruch: null,
+      modell: {
+        angefragt: modellId,
+        anbieter: modell.anbieter,
+        info: null,
+      },
+      konfiguration: {
+        parameter: modell.parameter,
+        systemprompt: null,
+        fallbacks: null,
+        anmerkung: modell.anmerkung,
+      },
+      vorlagen: FORMATZEILE,
+      nachrichtenaufbau: NACHRICHTENAUFBAU,
+      auswahl: voll
+        ? { verfahren: AUSWAHL_VERFAHREN_VOLL, kontingent: null, anzahl: fragen.length }
+        : { verfahren: AUSWAHL_VERFAHREN, kontingent: KONTINGENT },
+      steuerung: {
+        reihenfolge: "nacheinander, keine parallelen Anfragen",
+        sdk_wiederholungen: "SDK-Standard: bis zu 2 Wiederholungen je Anfrage (gleiches Modell)",
+        weitere_wiederholungen: "keine; fehler-Eintraege bleiben stehen, auch bei --fortsetzen",
+        kostenlimit_usd: kostenlimit,
+        preis_usd_pro_mio_token_schaetzung: modell.preis_usd_pro_mio_token,
+      },
+      herkunft: {
+        fragendatei: fragendateiRelativ,
+        fragendatei_sha256: fragenHash,
+        git_commit: commit,
+        run_mjs_committet: true,
+        sdk: sdkVersion,
+        node: process.version,
+      },
+      fortsetzungen: [],
+      antworten: [],
+    };
   }
-  schreibe(zielPfad, ergebnis);
 
-  for (const [nr, f] of fragen.entries()) {
-    const nachricht = baueNachricht(f);
-    const eintrag = { frage_id: f.id, nachricht, gesendet: new Date().toISOString() };
+  laufend = { pfad: zielPfad, ergebnis };
+  schreibe(zielPfad, ergebnis);
+  melde(`${LOG} Start ${jetzt}: ${offen.length} Fragen offen, Log: ${path.relative(process.cwd(), logPfad)}`);
+  melde(`${LOG} Strg+C beendet den Lauf nach der aktuellen Antwort.`);
+
+  if (!ergebnis.modell.info) {
+    try {
+      const info = await client.models.retrieve(modellId);
+      ergebnis.modell.info = { id: info.id, display_name: info.display_name, created_at: info.created_at };
+      melde(`${LOG} Modellinfo abgerufen: ${info.display_name}`);
+    } catch (fehler) {
+      ergebnis.modell.info = { fehler: fehlerAus(fehler) };
+      meldeFehler(`${LOG} Modellinfo nicht abrufbar: ${fehler.message}`);
+    }
+    schreibe(zielPfad, ergebnis);
+  }
+
+  const preis = modell.preis_usd_pro_mio_token;
+  const startMs = Date.now();
+  let erledigt = 0;
+
+  for (const f of offen) {
+    if (stopAngefordert) {
+      beende("abgebrochen", { grund: "Strg+C", zeitpunkt: new Date().toISOString(),
+        hinweis: "Nach der letzten gespeicherten Antwort beendet. Mit --fortsetzen weiterfuehren." });
+      melde(`${LOG} Abgebrochen (Strg+C). ${ergebnis.antworten.length}/${fragen.length} gespeichert.`);
+      return;
+    }
+    const bisherKosten = kostenAus(ergebnis.antworten, preis);
+    if (kostenlimit !== null && bisherKosten >= kostenlimit) {
+      beende("abgebrochen", { grund: "kostenlimit", zeitpunkt: new Date().toISOString(),
+        kosten_usd_geschaetzt: Number(bisherKosten.toFixed(4)), kostenlimit_usd: kostenlimit });
+      melde(`${LOG} Kostenlimit erreicht (${usdText(bisherKosten)} von $${kostenlimit}). `
+        + `${ergebnis.antworten.length}/${fragen.length} gespeichert.`);
+      return;
+    }
+
+    const eintrag = { frage_id: f.id, nachricht: baueNachricht(f), gesendet: new Date().toISOString() };
+    let zeilenInfo;
     try {
       const stream = client.messages.stream({
         model: modellId,
         ...modell.parameter,
-        messages: [{ role: "user", content: nachricht }],
+        messages: [{ role: "user", content: eintrag.nachricht }],
       });
       const antwort = await stream.finalMessage();
       Object.assign(eintrag, {
@@ -296,29 +555,58 @@ async function main() {
         content: antwort.content,
         usage: antwort.usage,
       });
-      console.log(`${LOG} ${nr + 1}/${fragen.length} ${f.id}: stop_reason ${antwort.stop_reason}, `
-        + `${antwort.usage.output_tokens} Ausgabe-Token`);
+      zeilenInfo = `${antwort.stop_reason}, ${antwort.usage.output_tokens} Ausgabe-Token`;
     } catch (fehler) {
-      eintrag.fehler = fehler instanceof Anthropic.APIError
-        ? { status: fehler.status, typ: fehler.name, meldung: fehler.message }
-        : { typ: "unbekannt", meldung: String(fehler) };
-      console.error(`${LOG} ${nr + 1}/${fragen.length} ${f.id}: FEHLER`, eintrag.fehler);
+      eintrag.fehler = fehlerAus(fehler);
+      zeilenInfo = `FEHLER ${JSON.stringify(eintrag.fehler)}`;
     }
     ergebnis.antworten.push(eintrag);
     schreibe(zielPfad, ergebnis);
+    erledigt++;
+
+    const vergangen = Date.now() - startMs;
+    const verbleibend = (vergangen / erledigt) * (offen.length - erledigt);
+    const zeile = `${LOG} ${ergebnis.antworten.length}/${fragen.length} ${f.id}: ${zeilenInfo} | `
+      + `${dauerText(vergangen)} vergangen, ~${dauerText(verbleibend)} verbleibend | `
+      + `${usdText(kostenAus(ergebnis.antworten, preis))} bisher`;
+    if (eintrag.fehler) meldeFehler(zeile); else melde(zeile);
+
+    if (erledigt % ZWISCHENSTAND_ALLE === 0 && erledigt < offen.length) {
+      const a = ergebnis.antworten;
+      const stopReasons = {};
+      for (const x of a) if (x.stop_reason) stopReasons[x.stop_reason] = (stopReasons[x.stop_reason] ?? 0) + 1;
+      const ausgabeToken = a.reduce((s, x) => s + (x.usage?.output_tokens ?? 0), 0);
+      melde(`${LOG} --- Zwischenstand ${a.length}/${fragen.length}: stop_reason ${JSON.stringify(stopReasons)}, `
+        + `fehler ${a.filter((x) => x.fehler).length}, abgeschnitten ${a.filter((x) => x.abgeschnitten).length}, `
+        + `${ausgabeToken} Ausgabe-Token, ${usdText(kostenAus(a, preis))} geschaetzt`);
+    }
   }
 
-  ergebnis.status = "abgeschlossen";
-  ergebnis.beendet = new Date().toISOString();
-  schreibe(zielPfad, ergebnis);
-
-  const fehlerAnzahl = ergebnis.antworten.filter((a) => a.fehler).length;
-  const abgeschnitten = ergebnis.antworten.filter((a) => a.abgeschnitten).length;
-  console.log(`${LOG} Fertig: ${ergebnis.antworten.length} Eintraege, ${fehlerAnzahl} Fehler, `
-    + `${abgeschnitten} abgeschnitten. Datei: ${path.relative(process.cwd(), zielPfad)}`);
+  beende("abgeschlossen");
+  const a = ergebnis.antworten;
+  melde(`${LOG} Fertig: ${a.length}/${fragen.length} Eintraege, ${a.filter((x) => x.fehler).length} fehler, `
+    + `${a.filter((x) => x.abgeschnitten).length} abgeschnitten, ${usdText(kostenAus(a, preis))} geschaetzt. `
+    + `Datei: ${path.relative(process.cwd(), zielPfad)}`);
 }
 
+process.on("SIGINT", () => {
+  if (!laufend) process.exit(130);
+  if (!stopAngefordert) {
+    stopAngefordert = true;
+    melde(`${LOG} Strg+C: Der Lauf endet nach der aktuellen Antwort. Nochmal Strg+C bricht sofort ab.`);
+    return;
+  }
+  beende("abgebrochen", { grund: "Strg+C sofort", zeitpunkt: new Date().toISOString(),
+    hinweis: "Die Antwort, die gerade lief, fehlt. Mit --fortsetzen weiterfuehren." });
+  meldeFehler(`${LOG} Sofort abgebrochen. ${laufend.ergebnis.antworten.length} Eintraege gespeichert.`);
+  process.exit(130);
+});
+
 main().catch((fehler) => {
-  console.error(`${LOG} Unerwarteter Fehler:`, fehler);
+  meldeFehler(`${LOG} Unerwarteter Fehler: ${fehler?.stack ?? fehler}`);
+  if (laufend) {
+    beende("abgebrochen", { grund: "unerwarteter Fehler", zeitpunkt: new Date().toISOString(),
+      meldung: String(fehler?.message ?? fehler) });
+  }
   process.exit(1);
 });
