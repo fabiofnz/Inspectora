@@ -14,6 +14,28 @@
 // Wissensbasis - keine Function, keine Edge Function, keine KI. Die Eingaben des
 // Nutzers verlassen das Geraet nicht, weil es keinen Weg gibt, auf dem sie es
 // koennten.
+//
+// ---------------------------------------------------------------------------
+// REGEL: FARBE BEDEUTET URTEIL - SONST NICHTS
+// ---------------------------------------------------------------------------
+// Gruen, Rot, Orange, Cyan und Grau an einer Position oder einer Frist tragen ein
+// Urteil der Engine: im Katalog, nicht umlagefaehig, Mietvertrag erforderlich, im
+// Gesetz nicht genannt, nicht zuordenbar - bzw. gewahrt, abhaengig, versaeumt.
+// Was kein Urteil ist, bekommt keine Urteilsfarbe, sondern die neutralen Variablen
+// (--surface-soft, --surface, --line, --muted, --text):
+//   - "Mehrere Positionen": Die Engine urteilt hier gerade NICHT ueber die Zeile.
+//   - "teilweise bewertet": eine Aussage ueber den Umfang der Pruefung, nicht ueber
+//     die Position.
+// Wer einen neuen Zustand einfuehrt, fragt zuerst: Ist das ein Urteil? Wenn nicht,
+// bleibt er neutral - auch wenn eine Farbe auffaelliger waere. Eine Urteilsfarbe an
+// einer Nicht-Aussage sieht sicherer aus, als die Engine ist.
+//
+// BESTAND, der dieser Regel noch nicht folgt (Stand 14.09.2026, bewusst nicht mit
+// umgebaut - das ist eine eigene Entscheidung): Orange tragen auch das verschobene
+// Fristende (.bk-datum-box.ist-verschoben), die Herkunftsmarke (.bk-herkunft), das
+// Kennzeichen "Suchbegriff" (.bk-treffer.ist-suchbegriff) und der Vorbehalts-Kasten
+// (.bk-vorbehalt); Cyan traegt der Luecken-Hinweis (.bk-luecke). Diese Liste wird
+// nicht still verlaengert.
 
 "use strict";
 
@@ -465,6 +487,8 @@ const URTEIL = {
   [VERDIKT.MIETVERTRAG]: { klasse: "ist-vertrag", text: "Mietvertrag erforderlich" },
   [VERDIKT.LUECKE]: { klasse: "ist-luecke", text: "Im Gesetz nicht genannt" },
   [VERDIKT.UNBEKANNT]: { klasse: "ist-unbekannt", text: "Nicht zuordenbar" },
+  // Kein Urteil ueber die Zeile - deshalb neutral, siehe Regel im Kopf.
+  [VERDIKT.MEHRERE]: { klasse: "ist-mehrere", text: "Mehrere Positionen" },
 };
 
 function baueFundstelle(fundstelle) {
@@ -497,12 +521,53 @@ function baueFundstelle(fundstelle) {
 
 function bauePosition(position) {
   const urteil = URTEIL[position.verdikt];
+  const name = position.bezeichnung || position.rohzeile;
+
+  // Ein Urteil, das diese Seite nicht kennt (neu in der Engine, Seite noch alt):
+  // nicht stillschweigend in "nicht zuordenbar" umdeuten - das waere eine Aussage
+  // ueber die Position. Sichtbar neutral melden und laut loggen.
+  if (!urteil) {
+    console.error(LOG, "Unbekanntes Urteil der Engine:", position.verdikt, "bei", name);
+    const karte = el("div", "bk-position");
+    const kopf = el("div", "bk-position-kopf");
+    kopf.appendChild(el("span", "bk-position-name", name));
+    karte.appendChild(kopf);
+    karte.appendChild(el("div", "bk-positions-hinweis",
+      "Dieses Ergebnis kann die Seite nicht darstellen – bitte die Seite neu laden."));
+    return karte;
+  }
+
   const karte = el("div", "bk-position " + urteil.klasse);
 
   const kopf = el("div", "bk-position-kopf");
-  kopf.appendChild(el("span", "bk-position-name", position.bezeichnung || position.rohzeile));
-  kopf.appendChild(el("span", "bk-position-urteil " + urteil.klasse, urteil.text));
+  kopf.appendChild(el("span", "bk-position-name", name));
+  const marken = el("span", "bk-position-marken");
+  marken.appendChild(el("span", "bk-position-urteil " + urteil.klasse, urteil.text));
+
+  // Teilweise bewertet: neben dem Urteil, nicht darunter - dort, wo zuerst hingesehen
+  // wird. Neutral, weil es kein Urteil ist (Regel im Kopf). Bei "nicht zuordenbar"
+  // entfaellt es: Dann ist die ganze Zeile unbewertet, und das sagt der Text unten.
+  const teilweise = position.verdikt !== VERDIKT.UNBEKANNT
+    && position.abdeckung && !position.abdeckung.vollstaendig;
+  if (teilweise) marken.appendChild(el("span", "bk-teilweise", "teilweise bewertet"));
+  kopf.appendChild(marken);
   karte.appendChild(kopf);
+
+  // Die Woerter so, wie der Nutzer sie geschrieben hat - die Engine liefert sie so.
+  if (teilweise && position.abdeckung.unbewertet.length > 0) {
+    karte.appendChild(el("div", "bk-abdeckung",
+      "Nicht bewertet: " + position.abdeckung.unbewertet.map((w) => `„${w}“`).join(", ")));
+  }
+
+  // "Mehrere Positionen" ist kein Urteil ueber die Zeile. Der Text sagt, warum - und
+  // nennt bewusst keine Nummern: Die stehen in den Fundstellen darunter, und eine
+  // Luecke darf nirgends in Zitierform auftauchen.
+  if (position.verdikt === VERDIKT.MEHRERE) {
+    karte.appendChild(el("div", "bk-positions-hinweis",
+      "Diese Zeile enthält mehrere Positionen. Wie sich der Betrag darauf verteilt, geht "
+      + "aus der Zeile nicht hervor – das Werkzeug bewertet sie deshalb nicht als Ganzes. "
+      + "Einzeln eingetragen wird jede Position für sich geprüft."));
+  }
 
   for (const fundstelle of position.fundstellen) karte.appendChild(baueFundstelle(fundstelle));
 
@@ -547,6 +612,8 @@ function baueZaehler(z) {
   zeige("ist-ausschluss", z.nichtUmlagefaehig, "nicht umlagefähig");
   zeige("ist-vertrag", z.mietvertrag, "Mietvertrag erforderlich");
   zeige("ist-luecke", z.nichtGenannt, "im Gesetz nicht genannt");
+  // Neutral wie "nicht zuordenbar" - kein Urteil, siehe Regel im Kopf.
+  zeige(null, z.mehrerePositionen || 0, "mehrere Positionen");
   zeige(null, z.nichtZuordenbar, "nicht zuordenbar");
   zeige(null, z.nichtGewertet, "nicht als Position gewertet");
   return leiste;
@@ -589,6 +656,15 @@ function pruefeListe() {
     + `Katalog in § 2 BetrKV und die Ausschlüsse in § 1 Abs. 2 BetrKV.`));
   karte.appendChild(baueZaehler(ergebnis.zusammenfassung));
 
+  // "teilweise bewertet" ist keine eigene Kachel: Die Kacheln oben summieren sich zu den
+  // geprueften Positionen, und eine Teilbewertung liegt quer zu allen Urteilen.
+  const teilweiseAnzahl = ergebnis.zusammenfassung.teilweiseBewertet || 0;
+  if (teilweiseAnzahl > 0) {
+    karte.appendChild(el("p", "bk-zaehler-hinweis",
+      `Davon ${teilweiseAnzahl} ${teilweiseAnzahl === 1 ? "Zeile" : "Zeilen"} nur teilweise `
+      + "bewertet – die nicht bewerteten Wörter stehen bei der jeweiligen Position."));
+  }
+
   for (const position of ergebnis.positionen) karte.appendChild(bauePosition(position));
 
   // Aussortierte Zeilen: eingeklappt, aber vollstaendig und mit Grund. Nichts
@@ -630,7 +706,8 @@ function pruefeListe() {
   console.log(LOG, "Positionen geprueft.",
     `${z.geprueft} Positionen, ${z.imKatalog} im Katalog, ${z.nichtUmlagefaehig} ausgeschlossen, `
     + `${z.mietvertrag} mit Vertragsvorbehalt, ${z.nichtGenannt} im Gesetz nicht genannt, `
-    + `${z.nichtZuordenbar} nicht zuordenbar, `
+    + `${z.nichtZuordenbar} nicht zuordenbar, ${z.mehrerePositionen} mit mehreren Positionen, `
+    + `${z.teilweiseBewertet} teilweise bewertet, `
     + `${z.nichtGewertet} nicht gewertet.`);
 }
 

@@ -1318,6 +1318,26 @@ main{padding-top:0}
 
 .bk-unbekannt-text{margin-top:8px;color:var(--muted);font-size:12px;line-height:1.65}
 
+/* "Mehrere Positionen" ist kein Urteil ueber die Zeile - deshalb keine Urteilsfarbe.
+   Neutrale Variablen; der linke Rand in --primary unterscheidet den Zustand von
+   "Nicht zuordenbar" (grau). Regel "Farbe bedeutet Urteil": Kopf von
+   betriebskosten-pruefer.js. */
+.bk-position.ist-mehrere{border-left-color:var(--primary)}
+.bk-position-urteil.ist-mehrere{border-color:var(--line);background:var(--surface-soft);color:var(--text)}
+.bk-position-marken{display:inline-flex;flex-wrap:wrap;align-items:baseline;gap:6px}
+.bk-positions-hinweis{margin-top:8px;color:var(--muted);font-size:12px;line-height:1.65}
+
+/* Teilweise bewertet: eine Aussage ueber den Umfang der Pruefung, nicht ueber die
+   Position. Neutral und ohne gestrichelten Rand - gestrichelt heisst auf dieser Seite
+   "Suchbegriff". */
+.bk-teilweise{
+  padding:4px 10px;border:1px solid var(--line);border-radius:999px;
+  background:var(--surface);color:var(--muted);
+  font-size:10px;font-weight:800;letter-spacing:.04em;text-transform:uppercase;
+}
+.bk-abdeckung{margin-top:6px;color:var(--muted);font-size:12px;line-height:1.6}
+.bk-zaehler-hinweis{margin-top:8px;color:var(--muted);font-size:11px;line-height:1.6}
+
 .bk-aussortiert{margin-top:16px;border:1px solid var(--line);border-radius:var(--radius);
   background:var(--surface-soft)}
 .bk-aussortiert summary{padding:12px 15px;color:var(--text);font-size:12px;font-weight:700;
