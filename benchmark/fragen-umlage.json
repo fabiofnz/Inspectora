@@ -1,0 +1,2262 @@
+[
+  {
+    "id": "umlage-grundsteuer",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Grundsteuer“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 1",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Grundsteuer",
+      "eintrag": "betrkv-2-1",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 1 BetrKV",
+      "kurztitel": "die laufenden öffentlichen Lasten des Grundstücks",
+      "gesetzestext": "1. die laufenden öffentlichen Lasten des Grundstücks,\nhierzu gehört namentlich die Grundsteuer;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-oeffentliche-lasten",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Öffentliche Lasten“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 1",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Öffentliche Lasten",
+      "eintrag": "betrkv-2-1",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 1 BetrKV",
+      "kurztitel": "die laufenden öffentlichen Lasten des Grundstücks",
+      "gesetzestext": "1. die laufenden öffentlichen Lasten des Grundstücks,\nhierzu gehört namentlich die Grundsteuer;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-laufende-oeffentliche-lasten",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Laufende öffentliche Lasten“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 1",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Laufende öffentliche Lasten",
+      "eintrag": "betrkv-2-1",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 1 BetrKV",
+      "kurztitel": "die laufenden öffentlichen Lasten des Grundstücks",
+      "gesetzestext": "1. die laufenden öffentlichen Lasten des Grundstücks,\nhierzu gehört namentlich die Grundsteuer;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-grundabgaben",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Grundabgaben“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 1",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Grundabgaben",
+      "eintrag": "betrkv-2-1",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 1 BetrKV",
+      "kurztitel": "die laufenden öffentlichen Lasten des Grundstücks",
+      "gesetzestext": "1. die laufenden öffentlichen Lasten des Grundstücks,\nhierzu gehört namentlich die Grundsteuer;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-wasserversorgung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Wasserversorgung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Wasserversorgung",
+      "eintrag": "betrkv-2-2",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 2 BetrKV",
+      "kurztitel": "die Kosten der Wasserversorgung",
+      "gesetzestext": "2. die Kosten der Wasserversorgung,\nhierzu gehören die Kosten des Wasserverbrauchs, die Grundgebühren, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung von Wasserzählern sowie die Kosten ihrer Verwendung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung, die Kosten der Wartung von Wassermengenreglern, die Kosten des Betriebs einer hauseigenen Wasserversorgungsanlage und einer Wasseraufbereitungsanlage einschließlich der Aufbereitungsstoffe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-kaltwasser",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Kaltwasser“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Kaltwasser",
+      "eintrag": "betrkv-2-2",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 2 BetrKV",
+      "kurztitel": "die Kosten der Wasserversorgung",
+      "gesetzestext": "2. die Kosten der Wasserversorgung,\nhierzu gehören die Kosten des Wasserverbrauchs, die Grundgebühren, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung von Wasserzählern sowie die Kosten ihrer Verwendung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung, die Kosten der Wartung von Wassermengenreglern, die Kosten des Betriebs einer hauseigenen Wasserversorgungsanlage und einer Wasseraufbereitungsanlage einschließlich der Aufbereitungsstoffe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-frischwasser",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Frischwasser“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Frischwasser",
+      "eintrag": "betrkv-2-2",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 2 BetrKV",
+      "kurztitel": "die Kosten der Wasserversorgung",
+      "gesetzestext": "2. die Kosten der Wasserversorgung,\nhierzu gehören die Kosten des Wasserverbrauchs, die Grundgebühren, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung von Wasserzählern sowie die Kosten ihrer Verwendung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung, die Kosten der Wartung von Wassermengenreglern, die Kosten des Betriebs einer hauseigenen Wasserversorgungsanlage und einer Wasseraufbereitungsanlage einschließlich der Aufbereitungsstoffe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-trinkwasser",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Trinkwasser“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Trinkwasser",
+      "eintrag": "betrkv-2-2",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 2 BetrKV",
+      "kurztitel": "die Kosten der Wasserversorgung",
+      "gesetzestext": "2. die Kosten der Wasserversorgung,\nhierzu gehören die Kosten des Wasserverbrauchs, die Grundgebühren, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung von Wasserzählern sowie die Kosten ihrer Verwendung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung, die Kosten der Wartung von Wassermengenreglern, die Kosten des Betriebs einer hauseigenen Wasserversorgungsanlage und einer Wasseraufbereitungsanlage einschließlich der Aufbereitungsstoffe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-wasserzaehler",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Wasserzähler“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Wasserzähler",
+      "eintrag": "betrkv-2-2",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 2 BetrKV",
+      "kurztitel": "die Kosten der Wasserversorgung",
+      "gesetzestext": "2. die Kosten der Wasserversorgung,\nhierzu gehören die Kosten des Wasserverbrauchs, die Grundgebühren, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung von Wasserzählern sowie die Kosten ihrer Verwendung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung, die Kosten der Wartung von Wassermengenreglern, die Kosten des Betriebs einer hauseigenen Wasserversorgungsanlage und einer Wasseraufbereitungsanlage einschließlich der Aufbereitungsstoffe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-wasseruhr",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Wasseruhr“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Wasseruhr",
+      "eintrag": "betrkv-2-2",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 2 BetrKV",
+      "kurztitel": "die Kosten der Wasserversorgung",
+      "gesetzestext": "2. die Kosten der Wasserversorgung,\nhierzu gehören die Kosten des Wasserverbrauchs, die Grundgebühren, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung von Wasserzählern sowie die Kosten ihrer Verwendung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung, die Kosten der Wartung von Wassermengenreglern, die Kosten des Betriebs einer hauseigenen Wasserversorgungsanlage und einer Wasseraufbereitungsanlage einschließlich der Aufbereitungsstoffe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-wasser",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Wasser“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Wasser",
+      "eintrag": "betrkv-2-2",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 2 BetrKV",
+      "kurztitel": "die Kosten der Wasserversorgung",
+      "gesetzestext": "2. die Kosten der Wasserversorgung,\nhierzu gehören die Kosten des Wasserverbrauchs, die Grundgebühren, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung von Wasserzählern sowie die Kosten ihrer Verwendung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung, die Kosten der Wartung von Wassermengenreglern, die Kosten des Betriebs einer hauseigenen Wasserversorgungsanlage und einer Wasseraufbereitungsanlage einschließlich der Aufbereitungsstoffe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-entwaesserung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Entwässerung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 3",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Entwässerung",
+      "eintrag": "betrkv-2-3",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 3 BetrKV",
+      "kurztitel": "die Kosten der Entwässerung",
+      "gesetzestext": "3. die Kosten der Entwässerung,\nhierzu gehören die Gebühren für die Haus- und Grundstücksentwässerung, die Kosten des Betriebs einer entsprechenden nicht öffentlichen Anlage und die Kosten des Betriebs einer Entwässerungspumpe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-abwasser",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Abwasser“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 3",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Abwasser",
+      "eintrag": "betrkv-2-3",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 3 BetrKV",
+      "kurztitel": "die Kosten der Entwässerung",
+      "gesetzestext": "3. die Kosten der Entwässerung,\nhierzu gehören die Gebühren für die Haus- und Grundstücksentwässerung, die Kosten des Betriebs einer entsprechenden nicht öffentlichen Anlage und die Kosten des Betriebs einer Entwässerungspumpe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-schmutzwasser",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Schmutzwasser“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 3",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Schmutzwasser",
+      "eintrag": "betrkv-2-3",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 3 BetrKV",
+      "kurztitel": "die Kosten der Entwässerung",
+      "gesetzestext": "3. die Kosten der Entwässerung,\nhierzu gehören die Gebühren für die Haus- und Grundstücksentwässerung, die Kosten des Betriebs einer entsprechenden nicht öffentlichen Anlage und die Kosten des Betriebs einer Entwässerungspumpe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-niederschlagswasser",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Niederschlagswasser“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 3",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Niederschlagswasser",
+      "eintrag": "betrkv-2-3",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 3 BetrKV",
+      "kurztitel": "die Kosten der Entwässerung",
+      "gesetzestext": "3. die Kosten der Entwässerung,\nhierzu gehören die Gebühren für die Haus- und Grundstücksentwässerung, die Kosten des Betriebs einer entsprechenden nicht öffentlichen Anlage und die Kosten des Betriebs einer Entwässerungspumpe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-regenwasser",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Regenwasser“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 3",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Regenwasser",
+      "eintrag": "betrkv-2-3",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 3 BetrKV",
+      "kurztitel": "die Kosten der Entwässerung",
+      "gesetzestext": "3. die Kosten der Entwässerung,\nhierzu gehören die Gebühren für die Haus- und Grundstücksentwässerung, die Kosten des Betriebs einer entsprechenden nicht öffentlichen Anlage und die Kosten des Betriebs einer Entwässerungspumpe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-kanalgebuehren",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Kanalgebühren“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 3",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Kanalgebühren",
+      "eintrag": "betrkv-2-3",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 3 BetrKV",
+      "kurztitel": "die Kosten der Entwässerung",
+      "gesetzestext": "3. die Kosten der Entwässerung,\nhierzu gehören die Gebühren für die Haus- und Grundstücksentwässerung, die Kosten des Betriebs einer entsprechenden nicht öffentlichen Anlage und die Kosten des Betriebs einer Entwässerungspumpe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-kanalbenutzungsgebuehren",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Kanalbenutzungsgebühren“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 3",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Kanalbenutzungsgebühren",
+      "eintrag": "betrkv-2-3",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 3 BetrKV",
+      "kurztitel": "die Kosten der Entwässerung",
+      "gesetzestext": "3. die Kosten der Entwässerung,\nhierzu gehören die Gebühren für die Haus- und Grundstücksentwässerung, die Kosten des Betriebs einer entsprechenden nicht öffentlichen Anlage und die Kosten des Betriebs einer Entwässerungspumpe;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-heizung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Heizung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 4",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Heizung",
+      "eintrag": "betrkv-2-4",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 4 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage",
+      "gesetzestext": "4. die Kosten\na) des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage,\nhierzu gehören die Kosten des zur Wärmeerzeugung verbrauchten Stroms und der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms, die Kosten der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft, der Reinigung der Anlage und des Betriebsraums, die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung einer Ausstattung zur Verbrauchserfassung sowie die Kosten der Verwendung einer Ausstattung zur Verbrauchserfassung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung\noder\nb) des Betriebs der zentralen Brennstoffversorgungsanlage,\nhierzu gehören die Kosten der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms und die Kosten der Überwachung sowie die Kosten der Reinigung der Anlage und des Betriebsraums\noder\nc) der eigenständig gewerblichen Lieferung von Wärme, auch aus Anlagen im Sinne des Buchstabens a,\nhierzu gehören das Entgelt für die Wärmelieferung und die Kosten des Betriebs der zugehörigen Hausanlagen entsprechend Buchstabe a\noder\nd) der Reinigung und Wartung von Etagenheizungen und Gaseinzelfeuerstätten,\nhierzu gehören die Kosten der Beseitigung von Wasserablagerungen und Verbrennungsrückständen in der Anlage, die Kosten der regelmäßigen Prüfung der Betriebsbereitschaft und Betriebssicherheit und der damit zusammenhängenden Einstellung durch eine Fachkraft sowie die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-heizkosten",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Heizkosten“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 4",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Heizkosten",
+      "eintrag": "betrkv-2-4",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 4 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage",
+      "gesetzestext": "4. die Kosten\na) des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage,\nhierzu gehören die Kosten des zur Wärmeerzeugung verbrauchten Stroms und der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms, die Kosten der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft, der Reinigung der Anlage und des Betriebsraums, die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung einer Ausstattung zur Verbrauchserfassung sowie die Kosten der Verwendung einer Ausstattung zur Verbrauchserfassung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung\noder\nb) des Betriebs der zentralen Brennstoffversorgungsanlage,\nhierzu gehören die Kosten der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms und die Kosten der Überwachung sowie die Kosten der Reinigung der Anlage und des Betriebsraums\noder\nc) der eigenständig gewerblichen Lieferung von Wärme, auch aus Anlagen im Sinne des Buchstabens a,\nhierzu gehören das Entgelt für die Wärmelieferung und die Kosten des Betriebs der zugehörigen Hausanlagen entsprechend Buchstabe a\noder\nd) der Reinigung und Wartung von Etagenheizungen und Gaseinzelfeuerstätten,\nhierzu gehören die Kosten der Beseitigung von Wasserablagerungen und Verbrennungsrückständen in der Anlage, die Kosten der regelmäßigen Prüfung der Betriebsbereitschaft und Betriebssicherheit und der damit zusammenhängenden Einstellung durch eine Fachkraft sowie die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-heizungsanlage",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Heizungsanlage“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 4",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Heizungsanlage",
+      "eintrag": "betrkv-2-4",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 4 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage",
+      "gesetzestext": "4. die Kosten\na) des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage,\nhierzu gehören die Kosten des zur Wärmeerzeugung verbrauchten Stroms und der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms, die Kosten der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft, der Reinigung der Anlage und des Betriebsraums, die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung einer Ausstattung zur Verbrauchserfassung sowie die Kosten der Verwendung einer Ausstattung zur Verbrauchserfassung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung\noder\nb) des Betriebs der zentralen Brennstoffversorgungsanlage,\nhierzu gehören die Kosten der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms und die Kosten der Überwachung sowie die Kosten der Reinigung der Anlage und des Betriebsraums\noder\nc) der eigenständig gewerblichen Lieferung von Wärme, auch aus Anlagen im Sinne des Buchstabens a,\nhierzu gehören das Entgelt für die Wärmelieferung und die Kosten des Betriebs der zugehörigen Hausanlagen entsprechend Buchstabe a\noder\nd) der Reinigung und Wartung von Etagenheizungen und Gaseinzelfeuerstätten,\nhierzu gehören die Kosten der Beseitigung von Wasserablagerungen und Verbrennungsrückständen in der Anlage, die Kosten der regelmäßigen Prüfung der Betriebsbereitschaft und Betriebssicherheit und der damit zusammenhängenden Einstellung durch eine Fachkraft sowie die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-brennstoff",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Brennstoff“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 4",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Brennstoff",
+      "eintrag": "betrkv-2-4",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 4 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage",
+      "gesetzestext": "4. die Kosten\na) des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage,\nhierzu gehören die Kosten des zur Wärmeerzeugung verbrauchten Stroms und der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms, die Kosten der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft, der Reinigung der Anlage und des Betriebsraums, die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung einer Ausstattung zur Verbrauchserfassung sowie die Kosten der Verwendung einer Ausstattung zur Verbrauchserfassung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung\noder\nb) des Betriebs der zentralen Brennstoffversorgungsanlage,\nhierzu gehören die Kosten der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms und die Kosten der Überwachung sowie die Kosten der Reinigung der Anlage und des Betriebsraums\noder\nc) der eigenständig gewerblichen Lieferung von Wärme, auch aus Anlagen im Sinne des Buchstabens a,\nhierzu gehören das Entgelt für die Wärmelieferung und die Kosten des Betriebs der zugehörigen Hausanlagen entsprechend Buchstabe a\noder\nd) der Reinigung und Wartung von Etagenheizungen und Gaseinzelfeuerstätten,\nhierzu gehören die Kosten der Beseitigung von Wasserablagerungen und Verbrennungsrückständen in der Anlage, die Kosten der regelmäßigen Prüfung der Betriebsbereitschaft und Betriebssicherheit und der damit zusammenhängenden Einstellung durch eine Fachkraft sowie die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-heizoel",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Heizöl“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 4",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Heizöl",
+      "eintrag": "betrkv-2-4",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 4 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage",
+      "gesetzestext": "4. die Kosten\na) des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage,\nhierzu gehören die Kosten des zur Wärmeerzeugung verbrauchten Stroms und der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms, die Kosten der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft, der Reinigung der Anlage und des Betriebsraums, die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung einer Ausstattung zur Verbrauchserfassung sowie die Kosten der Verwendung einer Ausstattung zur Verbrauchserfassung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung\noder\nb) des Betriebs der zentralen Brennstoffversorgungsanlage,\nhierzu gehören die Kosten der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms und die Kosten der Überwachung sowie die Kosten der Reinigung der Anlage und des Betriebsraums\noder\nc) der eigenständig gewerblichen Lieferung von Wärme, auch aus Anlagen im Sinne des Buchstabens a,\nhierzu gehören das Entgelt für die Wärmelieferung und die Kosten des Betriebs der zugehörigen Hausanlagen entsprechend Buchstabe a\noder\nd) der Reinigung und Wartung von Etagenheizungen und Gaseinzelfeuerstätten,\nhierzu gehören die Kosten der Beseitigung von Wasserablagerungen und Verbrennungsrückständen in der Anlage, die Kosten der regelmäßigen Prüfung der Betriebsbereitschaft und Betriebssicherheit und der damit zusammenhängenden Einstellung durch eine Fachkraft sowie die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-erdgas",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Erdgas“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 4",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Erdgas",
+      "eintrag": "betrkv-2-4",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 4 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage",
+      "gesetzestext": "4. die Kosten\na) des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage,\nhierzu gehören die Kosten des zur Wärmeerzeugung verbrauchten Stroms und der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms, die Kosten der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft, der Reinigung der Anlage und des Betriebsraums, die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung einer Ausstattung zur Verbrauchserfassung sowie die Kosten der Verwendung einer Ausstattung zur Verbrauchserfassung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung\noder\nb) des Betriebs der zentralen Brennstoffversorgungsanlage,\nhierzu gehören die Kosten der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms und die Kosten der Überwachung sowie die Kosten der Reinigung der Anlage und des Betriebsraums\noder\nc) der eigenständig gewerblichen Lieferung von Wärme, auch aus Anlagen im Sinne des Buchstabens a,\nhierzu gehören das Entgelt für die Wärmelieferung und die Kosten des Betriebs der zugehörigen Hausanlagen entsprechend Buchstabe a\noder\nd) der Reinigung und Wartung von Etagenheizungen und Gaseinzelfeuerstätten,\nhierzu gehören die Kosten der Beseitigung von Wasserablagerungen und Verbrennungsrückständen in der Anlage, die Kosten der regelmäßigen Prüfung der Betriebsbereitschaft und Betriebssicherheit und der damit zusammenhängenden Einstellung durch eine Fachkraft sowie die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-fernwaerme",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Fernwärme“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 4",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Fernwärme",
+      "eintrag": "betrkv-2-4",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 4 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage",
+      "gesetzestext": "4. die Kosten\na) des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage,\nhierzu gehören die Kosten des zur Wärmeerzeugung verbrauchten Stroms und der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms, die Kosten der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft, der Reinigung der Anlage und des Betriebsraums, die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung einer Ausstattung zur Verbrauchserfassung sowie die Kosten der Verwendung einer Ausstattung zur Verbrauchserfassung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung\noder\nb) des Betriebs der zentralen Brennstoffversorgungsanlage,\nhierzu gehören die Kosten der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms und die Kosten der Überwachung sowie die Kosten der Reinigung der Anlage und des Betriebsraums\noder\nc) der eigenständig gewerblichen Lieferung von Wärme, auch aus Anlagen im Sinne des Buchstabens a,\nhierzu gehören das Entgelt für die Wärmelieferung und die Kosten des Betriebs der zugehörigen Hausanlagen entsprechend Buchstabe a\noder\nd) der Reinigung und Wartung von Etagenheizungen und Gaseinzelfeuerstätten,\nhierzu gehören die Kosten der Beseitigung von Wasserablagerungen und Verbrennungsrückständen in der Anlage, die Kosten der regelmäßigen Prüfung der Betriebsbereitschaft und Betriebssicherheit und der damit zusammenhängenden Einstellung durch eine Fachkraft sowie die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-waermelieferung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Wärmelieferung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 4",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Wärmelieferung",
+      "eintrag": "betrkv-2-4",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 4 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage",
+      "gesetzestext": "4. die Kosten\na) des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage,\nhierzu gehören die Kosten des zur Wärmeerzeugung verbrauchten Stroms und der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms, die Kosten der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft, der Reinigung der Anlage und des Betriebsraums, die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung einer Ausstattung zur Verbrauchserfassung sowie die Kosten der Verwendung einer Ausstattung zur Verbrauchserfassung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung\noder\nb) des Betriebs der zentralen Brennstoffversorgungsanlage,\nhierzu gehören die Kosten der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms und die Kosten der Überwachung sowie die Kosten der Reinigung der Anlage und des Betriebsraums\noder\nc) der eigenständig gewerblichen Lieferung von Wärme, auch aus Anlagen im Sinne des Buchstabens a,\nhierzu gehören das Entgelt für die Wärmelieferung und die Kosten des Betriebs der zugehörigen Hausanlagen entsprechend Buchstabe a\noder\nd) der Reinigung und Wartung von Etagenheizungen und Gaseinzelfeuerstätten,\nhierzu gehören die Kosten der Beseitigung von Wasserablagerungen und Verbrennungsrückständen in der Anlage, die Kosten der regelmäßigen Prüfung der Betriebsbereitschaft und Betriebssicherheit und der damit zusammenhängenden Einstellung durch eine Fachkraft sowie die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-waermekosten",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Wärmekosten“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 4",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Wärmekosten",
+      "eintrag": "betrkv-2-4",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 4 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage",
+      "gesetzestext": "4. die Kosten\na) des Betriebs der zentralen Heizungsanlage einschließlich der Abgasanlage,\nhierzu gehören die Kosten des zur Wärmeerzeugung verbrauchten Stroms und der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms, die Kosten der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft, der Reinigung der Anlage und des Betriebsraums, die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz, die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung einer Ausstattung zur Verbrauchserfassung sowie die Kosten der Verwendung einer Ausstattung zur Verbrauchserfassung einschließlich der Kosten der Eichung sowie der Kosten der Berechnung und Aufteilung\noder\nb) des Betriebs der zentralen Brennstoffversorgungsanlage,\nhierzu gehören die Kosten der verbrauchten Brennstoffe und ihrer Lieferung, die Kosten des Betriebsstroms und die Kosten der Überwachung sowie die Kosten der Reinigung der Anlage und des Betriebsraums\noder\nc) der eigenständig gewerblichen Lieferung von Wärme, auch aus Anlagen im Sinne des Buchstabens a,\nhierzu gehören das Entgelt für die Wärmelieferung und die Kosten des Betriebs der zugehörigen Hausanlagen entsprechend Buchstabe a\noder\nd) der Reinigung und Wartung von Etagenheizungen und Gaseinzelfeuerstätten,\nhierzu gehören die Kosten der Beseitigung von Wasserablagerungen und Verbrennungsrückständen in der Anlage, die Kosten der regelmäßigen Prüfung der Betriebsbereitschaft und Betriebssicherheit und der damit zusammenhängenden Einstellung durch eine Fachkraft sowie die Kosten der Messungen nach dem Bundes-Immissionsschutzgesetz;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-warmwasser",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Warmwasser“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 5",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Warmwasser",
+      "eintrag": "betrkv-2-5",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 5 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der zentralen Warmwasserversorgungsanlage",
+      "gesetzestext": "5. die Kosten\na) des Betriebs der zentralen Warmwasserversorgungsanlage,\nhierzu gehören die Kosten der Wasserversorgung entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind, und die Kosten der Wassererwärmung entsprechend Nummer 4 Buchstabe a\noder\nb) der eigenständig gewerblichen Lieferung von Warmwasser, auch aus Anlagen im Sinne des Buchstabens a,\nhierzu gehören das Entgelt für die Lieferung des Warmwassers und die Kosten des Betriebs der zugehörigen Hausanlagen entsprechend Nummer 4 Buchstabe a\noder\nc) der Reinigung und Wartung von Warmwassergeräten,\nhierzu gehören die Kosten der Beseitigung von Wasserablagerungen und Verbrennungsrückständen im Innern der Geräte sowie die Kosten der regelmäßigen Prüfung der Betriebsbereitschaft und Betriebssicherheit und der damit zusammenhängenden Einstellung durch eine Fachkraft;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-warmwasserversorgung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Warmwasserversorgung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 5",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Warmwasserversorgung",
+      "eintrag": "betrkv-2-5",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 5 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der zentralen Warmwasserversorgungsanlage",
+      "gesetzestext": "5. die Kosten\na) des Betriebs der zentralen Warmwasserversorgungsanlage,\nhierzu gehören die Kosten der Wasserversorgung entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind, und die Kosten der Wassererwärmung entsprechend Nummer 4 Buchstabe a\noder\nb) der eigenständig gewerblichen Lieferung von Warmwasser, auch aus Anlagen im Sinne des Buchstabens a,\nhierzu gehören das Entgelt für die Lieferung des Warmwassers und die Kosten des Betriebs der zugehörigen Hausanlagen entsprechend Nummer 4 Buchstabe a\noder\nc) der Reinigung und Wartung von Warmwassergeräten,\nhierzu gehören die Kosten der Beseitigung von Wasserablagerungen und Verbrennungsrückständen im Innern der Geräte sowie die Kosten der regelmäßigen Prüfung der Betriebsbereitschaft und Betriebssicherheit und der damit zusammenhängenden Einstellung durch eine Fachkraft;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-warmwasserbereitung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Warmwasserbereitung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 5",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Warmwasserbereitung",
+      "eintrag": "betrkv-2-5",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 5 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der zentralen Warmwasserversorgungsanlage",
+      "gesetzestext": "5. die Kosten\na) des Betriebs der zentralen Warmwasserversorgungsanlage,\nhierzu gehören die Kosten der Wasserversorgung entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind, und die Kosten der Wassererwärmung entsprechend Nummer 4 Buchstabe a\noder\nb) der eigenständig gewerblichen Lieferung von Warmwasser, auch aus Anlagen im Sinne des Buchstabens a,\nhierzu gehören das Entgelt für die Lieferung des Warmwassers und die Kosten des Betriebs der zugehörigen Hausanlagen entsprechend Nummer 4 Buchstabe a\noder\nc) der Reinigung und Wartung von Warmwassergeräten,\nhierzu gehören die Kosten der Beseitigung von Wasserablagerungen und Verbrennungsrückständen im Innern der Geräte sowie die Kosten der regelmäßigen Prüfung der Betriebsbereitschaft und Betriebssicherheit und der damit zusammenhängenden Einstellung durch eine Fachkraft;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-verbundene-anlage",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Verbundene Anlage“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 6",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Verbundene Anlage",
+      "eintrag": "betrkv-2-6",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 6 BetrKV",
+      "kurztitel": "die Kosten verbundener Heizungs- und Warmwasserversorgungsanlagen",
+      "gesetzestext": "6. die Kosten verbundener Heizungs- und Warmwasserversorgungsanlagen\na) bei zentralen Heizungsanlagen entsprechend Nummer 4 Buchstabe a und entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind,\noder\nb) bei der eigenständig gewerblichen Lieferung von Wärme entsprechend Nummer 4 Buchstabe c und entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind,\noder\nc) bei verbundenen Etagenheizungen und Warmwasserversorgungsanlagen entsprechend Nummer 4 Buchstabe d und entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-verbundene-heizungs-und-warmwasserversorgungsanlage",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Verbundene Heizungs- und Warmwasserversorgungsanlage“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 6",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Verbundene Heizungs- und Warmwasserversorgungsanlage",
+      "eintrag": "betrkv-2-6",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 6 BetrKV",
+      "kurztitel": "die Kosten verbundener Heizungs- und Warmwasserversorgungsanlagen",
+      "gesetzestext": "6. die Kosten verbundener Heizungs- und Warmwasserversorgungsanlagen\na) bei zentralen Heizungsanlagen entsprechend Nummer 4 Buchstabe a und entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind,\noder\nb) bei der eigenständig gewerblichen Lieferung von Wärme entsprechend Nummer 4 Buchstabe c und entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind,\noder\nc) bei verbundenen Etagenheizungen und Warmwasserversorgungsanlagen entsprechend Nummer 4 Buchstabe d und entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-aufzug",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Aufzug“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 7",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Aufzug",
+      "eintrag": "betrkv-2-7",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 7 BetrKV",
+      "kurztitel": "die Kosten des Betriebs des Personen- oder Lastenaufzugs",
+      "gesetzestext": "7. die Kosten des Betriebs des Personen- oder Lastenaufzugs,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Beaufsichtigung, der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft sowie die Kosten der Reinigung der Anlage;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-aufzugskosten",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Aufzugskosten“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 7",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Aufzugskosten",
+      "eintrag": "betrkv-2-7",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 7 BetrKV",
+      "kurztitel": "die Kosten des Betriebs des Personen- oder Lastenaufzugs",
+      "gesetzestext": "7. die Kosten des Betriebs des Personen- oder Lastenaufzugs,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Beaufsichtigung, der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft sowie die Kosten der Reinigung der Anlage;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-aufzugswartung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Aufzugswartung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 7",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Aufzugswartung",
+      "eintrag": "betrkv-2-7",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 7 BetrKV",
+      "kurztitel": "die Kosten des Betriebs des Personen- oder Lastenaufzugs",
+      "gesetzestext": "7. die Kosten des Betriebs des Personen- oder Lastenaufzugs,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Beaufsichtigung, der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft sowie die Kosten der Reinigung der Anlage;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-fahrstuhl",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Fahrstuhl“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 7",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Fahrstuhl",
+      "eintrag": "betrkv-2-7",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 7 BetrKV",
+      "kurztitel": "die Kosten des Betriebs des Personen- oder Lastenaufzugs",
+      "gesetzestext": "7. die Kosten des Betriebs des Personen- oder Lastenaufzugs,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Beaufsichtigung, der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft sowie die Kosten der Reinigung der Anlage;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-personenaufzug",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Personenaufzug“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 7",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Personenaufzug",
+      "eintrag": "betrkv-2-7",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 7 BetrKV",
+      "kurztitel": "die Kosten des Betriebs des Personen- oder Lastenaufzugs",
+      "gesetzestext": "7. die Kosten des Betriebs des Personen- oder Lastenaufzugs,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Beaufsichtigung, der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft sowie die Kosten der Reinigung der Anlage;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-lastenaufzug",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Lastenaufzug“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 7",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Lastenaufzug",
+      "eintrag": "betrkv-2-7",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 7 BetrKV",
+      "kurztitel": "die Kosten des Betriebs des Personen- oder Lastenaufzugs",
+      "gesetzestext": "7. die Kosten des Betriebs des Personen- oder Lastenaufzugs,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Beaufsichtigung, der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft sowie die Kosten der Reinigung der Anlage;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-lift",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Lift“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 7",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Lift",
+      "eintrag": "betrkv-2-7",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 7 BetrKV",
+      "kurztitel": "die Kosten des Betriebs des Personen- oder Lastenaufzugs",
+      "gesetzestext": "7. die Kosten des Betriebs des Personen- oder Lastenaufzugs,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Beaufsichtigung, der Bedienung, Überwachung und Pflege der Anlage, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit einschließlich der Einstellung durch eine Fachkraft sowie die Kosten der Reinigung der Anlage;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-muellabfuhr",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Müllabfuhr“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 8",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Müllabfuhr",
+      "eintrag": "betrkv-2-8",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 8 BetrKV",
+      "kurztitel": "die Kosten der Straßenreinigung und Müllbeseitigung",
+      "gesetzestext": "8. die Kosten der Straßenreinigung und Müllbeseitigung,\nzu den Kosten der Straßenreinigung gehören die für die öffentliche Straßenreinigung zu entrichtenden Gebühren und die Kosten entsprechender nicht öffentlicher Maßnahmen; zu den Kosten der Müllbeseitigung gehören namentlich die für die Müllabfuhr zu entrichtenden Gebühren, die Kosten entsprechender nicht öffentlicher Maßnahmen, die Kosten des Betriebs von Müllkompressoren, Müllschluckern, Müllabsauganlagen sowie des Betriebs von Müllmengenerfassungsanlagen einschließlich der Kosten der Berechnung und Aufteilung;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-muellbeseitigung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Müllbeseitigung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 8",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Müllbeseitigung",
+      "eintrag": "betrkv-2-8",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 8 BetrKV",
+      "kurztitel": "die Kosten der Straßenreinigung und Müllbeseitigung",
+      "gesetzestext": "8. die Kosten der Straßenreinigung und Müllbeseitigung,\nzu den Kosten der Straßenreinigung gehören die für die öffentliche Straßenreinigung zu entrichtenden Gebühren und die Kosten entsprechender nicht öffentlicher Maßnahmen; zu den Kosten der Müllbeseitigung gehören namentlich die für die Müllabfuhr zu entrichtenden Gebühren, die Kosten entsprechender nicht öffentlicher Maßnahmen, die Kosten des Betriebs von Müllkompressoren, Müllschluckern, Müllabsauganlagen sowie des Betriebs von Müllmengenerfassungsanlagen einschließlich der Kosten der Berechnung und Aufteilung;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-muellentsorgung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Müllentsorgung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 8",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Müllentsorgung",
+      "eintrag": "betrkv-2-8",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 8 BetrKV",
+      "kurztitel": "die Kosten der Straßenreinigung und Müllbeseitigung",
+      "gesetzestext": "8. die Kosten der Straßenreinigung und Müllbeseitigung,\nzu den Kosten der Straßenreinigung gehören die für die öffentliche Straßenreinigung zu entrichtenden Gebühren und die Kosten entsprechender nicht öffentlicher Maßnahmen; zu den Kosten der Müllbeseitigung gehören namentlich die für die Müllabfuhr zu entrichtenden Gebühren, die Kosten entsprechender nicht öffentlicher Maßnahmen, die Kosten des Betriebs von Müllkompressoren, Müllschluckern, Müllabsauganlagen sowie des Betriebs von Müllmengenerfassungsanlagen einschließlich der Kosten der Berechnung und Aufteilung;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-muellgebuehren",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Müllgebühren“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 8",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Müllgebühren",
+      "eintrag": "betrkv-2-8",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 8 BetrKV",
+      "kurztitel": "die Kosten der Straßenreinigung und Müllbeseitigung",
+      "gesetzestext": "8. die Kosten der Straßenreinigung und Müllbeseitigung,\nzu den Kosten der Straßenreinigung gehören die für die öffentliche Straßenreinigung zu entrichtenden Gebühren und die Kosten entsprechender nicht öffentlicher Maßnahmen; zu den Kosten der Müllbeseitigung gehören namentlich die für die Müllabfuhr zu entrichtenden Gebühren, die Kosten entsprechender nicht öffentlicher Maßnahmen, die Kosten des Betriebs von Müllkompressoren, Müllschluckern, Müllabsauganlagen sowie des Betriebs von Müllmengenerfassungsanlagen einschließlich der Kosten der Berechnung und Aufteilung;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-restmuell",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Restmüll“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 8",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Restmüll",
+      "eintrag": "betrkv-2-8",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 8 BetrKV",
+      "kurztitel": "die Kosten der Straßenreinigung und Müllbeseitigung",
+      "gesetzestext": "8. die Kosten der Straßenreinigung und Müllbeseitigung,\nzu den Kosten der Straßenreinigung gehören die für die öffentliche Straßenreinigung zu entrichtenden Gebühren und die Kosten entsprechender nicht öffentlicher Maßnahmen; zu den Kosten der Müllbeseitigung gehören namentlich die für die Müllabfuhr zu entrichtenden Gebühren, die Kosten entsprechender nicht öffentlicher Maßnahmen, die Kosten des Betriebs von Müllkompressoren, Müllschluckern, Müllabsauganlagen sowie des Betriebs von Müllmengenerfassungsanlagen einschließlich der Kosten der Berechnung und Aufteilung;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-biotonne",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Biotonne“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 8",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Biotonne",
+      "eintrag": "betrkv-2-8",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 8 BetrKV",
+      "kurztitel": "die Kosten der Straßenreinigung und Müllbeseitigung",
+      "gesetzestext": "8. die Kosten der Straßenreinigung und Müllbeseitigung,\nzu den Kosten der Straßenreinigung gehören die für die öffentliche Straßenreinigung zu entrichtenden Gebühren und die Kosten entsprechender nicht öffentlicher Maßnahmen; zu den Kosten der Müllbeseitigung gehören namentlich die für die Müllabfuhr zu entrichtenden Gebühren, die Kosten entsprechender nicht öffentlicher Maßnahmen, die Kosten des Betriebs von Müllkompressoren, Müllschluckern, Müllabsauganlagen sowie des Betriebs von Müllmengenerfassungsanlagen einschließlich der Kosten der Berechnung und Aufteilung;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-papiertonne",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Papiertonne“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 8",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Papiertonne",
+      "eintrag": "betrkv-2-8",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 8 BetrKV",
+      "kurztitel": "die Kosten der Straßenreinigung und Müllbeseitigung",
+      "gesetzestext": "8. die Kosten der Straßenreinigung und Müllbeseitigung,\nzu den Kosten der Straßenreinigung gehören die für die öffentliche Straßenreinigung zu entrichtenden Gebühren und die Kosten entsprechender nicht öffentlicher Maßnahmen; zu den Kosten der Müllbeseitigung gehören namentlich die für die Müllabfuhr zu entrichtenden Gebühren, die Kosten entsprechender nicht öffentlicher Maßnahmen, die Kosten des Betriebs von Müllkompressoren, Müllschluckern, Müllabsauganlagen sowie des Betriebs von Müllmengenerfassungsanlagen einschließlich der Kosten der Berechnung und Aufteilung;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-abfallentsorgung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Abfallentsorgung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 8",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Abfallentsorgung",
+      "eintrag": "betrkv-2-8",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 8 BetrKV",
+      "kurztitel": "die Kosten der Straßenreinigung und Müllbeseitigung",
+      "gesetzestext": "8. die Kosten der Straßenreinigung und Müllbeseitigung,\nzu den Kosten der Straßenreinigung gehören die für die öffentliche Straßenreinigung zu entrichtenden Gebühren und die Kosten entsprechender nicht öffentlicher Maßnahmen; zu den Kosten der Müllbeseitigung gehören namentlich die für die Müllabfuhr zu entrichtenden Gebühren, die Kosten entsprechender nicht öffentlicher Maßnahmen, die Kosten des Betriebs von Müllkompressoren, Müllschluckern, Müllabsauganlagen sowie des Betriebs von Müllmengenerfassungsanlagen einschließlich der Kosten der Berechnung und Aufteilung;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-abfallgebuehren",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Abfallgebühren“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 8",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Abfallgebühren",
+      "eintrag": "betrkv-2-8",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 8 BetrKV",
+      "kurztitel": "die Kosten der Straßenreinigung und Müllbeseitigung",
+      "gesetzestext": "8. die Kosten der Straßenreinigung und Müllbeseitigung,\nzu den Kosten der Straßenreinigung gehören die für die öffentliche Straßenreinigung zu entrichtenden Gebühren und die Kosten entsprechender nicht öffentlicher Maßnahmen; zu den Kosten der Müllbeseitigung gehören namentlich die für die Müllabfuhr zu entrichtenden Gebühren, die Kosten entsprechender nicht öffentlicher Maßnahmen, die Kosten des Betriebs von Müllkompressoren, Müllschluckern, Müllabsauganlagen sowie des Betriebs von Müllmengenerfassungsanlagen einschließlich der Kosten der Berechnung und Aufteilung;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-strassenreinigung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Straßenreinigung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 8",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Straßenreinigung",
+      "eintrag": "betrkv-2-8",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 8 BetrKV",
+      "kurztitel": "die Kosten der Straßenreinigung und Müllbeseitigung",
+      "gesetzestext": "8. die Kosten der Straßenreinigung und Müllbeseitigung,\nzu den Kosten der Straßenreinigung gehören die für die öffentliche Straßenreinigung zu entrichtenden Gebühren und die Kosten entsprechender nicht öffentlicher Maßnahmen; zu den Kosten der Müllbeseitigung gehören namentlich die für die Müllabfuhr zu entrichtenden Gebühren, die Kosten entsprechender nicht öffentlicher Maßnahmen, die Kosten des Betriebs von Müllkompressoren, Müllschluckern, Müllabsauganlagen sowie des Betriebs von Müllmengenerfassungsanlagen einschließlich der Kosten der Berechnung und Aufteilung;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-muell",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Müll“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 8",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Müll",
+      "eintrag": "betrkv-2-8",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 8 BetrKV",
+      "kurztitel": "die Kosten der Straßenreinigung und Müllbeseitigung",
+      "gesetzestext": "8. die Kosten der Straßenreinigung und Müllbeseitigung,\nzu den Kosten der Straßenreinigung gehören die für die öffentliche Straßenreinigung zu entrichtenden Gebühren und die Kosten entsprechender nicht öffentlicher Maßnahmen; zu den Kosten der Müllbeseitigung gehören namentlich die für die Müllabfuhr zu entrichtenden Gebühren, die Kosten entsprechender nicht öffentlicher Maßnahmen, die Kosten des Betriebs von Müllkompressoren, Müllschluckern, Müllabsauganlagen sowie des Betriebs von Müllmengenerfassungsanlagen einschließlich der Kosten der Berechnung und Aufteilung;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-gebaeudereinigung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Gebäudereinigung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 9",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Gebäudereinigung",
+      "eintrag": "betrkv-2-9",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 9 BetrKV",
+      "kurztitel": "die Kosten der Gebäudereinigung und Ungezieferbekämpfung",
+      "gesetzestext": "9. die Kosten der Gebäudereinigung und Ungezieferbekämpfung,\nzu den Kosten der Gebäudereinigung gehören die Kosten für die Säuberung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen, Fahrkorb des Aufzugs;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-treppenhausreinigung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Treppenhausreinigung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 9",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Treppenhausreinigung",
+      "eintrag": "betrkv-2-9",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 9 BetrKV",
+      "kurztitel": "die Kosten der Gebäudereinigung und Ungezieferbekämpfung",
+      "gesetzestext": "9. die Kosten der Gebäudereinigung und Ungezieferbekämpfung,\nzu den Kosten der Gebäudereinigung gehören die Kosten für die Säuberung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen, Fahrkorb des Aufzugs;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-hausreinigung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Hausreinigung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 9",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Hausreinigung",
+      "eintrag": "betrkv-2-9",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 9 BetrKV",
+      "kurztitel": "die Kosten der Gebäudereinigung und Ungezieferbekämpfung",
+      "gesetzestext": "9. die Kosten der Gebäudereinigung und Ungezieferbekämpfung,\nzu den Kosten der Gebäudereinigung gehören die Kosten für die Säuberung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen, Fahrkorb des Aufzugs;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-ungezieferbekaempfung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Ungezieferbekämpfung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 9",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Ungezieferbekämpfung",
+      "eintrag": "betrkv-2-9",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 9 BetrKV",
+      "kurztitel": "die Kosten der Gebäudereinigung und Ungezieferbekämpfung",
+      "gesetzestext": "9. die Kosten der Gebäudereinigung und Ungezieferbekämpfung,\nzu den Kosten der Gebäudereinigung gehören die Kosten für die Säuberung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen, Fahrkorb des Aufzugs;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-schaedlingsbekaempfung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Schädlingsbekämpfung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 9",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Schädlingsbekämpfung",
+      "eintrag": "betrkv-2-9",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 9 BetrKV",
+      "kurztitel": "die Kosten der Gebäudereinigung und Ungezieferbekämpfung",
+      "gesetzestext": "9. die Kosten der Gebäudereinigung und Ungezieferbekämpfung,\nzu den Kosten der Gebäudereinigung gehören die Kosten für die Säuberung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen, Fahrkorb des Aufzugs;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-ungeziefer",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Ungeziefer“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 9",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Ungeziefer",
+      "eintrag": "betrkv-2-9",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 9 BetrKV",
+      "kurztitel": "die Kosten der Gebäudereinigung und Ungezieferbekämpfung",
+      "gesetzestext": "9. die Kosten der Gebäudereinigung und Ungezieferbekämpfung,\nzu den Kosten der Gebäudereinigung gehören die Kosten für die Säuberung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen, Fahrkorb des Aufzugs;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-reinigung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Reinigung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 9",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Reinigung",
+      "eintrag": "betrkv-2-9",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 9 BetrKV",
+      "kurztitel": "die Kosten der Gebäudereinigung und Ungezieferbekämpfung",
+      "gesetzestext": "9. die Kosten der Gebäudereinigung und Ungezieferbekämpfung,\nzu den Kosten der Gebäudereinigung gehören die Kosten für die Säuberung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen, Fahrkorb des Aufzugs;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-gartenpflege",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Gartenpflege“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 10",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Gartenpflege",
+      "eintrag": "betrkv-2-10",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 10 BetrKV",
+      "kurztitel": "die Kosten der Gartenpflege",
+      "gesetzestext": "10. die Kosten der Gartenpflege,\nhierzu gehören die Kosten der Pflege gärtnerisch angelegter Flächen einschließlich der Erneuerung von Pflanzen und Gehölzen, der Pflege von Spielplätzen einschließlich der Erneuerung von Sand und der Pflege von Plätzen, Zugängen und Zufahrten, die dem nicht öffentlichen Verkehr dienen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-gruenpflege",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Grünpflege“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 10",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Grünpflege",
+      "eintrag": "betrkv-2-10",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 10 BetrKV",
+      "kurztitel": "die Kosten der Gartenpflege",
+      "gesetzestext": "10. die Kosten der Gartenpflege,\nhierzu gehören die Kosten der Pflege gärtnerisch angelegter Flächen einschließlich der Erneuerung von Pflanzen und Gehölzen, der Pflege von Spielplätzen einschließlich der Erneuerung von Sand und der Pflege von Plätzen, Zugängen und Zufahrten, die dem nicht öffentlichen Verkehr dienen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-gruenanlagen",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Grünanlagen“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 10",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Grünanlagen",
+      "eintrag": "betrkv-2-10",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 10 BetrKV",
+      "kurztitel": "die Kosten der Gartenpflege",
+      "gesetzestext": "10. die Kosten der Gartenpflege,\nhierzu gehören die Kosten der Pflege gärtnerisch angelegter Flächen einschließlich der Erneuerung von Pflanzen und Gehölzen, der Pflege von Spielplätzen einschließlich der Erneuerung von Sand und der Pflege von Plätzen, Zugängen und Zufahrten, die dem nicht öffentlichen Verkehr dienen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-aussenanlagen",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Außenanlagen“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 10",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Außenanlagen",
+      "eintrag": "betrkv-2-10",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 10 BetrKV",
+      "kurztitel": "die Kosten der Gartenpflege",
+      "gesetzestext": "10. die Kosten der Gartenpflege,\nhierzu gehören die Kosten der Pflege gärtnerisch angelegter Flächen einschließlich der Erneuerung von Pflanzen und Gehölzen, der Pflege von Spielplätzen einschließlich der Erneuerung von Sand und der Pflege von Plätzen, Zugängen und Zufahrten, die dem nicht öffentlichen Verkehr dienen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-rasenpflege",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Rasenpflege“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 10",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Rasenpflege",
+      "eintrag": "betrkv-2-10",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 10 BetrKV",
+      "kurztitel": "die Kosten der Gartenpflege",
+      "gesetzestext": "10. die Kosten der Gartenpflege,\nhierzu gehören die Kosten der Pflege gärtnerisch angelegter Flächen einschließlich der Erneuerung von Pflanzen und Gehölzen, der Pflege von Spielplätzen einschließlich der Erneuerung von Sand und der Pflege von Plätzen, Zugängen und Zufahrten, die dem nicht öffentlichen Verkehr dienen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-spielplatz",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Spielplatz“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 10",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Spielplatz",
+      "eintrag": "betrkv-2-10",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 10 BetrKV",
+      "kurztitel": "die Kosten der Gartenpflege",
+      "gesetzestext": "10. die Kosten der Gartenpflege,\nhierzu gehören die Kosten der Pflege gärtnerisch angelegter Flächen einschließlich der Erneuerung von Pflanzen und Gehölzen, der Pflege von Spielplätzen einschließlich der Erneuerung von Sand und der Pflege von Plätzen, Zugängen und Zufahrten, die dem nicht öffentlichen Verkehr dienen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-garten",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Garten“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 10",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Garten",
+      "eintrag": "betrkv-2-10",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 10 BetrKV",
+      "kurztitel": "die Kosten der Gartenpflege",
+      "gesetzestext": "10. die Kosten der Gartenpflege,\nhierzu gehören die Kosten der Pflege gärtnerisch angelegter Flächen einschließlich der Erneuerung von Pflanzen und Gehölzen, der Pflege von Spielplätzen einschließlich der Erneuerung von Sand und der Pflege von Plätzen, Zugängen und Zufahrten, die dem nicht öffentlichen Verkehr dienen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-beleuchtung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Beleuchtung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 11",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Beleuchtung",
+      "eintrag": "betrkv-2-11",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 11 BetrKV",
+      "kurztitel": "die Kosten der Beleuchtung",
+      "gesetzestext": "11. die Kosten der Beleuchtung,\nhierzu gehören die Kosten des Stroms für die Außenbeleuchtung und die Beleuchtung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-allgemeinstrom",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Allgemeinstrom“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 11",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Allgemeinstrom",
+      "eintrag": "betrkv-2-11",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 11 BetrKV",
+      "kurztitel": "die Kosten der Beleuchtung",
+      "gesetzestext": "11. die Kosten der Beleuchtung,\nhierzu gehören die Kosten des Stroms für die Außenbeleuchtung und die Beleuchtung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-hausstrom",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Hausstrom“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 11",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Hausstrom",
+      "eintrag": "betrkv-2-11",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 11 BetrKV",
+      "kurztitel": "die Kosten der Beleuchtung",
+      "gesetzestext": "11. die Kosten der Beleuchtung,\nhierzu gehören die Kosten des Stroms für die Außenbeleuchtung und die Beleuchtung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-aussenbeleuchtung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Außenbeleuchtung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 11",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Außenbeleuchtung",
+      "eintrag": "betrkv-2-11",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 11 BetrKV",
+      "kurztitel": "die Kosten der Beleuchtung",
+      "gesetzestext": "11. die Kosten der Beleuchtung,\nhierzu gehören die Kosten des Stroms für die Außenbeleuchtung und die Beleuchtung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-treppenhausbeleuchtung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Treppenhausbeleuchtung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 11",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Treppenhausbeleuchtung",
+      "eintrag": "betrkv-2-11",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 11 BetrKV",
+      "kurztitel": "die Kosten der Beleuchtung",
+      "gesetzestext": "11. die Kosten der Beleuchtung,\nhierzu gehören die Kosten des Stroms für die Außenbeleuchtung und die Beleuchtung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-strom-fuer-aussenbeleuchtung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Strom für Außenbeleuchtung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 11",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Strom für Außenbeleuchtung",
+      "eintrag": "betrkv-2-11",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 11 BetrKV",
+      "kurztitel": "die Kosten der Beleuchtung",
+      "gesetzestext": "11. die Kosten der Beleuchtung,\nhierzu gehören die Kosten des Stroms für die Außenbeleuchtung und die Beleuchtung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-schornsteinreinigung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Schornsteinreinigung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 12",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Schornsteinreinigung",
+      "eintrag": "betrkv-2-12",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 12 BetrKV",
+      "kurztitel": "die Kosten der Schornsteinreinigung",
+      "gesetzestext": "12. die Kosten der Schornsteinreinigung,\nhierzu gehören die Kehrgebühren nach der maßgebenden Gebührenordnung, soweit sie nicht bereits als Kosten nach Nummer 4 Buchstabe a berücksichtigt sind;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-schornsteinfeger",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Schornsteinfeger“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 12",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Schornsteinfeger",
+      "eintrag": "betrkv-2-12",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 12 BetrKV",
+      "kurztitel": "die Kosten der Schornsteinreinigung",
+      "gesetzestext": "12. die Kosten der Schornsteinreinigung,\nhierzu gehören die Kehrgebühren nach der maßgebenden Gebührenordnung, soweit sie nicht bereits als Kosten nach Nummer 4 Buchstabe a berücksichtigt sind;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-kaminkehrer",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Kaminkehrer“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 12",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Kaminkehrer",
+      "eintrag": "betrkv-2-12",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 12 BetrKV",
+      "kurztitel": "die Kosten der Schornsteinreinigung",
+      "gesetzestext": "12. die Kosten der Schornsteinreinigung,\nhierzu gehören die Kehrgebühren nach der maßgebenden Gebührenordnung, soweit sie nicht bereits als Kosten nach Nummer 4 Buchstabe a berücksichtigt sind;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-kehrgebuehren",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Kehrgebühren“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 12",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Kehrgebühren",
+      "eintrag": "betrkv-2-12",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 12 BetrKV",
+      "kurztitel": "die Kosten der Schornsteinreinigung",
+      "gesetzestext": "12. die Kosten der Schornsteinreinigung,\nhierzu gehören die Kehrgebühren nach der maßgebenden Gebührenordnung, soweit sie nicht bereits als Kosten nach Nummer 4 Buchstabe a berücksichtigt sind;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-gebaeudeversicherung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Gebäudeversicherung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 13",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Gebäudeversicherung",
+      "eintrag": "betrkv-2-13",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 13 BetrKV",
+      "kurztitel": "die Kosten der Sach- und Haftpflichtversicherung",
+      "gesetzestext": "13. die Kosten der Sach- und Haftpflichtversicherung,\nhierzu gehören namentlich die Kosten der Versicherung des Gebäudes gegen Feuer-, Sturm-, Wasser- sowie sonstige Elementarschäden, der Glasversicherung, der Haftpflichtversicherung für das Gebäude, den Öltank und den Aufzug;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-haftpflichtversicherung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Haftpflichtversicherung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 13",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Haftpflichtversicherung",
+      "eintrag": "betrkv-2-13",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 13 BetrKV",
+      "kurztitel": "die Kosten der Sach- und Haftpflichtversicherung",
+      "gesetzestext": "13. die Kosten der Sach- und Haftpflichtversicherung,\nhierzu gehören namentlich die Kosten der Versicherung des Gebäudes gegen Feuer-, Sturm-, Wasser- sowie sonstige Elementarschäden, der Glasversicherung, der Haftpflichtversicherung für das Gebäude, den Öltank und den Aufzug;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-sachversicherung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Sachversicherung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 13",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Sachversicherung",
+      "eintrag": "betrkv-2-13",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 13 BetrKV",
+      "kurztitel": "die Kosten der Sach- und Haftpflichtversicherung",
+      "gesetzestext": "13. die Kosten der Sach- und Haftpflichtversicherung,\nhierzu gehören namentlich die Kosten der Versicherung des Gebäudes gegen Feuer-, Sturm-, Wasser- sowie sonstige Elementarschäden, der Glasversicherung, der Haftpflichtversicherung für das Gebäude, den Öltank und den Aufzug;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-glasversicherung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Glasversicherung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 13",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Glasversicherung",
+      "eintrag": "betrkv-2-13",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 13 BetrKV",
+      "kurztitel": "die Kosten der Sach- und Haftpflichtversicherung",
+      "gesetzestext": "13. die Kosten der Sach- und Haftpflichtversicherung,\nhierzu gehören namentlich die Kosten der Versicherung des Gebäudes gegen Feuer-, Sturm-, Wasser- sowie sonstige Elementarschäden, der Glasversicherung, der Haftpflichtversicherung für das Gebäude, den Öltank und den Aufzug;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-elementarschaeden",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Elementarschäden“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 13",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Elementarschäden",
+      "eintrag": "betrkv-2-13",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 13 BetrKV",
+      "kurztitel": "die Kosten der Sach- und Haftpflichtversicherung",
+      "gesetzestext": "13. die Kosten der Sach- und Haftpflichtversicherung,\nhierzu gehören namentlich die Kosten der Versicherung des Gebäudes gegen Feuer-, Sturm-, Wasser- sowie sonstige Elementarschäden, der Glasversicherung, der Haftpflichtversicherung für das Gebäude, den Öltank und den Aufzug;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-feuerversicherung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Feuerversicherung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 13",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Feuerversicherung",
+      "eintrag": "betrkv-2-13",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 13 BetrKV",
+      "kurztitel": "die Kosten der Sach- und Haftpflichtversicherung",
+      "gesetzestext": "13. die Kosten der Sach- und Haftpflichtversicherung,\nhierzu gehören namentlich die Kosten der Versicherung des Gebäudes gegen Feuer-, Sturm-, Wasser- sowie sonstige Elementarschäden, der Glasversicherung, der Haftpflichtversicherung für das Gebäude, den Öltank und den Aufzug;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-versicherung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Versicherung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 13",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Versicherung",
+      "eintrag": "betrkv-2-13",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 13 BetrKV",
+      "kurztitel": "die Kosten der Sach- und Haftpflichtversicherung",
+      "gesetzestext": "13. die Kosten der Sach- und Haftpflichtversicherung,\nhierzu gehören namentlich die Kosten der Versicherung des Gebäudes gegen Feuer-, Sturm-, Wasser- sowie sonstige Elementarschäden, der Glasversicherung, der Haftpflichtversicherung für das Gebäude, den Öltank und den Aufzug;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-antennenanlage",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Antennenanlage“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 15",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Antennenanlage",
+      "eintrag": "betrkv-2-15",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 15 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Gemeinschafts-Antennenanlage",
+      "gesetzestext": "15. die Kosten\na) des Betriebs der Gemeinschafts-Antennenanlage,\nhierzu gehören die Kosten des Betriebsstroms und die Kosten der regelmäßigen Prüfung ihrer Betriebsbereitschaft einschließlich ihrer Einstellung durch eine Fachkraft,\nbis zum 30. Juni 2024 außerdem das Nutzungsentgelt für eine nicht zu dem Gebäude gehörende Antennenanlage sowie die Gebühren, die nach dem Urheberrechtsgesetz für die Kabelweitersendung entstehen,\noder\nb) des Betriebs der mit einem Breitbandnetz verbundenen privaten Verteilanlage,\nhierzu gehören die Kosten des Betriebsstroms,\nbis zum 30. Juni 2024 außerdem die weiteren Kosten entsprechend Buchstabe a, sowie die laufenden monatlichen Grundgebühren für Breitbandanschlüsse,\noder\nc) des Betriebs einer gebäudeinternen Verteilanlage, die vollständig mittels Glasfaser mit einem öffentlichen Netz mit sehr hoher Kapazität im Sinne des § 3 Nummer 33 des Telekommunikationsgesetzes verbunden ist, wenn der Mieter seinen Anbieter von öffentlich zugänglichen Telekommunikationsdiensten über seinen Anschluss frei wählen kann,\nhierzu gehören die Kosten des Betriebsstroms sowie ein Bereitstellungsentgelt gemäß § 72 Absatz 1 des Telekommunikationsgesetzes;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-gemeinschaftsantenne",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Gemeinschaftsantenne“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 15",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Gemeinschaftsantenne",
+      "eintrag": "betrkv-2-15",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 15 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Gemeinschafts-Antennenanlage",
+      "gesetzestext": "15. die Kosten\na) des Betriebs der Gemeinschafts-Antennenanlage,\nhierzu gehören die Kosten des Betriebsstroms und die Kosten der regelmäßigen Prüfung ihrer Betriebsbereitschaft einschließlich ihrer Einstellung durch eine Fachkraft,\nbis zum 30. Juni 2024 außerdem das Nutzungsentgelt für eine nicht zu dem Gebäude gehörende Antennenanlage sowie die Gebühren, die nach dem Urheberrechtsgesetz für die Kabelweitersendung entstehen,\noder\nb) des Betriebs der mit einem Breitbandnetz verbundenen privaten Verteilanlage,\nhierzu gehören die Kosten des Betriebsstroms,\nbis zum 30. Juni 2024 außerdem die weiteren Kosten entsprechend Buchstabe a, sowie die laufenden monatlichen Grundgebühren für Breitbandanschlüsse,\noder\nc) des Betriebs einer gebäudeinternen Verteilanlage, die vollständig mittels Glasfaser mit einem öffentlichen Netz mit sehr hoher Kapazität im Sinne des § 3 Nummer 33 des Telekommunikationsgesetzes verbunden ist, wenn der Mieter seinen Anbieter von öffentlich zugänglichen Telekommunikationsdiensten über seinen Anschluss frei wählen kann,\nhierzu gehören die Kosten des Betriebsstroms sowie ein Bereitstellungsentgelt gemäß § 72 Absatz 1 des Telekommunikationsgesetzes;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-kabelfernsehen",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Kabelfernsehen“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 15",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Kabelfernsehen",
+      "eintrag": "betrkv-2-15",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 15 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Gemeinschafts-Antennenanlage",
+      "gesetzestext": "15. die Kosten\na) des Betriebs der Gemeinschafts-Antennenanlage,\nhierzu gehören die Kosten des Betriebsstroms und die Kosten der regelmäßigen Prüfung ihrer Betriebsbereitschaft einschließlich ihrer Einstellung durch eine Fachkraft,\nbis zum 30. Juni 2024 außerdem das Nutzungsentgelt für eine nicht zu dem Gebäude gehörende Antennenanlage sowie die Gebühren, die nach dem Urheberrechtsgesetz für die Kabelweitersendung entstehen,\noder\nb) des Betriebs der mit einem Breitbandnetz verbundenen privaten Verteilanlage,\nhierzu gehören die Kosten des Betriebsstroms,\nbis zum 30. Juni 2024 außerdem die weiteren Kosten entsprechend Buchstabe a, sowie die laufenden monatlichen Grundgebühren für Breitbandanschlüsse,\noder\nc) des Betriebs einer gebäudeinternen Verteilanlage, die vollständig mittels Glasfaser mit einem öffentlichen Netz mit sehr hoher Kapazität im Sinne des § 3 Nummer 33 des Telekommunikationsgesetzes verbunden ist, wenn der Mieter seinen Anbieter von öffentlich zugänglichen Telekommunikationsdiensten über seinen Anschluss frei wählen kann,\nhierzu gehören die Kosten des Betriebsstroms sowie ein Bereitstellungsentgelt gemäß § 72 Absatz 1 des Telekommunikationsgesetzes;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-kabelanschluss",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Kabelanschluss“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 15",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Kabelanschluss",
+      "eintrag": "betrkv-2-15",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 15 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Gemeinschafts-Antennenanlage",
+      "gesetzestext": "15. die Kosten\na) des Betriebs der Gemeinschafts-Antennenanlage,\nhierzu gehören die Kosten des Betriebsstroms und die Kosten der regelmäßigen Prüfung ihrer Betriebsbereitschaft einschließlich ihrer Einstellung durch eine Fachkraft,\nbis zum 30. Juni 2024 außerdem das Nutzungsentgelt für eine nicht zu dem Gebäude gehörende Antennenanlage sowie die Gebühren, die nach dem Urheberrechtsgesetz für die Kabelweitersendung entstehen,\noder\nb) des Betriebs der mit einem Breitbandnetz verbundenen privaten Verteilanlage,\nhierzu gehören die Kosten des Betriebsstroms,\nbis zum 30. Juni 2024 außerdem die weiteren Kosten entsprechend Buchstabe a, sowie die laufenden monatlichen Grundgebühren für Breitbandanschlüsse,\noder\nc) des Betriebs einer gebäudeinternen Verteilanlage, die vollständig mittels Glasfaser mit einem öffentlichen Netz mit sehr hoher Kapazität im Sinne des § 3 Nummer 33 des Telekommunikationsgesetzes verbunden ist, wenn der Mieter seinen Anbieter von öffentlich zugänglichen Telekommunikationsdiensten über seinen Anschluss frei wählen kann,\nhierzu gehören die Kosten des Betriebsstroms sowie ein Bereitstellungsentgelt gemäß § 72 Absatz 1 des Telekommunikationsgesetzes;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-breitbandanschluss",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Breitbandanschluss“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 15",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Breitbandanschluss",
+      "eintrag": "betrkv-2-15",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 15 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Gemeinschafts-Antennenanlage",
+      "gesetzestext": "15. die Kosten\na) des Betriebs der Gemeinschafts-Antennenanlage,\nhierzu gehören die Kosten des Betriebsstroms und die Kosten der regelmäßigen Prüfung ihrer Betriebsbereitschaft einschließlich ihrer Einstellung durch eine Fachkraft,\nbis zum 30. Juni 2024 außerdem das Nutzungsentgelt für eine nicht zu dem Gebäude gehörende Antennenanlage sowie die Gebühren, die nach dem Urheberrechtsgesetz für die Kabelweitersendung entstehen,\noder\nb) des Betriebs der mit einem Breitbandnetz verbundenen privaten Verteilanlage,\nhierzu gehören die Kosten des Betriebsstroms,\nbis zum 30. Juni 2024 außerdem die weiteren Kosten entsprechend Buchstabe a, sowie die laufenden monatlichen Grundgebühren für Breitbandanschlüsse,\noder\nc) des Betriebs einer gebäudeinternen Verteilanlage, die vollständig mittels Glasfaser mit einem öffentlichen Netz mit sehr hoher Kapazität im Sinne des § 3 Nummer 33 des Telekommunikationsgesetzes verbunden ist, wenn der Mieter seinen Anbieter von öffentlich zugänglichen Telekommunikationsdiensten über seinen Anschluss frei wählen kann,\nhierzu gehören die Kosten des Betriebsstroms sowie ein Bereitstellungsentgelt gemäß § 72 Absatz 1 des Telekommunikationsgesetzes;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-breitbandkabel",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Breitbandkabel“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 15",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Breitbandkabel",
+      "eintrag": "betrkv-2-15",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 15 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Gemeinschafts-Antennenanlage",
+      "gesetzestext": "15. die Kosten\na) des Betriebs der Gemeinschafts-Antennenanlage,\nhierzu gehören die Kosten des Betriebsstroms und die Kosten der regelmäßigen Prüfung ihrer Betriebsbereitschaft einschließlich ihrer Einstellung durch eine Fachkraft,\nbis zum 30. Juni 2024 außerdem das Nutzungsentgelt für eine nicht zu dem Gebäude gehörende Antennenanlage sowie die Gebühren, die nach dem Urheberrechtsgesetz für die Kabelweitersendung entstehen,\noder\nb) des Betriebs der mit einem Breitbandnetz verbundenen privaten Verteilanlage,\nhierzu gehören die Kosten des Betriebsstroms,\nbis zum 30. Juni 2024 außerdem die weiteren Kosten entsprechend Buchstabe a, sowie die laufenden monatlichen Grundgebühren für Breitbandanschlüsse,\noder\nc) des Betriebs einer gebäudeinternen Verteilanlage, die vollständig mittels Glasfaser mit einem öffentlichen Netz mit sehr hoher Kapazität im Sinne des § 3 Nummer 33 des Telekommunikationsgesetzes verbunden ist, wenn der Mieter seinen Anbieter von öffentlich zugänglichen Telekommunikationsdiensten über seinen Anschluss frei wählen kann,\nhierzu gehören die Kosten des Betriebsstroms sowie ein Bereitstellungsentgelt gemäß § 72 Absatz 1 des Telekommunikationsgesetzes;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-glasfaser",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Glasfaser“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 15",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Glasfaser",
+      "eintrag": "betrkv-2-15",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 15 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Gemeinschafts-Antennenanlage",
+      "gesetzestext": "15. die Kosten\na) des Betriebs der Gemeinschafts-Antennenanlage,\nhierzu gehören die Kosten des Betriebsstroms und die Kosten der regelmäßigen Prüfung ihrer Betriebsbereitschaft einschließlich ihrer Einstellung durch eine Fachkraft,\nbis zum 30. Juni 2024 außerdem das Nutzungsentgelt für eine nicht zu dem Gebäude gehörende Antennenanlage sowie die Gebühren, die nach dem Urheberrechtsgesetz für die Kabelweitersendung entstehen,\noder\nb) des Betriebs der mit einem Breitbandnetz verbundenen privaten Verteilanlage,\nhierzu gehören die Kosten des Betriebsstroms,\nbis zum 30. Juni 2024 außerdem die weiteren Kosten entsprechend Buchstabe a, sowie die laufenden monatlichen Grundgebühren für Breitbandanschlüsse,\noder\nc) des Betriebs einer gebäudeinternen Verteilanlage, die vollständig mittels Glasfaser mit einem öffentlichen Netz mit sehr hoher Kapazität im Sinne des § 3 Nummer 33 des Telekommunikationsgesetzes verbunden ist, wenn der Mieter seinen Anbieter von öffentlich zugänglichen Telekommunikationsdiensten über seinen Anschluss frei wählen kann,\nhierzu gehören die Kosten des Betriebsstroms sowie ein Bereitstellungsentgelt gemäß § 72 Absatz 1 des Telekommunikationsgesetzes;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-antenne",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Antenne“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 15",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Antenne",
+      "eintrag": "betrkv-2-15",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 15 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Gemeinschafts-Antennenanlage",
+      "gesetzestext": "15. die Kosten\na) des Betriebs der Gemeinschafts-Antennenanlage,\nhierzu gehören die Kosten des Betriebsstroms und die Kosten der regelmäßigen Prüfung ihrer Betriebsbereitschaft einschließlich ihrer Einstellung durch eine Fachkraft,\nbis zum 30. Juni 2024 außerdem das Nutzungsentgelt für eine nicht zu dem Gebäude gehörende Antennenanlage sowie die Gebühren, die nach dem Urheberrechtsgesetz für die Kabelweitersendung entstehen,\noder\nb) des Betriebs der mit einem Breitbandnetz verbundenen privaten Verteilanlage,\nhierzu gehören die Kosten des Betriebsstroms,\nbis zum 30. Juni 2024 außerdem die weiteren Kosten entsprechend Buchstabe a, sowie die laufenden monatlichen Grundgebühren für Breitbandanschlüsse,\noder\nc) des Betriebs einer gebäudeinternen Verteilanlage, die vollständig mittels Glasfaser mit einem öffentlichen Netz mit sehr hoher Kapazität im Sinne des § 3 Nummer 33 des Telekommunikationsgesetzes verbunden ist, wenn der Mieter seinen Anbieter von öffentlich zugänglichen Telekommunikationsdiensten über seinen Anschluss frei wählen kann,\nhierzu gehören die Kosten des Betriebsstroms sowie ein Bereitstellungsentgelt gemäß § 72 Absatz 1 des Telekommunikationsgesetzes;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-waeschepflege",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Wäschepflege“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 16",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-wortlaut",
+    "rechenweg": {
+      "begriff": "Wäschepflege",
+      "eintrag": "betrkv-2-16",
+      "verdikt": "im-katalog",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 2 Nr. 16 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Einrichtungen für die Wäschepflege",
+      "gesetzestext": "16. die Kosten des Betriebs der Einrichtungen für die Wäschepflege,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Überwachung, Pflege und Reinigung der Einrichtungen, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit sowie die Kosten der Wasserversorgung entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-waschkueche",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Waschküche“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 16",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Waschküche",
+      "eintrag": "betrkv-2-16",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 16 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Einrichtungen für die Wäschepflege",
+      "gesetzestext": "16. die Kosten des Betriebs der Einrichtungen für die Wäschepflege,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Überwachung, Pflege und Reinigung der Einrichtungen, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit sowie die Kosten der Wasserversorgung entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-waschmaschine",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Waschmaschine“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 16",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Waschmaschine",
+      "eintrag": "betrkv-2-16",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 16 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Einrichtungen für die Wäschepflege",
+      "gesetzestext": "16. die Kosten des Betriebs der Einrichtungen für die Wäschepflege,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Überwachung, Pflege und Reinigung der Einrichtungen, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit sowie die Kosten der Wasserversorgung entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-trockner",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Trockner“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 16",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Trockner",
+      "eintrag": "betrkv-2-16",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 16 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Einrichtungen für die Wäschepflege",
+      "gesetzestext": "16. die Kosten des Betriebs der Einrichtungen für die Wäschepflege,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Überwachung, Pflege und Reinigung der Einrichtungen, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit sowie die Kosten der Wasserversorgung entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-wascheinrichtung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Wascheinrichtung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "ja",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "2 Nr. 16",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+    "kategorie": "umlage-katalog-suchbegriff",
+    "rechenweg": {
+      "begriff": "Wascheinrichtung",
+      "eintrag": "betrkv-2-16",
+      "verdikt": "im-katalog",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 2 Nr. 16 BetrKV",
+      "kurztitel": "die Kosten des Betriebs der Einrichtungen für die Wäschepflege",
+      "gesetzestext": "16. die Kosten des Betriebs der Einrichtungen für die Wäschepflege,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Überwachung, Pflege und Reinigung der Einrichtungen, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit sowie die Kosten der Wasserversorgung entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind;",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+    }
+  },
+  {
+    "id": "umlage-verwaltungskosten",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Verwaltungskosten“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 1",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Verwaltungskosten",
+      "eintrag": "betrkv-1-1",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 1 Abs. 2 Nr. 1 BetrKV",
+      "kurztitel": "Verwaltungskosten",
+      "gesetzestext": "1. die Kosten der zur Verwaltung des Gebäudes erforderlichen Arbeitskräfte und Einrichtungen, die Kosten der Aufsicht, der Wert der vom Vermieter persönlich geleisteten Verwaltungsarbeit, die Kosten für die gesetzlichen oder freiwilligen Prüfungen des Jahresabschlusses und die Kosten für die Geschäftsführung (Verwaltungskosten),",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-verwalterverguetung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Verwaltervergütung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 1",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Verwaltervergütung",
+      "eintrag": "betrkv-1-1",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 1 BetrKV",
+      "kurztitel": "Verwaltungskosten",
+      "gesetzestext": "1. die Kosten der zur Verwaltung des Gebäudes erforderlichen Arbeitskräfte und Einrichtungen, die Kosten der Aufsicht, der Wert der vom Vermieter persönlich geleisteten Verwaltungsarbeit, die Kosten für die gesetzlichen oder freiwilligen Prüfungen des Jahresabschlusses und die Kosten für die Geschäftsführung (Verwaltungskosten),",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-verwalterhonorar",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Verwalterhonorar“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 1",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Verwalterhonorar",
+      "eintrag": "betrkv-1-1",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 1 BetrKV",
+      "kurztitel": "Verwaltungskosten",
+      "gesetzestext": "1. die Kosten der zur Verwaltung des Gebäudes erforderlichen Arbeitskräfte und Einrichtungen, die Kosten der Aufsicht, der Wert der vom Vermieter persönlich geleisteten Verwaltungsarbeit, die Kosten für die gesetzlichen oder freiwilligen Prüfungen des Jahresabschlusses und die Kosten für die Geschäftsführung (Verwaltungskosten),",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-verwaltergebuehr",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Verwaltergebühr“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 1",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Verwaltergebühr",
+      "eintrag": "betrkv-1-1",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 1 BetrKV",
+      "kurztitel": "Verwaltungskosten",
+      "gesetzestext": "1. die Kosten der zur Verwaltung des Gebäudes erforderlichen Arbeitskräfte und Einrichtungen, die Kosten der Aufsicht, der Wert der vom Vermieter persönlich geleisteten Verwaltungsarbeit, die Kosten für die gesetzlichen oder freiwilligen Prüfungen des Jahresabschlusses und die Kosten für die Geschäftsführung (Verwaltungskosten),",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-hausverwaltung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Hausverwaltung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 1",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Hausverwaltung",
+      "eintrag": "betrkv-1-1",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 1 BetrKV",
+      "kurztitel": "Verwaltungskosten",
+      "gesetzestext": "1. die Kosten der zur Verwaltung des Gebäudes erforderlichen Arbeitskräfte und Einrichtungen, die Kosten der Aufsicht, der Wert der vom Vermieter persönlich geleisteten Verwaltungsarbeit, die Kosten für die gesetzlichen oder freiwilligen Prüfungen des Jahresabschlusses und die Kosten für die Geschäftsführung (Verwaltungskosten),",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-geschaeftsfuehrung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Geschäftsführung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 1",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Geschäftsführung",
+      "eintrag": "betrkv-1-1",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 1 Abs. 2 Nr. 1 BetrKV",
+      "kurztitel": "Verwaltungskosten",
+      "gesetzestext": "1. die Kosten der zur Verwaltung des Gebäudes erforderlichen Arbeitskräfte und Einrichtungen, die Kosten der Aufsicht, der Wert der vom Vermieter persönlich geleisteten Verwaltungsarbeit, die Kosten für die gesetzlichen oder freiwilligen Prüfungen des Jahresabschlusses und die Kosten für die Geschäftsführung (Verwaltungskosten),",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-aufsicht",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Aufsicht“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 1",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Aufsicht",
+      "eintrag": "betrkv-1-1",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 1 Abs. 2 Nr. 1 BetrKV",
+      "kurztitel": "Verwaltungskosten",
+      "gesetzestext": "1. die Kosten der zur Verwaltung des Gebäudes erforderlichen Arbeitskräfte und Einrichtungen, die Kosten der Aufsicht, der Wert der vom Vermieter persönlich geleisteten Verwaltungsarbeit, die Kosten für die gesetzlichen oder freiwilligen Prüfungen des Jahresabschlusses und die Kosten für die Geschäftsführung (Verwaltungskosten),",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-verwaltung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Verwaltung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 1",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Verwaltung",
+      "eintrag": "betrkv-1-1",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 1 Abs. 2 Nr. 1 BetrKV",
+      "kurztitel": "Verwaltungskosten",
+      "gesetzestext": "1. die Kosten der zur Verwaltung des Gebäudes erforderlichen Arbeitskräfte und Einrichtungen, die Kosten der Aufsicht, der Wert der vom Vermieter persönlich geleisteten Verwaltungsarbeit, die Kosten für die gesetzlichen oder freiwilligen Prüfungen des Jahresabschlusses und die Kosten für die Geschäftsführung (Verwaltungskosten),",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-instandhaltung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Instandhaltung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Instandhaltung",
+      "eintrag": "betrkv-1-2",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 1 Abs. 2 Nr. 2 BetrKV",
+      "kurztitel": "Instandhaltungs- und Instandsetzungskosten",
+      "gesetzestext": "2. die Kosten, die während der Nutzungsdauer zur Erhaltung des bestimmungsmäßigen Gebrauchs aufgewendet werden müssen, um die durch Abnutzung, Alterung und Witterungseinwirkung entstehenden baulichen oder sonstigen Mängel ordnungsgemäß zu beseitigen (Instandhaltungs- und Instandsetzungskosten).",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-instandsetzung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Instandsetzung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Instandsetzung",
+      "eintrag": "betrkv-1-2",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "wortlaut",
+      "fundstelle": "§ 1 Abs. 2 Nr. 2 BetrKV",
+      "kurztitel": "Instandhaltungs- und Instandsetzungskosten",
+      "gesetzestext": "2. die Kosten, die während der Nutzungsdauer zur Erhaltung des bestimmungsmäßigen Gebrauchs aufgewendet werden müssen, um die durch Abnutzung, Alterung und Witterungseinwirkung entstehenden baulichen oder sonstigen Mängel ordnungsgemäß zu beseitigen (Instandhaltungs- und Instandsetzungskosten).",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-instandhaltungsruecklage",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Instandhaltungsrücklage“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Instandhaltungsrücklage",
+      "eintrag": "betrkv-1-2",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 2 BetrKV",
+      "kurztitel": "Instandhaltungs- und Instandsetzungskosten",
+      "gesetzestext": "2. die Kosten, die während der Nutzungsdauer zur Erhaltung des bestimmungsmäßigen Gebrauchs aufgewendet werden müssen, um die durch Abnutzung, Alterung und Witterungseinwirkung entstehenden baulichen oder sonstigen Mängel ordnungsgemäß zu beseitigen (Instandhaltungs- und Instandsetzungskosten).",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-erhaltungsruecklage",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Erhaltungsrücklage“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Erhaltungsrücklage",
+      "eintrag": "betrkv-1-2",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 2 BetrKV",
+      "kurztitel": "Instandhaltungs- und Instandsetzungskosten",
+      "gesetzestext": "2. die Kosten, die während der Nutzungsdauer zur Erhaltung des bestimmungsmäßigen Gebrauchs aufgewendet werden müssen, um die durch Abnutzung, Alterung und Witterungseinwirkung entstehenden baulichen oder sonstigen Mängel ordnungsgemäß zu beseitigen (Instandhaltungs- und Instandsetzungskosten).",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-reparatur",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Reparatur“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Reparatur",
+      "eintrag": "betrkv-1-2",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 2 BetrKV",
+      "kurztitel": "Instandhaltungs- und Instandsetzungskosten",
+      "gesetzestext": "2. die Kosten, die während der Nutzungsdauer zur Erhaltung des bestimmungsmäßigen Gebrauchs aufgewendet werden müssen, um die durch Abnutzung, Alterung und Witterungseinwirkung entstehenden baulichen oder sonstigen Mängel ordnungsgemäß zu beseitigen (Instandhaltungs- und Instandsetzungskosten).",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-reparaturen",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Reparaturen“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Reparaturen",
+      "eintrag": "betrkv-1-2",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 2 BetrKV",
+      "kurztitel": "Instandhaltungs- und Instandsetzungskosten",
+      "gesetzestext": "2. die Kosten, die während der Nutzungsdauer zur Erhaltung des bestimmungsmäßigen Gebrauchs aufgewendet werden müssen, um die durch Abnutzung, Alterung und Witterungseinwirkung entstehenden baulichen oder sonstigen Mängel ordnungsgemäß zu beseitigen (Instandhaltungs- und Instandsetzungskosten).",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-sanierung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Sanierung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Sanierung",
+      "eintrag": "betrkv-1-2",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 2 BetrKV",
+      "kurztitel": "Instandhaltungs- und Instandsetzungskosten",
+      "gesetzestext": "2. die Kosten, die während der Nutzungsdauer zur Erhaltung des bestimmungsmäßigen Gebrauchs aufgewendet werden müssen, um die durch Abnutzung, Alterung und Witterungseinwirkung entstehenden baulichen oder sonstigen Mängel ordnungsgemäß zu beseitigen (Instandhaltungs- und Instandsetzungskosten).",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-modernisierung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Modernisierung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Modernisierung",
+      "eintrag": "betrkv-1-2",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 2 BetrKV",
+      "kurztitel": "Instandhaltungs- und Instandsetzungskosten",
+      "gesetzestext": "2. die Kosten, die während der Nutzungsdauer zur Erhaltung des bestimmungsmäßigen Gebrauchs aufgewendet werden müssen, um die durch Abnutzung, Alterung und Witterungseinwirkung entstehenden baulichen oder sonstigen Mängel ordnungsgemäß zu beseitigen (Instandhaltungs- und Instandsetzungskosten).",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-erneuerung",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Erneuerung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Erneuerung",
+      "eintrag": "betrkv-1-2",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 2 BetrKV",
+      "kurztitel": "Instandhaltungs- und Instandsetzungskosten",
+      "gesetzestext": "2. die Kosten, die während der Nutzungsdauer zur Erhaltung des bestimmungsmäßigen Gebrauchs aufgewendet werden müssen, um die durch Abnutzung, Alterung und Witterungseinwirkung entstehenden baulichen oder sonstigen Mängel ordnungsgemäß zu beseitigen (Instandhaltungs- und Instandsetzungskosten).",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-malerarbeiten",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Malerarbeiten“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Malerarbeiten",
+      "eintrag": "betrkv-1-2",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 2 BetrKV",
+      "kurztitel": "Instandhaltungs- und Instandsetzungskosten",
+      "gesetzestext": "2. die Kosten, die während der Nutzungsdauer zur Erhaltung des bestimmungsmäßigen Gebrauchs aufgewendet werden müssen, um die durch Abnutzung, Alterung und Witterungseinwirkung entstehenden baulichen oder sonstigen Mängel ordnungsgemäß zu beseitigen (Instandhaltungs- und Instandsetzungskosten).",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  },
+  {
+    "id": "umlage-schoenheitsreparaturen",
+    "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Schönheitsreparaturen“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+    "antwort_typ": "ja-nein",
+    "antwort": "nein",
+    "beleg_gesetz": "BetrKV",
+    "beleg_paragraph": "1 Abs. 2 Nr. 2",
+    "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html",
+    "kategorie": "umlage-ausschluss",
+    "rechenweg": {
+      "begriff": "Schönheitsreparaturen",
+      "eintrag": "betrkv-1-2",
+      "verdikt": "nicht-umlagefaehig",
+      "treffer": "suchbegriff",
+      "fundstelle": "§ 1 Abs. 2 Nr. 2 BetrKV",
+      "kurztitel": "Instandhaltungs- und Instandsetzungskosten",
+      "gesetzestext": "2. die Kosten, die während der Nutzungsdauer zur Erhaltung des bestimmungsmäßigen Gebrauchs aufgewendet werden müssen, um die durch Abnutzung, Alterung und Witterungseinwirkung entstehenden baulichen oder sonstigen Mängel ordnungsgemäß zu beseitigen (Instandhaltungs- und Instandsetzungskosten).",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__1.html"
+    }
+  }
+]

@@ -1,6 +1,6 @@
 // benchmark/generiere-fristen.mjs
 // Erzeugt Benchmark-Fragen zu den Fristen des § 556 Abs. 3 BGB samt Antwort.
-// Aufruf: node benchmark/generiere-fristen.mjs   -> schreibt benchmark/fragen.json
+// Aufruf: node benchmark/generiere-fristen.mjs   -> schreibt benchmark/fragen-fristen.json
 //
 // Die Antworten werden NICHT von Hand geschrieben, sondern von kern/frist.mjs berechnet -
 // demselben Code, den die Seite im Browser laedt und scripts/pruefe-betriebskosten.js
@@ -9,7 +9,7 @@
 // Fremder den Schluessel nachpruefen kann, statt ihm glauben zu muessen.
 //
 // DETERMINISTISCH, KEIN ZUFALL: Zwei Laeufe auf demselben Stand liefern eine
-// byte-gleiche fragen.json. Auch kein Zeitstempel in der Datei - sonst waere jeder
+// byte-gleiche fragen-fristen.json. Auch kein Zeitstempel in der Datei - sonst waere jeder
 // Lauf "anders", und niemand koennte den veroeffentlichten Datensatz reproduzieren.
 //
 // WAS UEBERSPRUNGEN WIRD (und im Log gezaehlt, damit sichtbar ist, dass der Filter lief):
@@ -43,7 +43,7 @@ import { zuIso, plusTage, tageImMonat, wochentag, formatiereDeutsch, istSchaltja
 const LOG = "[generiere-fristen]";
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const GESETZE_PFAD = path.resolve(HIER, "../wissensbasis/gesetze.json");
-const AUSGABE_PFAD = path.resolve(HIER, "fragen.json");
+const AUSGABE_PFAD = path.resolve(HIER, "fragen-fristen.json");
 
 const JAHR_VON = 2019;
 const JAHR_BIS = 2026;
