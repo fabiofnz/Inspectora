@@ -165,8 +165,10 @@ const MUTATIONEN = [
     name: "Ausschluss verliert seinen Vorrang vor dem Katalog",
     erwartet: "Zuordnung der Positionen",
     datei: "katalog.mjs",
-    suchen: "        if (verdikt === null) {\n          verdikt = IMMER_MIT_VORBEHALT[item.nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;\n        }",
-    ersetzen: "        verdikt = IMMER_MIT_VORBEHALT[item.nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;",
+    // Nach dem Umbau von ordneZeileZu dieselbe Mutation wie vorher: Der Katalogtreffer
+    // ueberschreibt ein bereits gesetztes Ausschluss-Urteil.
+    suchen: "  if (fundstellenKatalog.length === 1 && ziele === 1 && verdikt === null) {",
+    ersetzen: "  if (fundstellenKatalog.length === 1 && ziele === 1) {",
   },
   {
     name: "Nr. 14 verliert ihren Vorbehalt",
@@ -233,9 +235,39 @@ const MUTATIONEN = [
     name: "Luecke verliert den Wettbewerb gegen den Katalogbegriff",
     erwartet: "Bekannte Luecken sind keine Fundstellen",
     datei: "katalog.mjs",
-    suchen: "  const trefferKatalogUndLuecke = sucheBegriffe(gefaltet, [...katalogEintraege, ...lueckenEintraege]);",
-    ersetzen: "  const trefferKatalogUndLuecke = sucheBegriffe(gefaltet, katalogEintraege)\n"
-      + "    .concat(sucheBegriffe(gefaltet, lueckenEintraege));",
+    // Nach dem Umbau dieselbe Mutation wie vorher: Katalog und Luecken werden getrennt
+    // durchsucht, "reinigung" in "Dachrinnenreinigung" ueberlebt als Katalogtreffer.
+    suchen: "  const trefferKatalogUndLuecke = sucheTreffer(gefaltet, [...katalogEintraege, ...lueckenEintraege]);",
+    ersetzen: "  const trefferKatalogUndLuecke = sucheTreffer(gefaltet, katalogEintraege)\n"
+      + "    .concat(sucheTreffer(gefaltet, lueckenEintraege));",
+  },
+  {
+    name: "Listenreihenfolge statt laengster Begriff (Warmwasserversorgung trifft Nr. 2)",
+    erwartet: "Mehrere Treffer in einer Zeile",
+    datei: "katalog.mjs",
+    suchen: "  alle.sort((a, b) => (b.ende - b.start) - (a.ende - a.start) || a.start - b.start);",
+    ersetzen: "  // Sortierung entfernt: Listenreihenfolge entscheidet",
+  },
+  {
+    name: "Nur der erste Treffer einer Zeile bleibt (Muell verschwindet neben Wasser)",
+    erwartet: "Mehrere Treffer in einer Zeile",
+    datei: "katalog.mjs",
+    suchen: "  const zielGruppen = jeEintrag(trefferKatalogUndLuecke);",
+    ersetzen: "  const zielGruppen = jeEintrag(trefferKatalogUndLuecke).slice(0, 1);",
+  },
+  {
+    name: "Enthaltener Begriff zaehlt als eigene Position (Abwasser trifft auch Nr. 2)",
+    erwartet: "Mehrere Treffer in einer Zeile",
+    datei: "katalog.mjs",
+    suchen: "    const enthalten = behalten.some((b) => b.start <= t.start && t.ende <= b.ende);",
+    ersetzen: "    const enthalten = false;",
+  },
+  {
+    name: "Abdeckung meldet jede Zeile als vollstaendig bewertet",
+    erwartet: "Mehrere Treffer in einer Zeile",
+    datei: "katalog.mjs",
+    suchen: "    vollstaendig: verdikt !== VERDIKT.UNBEKANNT && unbewertet.length === 0,",
+    ersetzen: "    vollstaendig: true,",
   },
   {
     name: "Wissensbasis: BetrKV § 2 hat keinen Quell-Link mehr",

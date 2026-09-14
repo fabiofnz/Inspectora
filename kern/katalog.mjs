@@ -38,6 +38,25 @@
 // unterdruecken ("Zwischensumme Wasser" bleibt ein Treffer auf § 2 Nr. 2).
 // Eine still verschluckte Position waere die gefaehrlichste Ausgabe von allen:
 // eine Seite ohne Befund sieht aus wie eine Seite ohne Problem.
+//
+// ---------------------------------------------------------------------------
+// MEHRERE TREFFER IN EINER ZEILE
+// ---------------------------------------------------------------------------
+// "Wasser und Müll" trifft § 2 Nr. 2 und Nr. 8. Frueher blieb davon nur ein Treffer
+// uebrig - die Zeile war gruen und halb geprueft. Jetzt gilt:
+//   - Gesucht wird mit Position in der Zeile. Ein Treffer faellt nur weg, wenn er
+//     VOLLSTAENDIG in einem laengeren Treffer liegt ("wasser" in "abwasser" ist
+//     dasselbe Wort, keine zweite Position). Teilweise ueberlappende Treffer bleiben
+//     beide stehen.
+//   - Innerhalb eines Eintrags gewinnt der laengste Begriff, nicht der erste der Liste.
+//   - Beruehrt eine Zeile zwei oder mehr Nummern (Katalog und/oder Luecke), lautet das
+//     Urteil "mehrere Positionen". Die Engine erkennt beide Teile, kann die Aufteilung
+//     aber nicht entscheiden - also entscheidet sie sie nicht. Dasselbe Prinzip wie bei
+//     § 193 in frist.mjs. Das gilt auch, wenn zusaetzlich ein Ausschluss trifft: Auf
+//     welchen Teil sich "Reparatur" bezieht, steht nicht in der Zeile.
+//   - Jede Position traegt "abdeckung": welche Woerter der Zeile KEIN Treffer abdeckt.
+//     Ein Ergebnis, das nur einen Teil der Zeile bewertet hat, muss als solches
+//     erkennbar sein. Die Abdeckung aendert nie das Urteil.
 
 "use strict";
 
@@ -57,6 +76,9 @@ export const VERDIKT = {
   // es das Wort - und weiss, dass das Gesetz es nicht nennt.
   LUECKE: "im-gesetz-nicht-genannt",
   UNBEKANNT: "nicht-zuordenbar",
+  // Die Zeile beruehrt zwei oder mehr Nummern. Kein Urteil ueber die Zeile als Ganzes,
+  // weil die Aufteilung aus dem Text nicht hervorgeht - siehe Kopf der Datei.
+  MEHRERE: "mehrere-positionen",
 };
 
 // Diese beiden Nummern sind aus dem Gesetzestext allein nie zu entscheiden und
@@ -262,6 +284,21 @@ const KOPFZEILENWORTE = [
   "seite", "rechnungsnummer", "kundennummer", "mieter", "vermieter", "objekt",
 ];
 
+// Fuellwoerter fuer die Abdeckung einer Zeile.
+//
+// REDAKTIONELL, NICHT AUS DEM GESETZ - wie SUMMENWORTE und KOPFZEILENWORTE. Diese
+// Liste entscheidet nur, welche Woerter bei der Abdeckung NICHT als "unbewertet"
+// gemeldet werden: "Wasser und Müll" ist vollstaendig bewertet, obwohl "und" keinen
+// Treffer hat. Sie erzeugt NIE ein Urteil und NIE eine Fundstelle.
+//
+// Eintraege stehen in gefalteter Form (siehe falte): "fuer", nicht "für" - sonst
+// greift ein Eintrag nie, und das faellt nicht auf. scripts/pruefe-betriebskosten.js
+// prueft das. Beim Ausbau der Wissensbasis gehoert diese Liste mit auf den Tisch.
+export const FUELLWOERTER = [
+  "und", "oder", "sowie", "inkl", "einschl", "fuer", "der", "die", "das", "des",
+  "von", "mit", "kosten",
+];
+
 export function nichtPositionGrund(rohzeile, bezeichnung) {
   const roh = String(rohzeile || "").trim();
   const gefaltet = falte(bezeichnung);
@@ -289,20 +326,85 @@ export function nichtPositionGrund(rohzeile, bezeichnung) {
 // Zuordnung einer einzelnen Zeile
 // ---------------------------------------------------------------------------
 
-function sucheBegriffe(gefaltet, eintraege) {
-  const treffer = [];
+// Alle Treffer einer Zeile, jeweils mit Position (start/ende in der gefalteten Zeile).
+//
+// Frueher brach die Suche je Eintrag beim ERSTEN passenden Begriff der Liste ab, und
+// danach blieb je Zeile nur ein einziger Treffer uebrig. Beides hat still verworfen:
+// "Warmwasserversorgung" traf Nr. 5 ueber "warmwasser" (10 Zeichen) statt ueber den
+// ganzen Begriff (20) und verlor dann gegen "wasserversorgung" aus Nr. 2 (16). Bei
+// "Wasser und Müll" verschwand Nr. 8.
+//
+// Jetzt wird jedes Vorkommen jedes Begriffs gesammelt, laengster Treffer zuerst. Ein
+// Treffer faellt nur weg, wenn er vollstaendig in einem schon behaltenen, laengeren
+// Treffer liegt - dann ist er Teil desselben Wortes und keine eigene Position.
+// Teilweise Ueberlappungen bleiben beide stehen: Dort waere jede Auswahl eine Vermutung.
+function sucheTreffer(gefaltet, eintraege) {
+  const alle = [];
   for (const eintrag of eintraege) {
     for (const begriff of eintrag.begriffe) {
       const gefalteterBegriff = falte(begriff);
-      if (gefalteterBegriff && gefaltet.includes(gefalteterBegriff)) {
-        treffer.push({ eintrag, begriff, laenge: gefalteterBegriff.length });
-        break;
+      if (!gefalteterBegriff) continue;
+      for (let start = gefaltet.indexOf(gefalteterBegriff); start !== -1;
+        start = gefaltet.indexOf(gefalteterBegriff, start + 1)) {
+        alle.push({ eintrag, begriff, start, ende: start + gefalteterBegriff.length });
       }
     }
   }
+
   // Laengster Begriff gewinnt: "hausmeisterservice" ist genauer als "haus".
-  treffer.sort((a, b) => b.laenge - a.laenge);
-  return treffer;
+  alle.sort((a, b) => (b.ende - b.start) - (a.ende - a.start) || a.start - b.start);
+
+  const behalten = [];
+  for (const t of alle) {
+    const enthalten = behalten.some((b) => b.start <= t.start && t.ende <= b.ende);
+    if (!enthalten) behalten.push(t);
+  }
+  return behalten;
+}
+
+// Fasst Treffer je Eintrag zusammen. Mehrere Treffer derselben Nummer sind EINE
+// Fundstelle; genannt wird der laengste Begriff. Reihenfolge: wie in der Zeile.
+function jeEintrag(treffer) {
+  const gruppen = new Map();
+  for (const t of treffer) {
+    // treffer kommt nach Laenge sortiert - der erste je Eintrag ist der laengste.
+    if (!gruppen.has(t.eintrag.schluessel)) {
+      gruppen.set(t.eintrag.schluessel, { eintrag: t.eintrag, begriff: t.begriff, start: t.start });
+    }
+    const gruppe = gruppen.get(t.eintrag.schluessel);
+    gruppe.start = Math.min(gruppe.start, t.start);
+  }
+  return [...gruppen.values()].sort((a, b) => a.start - b.start);
+}
+
+// Welche Woerter der Zeile kein Treffer abdeckt. Ein Wort gilt nur als bewertet, wenn
+// es VOLLSTAENDIG abgedeckt ist: "Wasserschaden" ist nicht bewertet, nur weil "wasser"
+// darin steckt. Gemeldet wird das Wort so, wie der Nutzer es geschrieben hat - nie in
+// gefalteter Form. Zahlen und FUELLWOERTER zaehlen nicht als unbewertet.
+function berechneAbdeckung(bezeichnung, gefaltet, treffer, verdikt) {
+  const abgedeckt = new Array(gefaltet.length).fill(false);
+  for (const t of treffer) for (let i = t.start; i < t.ende; i++) abgedeckt[i] = true;
+
+  const unbewertet = [];
+  let cursor = 0;
+  for (const wort of String(bezeichnung).match(/[\p{L}\p{N}]+/gu) || []) {
+    const gefaltetesWort = falte(wort);
+    if (!gefaltetesWort) continue;
+    const start = gefaltet.indexOf(gefaltetesWort, cursor);
+    // Nicht wiedergefunden (sollte nicht vorkommen): lieber als unbewertet melden.
+    if (start === -1) { unbewertet.push(wort); continue; }
+    const ende = start + gefaltetesWort.length;
+    cursor = ende;
+    if (/^\d+$/.test(gefaltetesWort) || FUELLWOERTER.includes(gefaltetesWort)) continue;
+    let voll = true;
+    for (let i = start; i < ende; i++) if (!abgedeckt[i]) { voll = false; break; }
+    if (!voll) unbewertet.push(wort);
+  }
+
+  return {
+    vollstaendig: verdikt !== VERDIKT.UNBEKANNT && unbewertet.length === 0,
+    unbewertet,
+  };
 }
 
 function fundstelleKatalog(item, begriff, wortlaut, beleg) {
@@ -354,7 +456,12 @@ function luecke(eintrag, begriff) {
 
 export function ordneZeileZu(bezeichnung, katalog, ausschluesse, begriffe, belege) {
   const gefaltet = falte(bezeichnung);
-  if (gefaltet === "") return { verdikt: VERDIKT.UNBEKANNT, fundstellen: [], luecken: [] };
+  if (gefaltet === "") {
+    return {
+      verdikt: VERDIKT.UNBEKANNT, fundstellen: [], luecken: [], vorbehalte: [],
+      abdeckung: { vollstaendig: false, unbewertet: [] },
+    };
+  }
 
   const katalogEintraege = [];
   const ausschlussEintraege = [];
@@ -365,56 +472,64 @@ export function ordneZeileZu(bezeichnung, katalog, ausschluesse, begriffe, beleg
     else ausschlussEintraege.push(eintrag);
   }
 
-  const ausschlussTreffer = sucheBegriffe(gefaltet, ausschlussEintraege);
+  const ausschlussTreffer = sucheTreffer(gefaltet, ausschlussEintraege);
 
   // Katalog und Luecken treten im SELBEN Wettbewerb an, laengster Begriff gewinnt.
   // Getrennte Durchlaeufe waeren hier ein Fehler mit Ansage: "Dachrinnenreinigung"
   // enthaelt "reinigung" und wuerde sonst als § 2 Nr. 9 durchgehen - eine
   // dokumentierte Luecke, ausgegeben mit echtem Paragraphen und echtem Link.
-  const trefferKatalogUndLuecke = sucheBegriffe(gefaltet, [...katalogEintraege, ...lueckenEintraege]);
+  const trefferKatalogUndLuecke = sucheTreffer(gefaltet, [...katalogEintraege, ...lueckenEintraege]);
 
-  const fundstellen = [];
+  // Ausschluesse zuerst - Begruendung im Kopf dieser Datei. Jeder getroffene
+  // Ausschluss wird genannt, nicht nur der erste.
+  const fundstellenAusschluss = [];
+  for (const gruppe of jeEintrag(ausschlussTreffer)) {
+    const posten = ausschluesse.posten.find((p) => p.nr === gruppe.eintrag.nr);
+    if (!posten) continue;
+    const wortlaut = falte(posten.text).includes(falte(gruppe.begriff));
+    fundstellenAusschluss.push(fundstelleAusschluss(posten, gruppe.begriff, wortlaut, belege["betrkv-1"]));
+  }
+
+  const fundstellenKatalog = [];
   const luecken = [];
+  const zielGruppen = jeEintrag(trefferKatalogUndLuecke);
+  for (const gruppe of zielGruppen) {
+    if (gruppe.eintrag.art === "luecke") {
+      luecken.push(luecke(gruppe.eintrag, gruppe.begriff));
+      continue;
+    }
+    const item = katalog.items.find((it) => it.nr === gruppe.eintrag.nr);
+    if (!item) continue;
+    const wortlaut = falte(item.text).includes(falte(gruppe.begriff));
+    fundstellenKatalog.push(fundstelleKatalog(item, gruppe.begriff, wortlaut, belege["betrkv-2"]));
+  }
 
-  // Ausschluss zuerst - Begruendung im Kopf dieser Datei.
+  // Wie viele verschiedene Nummern (Katalog oder Luecke) die Zeile beruehrt.
+  const ziele = fundstellenKatalog.length + luecken.length;
+
   let verdikt = null;
-  if (ausschlussTreffer.length > 0) {
-    const best = ausschlussTreffer[0];
-    const posten = ausschluesse.posten.find((p) => p.nr === best.eintrag.nr);
-    if (posten) {
-      const wortlaut = falte(posten.text).includes(falte(best.begriff));
-      fundstellen.push(fundstelleAusschluss(posten, best.begriff, wortlaut, belege["betrkv-1"]));
-      verdikt = VERDIKT.AUSGESCHLOSSEN;
-    }
+  // Zwei oder mehr Nummern: Die Aufteilung geht aus der Zeile nicht hervor, also wird
+  // sie nicht entschieden - auch nicht ueber einen zusaetzlichen Ausschluss.
+  if (ziele >= 2) verdikt = VERDIKT.MEHRERE;
+  if (verdikt === null && fundstellenAusschluss.length > 0) verdikt = VERDIKT.AUSGESCHLOSSEN;
+  if (verdikt === null && luecken.length === 1) verdikt = VERDIKT.LUECKE;
+  if (fundstellenKatalog.length === 1 && ziele === 1 && verdikt === null) {
+    verdikt = IMMER_MIT_VORBEHALT[fundstellenKatalog[0].nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;
   }
+  if (verdikt === null) verdikt = VERDIKT.UNBEKANNT;
 
-  if (trefferKatalogUndLuecke.length > 0) {
-    const best = trefferKatalogUndLuecke[0];
-
-    if (best.eintrag.art === "luecke") {
-      luecken.push(luecke(best.eintrag, best.begriff));
-      if (verdikt === null) verdikt = VERDIKT.LUECKE;
-    } else {
-      const item = katalog.items.find((it) => it.nr === best.eintrag.nr);
-      if (item) {
-        const wortlaut = falte(item.text).includes(falte(best.begriff));
-        fundstellen.push(fundstelleKatalog(item, best.begriff, wortlaut, belege["betrkv-2"]));
-        if (verdikt === null) {
-          verdikt = IMMER_MIT_VORBEHALT[item.nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;
-        }
-      }
-    }
-  }
-
-  if (verdikt === null) return { verdikt: VERDIKT.UNBEKANNT, fundstellen: [], luecken: [] };
+  const fundstellen = [...fundstellenAusschluss, ...fundstellenKatalog];
 
   // Nr. 14 und Nr. 17 tragen ihren Vorbehalt immer, auch wenn das Urteil wegen
-  // eines Ausschlusses schon anders lautet.
+  // eines Ausschlusses oder mehrerer Positionen schon anders lautet.
   const vorbehalte = fundstellen
     .filter((f) => f.art === "katalog" && IMMER_MIT_VORBEHALT[f.nr])
     .map((f) => ({ nr: f.nr, text: IMMER_MIT_VORBEHALT[f.nr] }));
 
-  return { verdikt, fundstellen, luecken, vorbehalte };
+  const abdeckung = berechneAbdeckung(
+    bezeichnung, gefaltet, [...ausschlussTreffer, ...trefferKatalogUndLuecke], verdikt);
+
+  return { verdikt, fundstellen, luecken, vorbehalte, abdeckung };
 }
 
 // ---------------------------------------------------------------------------
@@ -463,6 +578,7 @@ export function pruefePositionen(eingabe, korpus, begriffsdatei) {
       fundstellen: zuordnung.fundstellen,
       luecken: zuordnung.luecken || [],
       vorbehalte: zuordnung.vorbehalte || [],
+      abdeckung: zuordnung.abdeckung,
     });
   }
 
@@ -483,6 +599,10 @@ export function pruefePositionen(eingabe, korpus, begriffsdatei) {
       mietvertrag: zaehle(VERDIKT.MIETVERTRAG),
       nichtGenannt: zaehle(VERDIKT.LUECKE),
       nichtZuordenbar: zaehle(VERDIKT.UNBEKANNT),
+      mehrerePositionen: zaehle(VERDIKT.MEHRERE),
+      // Bewertet, aber nicht die ganze Zeile - siehe abdeckung.
+      teilweiseBewertet: positionen.filter(
+        (p) => p.verdikt !== VERDIKT.UNBEKANNT && !p.abdeckung.vollstaendig).length,
       nichtGewertet: nichtGewertet.length,
     },
   };

@@ -948,6 +948,161 @@ async function main() {
   });
 
   // -------------------------------------------------------------------------
+  const P_MEHRERE = "Mehrere Treffer in einer Zeile";
+  // -------------------------------------------------------------------------
+  //
+  // Frueher verwarf die Suche still: Je Eintrag gewann der erste Begriff der Liste
+  // statt des laengsten, und je Zeile blieb nur ein Treffer uebrig. "Wasser und Müll"
+  // war gruen und halb geprueft. Lieber ehrlich unbestimmt als falsch eindeutig.
+
+  const artNr = (p) => p.fundstellen.map((f) => f.art + " " + f.nr).join(", ");
+
+  // Der wertvollste Test dieser Gruppe: nicht ein Einzelfall, sondern die ganze
+  // Fehlerklasse. Jeder Begriff der Begriffsdatei, allein eingegeben, muss genau
+  // seinen eigenen Eintrag treffen - und sonst nichts. Die Schleife laeuft ueber die
+  // Datei selbst und waechst mit jeder Erweiterung mit. Alle Abweichungen werden
+  // gesammelt und zusammen gemeldet, nicht nur die erste.
+  pruefe(P_MEHRERE, "jeder Begriff trifft allein genau seinen Eintrag", () => {
+    const abweichungen = [];
+    let geprueft = 0;
+    for (const eintrag of begriffsEintraege) {
+      for (const begriff of eintrag.begriffe) {
+        geprueft++;
+        const p = ordne(begriff, { alleZeilenPruefen: true });
+        if (!p) { abweichungen.push(`"${begriff}" (${eintrag.schluessel}): keine Position`); continue; }
+
+        const probleme = [];
+        const sollFundstellen = eintrag.art === "luecke" ? 0 : 1;
+        const sollLuecken = eintrag.art === "luecke" ? 1 : 0;
+        if (p.fundstellen.length !== sollFundstellen || p.luecken.length !== sollLuecken) {
+          probleme.push(`Fundstellen [${artNr(p)}], Luecken [${p.luecken.map((l) => l.begriff).join(", ")}]`);
+        } else if (eintrag.art === "luecke") {
+          if (!eintrag.begriffe.includes(p.luecken[0].begriff)) {
+            probleme.push(`Luecken-Hinweis ueber "${p.luecken[0].begriff}" aus einem anderen Eintrag`);
+          }
+        } else if (p.fundstellen[0].art !== eintrag.art || p.fundstellen[0].nr !== eintrag.nr) {
+          probleme.push(`trifft ${p.fundstellen[0].bezeichnung}`);
+        }
+        if (p.verdikt === "mehrere-positionen") probleme.push("Urteil: mehrere Positionen");
+        if (!p.abdeckung || !p.abdeckung.vollstaendig) {
+          probleme.push("nicht vollstaendig abgedeckt"
+            + (p.abdeckung ? ": " + p.abdeckung.unbewertet.join(" ") : " (keine Angabe)"));
+        }
+        if (probleme.length > 0) {
+          abweichungen.push(`"${begriff}" (${eintrag.schluessel}): ${probleme.join("; ")}`);
+        }
+      }
+    }
+    if (geprueft === 0) return "kein einziger Begriff geprueft";
+    return abweichungen.length === 0 ? true
+      : `${abweichungen.length} von ${geprueft} Begriffen weichen ab: ${abweichungen.join(" | ")}`;
+  });
+
+  pruefe(P_MEHRERE, "Warmwasserversorgung trifft Nr. 5, nicht Nr. 2", () => {
+    const p = ordne("Warmwasserversorgung 310,00");
+    if (p.fundstellen.length !== 1) return "Fundstellen: " + artNr(p);
+    const nr = gleich(p.fundstellen[0].nr, 5, "Nummer");
+    if (nr !== true) return nr;
+    return gleich(p.fundstellen[0].treffer.begriff, "Warmwasserversorgung", "genannter Begriff");
+  });
+
+  pruefe(P_MEHRERE, "Wasser und Müll: beide Nummern, kein eindeutiges Urteil", () => {
+    const p = ordne("Wasser und Müll 400");
+    const v = gleich(p.verdikt, "mehrere-positionen", "Urteil");
+    if (v !== true) return v;
+    const n = gleich(artNr(p), "katalog 2, katalog 8", "Fundstellen");
+    if (n !== true) return n;
+    return p.abdeckung.vollstaendig ? true
+      : "als unbewertet gemeldet: " + p.abdeckung.unbewertet.join(", ");
+  });
+
+  pruefe(P_MEHRERE, "Luecke verschwindet nicht neben einem Katalogtreffer", () => {
+    const p = ordne("Winterdienst und Treppenhausreinigung");
+    const v = gleich(p.verdikt, "mehrere-positionen", "Urteil");
+    if (v !== true) return v;
+    const n = gleich(artNr(p), "katalog 9", "Fundstellen");
+    if (n !== true) return n;
+    return gleich(p.luecken.map((l) => l.begriff).join(", "), "Winterdienst", "Luecken-Hinweise");
+  });
+
+  pruefe(P_MEHRERE, "enthaltener Begriff zaehlt nicht als zweite Position", () => {
+    for (const [zeile, nr] of [["Abwasser", 3], ["Straßenreinigung", 8], ["Schornsteinreinigung", 12]]) {
+      const p = ordne(zeile);
+      if (p.verdikt !== "im-katalog" || artNr(p) !== "katalog " + nr) {
+        return `${zeile}: Urteil ${p.verdikt}, Fundstellen [${artNr(p)}] statt katalog ${nr}`;
+      }
+    }
+    return true;
+  });
+
+  pruefe(P_MEHRERE, "zwei Begriffe derselben Nummer sind eine Fundstelle", () => {
+    const p = ordne("Heizung Heizkosten 900,00");
+    const v = gleich(p.verdikt, "im-katalog", "Urteil");
+    if (v !== true) return v;
+    return gleich(artNr(p), "katalog 4", "Fundstellen");
+  });
+
+  pruefe(P_MEHRERE, "Ausschluss und zwei Nummern: Aufteilung wird nicht entschieden", () => {
+    const p = ordne("Reparatur Heizung und Aufzug 1.200,00");
+    const v = gleich(p.verdikt, "mehrere-positionen", "Urteil");
+    if (v !== true) return v;
+    return gleich(artNr(p), "ausschluss 2, katalog 4, katalog 7", "Fundstellen");
+  });
+
+  pruefe(P_MEHRERE, "zwei Ausschluesse: nicht umlagefaehig, beide genannt", () => {
+    const p = ordne("Verwaltung und Reparatur 500,00");
+    const v = gleich(p.verdikt, "nicht-umlagefaehig", "Urteil");
+    if (v !== true) return v;
+    return gleich(artNr(p), "ausschluss 1, ausschluss 2", "Fundstellen");
+  });
+
+  pruefe(P_MEHRERE, "Teilbewertung ist erkennbar, in Originalschreibweise", () => {
+    const p = ordne("Müllabfuhr Firma Remondis 180,00");
+    const v = gleich(p.verdikt, "im-katalog", "Urteil (die Abdeckung aendert es nicht)");
+    if (v !== true) return v;
+    if (p.abdeckung.vollstaendig !== false) return "als vollstaendig bewertet gemeldet";
+    return gleich(p.abdeckung.unbewertet.join(", "), "Firma, Remondis", "unbewertete Woerter");
+  });
+
+  pruefe(P_MEHRERE, "Wort mit Teiltreffer gilt nicht als bewertet", () => {
+    const p = ordne("Wasserschaden 800,00");
+    return gleich(p.abdeckung.unbewertet.join(", "), "Wasserschaden", "unbewertete Woerter");
+  });
+
+  pruefe(P_MEHRERE, "Fuellwoerter und Zahlen machen eine Zeile nicht unvollstaendig", () => {
+    for (const zeile of ["Kosten der Müllabfuhr", "Grundsteuer 2024"]) {
+      const p = ordne(zeile);
+      if (!p.abdeckung.vollstaendig) return `${zeile}: unbewertet ${p.abdeckung.unbewertet.join(", ")}`;
+    }
+    return true;
+  });
+
+  // Die Fuellwortliste ist redaktionell. Sie darf die Abdeckung beeinflussen, aber nie
+  // ein Urteil oder eine Fundstelle erzeugen.
+  pruefe(P_MEHRERE, "Fuellwoerter allein erzeugen kein Urteil", () => {
+    const p = ordne(Katalog.FUELLWOERTER.join(" "), { alleZeilenPruefen: true });
+    if (!p) return "keine Position erzeugt";
+    const v = gleich(p.verdikt, "nicht-zuordenbar", "Urteil");
+    if (v !== true) return v;
+    if (p.fundstellen.length > 0 || p.luecken.length > 0) return "Fundstelle oder Hinweis aus Fuellwoertern";
+    return p.abdeckung.vollstaendig ? "als vollstaendig bewertet gemeldet" : true;
+  });
+
+  pruefe(P_MEHRERE, "Fuellwoerter stehen in gefalteter Form", () => {
+    const falsch = Katalog.FUELLWOERTER.filter((w) => Katalog.falte(w) !== w);
+    return falsch.length === 0 ? true : "greifen nie: " + falsch.join(", ");
+  });
+
+  pruefe(P_MEHRERE, "Zusammenfassung zaehlt mehrere und teilweise bewertete Positionen", () => {
+    const e = Katalog.pruefePositionen({
+      text: "Wasser und Müll 400\nMüllabfuhr Firma Remondis 180\nGrundsteuer 245",
+    }, korpus, begriffsdatei);
+    const m = gleich(e.zusammenfassung.mehrerePositionen, 1, "mehrere Positionen");
+    if (m !== true) return m;
+    return gleich(e.zusammenfassung.teilweiseBewertet, 1, "teilweise bewertet");
+  });
+
+  // -------------------------------------------------------------------------
   // Ausgabe
   // -------------------------------------------------------------------------
 
