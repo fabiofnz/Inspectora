@@ -1,6 +1,7 @@
 {
   "_hinweis": "Zuordnung von Alltags-Begriffen aus Nebenkostenabrechnungen zu den Nummern des BetrKV-Katalogs (§ 2) und zu den Ausschluessen (§ 1 Abs. 2). Schluessel: betrkv-2-<Nr> fuer den Katalog, betrkv-1-<Nr> fuer die Ausschluesse. 'titel_pruefung' ist die Sicherung: Das Pruefskript meldet einen Fehler, wenn dieser Textteil im geparsten Text GENAU DIESER Nummer nicht vorkommt. Damit zeigt eine Zuordnung nie auf die falsche Nummer, ohne dass es auffaellt. — Diese Datei ist redaktionell, nicht amtlich: 'Hausmeister' steht in keinem Gesetz, 'Hauswart' schon. Ein Treffer ueber einen Suchbegriff wird in der Oberflaeche deshalb ausdruecklich als Suchbegriff-Treffer gekennzeichnet und immer zusammen mit dem Gesetzeswortlaut gezeigt, damit der Nutzer die Zuordnung pruefen kann, statt sie zu glauben.",
   "_bewusste_luecken": "Die Eintraege mit dem Praefix 'luecke-' sind haeufige Positionen, die der Wortlaut des § 2 BetrKV NICHT nennt; ihre Zuordnung stammt aus der Rechtsprechung. Sie bekommen deshalb ein eigenes Urteil ('Im Gesetz nicht genannt') und ausdruecklich KEINE Fundstelle: kein Paragraph, kein Quell-Link, keine Zitierform. Im Hinweistext steht nur 'Nr. 8' und nicht '§ 2 Nr. 8 BetrKV', weil die volle Zitierform auf der Seite das Kennzeichen eines echten Belegs ist. Der Sinn des Urteils ist die Unterscheidung von 'nicht zuordenbar': Dort kennt das Werkzeug den Begriff nicht, hier kennt es ihn - und weiss, dass das Gesetz ihn nicht nennt. 'praxis_nr' ist deshalb kein Beleg, sondern eine Angabe im Fliesstext. 'titel_pruefung' sichert weiterhin ab, dass die genannte Nummer noch die Vorschrift ist, die gemeint war. Aufgenommen wird hier nur, was sich einer Nummer eindeutig zurechnen laesst - Sammelbegriffe wie 'Wartungspauschale' bleiben draussen und kommen als 'nicht zuordenbar' heraus. Bei Nr. 17 des Katalogs sind nur Begriffe aufgenommen, die sich selbst als 'sonstige' bezeichnen.",
+  "_einschraenkungen": "Optionales Feld 'einschraenkungen' an Eintraegen betrkv-2-* und betrkv-1-*. Es haelt fest, was die Zuordnung Begriff -> Nummer allein nicht sagen kann. Die Engine liest das Feld nicht (begriffeAufbereiten uebernimmt es nicht), die Seite zeigt es bisher nicht an; der Benchmark-Generator schliesst danach Fragen aus. Arten an § 2-Eintraegen: 'bedingung' und 'befristung' gelten fuer die ganze Nummer, 'wortlaut' aus der Nummer oder aus dem Schlusssatz, der sie nennt (schliessen aus). 'umfang': die Nummer deckt nur die engere Bedeutung der genannten 'begriffe' (schliesst nicht aus). 'gegenstand': der Begriff bezeichnet ein Geraet, eine Anlage oder eine Flaeche - Betrieb und Anschaffung fallen auseinander, 'wortlaut' nennt, was die Nummer davon deckt (schliesst aus). 'kostenart': bewusst als Kostenart eingestuft (schliesst nicht aus). Arten an § 1 Abs. 2-Eintraegen: 'widerspruch-katalog': der Begriff steht auch im Wortlaut von § 2, 'nr' und 'wortlaut' nennen die Stelle (schliesst aus). 'beleg-analogie': der Wortlaut nennt den Begriff nicht, die Zuordnung ist ein Analogieschluss, 'hinweis' sagt warum (schliesst aus). 'beleg-gedeckt': bewusst als vom Wortlaut gedeckt eingestuft (schliesst nicht aus). Jeder 'wortlaut' muss woertlich im Gesetzestext stehen. scripts/pruefe-betriebskosten.js prueft das und verlangt Vollstaendigkeit: Jeder Begriff unter einer Nummer, deren Wortlaut vom Betrieb, von der Anmietung, vom Strom oder von der Pflege spricht, ist 'gegenstand' oder 'kostenart'; jeder Ausschluss-Begriff, der nur als Suchbegriff trifft, ist 'beleg-gedeckt', 'beleg-analogie' oder 'widerspruch-katalog'; jede Bedingung und Befristung im Wortlaut ist markiert.",
 
   "luecke-winterdienst": {
     "praxis_nr": 8,
@@ -35,6 +36,13 @@
       "Öffentliche Lasten",
       "Laufende öffentliche Lasten",
       "Grundabgaben"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "umfang",
+        "wortlaut": "die laufenden öffentlichen Lasten des Grundstücks",
+        "begriffe": ["Öffentliche Lasten", "Grundabgaben"]
+      }
     ]
   },
   "betrkv-2-2": {
@@ -47,6 +55,17 @@
       "Wasserzähler",
       "Wasseruhr",
       "Wasser"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "gegenstand",
+        "wortlaut": "die Kosten der Anmietung oder anderer Arten der Gebrauchsüberlassung von Wasserzählern sowie die Kosten ihrer Verwendung",
+        "begriffe": ["Wasserzähler", "Wasseruhr"]
+      },
+      {
+        "art": "kostenart",
+        "begriffe": ["Wasserversorgung", "Kaltwasser", "Frischwasser", "Trinkwasser", "Wasser"]
+      }
     ]
   },
   "betrkv-2-3": {
@@ -59,6 +78,12 @@
       "Regenwasser",
       "Kanalgebühren",
       "Kanalbenutzungsgebühren"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "kostenart",
+        "begriffe": ["Entwässerung", "Abwasser", "Schmutzwasser", "Niederschlagswasser", "Regenwasser", "Kanalgebühren", "Kanalbenutzungsgebühren"]
+      }
     ]
   },
   "betrkv-2-4": {
@@ -73,6 +98,22 @@
       "Fernwärme",
       "Wärmelieferung",
       "Wärmekosten"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "umfang",
+        "wortlaut": "des Betriebs der zentralen Heizungsanlage",
+        "begriffe": ["Heizung", "Heizkosten", "Heizungsanlage", "Brennstoff", "Heizöl", "Erdgas", "Wärmekosten"]
+      },
+      {
+        "art": "gegenstand",
+        "wortlaut": "des Betriebs der zentralen Heizungsanlage",
+        "begriffe": ["Heizung", "Heizungsanlage"]
+      },
+      {
+        "art": "kostenart",
+        "begriffe": ["Heizkosten", "Brennstoff", "Heizöl", "Erdgas", "Fernwärme", "Wärmelieferung", "Wärmekosten"]
+      }
     ]
   },
   "betrkv-2-5": {
@@ -81,6 +122,17 @@
       "Warmwasser",
       "Warmwasserversorgung",
       "Warmwasserbereitung"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "umfang",
+        "wortlaut": "des Betriebs der zentralen Warmwasserversorgungsanlage",
+        "begriffe": ["Warmwasser", "Warmwasserversorgung", "Warmwasserbereitung"]
+      },
+      {
+        "art": "kostenart",
+        "begriffe": ["Warmwasser", "Warmwasserversorgung", "Warmwasserbereitung"]
+      }
     ]
   },
   "betrkv-2-6": {
@@ -88,6 +140,13 @@
     "begriffe": [
       "Verbundene Anlage",
       "Verbundene Heizungs- und Warmwasserversorgungsanlage"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "gegenstand",
+        "wortlaut": "bei zentralen Heizungsanlagen entsprechend Nummer 4 Buchstabe a",
+        "begriffe": ["Verbundene Anlage", "Verbundene Heizungs- und Warmwasserversorgungsanlage"]
+      }
     ]
   },
   "betrkv-2-7": {
@@ -100,6 +159,17 @@
       "Personenaufzug",
       "Lastenaufzug",
       "Lift"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "gegenstand",
+        "wortlaut": "die Kosten des Betriebs des Personen- oder Lastenaufzugs",
+        "begriffe": ["Aufzug", "Fahrstuhl", "Personenaufzug", "Lastenaufzug", "Lift"]
+      },
+      {
+        "art": "kostenart",
+        "begriffe": ["Aufzugskosten", "Aufzugswartung"]
+      }
     ]
   },
   "betrkv-2-8": {
@@ -116,6 +186,17 @@
       "Abfallgebühren",
       "Straßenreinigung",
       "Müll"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "gegenstand",
+        "wortlaut": "die für die Müllabfuhr zu entrichtenden Gebühren",
+        "begriffe": ["Biotonne", "Papiertonne"]
+      },
+      {
+        "art": "kostenart",
+        "begriffe": ["Müllabfuhr", "Müllbeseitigung", "Müllentsorgung", "Müllgebühren", "Restmüll", "Abfallentsorgung", "Abfallgebühren", "Straßenreinigung", "Müll"]
+      }
     ]
   },
   "betrkv-2-9": {
@@ -128,6 +209,13 @@
       "Schädlingsbekämpfung",
       "Ungeziefer",
       "Reinigung"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "umfang",
+        "wortlaut": "der von den Bewohnern gemeinsam genutzten Gebäudeteile",
+        "begriffe": ["Gebäudereinigung", "Hausreinigung", "Reinigung"]
+      }
     ]
   },
   "betrkv-2-10": {
@@ -140,6 +228,27 @@
       "Rasenpflege",
       "Spielplatz",
       "Garten"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "umfang",
+        "wortlaut": "die dem nicht öffentlichen Verkehr dienen",
+        "begriffe": ["Außenanlagen", "Grünanlagen", "Garten", "Spielplatz"]
+      },
+      {
+        "art": "gegenstand",
+        "wortlaut": "der Pflege gärtnerisch angelegter Flächen",
+        "begriffe": ["Grünanlagen", "Außenanlagen", "Garten"]
+      },
+      {
+        "art": "gegenstand",
+        "wortlaut": "der Pflege von Spielplätzen einschließlich der Erneuerung von Sand",
+        "begriffe": ["Spielplatz"]
+      },
+      {
+        "art": "kostenart",
+        "begriffe": ["Gartenpflege", "Grünpflege", "Rasenpflege"]
+      }
     ]
   },
   "betrkv-2-11": {
@@ -151,6 +260,22 @@
       "Außenbeleuchtung",
       "Treppenhausbeleuchtung",
       "Strom für Außenbeleuchtung"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "umfang",
+        "wortlaut": "die Kosten des Stroms für die Außenbeleuchtung und die Beleuchtung der von den Bewohnern gemeinsam genutzten Gebäudeteile",
+        "begriffe": ["Beleuchtung", "Allgemeinstrom", "Hausstrom"]
+      },
+      {
+        "art": "gegenstand",
+        "wortlaut": "die Kosten des Stroms",
+        "begriffe": ["Beleuchtung"]
+      },
+      {
+        "art": "kostenart",
+        "begriffe": ["Allgemeinstrom", "Hausstrom", "Außenbeleuchtung", "Treppenhausbeleuchtung", "Strom für Außenbeleuchtung"]
+      }
     ]
   },
   "betrkv-2-12": {
@@ -172,6 +297,18 @@
       "Elementarschäden",
       "Feuerversicherung",
       "Versicherung"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "umfang",
+        "wortlaut": "die Kosten der Sach- und Haftpflichtversicherung",
+        "begriffe": ["Versicherung"]
+      },
+      {
+        "art": "umfang",
+        "wortlaut": "der Haftpflichtversicherung für das Gebäude, den Öltank und den Aufzug",
+        "begriffe": ["Haftpflichtversicherung"]
+      }
     ]
   },
   "betrkv-2-14": {
@@ -195,6 +332,43 @@
       "Breitbandkabel",
       "Glasfaser",
       "Antenne"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "bedingung",
+        "wortlaut": "wenn der Mieter seinen Anbieter von öffentlich zugänglichen Telekommunikationsdiensten über seinen Anschluss frei wählen kann"
+      },
+      {
+        "art": "befristung",
+        "wortlaut": "bis zum 30. Juni 2024 außerdem das Nutzungsentgelt für eine nicht zu dem Gebäude gehörende Antennenanlage"
+      },
+      {
+        "art": "befristung",
+        "wortlaut": "bis zum 30. Juni 2024 außerdem die weiteren Kosten entsprechend Buchstabe a, sowie die laufenden monatlichen Grundgebühren für Breitbandanschlüsse"
+      },
+      {
+        "art": "befristung",
+        "wortlaut": "Für Anlagen, die ab dem 1. Dezember 2021 errichtet worden sind, ist Satz 1 Nummer 15 Buchstabe a und b nicht anzuwenden."
+      },
+      {
+        "art": "gegenstand",
+        "wortlaut": "des Betriebs der Gemeinschafts-Antennenanlage",
+        "begriffe": ["Antennenanlage", "Gemeinschaftsantenne", "Antenne"]
+      },
+      {
+        "art": "gegenstand",
+        "wortlaut": "des Betriebs der mit einem Breitbandnetz verbundenen privaten Verteilanlage",
+        "begriffe": ["Breitbandkabel"]
+      },
+      {
+        "art": "gegenstand",
+        "wortlaut": "des Betriebs einer gebäudeinternen Verteilanlage",
+        "begriffe": ["Glasfaser"]
+      },
+      {
+        "art": "kostenart",
+        "begriffe": ["Kabelfernsehen", "Kabelanschluss", "Breitbandanschluss"]
+      }
     ]
   },
   "betrkv-2-16": {
@@ -205,6 +379,17 @@
       "Waschmaschine",
       "Trockner",
       "Wascheinrichtung"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "gegenstand",
+        "wortlaut": "die Kosten des Betriebs der Einrichtungen für die Wäschepflege",
+        "begriffe": ["Waschküche", "Waschmaschine", "Trockner", "Wascheinrichtung"]
+      },
+      {
+        "art": "kostenart",
+        "begriffe": ["Wäschepflege"]
+      }
     ]
   },
   "betrkv-2-17": {
@@ -226,6 +411,18 @@
       "Geschäftsführung",
       "Aufsicht",
       "Verwaltung"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "widerspruch-katalog",
+        "nr": 7,
+        "wortlaut": "die Kosten der Beaufsichtigung",
+        "begriffe": ["Aufsicht"]
+      },
+      {
+        "art": "beleg-gedeckt",
+        "begriffe": ["Verwaltervergütung", "Verwalterhonorar", "Verwaltergebühr", "Hausverwaltung"]
+      }
     ]
   },
   "betrkv-1-2": {
@@ -242,6 +439,33 @@
       "Erneuerung",
       "Malerarbeiten",
       "Schönheitsreparaturen"
+    ],
+    "einschraenkungen": [
+      {
+        "art": "widerspruch-katalog",
+        "nr": 10,
+        "wortlaut": "einschließlich der Erneuerung von Pflanzen und Gehölzen",
+        "begriffe": ["Erneuerung"]
+      },
+      {
+        "art": "beleg-analogie",
+        "hinweis": "§ 1 Abs. 2 Nr. 2 BetrKV erfasst Kosten, um Mängel durch Abnutzung, Alterung und Witterung zu beseitigen. Eine Modernisierung beseitigt keinen Mangel; dass sie keine Betriebskosten sind, folgt eher aus § 1 Abs. 1 (laufend entstehende Kosten).",
+        "begriffe": ["Modernisierung"]
+      },
+      {
+        "art": "beleg-analogie",
+        "hinweis": "Eine Rücklage ist kein Aufwand zur Beseitigung eines Mangels, sondern Vorsorge dafür. § 1 Abs. 2 Nr. 2 BetrKV nennt sie nicht.",
+        "begriffe": ["Instandhaltungsrücklage", "Erhaltungsrücklage"]
+      },
+      {
+        "art": "beleg-analogie",
+        "hinweis": "§ 1 Abs. 2 Nr. 2 BetrKV nennt Schönheitsreparaturen nicht. § 2 Nr. 14 führt sie neben Instandhaltung und Instandsetzung auf, also als etwas anderes.",
+        "begriffe": ["Malerarbeiten", "Schönheitsreparaturen"]
+      },
+      {
+        "art": "beleg-gedeckt",
+        "begriffe": ["Reparatur", "Reparaturen", "Sanierung"]
+      }
     ]
   }
 }

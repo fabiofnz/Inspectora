@@ -269,6 +269,95 @@ const MUTATIONEN = [
     suchen: "    vollstaendig: verdikt !== VERDIKT.UNBEKANNT && unbewertet.length === 0,",
     ersetzen: "    vollstaendig: true,",
   },
+  // Einschraenkungen und redaktionelle Markierungen (15.09.2026). Jede Mutation entfernt
+  // oder verfaelscht genau eine Angabe - so wie sie beim naechsten Ausbau vergessen oder
+  // falsch abgeschrieben wuerde.
+  {
+    name: "Einschraenkung: Bedingung in Nr. 15 c nicht mehr markiert",
+    erwartet: "Einschraenkungen im Wortlaut",
+    begriffe: (datei) => {
+      datei["betrkv-2-15"].einschraenkungen = datei["betrkv-2-15"].einschraenkungen
+        .filter((a) => a.art !== "bedingung");
+      return datei;
+    },
+  },
+  {
+    name: "Einschraenkung: Schlusssatz (Anlagen ab 01.12.2021) nicht mehr markiert",
+    erwartet: "Einschraenkungen im Wortlaut",
+    begriffe: (datei) => {
+      datei["betrkv-2-15"].einschraenkungen = datei["betrkv-2-15"].einschraenkungen
+        .filter((a) => !(a.art === "befristung" && a.wortlaut.startsWith("Für Anlagen")));
+      return datei;
+    },
+  },
+  {
+    name: "Einschraenkung: Aufsicht verliert widerspruch-katalog (Nr. 7 Beaufsichtigung)",
+    erwartet: "Einschraenkungen im Wortlaut",
+    begriffe: (datei) => {
+      datei["betrkv-1-1"].einschraenkungen = datei["betrkv-1-1"].einschraenkungen
+        .filter((a) => a.art !== "widerspruch-katalog");
+      return datei;
+    },
+  },
+  {
+    name: "Einschraenkung: Wortlaut steht so nicht im Gesetz",
+    erwartet: "Einschraenkungen im Wortlaut",
+    begriffe: (datei) => {
+      datei["betrkv-2-16"].einschraenkungen.find((a) => a.art === "gegenstand").wortlaut =
+        "die Kosten der Anschaffung der Einrichtungen für die Wäschepflege";
+      return datei;
+    },
+  },
+  {
+    name: "Einschraenkung: unbekannte Art",
+    erwartet: "Einschraenkungen im Wortlaut",
+    begriffe: (datei) => {
+      datei["betrkv-2-16"].einschraenkungen.push({ art: "vielleicht", begriffe: ["Wäschepflege"] });
+      return datei;
+    },
+  },
+  {
+    name: "Einschraenkung: markierter Begriff steht nicht im Eintrag",
+    erwartet: "Einschraenkungen im Wortlaut",
+    begriffe: (datei) => {
+      datei["betrkv-2-16"].einschraenkungen.find((a) => a.art === "kostenart").begriffe.push("Aufzugskosten");
+      return datei;
+    },
+  },
+  {
+    name: "Markierung: neuer Begriff unter Nr. 16 ohne gegenstand/kostenart",
+    erwartet: "Redaktionelle Markierung vollstaendig",
+    begriffe: (datei) => {
+      datei["betrkv-2-16"].begriffe = [...datei["betrkv-2-16"].begriffe, "Wäschetrockner"];
+      return datei;
+    },
+  },
+  {
+    name: "Markierung: Waschmaschine verliert gegenstand",
+    erwartet: "Redaktionelle Markierung vollstaendig",
+    begriffe: (datei) => {
+      const g = datei["betrkv-2-16"].einschraenkungen.find((a) => a.art === "gegenstand");
+      g.begriffe = g.begriffe.filter((b) => b !== "Waschmaschine");
+      return datei;
+    },
+  },
+  {
+    name: "Markierung: Waschmaschine zugleich gegenstand und kostenart",
+    erwartet: "Redaktionelle Markierung vollstaendig",
+    begriffe: (datei) => {
+      datei["betrkv-2-16"].einschraenkungen.find((a) => a.art === "kostenart").begriffe.push("Waschmaschine");
+      return datei;
+    },
+  },
+  {
+    name: "Markierung: Ausschluss-Suchbegriff Sanierung verliert beleg-gedeckt",
+    erwartet: "Redaktionelle Markierung vollstaendig",
+    begriffe: (datei) => {
+      const g = datei["betrkv-1-2"].einschraenkungen.find((a) => a.art === "beleg-gedeckt");
+      g.begriffe = g.begriffe.filter((b) => b !== "Sanierung");
+      return datei;
+    },
+  },
   {
     name: "Wissensbasis: BetrKV § 2 hat keinen Quell-Link mehr",
     erwartet: "Belege fuer die Positionspruefung",

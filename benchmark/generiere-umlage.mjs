@@ -19,6 +19,9 @@
 //   luecke               - bekannte Luecke: Zuordnung stammt aus der Rechtsprechung
 //   vorbehalt-nr-14-17   - Nummer steht in IMMER_MIT_VORBEHALT, aus dem Gesetz allein nicht
 //                          zu entscheiden
+//   einschraenkung-<art> - die Begriffsdatei markiert den Begriff (oder seine ganze Nummer)
+//                          mit einer ausschliessenden Art, siehe AUSSCHLIESSENDE_ARTEN.
+//                          Welche Begriffe das sind, steht in der Begriffsdatei, nicht hier.
 //   vorbehalte           - das Ergebnis traegt einen Vorbehalt
 //   nicht-zuordenbar     - die Engine kennt einen gelisteten Begriff nicht (Datenfehler)
 //   mehrere-fundstellen  - mehr als eine Fundstelle, der Beleg waere nicht eindeutig
@@ -57,6 +60,18 @@ const PLATZHALTER = "…";
 // Woerter, mit denen ein Begriff die Antwort schon mitbringen wuerde.
 const VERRAETERISCH = ["umlage", "betriebskost"];
 
+// Arten aus dem Feld "einschraenkungen" der Begriffsdatei (Beschreibung dort unter
+// "_einschraenkungen"). Hier stehen nur ARTEN, keine Begriffe: Welcher Begriff betroffen
+// ist, entscheidet die Datei, damit ein Ausschluss beim naechsten Ausbau nicht vergessen
+// wird. Ausschliessend ist, was eine unbedingte Ja/Nein-Antwort unmoeglich macht oder
+// einen Beleg veroeffentlichen wuerde, den der Wortlaut nicht traegt.
+const AUSSCHLIESSENDE_ARTEN = ["bedingung", "befristung", "gegenstand", "widerspruch-katalog", "beleg-analogie"];
+// Bekannt, aber nicht ausschliessend: festgehaltene Entscheidungen. "umfang" kommt als
+// Einschraenkung auf die Methodenseite.
+const NICHT_AUSSCHLIESSENDE_ARTEN = ["umfang", "kostenart", "beleg-gedeckt"];
+// Diese Arten gelten fuer die ganze Nummer und nennen keine Begriffe.
+const ARTEN_FUER_GANZE_NUMMER = ["bedingung", "befristung"];
+
 const ANTWORT = {
   [VERDIKT.KATALOG]: "ja",
   [VERDIKT.AUSGESCHLOSSEN]: "nein",
@@ -70,6 +85,32 @@ function kategorie(fundstelle) {
 function abbruch(text) {
   console.error(`${LOG} Abbruch: ${text}`);
   process.exit(1);
+}
+
+// Liest "einschraenkungen" direkt aus der Begriffsdatei - die Engine uebernimmt das Feld
+// nicht. Unbekannte Arten und Begriffe, die nicht im Eintrag stehen, brechen ab: Eine neue
+// Art darf nicht still als "nicht ausschliessend" durchgehen.
+function artenJeBegriff(begriffsdatei, eintrag) {
+  const roh = begriffsdatei[eintrag.schluessel]?.einschraenkungen;
+  const arten = new Map(eintrag.begriffe.map((b) => [b, []]));
+  if (roh === undefined) return arten;
+  if (!Array.isArray(roh)) abbruch(`${eintrag.schluessel}: einschraenkungen ist keine Liste.`);
+  for (const a of roh) {
+    if (!AUSSCHLIESSENDE_ARTEN.includes(a?.art) && !NICHT_AUSSCHLIESSENDE_ARTEN.includes(a?.art)) {
+      abbruch(`${eintrag.schluessel}: unbekannte Einschraenkungsart ${JSON.stringify(a?.art)}.`);
+    }
+    if (ARTEN_FUER_GANZE_NUMMER.includes(a.art)) {
+      if (a.begriffe !== undefined) abbruch(`${eintrag.schluessel}: "${a.art}" gilt fuer die ganze Nummer und nennt keine Begriffe.`);
+      for (const liste of arten.values()) liste.push(a.art);
+      continue;
+    }
+    if (!Array.isArray(a.begriffe) || a.begriffe.length === 0) abbruch(`${eintrag.schluessel}: "${a.art}" ohne begriffe.`);
+    for (const b of a.begriffe) {
+      if (!arten.has(b)) abbruch(`${eintrag.schluessel}: "${b}" in einschraenkungen steht nicht in den Begriffen.`);
+      arten.get(b).push(a.art);
+    }
+  }
+  return arten;
 }
 
 // ---------------------------------------------------------------------------
@@ -96,19 +137,34 @@ function main() {
   const fragen = [];
   const vergebeneIds = new Set();
   const uebersprungen = {
-    "ok-false": 0, luecke: 0, "vorbehalt-nr-14-17": 0, vorbehalte: 0, "nicht-zuordenbar": 0,
+    "ok-false": 0, luecke: 0, "vorbehalt-nr-14-17": 0,
+    ...Object.fromEntries(AUSSCHLIESSENDE_ARTEN.map((a) => [`einschraenkung-${a}`, 0])),
+    vorbehalte: 0, "nicht-zuordenbar": 0,
     "mehrere-fundstellen": 0, "zuordnung-abweichend": 0, "begriff-verraet": 0,
   };
   const abweichungen = [];
+  const eingeschraenkt = [];
+  const mitUmfang = [];
   const ueberspringe = (grund) => { uebersprungen[grund]++; };
 
   for (const eintrag of eintraege) {
+    const arten = eintrag.art === "luecke" ? null : artenJeBegriff(begriffsdatei, eintrag);
     for (const begriff of eintrag.begriffe) {
       const ergebnis = pruefePositionen({ text: begriff, alleZeilenPruefen: true }, korpus, begriffsdatei);
       if (!ergebnis.ok) { ueberspringe("ok-false"); continue; }
 
       if (eintrag.art === "luecke") { ueberspringe("luecke"); continue; }
       if (eintrag.art === "katalog" && IMMER_MIT_VORBEHALT[eintrag.nr]) { ueberspringe("vorbehalt-nr-14-17"); continue; }
+
+      // Gezaehlt wird die erste ausschliessende Art in der Reihenfolge von
+      // AUSSCHLIESSENDE_ARTEN; im Log stehen alle.
+      const artenDesBegriffs = arten.get(begriff);
+      const ausschliessend = AUSSCHLIESSENDE_ARTEN.filter((a) => artenDesBegriffs.includes(a));
+      if (ausschliessend.length > 0) {
+        ueberspringe(`einschraenkung-${ausschliessend[0]}`);
+        eingeschraenkt.push(`${eintrag.schluessel.padEnd(12)} ${begriff} [${ausschliessend.join(", ")}]`);
+        continue;
+      }
 
       if (ergebnis.positionen.length !== 1) { ueberspringe("nicht-zuordenbar"); continue; }
       const position = ergebnis.positionen[0];
@@ -145,6 +201,8 @@ function main() {
       const id = "umlage-" + gefaltet.replace(/ /g, "-");
       if (vergebeneIds.has(id)) abbruch(`ID doppelt vergeben: ${id}`);
       vergebeneIds.add(id);
+
+      if (artenDesBegriffs.includes("umfang")) mitUmfang.push(`${eintrag.schluessel.padEnd(12)} ${begriff}`);
 
       fragen.push({
         id,
@@ -190,6 +248,10 @@ function main() {
   console.log(`${LOG} Antworten: ja ${ja} / nein ${fragen.length - ja} - Ja/Nein-Quote getrennt auswerten`);
   console.log(`${LOG} Uebersprungen:`, uebersprungen);
   for (const a of abweichungen) console.log(`${LOG}   zuordnung-abweichend: ${a}`);
+  console.log(`${LOG} Wegen Einschraenkung uebersprungen (${eingeschraenkt.length}):`);
+  for (const e of eingeschraenkt) console.log(`${LOG}   ${e}`);
+  console.log(`${LOG} Enthalten, mit Einschraenkung "umfang" - gehoert auf die Methodenseite (${mitUmfang.length}):`);
+  for (const e of mitUmfang) console.log(`${LOG}   ${e}`);
   console.log(`${LOG} Ausschluss-Fragen (§ 1 Abs. 2 BetrKV), separat auswerten: ${ausschluss.length}`);
   for (const f of ausschluss) console.log(`${LOG}   ${f.rechenweg.fundstelle.padEnd(24)} ${f.rechenweg.begriff}`);
 }

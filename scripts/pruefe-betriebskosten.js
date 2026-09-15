@@ -1103,6 +1103,231 @@ async function main() {
   });
 
   // -------------------------------------------------------------------------
+  const P_EINSCHR = "Einschraenkungen im Wortlaut";
+  // -------------------------------------------------------------------------
+  //
+  // Die Begriffsdatei ordnet Begriffe Nummern zu. Dass eine Nummer nur unter einer
+  // Bedingung oder nur befristet gilt, dass ein Begriff ein Geraet statt einer Kostenart
+  // bezeichnet oder dass ein Ausschluss-Beleg nur per Analogie traegt, steht im Feld
+  // "einschraenkungen" (Beschreibung: "_einschraenkungen" in der Datei). Die Engine liest
+  // das Feld nicht; der Benchmark-Generator schliesst danach Fragen aus. Gefunden am
+  // 15.09.2026: "Glasfaser" war ein unbedingtes "im Katalog", obwohl Nr. 15 c nur gilt,
+  // "wenn der Mieter seinen Anbieter ... frei waehlen kann".
+  //
+  // Wortlaut wird nach Zusammenfassen von Leerraum WOERTLICH verglichen, strenger als
+  // titel_pruefung (dort gefaltet) - die Stelle soll im Gesetz auffindbar sein, wie sie
+  // in der Datei steht.
+
+  const ARTEN = {
+    bedingung:             { eintrag: "katalog",    wortlaut: "nummer-oder-schlusssatz", begriffe: false },
+    befristung:            { eintrag: "katalog",    wortlaut: "nummer-oder-schlusssatz", begriffe: false },
+    umfang:                { eintrag: "katalog",    wortlaut: "nummer",        begriffe: true },
+    gegenstand:            { eintrag: "katalog",    wortlaut: "nummer",        begriffe: true },
+    kostenart:             { eintrag: "katalog",    wortlaut: null,            begriffe: true },
+    "widerspruch-katalog": { eintrag: "ausschluss", wortlaut: "katalognummer", begriffe: true },
+    "beleg-analogie":      { eintrag: "ausschluss", wortlaut: null,            begriffe: true, hinweis: true },
+    "beleg-gedeckt":       { eintrag: "ausschluss", wortlaut: null,            begriffe: true },
+  };
+
+  const eng = (s) => String(s).replace(/\s+/g, " ").trim();
+  const nummerText = (nr) => {
+    const item = katalog.items.find((i) => i.nr === nr);
+    return item ? eng(item.text) : null;
+  };
+  const schlusssatzNr = () => {
+    const m = /Nummer (\d+)/.exec(katalog.schlusssatz || "");
+    return m ? Number(m[1]) : null;
+  };
+  const einschraenkungenVon = (eintrag) => {
+    const roh = begriffsdatei[eintrag.schluessel];
+    return roh && Array.isArray(roh.einschraenkungen) ? roh.einschraenkungen.filter((a) => a && typeof a === "object") : [];
+  };
+  const markiertAls = (eintrag, begriff, arten) => einschraenkungenVon(eintrag)
+    .filter((a) => arten.includes(a.art) && Array.isArray(a.begriffe) && a.begriffe.includes(begriff))
+    .map((a) => a.art);
+
+  pruefe(P_EINSCHR, "jede Angabe ist gueltig und steht im Gesetzestext", () => {
+    const probleme = [];
+    let angaben = 0;
+    for (const [schluessel, wert] of Object.entries(begriffsdatei)) {
+      if (schluessel.startsWith("_") || !wert || wert.einschraenkungen === undefined) continue;
+      const eintrag = begriffsEintraege.find((e) => e.schluessel === schluessel);
+      if (!eintrag || eintrag.art === "luecke") {
+        probleme.push(`${schluessel}: einschraenkungen nur an § 2- und § 1 Abs. 2-Eintraegen`);
+        continue;
+      }
+      if (!Array.isArray(wert.einschraenkungen)) { probleme.push(`${schluessel}: einschraenkungen ist keine Liste`); continue; }
+
+      wert.einschraenkungen.forEach((a, i) => {
+        angaben++;
+        const wo = `${schluessel}[${i}]`;
+        const regel = a && ARTEN[a.art];
+        if (!regel) { probleme.push(`${wo}: unbekannte art ${JSON.stringify(a && a.art)}`); return; }
+        if (regel.eintrag !== eintrag.art) { probleme.push(`${wo}: "${a.art}" gehoert nicht an einen ${eintrag.art}-Eintrag`); return; }
+
+        if (regel.begriffe) {
+          if (!Array.isArray(a.begriffe) || a.begriffe.length === 0) probleme.push(`${wo}: begriffe fehlen`);
+          else {
+            for (const b of a.begriffe) {
+              if (!eintrag.begriffe.includes(b)) probleme.push(`${wo}: "${b}" steht nicht in den Begriffen des Eintrags`);
+            }
+          }
+        } else if (a.begriffe !== undefined) {
+          probleme.push(`${wo}: "${a.art}" gilt fuer die ganze Nummer und nennt keine Begriffe`);
+        }
+        if (regel.hinweis && !(typeof a.hinweis === "string" && a.hinweis.trim().length >= 20)) {
+          probleme.push(`${wo}: hinweis fehlt oder ist zu kurz`);
+        }
+
+        if (regel.wortlaut === null) {
+          if (a.wortlaut !== undefined) probleme.push(`${wo}: "${a.art}" hat keinen Wortlaut`);
+          return;
+        }
+        if (typeof a.wortlaut !== "string" || a.wortlaut.trim() === "") { probleme.push(`${wo}: wortlaut fehlt`); return; }
+        const w = eng(a.wortlaut);
+
+        if (regel.wortlaut === "katalognummer") {
+          // Nr. 14 zaehlt Instandhaltung, Schoenheitsreparaturen und Hausverwaltung als NICHT
+          // angesetzt auf - dieselbe Richtung wie § 1 Abs. 2, kein Widerspruch.
+          if (!Number.isInteger(a.nr) || a.nr === 14) { probleme.push(`${wo}: nr fehlt, ist keine Zahl oder ist 14`); return; }
+          const t = nummerText(a.nr);
+          if (!t || !t.includes(w)) probleme.push(`${wo}: Wortlaut steht nicht in § 2 Nr. ${a.nr}: ${JSON.stringify(a.wortlaut)}`);
+          return;
+        }
+        const inNummer = (nummerText(eintrag.nr) || "").includes(w);
+        const imSchlusssatz = regel.wortlaut === "nummer-oder-schlusssatz"
+          && schlusssatzNr() === eintrag.nr && eng(katalog.schlusssatz).includes(w);
+        if (!inNummer && !imSchlusssatz) {
+          probleme.push(`${wo}: Wortlaut steht nicht in § 2 Nr. ${eintrag.nr}: ${JSON.stringify(a.wortlaut)}`);
+        }
+      });
+    }
+    if (angaben === 0) return "keine einzige Einschraenkung in der Begriffsdatei";
+    return probleme.length === 0 ? true : probleme.join(" | ");
+  });
+
+  // Bedingungen und Befristungen erkennt man am Wortlaut. Jede Stelle, die so aussieht,
+  // muss von einer markierten bedingung/befristung ihrer Nummer ueberdeckt sein - auch
+  // nach einer Gesetzesaenderung, die eine neue Bedingung einfuehrt. Der Schlusssatz
+  // gehoert zu der Nummer, die er nennt.
+  const MARKER = [
+    /bis zum \d{1,2}\. \p{L}+ \d{4}/gu,
+    /(?<!\p{L})wenn(?!\p{L})/gu,
+    /ab dem \d{1,2}\. \p{L}+ \d{4}/gu,
+    /nicht anzuwenden/gu,
+  ];
+
+  pruefe(P_EINSCHR, "jede Bedingung und Befristung im Wortlaut ist markiert", () => {
+    const probleme = [];
+    let gefunden = 0;
+    const ueberdeckt = (text, treffer, nr) => {
+      const eintrag = begriffsEintraege.find((e) => e.art === "katalog" && e.nr === nr);
+      if (!eintrag) return false;
+      return einschraenkungenVon(eintrag)
+        .filter((a) => (a.art === "bedingung" || a.art === "befristung") && typeof a.wortlaut === "string")
+        .some((a) => {
+          const w = eng(a.wortlaut);
+          for (let i = text.indexOf(w); i !== -1; i = text.indexOf(w, i + 1)) {
+            if (i <= treffer.index && treffer.index + treffer[0].length <= i + w.length) return true;
+          }
+          return false;
+        });
+    };
+    const quellen = katalog.items.map((i) => ({ text: eng(i.text), nr: i.nr, wo: "Nr. " + i.nr }));
+    if (katalog.schlusssatz) quellen.push({ text: eng(katalog.schlusssatz), nr: schlusssatzNr(), wo: "Schlusssatz" });
+    for (const q of quellen) {
+      for (const muster of MARKER) {
+        for (const t of q.text.matchAll(muster)) {
+          gefunden++;
+          if (q.nr === null || !ueberdeckt(q.text, t, q.nr)) {
+            probleme.push(`${q.wo}: "${t[0]}" ist von keiner bedingung/befristung ueberdeckt`);
+          }
+        }
+      }
+    }
+    info(P_EINSCHR, "-", `Bedingungs-/Befristungsmarker im Wortlaut von § 2: ${gefunden}`);
+    if (gefunden === 0) return "kein einziger Marker gefunden - Muster greift ins Leere oder der Wortlaut hat sich geaendert";
+    return probleme.length === 0 ? true : probleme.join(" | ");
+  });
+
+  pruefe(P_EINSCHR, "Ausschlussbegriff im Wortlaut von § 2 ist als Widerspruch markiert", () => {
+    const probleme = [];
+    for (const eintrag of begriffsEintraege.filter((e) => e.art === "ausschluss")) {
+      const widersprueche = einschraenkungenVon(eintrag).filter((a) => a.art === "widerspruch-katalog");
+      for (const begriff of eintrag.begriffe) {
+        // Nr. 14 ausgenommen: siehe oben, dort stehen dieselben Begriffe als Ausschluss.
+        const nummern = katalog.items
+          .filter((i) => i.nr !== 14 && Katalog.falte(i.text).includes(Katalog.falte(begriff)))
+          .map((i) => i.nr);
+        for (const nr of nummern) {
+          const markiert = widersprueche.some((a) => a.nr === nr && Array.isArray(a.begriffe) && a.begriffe.includes(begriff));
+          if (!markiert) probleme.push(`"${begriff}" (${eintrag.schluessel}) steht in § 2 Nr. ${nr}, ohne widerspruch-katalog`);
+        }
+      }
+    }
+    return probleme.length === 0 ? true : probleme.join(" | ");
+  });
+
+  // -------------------------------------------------------------------------
+  const P_MARKIERT = "Redaktionelle Markierung vollstaendig";
+  // -------------------------------------------------------------------------
+  //
+  // "gegenstand" und "beleg-analogie" sind redaktionelle Entscheidungen - aber sie duerfen
+  // nicht vergessen werden. Genau so ist der Warmwasser-Fehler entstanden: eine Regel im
+  // Kommentar, die nirgends geprueft wurde. Deshalb verlangt dieser Abschnitt fuer jeden
+  // betroffenen Begriff eine ausdrueckliche Markierung, auch dort, wo sie nichts ausschliesst.
+  //
+  // Ausloeser: Der Wortlaut der Nummer spricht irgendwo (mit Wortgrenze) von einer dieser
+  // Wendungen. Gemessen am 15.09.2026: Nur "am Anfang der Nummer" traefe 5 Nummern und liesse
+  // 11 der 27 Geraetebegriffe ungeprueft ("der Anmietung" und "die Kosten des Stroms" stehen
+  // nie am Anfang). "entsprechend Nummer 4" (Nr. 6) und "der Pflege" (Nr. 10) schliessen die
+  // letzten Luecken. Ergebnis: Nr. 2, 3, 4, 5, 6, 7, 8, 10, 11, 15, 16 - 72 Begriffe.
+  const WENDUNGEN_BETRIEB = [
+    "die Kosten des Betriebs", "des Betriebs", "der Anmietung", "die Kosten des Stroms",
+    "entsprechend Nummer 4", "der Pflege",
+  ];
+  const sprichtVomBetrieb = (text) => WENDUNGEN_BETRIEB.some((w) =>
+    new RegExp("(?<!\\p{L})" + w.split(" ").join("\\s+") + "(?!\\p{L})", "u").test(text));
+
+  pruefe(P_MARKIERT, "jeder Begriff unter einer Betriebs-Nummer ist gegenstand oder kostenart", () => {
+    const nummern = katalog.items.filter((i) => sprichtVomBetrieb(i.text)).map((i) => i.nr);
+    if (nummern.length === 0) return "keine Nummer trifft die Wendungen - der Ausloeser greift ins Leere";
+    const probleme = [];
+    let geprueft = 0;
+    for (const eintrag of begriffsEintraege.filter((e) => e.art === "katalog" && nummern.includes(e.nr))) {
+      for (const begriff of eintrag.begriffe) {
+        geprueft++;
+        const arten = markiertAls(eintrag, begriff, ["gegenstand", "kostenart"]);
+        if (arten.length === 0) probleme.push(`"${begriff}" (Nr. ${eintrag.nr}) ohne gegenstand/kostenart`);
+        else if (arten.length > 1) probleme.push(`"${begriff}" (Nr. ${eintrag.nr}) mehrfach markiert: ${arten.join(", ")}`);
+      }
+    }
+    info(P_MARKIERT, "-", `Betriebs-Nummern: ${nummern.join(", ")} - ${geprueft} Begriffe geprueft`);
+    return probleme.length === 0 ? true : `${probleme.length} von ${geprueft} Begriffen: ${probleme.join(" | ")}`;
+  });
+
+  pruefe(P_MARKIERT, "jeder Ausschluss-Suchbegriff ist beleg-gedeckt, beleg-analogie oder widerspruch-katalog", () => {
+    const BELEG_ARTEN = ["beleg-gedeckt", "beleg-analogie", "widerspruch-katalog"];
+    const probleme = [];
+    let geprueft = 0;
+    for (const eintrag of begriffsEintraege.filter((e) => e.art === "ausschluss")) {
+      for (const begriff of eintrag.begriffe) {
+        const p = ordne(begriff, { alleZeilenPruefen: true });
+        const f = p && p.fundstellen.length === 1 ? p.fundstellen[0] : null;
+        if (!f) { probleme.push(`"${begriff}" (${eintrag.schluessel}): keine eindeutige Fundstelle`); continue; }
+        if (f.treffer.art !== "suchbegriff") continue;
+        geprueft++;
+        const arten = markiertAls(eintrag, begriff, BELEG_ARTEN);
+        if (arten.length === 0) probleme.push(`"${begriff}" (${eintrag.schluessel}) ohne ${BELEG_ARTEN.join("/")}`);
+        else if (arten.length > 1) probleme.push(`"${begriff}" (${eintrag.schluessel}) mehrfach markiert: ${arten.join(", ")}`);
+      }
+    }
+    info(P_MARKIERT, "-", `Ausschluss-Suchbegriffe geprueft: ${geprueft}`);
+    if (geprueft === 0) return "kein einziger Ausschluss-Suchbegriff - die Pruefung greift ins Leere";
+    return probleme.length === 0 ? true : probleme.join(" | ");
+  });
+
+  // -------------------------------------------------------------------------
   // Ausgabe
   // -------------------------------------------------------------------------
 
