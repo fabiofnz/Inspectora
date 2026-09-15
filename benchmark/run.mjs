@@ -32,6 +32,20 @@
 //     kein Datum als Anker wirkt.
 //   - Keine Beispiele, kein Gespraechsverlauf: jede Frage ist eine eigene Anfrage.
 //   - Eine Anfrage nach der anderen, nie parallel - gleiche Bedingungen wie im Testlauf.
+//
+// ---------------------------------------------------------------------------
+// REIHENFOLGE (nur --voll) - fest, kein Zufall
+// ---------------------------------------------------------------------------
+//   - In Dateireihenfolge laege z.B. jede der 19 Ausschlussfragen im letzten Fuenftel des
+//     umlage-Laufs, und die fristen-Fragen stuenden nach Jahren sortiert. Eine Schwankung der
+//     API waehrend eines Abschnitts traefe dann eine ganze Kategorie am Stueck.
+//   - Deshalb verzahnt: Gruppen wie im Testlauf-Kontingent (Kategorie, Antworttyp, bei Ja/Nein
+//     auch Antwort), jede Gruppe gleichmaessig ueber den ganzen Lauf verteilt. Verfahren siehe
+//     REIHENFOLGE_VERFAHREN - es haengt nur an den Frage-IDs, nicht an Dateireihenfolge oder Datum.
+//   - Die Ergebnisdatei enthaelt das Verfahren und reihenfolge_sha256 (SHA-256 der ID-Liste in
+//     Frage-Reihenfolge). --fortsetzen bricht ab, wenn beides nicht exakt passt.
+//   - Der Testlauf behaelt die Reihenfolge seiner Kontingente - er ist gelaufen, und sein
+//     Ergebnis soll zu seinem Commit passen.
 //   - Vor der ersten Anfrage wird geprueft, dass jede Nachricht ohne die Frage exakt die
 //     Vorlage ihres Antworttyps ist. Weicht eine ab, bricht das Skript ab.
 //   - KEINE fallbacks: Ein Rueckfall auf ein anderes Modell wuerde eine Antwort dem
@@ -64,6 +78,11 @@
 //     Wiederholung - auch --fortsetzen laesst diese Fragen unangetastet. Ein spaeterer
 //     Versuch waere ein zweiter Wurf unter anderen Bedingungen; ihn still als "die"
 //     Antwort zu speichern, waere eine stille Auswahl.
+//   - Fehler-Serie: Ein einzelner fehler-Eintrag beendet den Lauf nicht (normales API-Rauschen).
+//     Drei fehler-Eintraege in Folge sind eine Stoerung: Der Lauf endet sofort mit status
+//     "abgebrochen", grund "API-Fehler-Serie". Jede erfolgreiche Antwort setzt den Zaehler
+//     zurueck. So gehen bei einem Ausfall hoechstens drei Fragen verloren, der Rest bleibt
+//     fuer --fortsetzen offen.
 //   - --fortsetzen fragt nur Fragen ohne jeden Eintrag. Vorher muessen Modell, Parameter,
 //     Vorlagen, Laufart, Fragendatei und ihr SHA-256 exakt zum urspruenglichen Lauf passen.
 //     Jede Fortsetzung wird in der Datei unter "fortsetzungen" vermerkt.
@@ -94,6 +113,7 @@ const FRAGENDATEIEN = {
 };
 
 const ZWISCHENSTAND_ALLE = 25;
+const FEHLER_SERIE_LIMIT = 3;
 
 // ---------------------------------------------------------------------------
 // Modelle und ihre Konfiguration
@@ -158,7 +178,56 @@ const AUSWAHL_VERFAHREN = "Je Kontingent (Kategorie, Antworttyp, bei Ja/Nein auc
   + "die Gruppe nach ID sortieren und die Positionen round(i*(n-1)/(k-1)) nehmen, "
   + "i = 0..k-1; bei k = 1 die Mitte floor((n-1)/2). Kein Zufall.";
 
-const AUSWAHL_VERFAHREN_VOLL = "Alle Fragen der Fragendatei, in der Reihenfolge der Datei. Keine Auswahl.";
+const AUSWAHL_VERFAHREN_VOLL = "Alle Fragen der Fragendatei. Keine Auswahl.";
+
+// ---------------------------------------------------------------------------
+// Feste Reihenfolge fuer volle Laeufe - kein Zufall
+// ---------------------------------------------------------------------------
+
+const REIHENFOLGE_GRUPPIERUNG = "Kategorie, Antworttyp, bei Ja/Nein auch Antwort";
+
+const REIHENFOLGE_VERFAHREN = "Verzahnt. 1. Gruppen bilden nach (Kategorie, Antworttyp, bei Ja/Nein "
+  + "auch Antwort). 2. In jeder Gruppe nach SHA-256 der Frage-ID (UTF-8, hex) aufsteigend sortieren. "
+  + "3. Frage j (j = 0..n-1) einer Gruppe mit n Fragen erhaelt die Position (j + 0,5) / n. "
+  + "4. Alle Fragen nach Position aufsteigend sortieren, bei gleicher Position nach SHA-256 der "
+  + "Frage-ID. Haengt nur an den IDs - nicht an Dateireihenfolge, Datum oder Zufall.";
+
+const TESTLAUF_REIHENFOLGE = "Reihenfolge der Testauswahl: Kontingente nacheinander, wie in KONTINGENT.";
+
+const gruppenSchluessel = (f) => `${f.kategorie} | ${f.antwort_typ}`
+  + (f.antwort_typ === "ja-nein" ? ` | ${f.antwort}` : "");
+
+function ordneFragen(alle) {
+  const hash = new Map(alle.map((f) => [f.id, sha256(Buffer.from(f.id, "utf8"))]));
+  const nachHash = (a, b) => (hash.get(a.id) < hash.get(b.id) ? -1 : hash.get(a.id) > hash.get(b.id) ? 1 : 0);
+  const gruppen = new Map();
+  for (const f of alle) {
+    const k = gruppenSchluessel(f);
+    if (!gruppen.has(k)) gruppen.set(k, []);
+    gruppen.get(k).push(f);
+  }
+  const platziert = [];
+  for (const gruppe of gruppen.values()) {
+    gruppe.sort(nachHash);
+    gruppe.forEach((f, j) => platziert.push({ f, position: (j + 0.5) / gruppe.length }));
+  }
+  platziert.sort((a, b) => a.position - b.position || nachHash(a.f, b.f));
+  return platziert.map((x) => x.f);
+}
+
+// SHA-256 der ID-Liste in Frage-Reihenfolge, IDs mit "\n" verbunden.
+const reihenfolgeHash = (fragen) => sha256(Buffer.from(fragen.map((f) => f.id).join("\n"), "utf8"));
+
+// Anteil jeder Gruppe je Fuenftel des Laufs - nur zur Anzeige im Trockenlauf.
+function verteilungJeFuenftel(fragen) {
+  const v = {};
+  fragen.forEach((f, i) => {
+    const k = gruppenSchluessel(f);
+    v[k] ??= [0, 0, 0, 0, 0];
+    v[k][Math.floor(i * 5 / fragen.length)]++;
+  });
+  return v;
+}
 
 function waehleFragen(alle) {
   const auswahl = [];
@@ -213,6 +282,10 @@ function pruefeFortsetzung(ergebnis, soll) {
   if (ergebnis.nachrichtenaufbau !== NACHRICHTENAUFBAU) p.push("Nachrichtenaufbau weicht ab");
   if (soll.laufArt === "testlauf" && !isDeepStrictEqual(ergebnis.auswahl?.kontingent, KONTINGENT)) {
     p.push("Kontingent der Testauswahl weicht ab");
+  }
+  if (ergebnis.reihenfolge?.verfahren !== soll.reihenfolgeVerfahren) p.push("Reihenfolge-Verfahren weicht ab");
+  if (ergebnis.reihenfolge?.reihenfolge_sha256 !== soll.reihenfolgeSha) {
+    p.push(`reihenfolge_sha256 "${ergebnis.reihenfolge?.reihenfolge_sha256}", berechnet "${soll.reihenfolgeSha}"`);
   }
   if (ergebnis.herkunft?.fragendatei !== soll.fragendatei) {
     p.push(`Fragendatei "${ergebnis.herkunft?.fragendatei}", angefragt "${soll.fragendatei}"`);
@@ -349,7 +422,9 @@ async function main() {
 
   if (!voll && fragenName !== "fristen") abbruch("Eine Testauswahl gibt es nur fuer fristen. Fuer umlage: --voll.");
   const laufArt = voll ? "voll" : "testlauf";
-  const fragen = voll ? alle : waehleFragen(alle);
+  const fragen = voll ? ordneFragen(alle) : waehleFragen(alle);
+  const reihenfolgeVerfahren = voll ? REIHENFOLGE_VERFAHREN : TESTLAUF_REIHENFOLGE;
+  const reihenfolgeSha = reihenfolgeHash(fragen);
 
   const probleme = pruefeVorlagen(fragen);
   if (probleme.length > 0) abbruch("Vorlagenpruefung: " + probleme.join(" | "));
@@ -363,6 +438,7 @@ async function main() {
     bestehend = JSON.parse(fs.readFileSync(zielPfad, "utf8"));
     const p = pruefeFortsetzung(bestehend, {
       laufArt, modellId, parameter: modell.parameter, fragendatei: fragendateiRelativ, fragenHash, fragen,
+      reihenfolgeVerfahren, reihenfolgeSha,
     });
     if (p.length > 0) abbruch("Fortsetzung nicht moeglich: " + p.join(" | "));
     const vorhanden = new Set(bestehend.antworten.map((a) => a.frage_id));
@@ -383,6 +459,11 @@ async function main() {
     + `${anzahl((f) => f.antwort === "ja")} ja, ${anzahl((f) => f.antwort === "nein")} nein`);
   for (const [k, n] of Object.entries(kategorien)) console.log(`${LOG}   ${k}: ${n}`);
   console.log(`${LOG} Vorlagenpruefung: bestanden (${fragen.length} Nachrichten)`);
+  console.log(`${LOG} Reihenfolge: ${voll ? "verzahnt" : "Testauswahl"}, reihenfolge_sha256 ${reihenfolgeSha}`);
+  if (voll) {
+    console.log(`${LOG} Verteilung je Fuenftel des Laufs (Gruppe: 1. 2. 3. 4. 5. Fuenftel):`);
+    for (const [k, v] of Object.entries(verteilungJeFuenftel(fragen))) console.log(`${LOG}   ${k}: ${v.join(" ")}`);
+  }
   console.log(`${LOG} Zieldatei: ${path.relative(process.cwd(), zielPfad)}`
     + (!bestehend && fs.existsSync(zielPfad) ? " - EXISTIERT BEREITS" : ""));
   if (bestehend) {
@@ -477,8 +558,16 @@ async function main() {
       auswahl: voll
         ? { verfahren: AUSWAHL_VERFAHREN_VOLL, kontingent: null, anzahl: fragen.length }
         : { verfahren: AUSWAHL_VERFAHREN, kontingent: KONTINGENT },
+      reihenfolge: {
+        verfahren: reihenfolgeVerfahren,
+        gruppierung: voll ? REIHENFOLGE_GRUPPIERUNG : null,
+        reihenfolge_sha256: reihenfolgeSha,
+        reihenfolge_sha256_verfahren: "SHA-256 (hex) der Frage-IDs in Frage-Reihenfolge, mit \"\\n\" verbunden, UTF-8",
+      },
       steuerung: {
         reihenfolge: "nacheinander, keine parallelen Anfragen",
+        fehler_serie: `Lauf endet nach ${FEHLER_SERIE_LIMIT} fehler-Eintraegen in Folge (grund "API-Fehler-Serie"); `
+          + "jede erfolgreiche Antwort setzt den Zaehler zurueck",
         sdk_wiederholungen: "SDK-Standard: bis zu 2 Wiederholungen je Anfrage (gleiches Modell)",
         weitere_wiederholungen: "keine; fehler-Eintraege bleiben stehen, auch bei --fortsetzen",
         kostenlimit_usd: kostenlimit,
@@ -517,6 +606,7 @@ async function main() {
   const preis = modell.preis_usd_pro_mio_token;
   const startMs = Date.now();
   let erledigt = 0;
+  let fehlerInFolge = 0;
 
   for (const f of offen) {
     if (stopAngefordert) {
@@ -570,6 +660,17 @@ async function main() {
       + `${dauerText(vergangen)} vergangen, ~${dauerText(verbleibend)} verbleibend | `
       + `${usdText(kostenAus(ergebnis.antworten, preis))} bisher`;
     if (eintrag.fehler) meldeFehler(zeile); else melde(zeile);
+
+    fehlerInFolge = eintrag.fehler ? fehlerInFolge + 1 : 0;
+    if (fehlerInFolge >= FEHLER_SERIE_LIMIT) {
+      beende("abgebrochen", { grund: "API-Fehler-Serie", zeitpunkt: new Date().toISOString(),
+        fehler_in_folge: fehlerInFolge,
+        hinweis: `Die letzten ${fehlerInFolge} Eintraege sind fehler und bleiben stehen. `
+          + "Offene Fragen mit --fortsetzen weiterfuehren." });
+      meldeFehler(`${LOG} Abgebrochen: ${fehlerInFolge} API-Fehler in Folge. `
+        + `${ergebnis.antworten.length}/${fragen.length} Eintraege gespeichert. Kein Neustart.`);
+      return;
+    }
 
     if (erledigt % ZWISCHENSTAND_ALLE === 0 && erledigt < offen.length) {
       const a = ergebnis.antworten;
