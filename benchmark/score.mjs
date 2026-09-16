@@ -353,6 +353,11 @@ function main() {
       lauf: ergebnis.lauf ?? null,
       // Fehlt das Feld (Laeufe vor Commit 48221df), steht hier null - Zuordnung siehe benchmark/PLAN.md.
       lauf_nummer: ergebnis.lauf_nummer ?? null,
+      // Blob-Hash der run.mjs, die lief - der staerkere Beleg als ein Commit. Fehlt bei Laeufen vor
+      // Commit 14063a1 (null), dann siehe benchmark/PLAN.md. Fortsetzungen koennen mit einer anderen
+      // run.mjs gelaufen sein, deshalb ihre Blobs daneben, in Reihenfolge.
+      run_mjs_blob: herkunft.run_mjs_blob ?? null,
+      run_mjs_blob_fortsetzungen: (ergebnis.fortsetzungen ?? []).map((f) => f.run_mjs_blob ?? null),
       lauf_status: ergebnis.status ?? null,
       gestartet: ergebnis.gestartet ?? null,
       beendet: ergebnis.beendet ?? null,
@@ -388,6 +393,9 @@ function main() {
   if (geplant !== null && geplant !== einzel.length) {
     out.push(`${LOG} WARNUNG: ${geplant} Fragen geplant, ${einzel.length} Antworten in der Datei.`);
   }
+  out.push(`${LOG} run.mjs-Blob: ${herkunft.run_mjs_blob ?? "nicht vermerkt"}`
+    + ((ergebnis.fortsetzungen ?? []).length
+      ? `, Fortsetzungen: ${ergebnis.fortsetzungen.map((f) => f.run_mjs_blob ?? "nicht vermerkt").join(", ")}` : ""));
   out.push(`${LOG} Fragendatei: ${herkunft.fragendatei}, SHA-256 stimmt mit dem Lauf ueberein`);
   out.push(`${LOG} Eingabepruefung: ${einzel.length} Nachrichten exakt Frage + Vorlage, alle Schluessel im Format`);
 
