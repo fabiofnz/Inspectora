@@ -90,6 +90,9 @@
 //     Jede Fortsetzung wird in der Datei unter "fortsetzungen" vermerkt.
 //   - Ein echter Lauf startet nur, wenn benchmark/run.mjs committet ist - sonst bezeichnet
 //     git_commit nicht den Code, der gelaufen ist.
+//   - herkunft.run_mjs_blob ist der git-Blob-Hash von run.mjs beim Start (git hash-object). Er
+//     belegt, welche Datei lief; git_commit legt das nur nahe - jeder Commit dazwischen, auch einer,
+//     der run.mjs nicht beruehrt, verschiebt git_commit. Jede Fortsetzung vermerkt ihren Blob.
 //
 // ---------------------------------------------------------------------------
 // LAUF-NUMMER (nur --voll)
@@ -345,6 +348,16 @@ function gitCommit() {
   }
 }
 
+// Blob-Hash von run.mjs, wie git ihn speichern wuerde (mit den Zeilenende-Filtern des Repos).
+// Bei committeter Datei gleich "git rev-parse <commit>:benchmark/run.mjs".
+function runMjsBlob() {
+  try {
+    return execSync("git hash-object -- run.mjs", { cwd: HIER, encoding: "utf8", stdio: ["ignore", "pipe", "ignore"] }).trim();
+  } catch {
+    return null;
+  }
+}
+
 // true nur, wenn git laeuft und run.mjs keine uncommitteten Aenderungen hat.
 function runMjsCommittet() {
   try {
@@ -481,7 +494,7 @@ async function main() {
   console.log(`${LOG} Parameter: ${JSON.stringify(modell.parameter)}`);
   console.log(`${LOG} Fragendatei: ${fragendateiRelativ}, SHA-256 ${fragenHash}`);
   console.log(`${LOG} Lauf-Nummer: ${laufNummer ?? "keine"}`);
-  console.log(`${LOG} Lauf: ${laufArt}, ${fragen.length} Fragen:${anzahl((f) => f.antwort_typ === "datum")} Datum, `
+  console.log(`${LOG} Lauf: ${laufArt}, ${fragen.length} Fragen: ${anzahl((f) => f.antwort_typ === "datum")} Datum, `
     + `${anzahl((f) => f.antwort === "ja")} ja, ${anzahl((f) => f.antwort === "nein")} nein`);
   for (const [k, n] of Object.entries(kategorien)) console.log(`${LOG}   ${k}: ${n}`);
   console.log(`${LOG} Vorlagenpruefung: bestanden (${fragen.length} Nachrichten)`);
@@ -499,7 +512,7 @@ async function main() {
   }
   console.log(`${LOG} Kostenlimit: ${kostenlimit === null ? "keins" : `$${kostenlimit}`}`);
   console.log(`${LOG} ${SCHLUESSEL_VARIABLE} gesetzt: ${process.env[SCHLUESSEL_VARIABLE] ? "ja" : "nein"}`);
-  console.log(`${LOG} run.mjs committet: ${runMjsCommittet() ? "ja" : "nein"}`);
+  console.log(`${LOG} run.mjs committet: ${runMjsCommittet() ? "ja" : "nein"}, Blob ${runMjsBlob() ?? "nicht ermittelbar"}`);
 
   if (!ausfuehren) {
     if (bestehend) {
@@ -538,6 +551,8 @@ async function main() {
   const client = new Anthropic({ apiKey: schluessel, authToken: null });
   const sdkVersion = `@anthropic-ai/sdk ${JSON.parse(fs.readFileSync(SDK_PAKET, "utf8")).version}`;
   const commit = gitCommit();
+  const blob = runMjsBlob();
+  if (!blob) abbruch("Blob-Hash von run.mjs nicht ermittelbar - ohne ihn ist nicht belegt, welche Datei lief.");
   const jetzt = new Date().toISOString();
 
   let ergebnis;
@@ -546,6 +561,11 @@ async function main() {
     if (ergebnis.herkunft.git_commit !== commit) {
       melde(`${LOG} HINWEIS: Urspruenglicher Lauf auf Commit ${ergebnis.herkunft.git_commit}, Fortsetzung auf ${commit}. `
         + "Wird in der Datei vermerkt.");
+    }
+    const urspruenglicherBlob = ergebnis.herkunft.run_mjs_blob ?? null;
+    if (urspruenglicherBlob !== blob) {
+      melde(`${LOG} HINWEIS: run.mjs-Blob des urspruenglichen Laufs ${urspruenglicherBlob ?? "nicht vermerkt"}, `
+        + `Fortsetzung ${blob}. Wird in der Datei vermerkt.`);
     }
     ergebnis.fortsetzungen ??= [];
     ergebnis.fortsetzungen.push({
@@ -557,6 +577,7 @@ async function main() {
       offen_vor_start: offen.length,
       git_commit: commit,
       run_mjs_committet: true,
+      run_mjs_blob: blob,
       sdk: sdkVersion,
       node: process.version,
       kostenlimit_usd: kostenlimit,
@@ -608,6 +629,9 @@ async function main() {
         fragendatei_sha256: fragenHash,
         git_commit: commit,
         run_mjs_committet: true,
+        run_mjs_blob: blob,
+        run_mjs_blob_verfahren: "git hash-object benchmark/run.mjs beim Start; bei committeter Datei gleich "
+          + "git rev-parse <commit>:benchmark/run.mjs",
         sdk: sdkVersion,
         node: process.version,
       },
