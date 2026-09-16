@@ -97,7 +97,10 @@
 //   - Veroeffentlicht wird die Spanne ueber mehrere Laeufe je Modell und Fragendatei. Welcher
 //     Lauf welcher ist, gehoert zum Messgegenstand - deshalb eine Nummer, kein freier Text.
 //   - --lauf <n> (ganze Zahl ab 1) haengt "-lauf<n>" an den Dateinamen und steht als
-//     lauf_nummer in der Ergebnisdatei. Ohne --lauf ist lauf_nummer null.
+//     lauf_nummer in der Ergebnisdatei.
+//   - Bei einem echten --voll-Lauf ist --lauf Pflicht, wie --kostenlimit: Ein Lauf ohne Nummer
+//     laesst sich keiner Spanne zuordnen. Testlaeufe haben keine Nummer. Trockenlaeufe gehen ohne.
+//   - Folge: Eine Volldatei ohne Nummer (vor Commit 48221df) laesst sich nicht mehr fortsetzen.
 //   - Die Laeufe vom 15.09.2026 haben keine Nummer, sie sind Lauf 1 (siehe benchmark/PLAN.md).
 //   - --fortsetzen bricht ab, wenn --lauf nicht zur lauf_nummer der Datei passt.
 
@@ -514,6 +517,9 @@ async function main() {
   // Ab hier: echter Lauf. Jede Voraussetzung wird VOR der ersten Anfrage geprueft.
   if (!modell.freigegeben) abbruch(`Die Konfiguration fuer ${modellId} ist nicht freigegeben.`);
   if (voll && kostenlimit === null) abbruch("--kostenlimit fehlt. Bei --voll ist es Pflicht.");
+  if (voll && laufNummer === null) {
+    abbruch("--lauf fehlt. Bei --voll ist es Pflicht - ein Lauf ohne Nummer laesst sich keiner Spanne zuordnen.");
+  }
   const schluessel = process.env[SCHLUESSEL_VARIABLE];
   if (!schluessel) abbruch(`${SCHLUESSEL_VARIABLE} ist nicht gesetzt.`);
   if (!runMjsCommittet()) {
