@@ -351,6 +351,8 @@ function main() {
       fragendatei: herkunft.fragendatei,
       fragendatei_sha256: fragenHash,
       lauf: ergebnis.lauf ?? null,
+      // Fehlt das Feld (Laeufe vor Commit 48221df), steht hier null - Zuordnung siehe benchmark/PLAN.md.
+      lauf_nummer: ergebnis.lauf_nummer ?? null,
       lauf_status: ergebnis.status ?? null,
       gestartet: ergebnis.gestartet ?? null,
       beendet: ergebnis.beendet ?? null,
@@ -378,7 +380,8 @@ function main() {
   const out = [];
   const modellName = ergebnis.modell?.info?.display_name ?? "?";
   out.push(`${LOG} Ergebnisdatei: ${relativ(ergebnisPfad)}`);
-  out.push(`${LOG} Modell: ${ergebnis.modell?.angefragt} (${modellName}), Lauf: ${ergebnis.lauf}, Status: ${ergebnis.status}`);
+  out.push(`${LOG} Modell: ${ergebnis.modell?.angefragt} (${modellName}), Lauf: ${ergebnis.lauf}, `
+    + `Lauf-Nummer: ${ergebnis.lauf_nummer ?? "keine"}, Status: ${ergebnis.status}`);
   if (ergebnis.status !== "abgeschlossen") {
     out.push(`${LOG} WARNUNG: Der Lauf ist nicht abgeschlossen (Status "${ergebnis.status}"). Ausgewertet wird nur, was vorliegt.`);
   }
