@@ -11,6 +11,8 @@
 //   node benchmark/run.mjs --modell claude-sonnet-5 --fragen fristen --voll --ausfuehren --kostenlimit 15 \
 //       --fortsetzen benchmark/ergebnisse/2026-09-14-claude-sonnet-5-fristen-voll.json
 //       setzt einen abgebrochenen Lauf fort
+//   node benchmark/run.mjs --modell claude-sonnet-5 --fragen fristen --voll --ausfuehren --kostenlimit 8 --lauf 2
+//       Wiederholungslauf mit Nummer: Datei ...-fristen-voll-lauf2.json, lauf_nummer 2 in der Datei
 //
 // Laeuft nur lokal, nie auf Netlify. Der Schluessel kommt ausschliesslich aus der
 // Umgebungsvariablen BENCHMARK_ANTHROPIC_API_KEY - es gibt keinen Rueckfall auf andere
@@ -88,6 +90,16 @@
 //     Jede Fortsetzung wird in der Datei unter "fortsetzungen" vermerkt.
 //   - Ein echter Lauf startet nur, wenn benchmark/run.mjs committet ist - sonst bezeichnet
 //     git_commit nicht den Code, der gelaufen ist.
+//
+// ---------------------------------------------------------------------------
+// LAUF-NUMMER (nur --voll)
+// ---------------------------------------------------------------------------
+//   - Veroeffentlicht wird die Spanne ueber mehrere Laeufe je Modell und Fragendatei. Welcher
+//     Lauf welcher ist, gehoert zum Messgegenstand - deshalb eine Nummer, kein freier Text.
+//   - --lauf <n> (ganze Zahl ab 1) haengt "-lauf<n>" an den Dateinamen und steht als
+//     lauf_nummer in der Ergebnisdatei. Ohne --lauf ist lauf_nummer null.
+//   - Die Laeufe vom 15.09.2026 haben keine Nummer, sie sind Lauf 1 (siehe benchmark/PLAN.md).
+//   - --fortsetzen bricht ab, wenn --lauf nicht zur lauf_nummer der Datei passt.
 
 "use strict";
 
@@ -272,6 +284,9 @@ function pruefeFortsetzung(ergebnis, soll) {
   const p = [];
   if (ergebnis.status === "abgeschlossen") p.push("Lauf ist bereits abgeschlossen");
   if (ergebnis.lauf !== soll.laufArt) p.push(`Laufart "${ergebnis.lauf}", angefragt "${soll.laufArt}"`);
+  if ((ergebnis.lauf_nummer ?? null) !== soll.laufNummer) {
+    p.push(`Lauf-Nummer ${ergebnis.lauf_nummer ?? "keine"}, angefragt ${soll.laufNummer ?? "keine"}`);
+  }
   if (ergebnis.modell?.angefragt !== soll.modellId) {
     p.push(`Modell "${ergebnis.modell?.angefragt}", angefragt "${soll.modellId}"`);
   }
@@ -413,6 +428,12 @@ async function main() {
   if (!FRAGENDATEIEN[fragenName]) abbruch(`--fragen fehlt oder unbekannt. Bekannt: ${Object.keys(FRAGENDATEIEN).join(", ")}`);
   const kostenlimit = kostenlimitArg === null ? null : Number(kostenlimitArg);
   if (kostenlimitArg !== null && !(kostenlimit > 0)) abbruch(`--kostenlimit "${kostenlimitArg}" ist keine positive Zahl.`);
+  const laufArg = argument("--lauf");
+  if (process.argv.includes("--lauf") && !/^[1-9][0-9]*$/.test(laufArg ?? "")) {
+    abbruch(`--lauf "${laufArg ?? ""}" ist keine ganze Zahl ab 1.`);
+  }
+  const laufNummer = laufArg === null ? null : Number(laufArg);
+  if (laufNummer !== null && !voll) abbruch("--lauf gibt es nur mit --voll.");
 
   const fragenPfad = path.resolve(HIER, FRAGENDATEIEN[fragenName]);
   const fragendateiRelativ = path.relative(WURZEL, fragenPfad).replace(/\\/g, "/");
@@ -438,14 +459,15 @@ async function main() {
     bestehend = JSON.parse(fs.readFileSync(zielPfad, "utf8"));
     const p = pruefeFortsetzung(bestehend, {
       laufArt, modellId, parameter: modell.parameter, fragendatei: fragendateiRelativ, fragenHash, fragen,
-      reihenfolgeVerfahren, reihenfolgeSha,
+      reihenfolgeVerfahren, reihenfolgeSha, laufNummer,
     });
     if (p.length > 0) abbruch("Fortsetzung nicht moeglich: " + p.join(" | "));
     const vorhanden = new Set(bestehend.antworten.map((a) => a.frage_id));
     offen = fragen.filter((f) => !vorhanden.has(f.id));
   } else {
     zielPfad = path.join(ERGEBNIS_VERZEICHNIS,
-      `${lokalesDatum()}-${modellId}-${fragenName}-${voll ? "voll" : "test"}.json`);
+      `${lokalesDatum()}-${modellId}-${fragenName}-${voll ? "voll" : "test"}`
+      + `${laufNummer === null ? "" : `-lauf${laufNummer}`}.json`);
   }
 
   const anzahl = (filter) => fragen.filter(filter).length;
@@ -455,7 +477,8 @@ async function main() {
   console.log(`${LOG} Modell: ${modellId} (${modell.anbieter}), freigegeben: ${modell.freigegeben}`);
   console.log(`${LOG} Parameter: ${JSON.stringify(modell.parameter)}`);
   console.log(`${LOG} Fragendatei: ${fragendateiRelativ}, SHA-256 ${fragenHash}`);
-  console.log(`${LOG} Lauf: ${laufArt}, ${fragen.length} Fragen: ${anzahl((f) => f.antwort_typ === "datum")} Datum, `
+  console.log(`${LOG} Lauf-Nummer: ${laufNummer ?? "keine"}`);
+  console.log(`${LOG} Lauf: ${laufArt}, ${fragen.length} Fragen:${anzahl((f) => f.antwort_typ === "datum")} Datum, `
     + `${anzahl((f) => f.antwort === "ja")} ja, ${anzahl((f) => f.antwort === "nein")} nein`);
   for (const [k, n] of Object.entries(kategorien)) console.log(`${LOG}   ${k}: ${n}`);
   console.log(`${LOG} Vorlagenpruefung: bestanden (${fragen.length} Nachrichten)`);
@@ -538,6 +561,7 @@ async function main() {
   } else {
     ergebnis = {
       lauf: laufArt,
+      lauf_nummer: laufNummer,
       status: "laeuft",
       gestartet: jetzt,
       beendet: null,
