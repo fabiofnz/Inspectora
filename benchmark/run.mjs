@@ -12,7 +12,7 @@
 //       --fortsetzen benchmark/ergebnisse/2026-09-14-claude-sonnet-5-fristen-voll.json
 //       setzt einen abgebrochenen Lauf fort
 //   node benchmark/run.mjs --modell claude-sonnet-5 --fragen fristen --voll --ausfuehren --kostenlimit 8 --lauf 2
-//       Wiederholungslauf mit Nummer: Datei ...-fristen-voll-lauf2.json, lauf_nummer 2 in der Datei
+//       Lauf mit Nummer: Datei ...-fristen-voll-<SHA8>-lauf2.json, lauf_nummer 2 in der Datei
 //
 // Laeuft nur lokal, nie auf Netlify. Der Schluessel kommt ausschliesslich aus der
 // Umgebungsvariablen BENCHMARK_ANTHROPIC_API_KEY - es gibt keinen Rueckfall auf andere
@@ -106,6 +106,10 @@
 //   - Folge: Eine Volldatei ohne Nummer (vor Commit 48221df) laesst sich nicht mehr fortsetzen.
 //   - Die Laeufe vom 15.09.2026 haben keine Nummer, sie sind Lauf 1 (siehe benchmark/PLAN.md).
 //   - --fortsetzen bricht ab, wenn --lauf nicht zur lauf_nummer der Datei passt.
+//   - Die Nummer ist die Position INNERHALB einer Serie, kein fortlaufender Zaehler. Die Serie
+//     bestimmt der SHA-256 der Fragendatei. Seit 17.09.2026 stehen dessen erste 8 Zeichen im
+//     Dateinamen von Volllaeufen: <datum>-<modell>-<fragen>-voll-<SHA8>-lauf<n>.json. Aeltere
+//     Dateien heissen ohne SHA8 und bleiben so - sie sind Beweisstuecke.
 
 "use strict";
 
@@ -481,8 +485,10 @@ async function main() {
     const vorhanden = new Set(bestehend.antworten.map((a) => a.frage_id));
     offen = fragen.filter((f) => !vorhanden.has(f.id));
   } else {
+    // Volllaeufe tragen die ersten 8 Zeichen des Fragendatei-SHA-256 im Namen: Die Serie ist
+    // an der Datei erkennbar, ohne sie zu oeffnen. Beweis bleibt herkunft.fragendatei_sha256.
     zielPfad = path.join(ERGEBNIS_VERZEICHNIS,
-      `${lokalesDatum()}-${modellId}-${fragenName}-${voll ? "voll" : "test"}`
+      `${lokalesDatum()}-${modellId}-${fragenName}-${voll ? `voll-${fragenHash.slice(0, 8)}` : "test"}`
       + `${laufNummer === null ? "" : `-lauf${laufNummer}`}.json`);
   }
 
