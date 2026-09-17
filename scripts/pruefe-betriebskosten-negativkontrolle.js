@@ -192,6 +192,20 @@ const MUTATIONEN = [
     ersetzen: "    if (!alleZeilenPruefen) {",
   },
   {
+    name: "Wortlaut wieder als Teilstring (Müll in Müllbeseitigung gilt als Wortlaut)",
+    erwartet: "Zuordnung der Positionen",
+    datei: "katalog.mjs",
+    suchen: "  return ` ${falte(text)} `.includes(` ${gefalteterBegriff} `);",
+    ersetzen: "  return falte(text).includes(gefalteterBegriff);",
+  },
+  {
+    name: "Wortlaut nie erkannt (Grundsteuer wird zum Suchbegriff)",
+    erwartet: "Zuordnung der Positionen",
+    datei: "katalog.mjs",
+    suchen: "  return ` ${falte(text)} `.includes(` ${gefalteterBegriff} `);",
+    ersetzen: "  return false;",
+  },
+  {
     name: "Begriffsdatei: Suchbegriff zeigt auf die falsche Nummer",
     erwartet: "Zuordnung der Positionen",
     begriffe: (datei) => {

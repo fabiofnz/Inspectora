@@ -465,6 +465,11 @@
       {
         "art": "beleg-gedeckt",
         "begriffe": ["Reparatur", "Reparaturen", "Sanierung"]
+      },
+      {
+        "art": "beleg-gedeckt",
+        "hinweis": "§ 1 Abs. 2 Nr. 2 BetrKV endet wörtlich mit „(Instandhaltungs- und Instandsetzungskosten)“. Der Beleg trägt, nur steht keiner der beiden Begriffe dort als ganzes Wort - deshalb Suchbegriff, nicht Wortlaut.",
+        "begriffe": ["Instandhaltung", "Instandsetzung"]
       }
     ]
   }

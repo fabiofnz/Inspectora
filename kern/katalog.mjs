@@ -407,6 +407,21 @@ function berechneAbdeckung(bezeichnung, gefaltet, treffer, verdikt) {
   };
 }
 
+// Steht der Begriff als GANZES WORT im Gesetzestext? Nur dann darf die Oberflaeche
+// "steht so im Gesetz" schreiben. Ein Teilstring reicht nicht: "Müll" steckt in
+// "Müllbeseitigung", "Reinigung" in "Gebäudereinigung" - so steht es eben nicht im
+// Gesetz. Bewusst ohne Liste erlaubter Endungen: Die waere redaktionell und laege
+// schon beim ersten echten Fall daneben ("Instandhaltungs-" traegt ein Fugen-s, keine
+// Endung). Der Preis: "Brennstoff" (Gesetz: "Brennstoffe") verliert das Kennzeichen.
+// Das ist die richtige Richtung - die Anzeige ist dann weniger sicher als der Befund,
+// nie sicherer. Gearbeitet wird auf der gefalteten Form, dort trennt genau ein
+// Leerzeichen die Woerter.
+function stehtAlsWort(text, begriff) {
+  const gefalteterBegriff = falte(begriff);
+  if (!gefalteterBegriff) return false;
+  return ` ${falte(text)} `.includes(` ${gefalteterBegriff} `);
+}
+
 function fundstelleKatalog(item, begriff, wortlaut, beleg) {
   return {
     art: "katalog",
@@ -486,7 +501,7 @@ export function ordneZeileZu(bezeichnung, katalog, ausschluesse, begriffe, beleg
   for (const gruppe of jeEintrag(ausschlussTreffer)) {
     const posten = ausschluesse.posten.find((p) => p.nr === gruppe.eintrag.nr);
     if (!posten) continue;
-    const wortlaut = falte(posten.text).includes(falte(gruppe.begriff));
+    const wortlaut = stehtAlsWort(posten.text, gruppe.begriff);
     fundstellenAusschluss.push(fundstelleAusschluss(posten, gruppe.begriff, wortlaut, belege["betrkv-1"]));
   }
 
@@ -500,7 +515,7 @@ export function ordneZeileZu(bezeichnung, katalog, ausschluesse, begriffe, beleg
     }
     const item = katalog.items.find((it) => it.nr === gruppe.eintrag.nr);
     if (!item) continue;
-    const wortlaut = falte(item.text).includes(falte(gruppe.begriff));
+    const wortlaut = stehtAlsWort(item.text, gruppe.begriff);
     fundstellenKatalog.push(fundstelleKatalog(item, gruppe.begriff, wortlaut, belege["betrkv-2"]));
   }
 

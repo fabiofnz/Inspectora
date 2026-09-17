@@ -738,20 +738,45 @@ async function main() {
   // Dann muss der genannte Begriff auch wirklich so im Text stehen - sonst ist
   // die Beschriftung selbst die Unwahrheit. (Erste Fassung zeigte die intern
   // gefaltete Form "muellabfuhr", die in keinem Gesetzestext vorkommt.)
-  pruefe(P_ZUORDNUNG, "Wortlaut-Treffer steht wirklich im Gesetzestext", () => {
-    const e = Katalog.pruefePositionen({
-      text: "Grundsteuer\nMüllabfuhr\nGartenpflege\nAufzug\nEntwässerung\nGebäudereinigung",
-    }, korpus, begriffsdatei);
-    for (const p of e.positionen) {
-      for (const f of p.fundstellen) {
-        if (f.treffer.art !== "wortlaut") continue;
-        if (!f.text.toLowerCase().includes(f.treffer.begriff.toLowerCase())) {
-          return `"${f.treffer.begriff}" wird als Wortlaut ausgewiesen, kommt in `
-            + `${f.bezeichnung} aber nicht so vor`;
+  //
+  // "So" heisst: als GANZES WORT. Die fruehere Fassung prueft nur einen Teilstring
+  // auf sechs Beispielzeilen - "Müll" in "Müllbeseitigung", "Aufzug" in
+  // "Lastenaufzugs" gingen damit als Wortlaut durch (14 von 43 Kennzeichen). Jetzt
+  // ueber alle Begriffe der Datei und in beide Richtungen: kein Wortlaut ohne ganzes
+  // Wort, kein Suchbegriff, der als ganzes Wort dasteht. Die Wortgrenze wird hier
+  // eigenstaendig auf dem Originaltext bestimmt, nicht mit der Hilfsfunktion der
+  // Engine - sonst prueft die Engine sich selbst.
+  const stehtAlsGanzesWort = (text, begriff) => {
+    const muster = begriff.trim().split(/\s+/)
+      .map((teil) => teil.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")).join("\\s+");
+    return new RegExp(`(?<![\\p{L}\\p{N}])${muster}(?![\\p{L}\\p{N}])`, "iu").test(text);
+  };
+
+  pruefe(P_ZUORDNUNG, "Wortlaut-Treffer steht als ganzes Wort im Gesetzestext", () => {
+    const probleme = [];
+    let wortlaut = 0;
+    let geprueft = 0;
+    for (const eintrag of begriffsEintraege.filter((e) => e.art !== "luecke")) {
+      for (const begriff of eintrag.begriffe) {
+        const p = ordne(begriff, { alleZeilenPruefen: true });
+        for (const f of p ? p.fundstellen : []) {
+          geprueft++;
+          const ganz = stehtAlsGanzesWort(f.text, f.treffer.begriff);
+          if (f.treffer.art === "wortlaut") {
+            wortlaut++;
+            if (!ganz) probleme.push(`"${f.treffer.begriff}" als Wortlaut, steht in ${f.bezeichnung} nicht als ganzes Wort`);
+          } else if (ganz) {
+            probleme.push(`"${f.treffer.begriff}" als Suchbegriff, steht in ${f.bezeichnung} aber als ganzes Wort`);
+          }
         }
       }
     }
-    return true;
+    info(P_ZUORDNUNG, "-", `Fundstellen geprueft: ${geprueft}, davon Wortlaut: ${wortlaut}`);
+    if (geprueft === 0) return "keine einzige Fundstelle - die Pruefung greift ins Leere";
+    if (probleme.length > 0) return probleme.join(" | ");
+    // Stand 17.09.2026: 29 Begriffe stehen als ganzes Wort im Gesetz. Aendert sich die
+    // Zahl, ist das kein Fehler an sich - aber eine Aenderung, die bewusst geschehen muss.
+    return gleich(wortlaut, 29, "Wortlaut-Kennzeichen");
   });
 
   pruefe(P_ZUORDNUNG, "Tabellenkopf wird nicht als Position gelesen", () => {
