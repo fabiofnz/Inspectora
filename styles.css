@@ -100,8 +100,13 @@ main{padding-top:0}
 .nav-secondary{opacity:.65;font-size:11px}
 
 .nav-group{position:relative}
-.nav-trigger{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border:0;border-radius:7px;background:transparent;color:inherit;font:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:color .15s,background .15s}
-.nav-trigger:hover{color:#fff;background:rgba(255,255,255,.09)}
+/* .nav-link teilt sich die Regel mit .nav-trigger. Vorher war .nav-link
+   nirgends definiert: Die Abstaende zwischen den Menuepunkten entstanden
+   allein durch das Innenpolster der Klapp-Schaltflaechen daneben. Sobald
+   mehrere einfache Links nebeneinanderstehen, kleben sie ohne diese Zeile
+   aneinander. Kein neuer Wert - dieselbe Regel, ein Selektor mehr. */
+.nav-trigger,.nav-link{display:inline-flex;align-items:center;gap:5px;padding:6px 10px;border:0;border-radius:7px;background:transparent;color:inherit;font:inherit;font-size:13px;font-weight:800;cursor:pointer;transition:color .15s,background .15s}
+.nav-trigger:hover,.nav-link:hover{color:#fff;background:rgba(255,255,255,.09)}
 .nav-chevron{flex:0 0 auto;transition:transform .18s}
 .nav-group.open .nav-chevron{transform:rotate(180deg)}
 
@@ -227,11 +232,17 @@ main{padding-top:0}
    Übergangs-Fades mehr zwischen ihnen – Abwechslung entsteht stattdessen
    über die jeweils eigene Glow-Farbe/Position (siehe Abschnitt 7–11). */
 .section{position:relative;padding-top:112px;padding-bottom:112px}
-#werkzeuge,.projects-section{
+#werkzeuge,.projects-section,.section-breit{
   width:100%;max-width:none;margin:0;
   padding-left:max(24px,calc((100vw - var(--max))/2));
   padding-right:max(24px,calc((100vw - var(--max))/2));
 }
+/* .section-breit ist reines Layout: volle Breite mit demselben seitlichen
+   Innenabstand wie Hero und Tool-Sections. Kein Farbwert, kein Hintergrund,
+   keine eigene Optik - nur der Abstand, den .section allein nicht mitbringt.
+   Vorher lieferten ihn nur #werkzeuge (eine ID) und .projects-section (mit
+   rotem Glow im Gepaeck). Beides waere fuer einen beliebigen Abschnitt
+   zweckentfremdet gewesen. */
 .section>*{position:relative;z-index:1}
 
 .section-heading{max-width:760px;padding-bottom:40px;margin-bottom:8px;border-bottom:1px solid var(--line-on-dark)}
@@ -435,7 +446,12 @@ main{padding-top:0}
 }
 .about-card h2{position:relative;margin-top:8px;color:#fff;font-size:clamp(30px,3.5vw,46px);letter-spacing:-.048em}
 .about-card .eyebrow{position:relative;color:rgba(255,255,255,.55);background:rgba(255,255,255,.07);border-color:rgba(255,255,255,.11)}
-.about-text{position:relative;display:grid;gap:14px;color:rgba(255,255,255,.56);font-size:14px}
+/* max-width ergaenzt 23.09.2026: .about-text ist der Fliesstext-Behaelter fuer
+   dunkle Flaechen und steht seit dem Umbau der Startseite auch ausserhalb der
+   .about-card - dort ueber die volle Seitenbreite, was zu lange Zeilen ergibt.
+   760px entspricht der Breite von .section-heading. In der .about-card aendert
+   sich nichts: ihre Spalte ist rund 614px breit und bleibt darunter. */
+.about-text{position:relative;display:grid;gap:14px;max-width:760px;color:rgba(255,255,255,.56);font-size:14px}
 .about-text a{color:rgba(255,255,255,.82);text-decoration:underline;text-underline-offset:2px}
 
 .trust-chips{position:relative;display:flex;flex-wrap:wrap;gap:8px;margin-top:6px}

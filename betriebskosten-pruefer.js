@@ -262,12 +262,12 @@ function baueFeiertagsfrage(iso, anzeige, bereitsGesetzt) {
 
   const text = el("span");
   text.appendChild(document.createTextNode(
-    `Ist der ${anzeige} an Ihrem Ort ein gesetzlicher Feiertag?`));
+    `Ist der ${anzeige} an deinem Ort ein gesetzlicher Feiertag?`));
   text.appendChild(el("small", null, bereitsGesetzt
-    ? "Ihre Angabe. Das Häkchen entfernen nimmt sie zurück."
+    ? "Deine Angabe. Das Häkchen entfernen nimmt sie zurück."
     : "Landesrechtliche Feiertage wie Fronleichnam, Reformationstag oder Allerheiligen "
-      + "kennt dieses Werkzeug nicht. Wenn Sie hier ankreuzen, wird die Verschiebung nach "
-      + "§ 193 BGB mit Ihrer Angabe gerechnet und als Ihre Angabe ausgewiesen."));
+      + "kennt dieses Werkzeug nicht. Wenn du hier ankreuzt, wird die Verschiebung nach "
+      + "§ 193 BGB mit deiner Angabe gerechnet und als deine Angabe ausgewiesen."));
   label.appendChild(text);
   return label;
 }
@@ -326,7 +326,7 @@ function baueFristKarte(frist, belege, zitate) {
   if (frist.verschiebung.verschoben && frist.verschiebung.grund.art === "feiertag") {
     const herkunft = el("div", "bk-herkunft");
     herkunft.textContent = frist.verschiebung.grund.herkunft === "nutzerangabe"
-      ? "Diese Verschiebung beruht auf Ihrer eigenen Angabe, nicht auf einer Berechnung."
+      ? "Diese Verschiebung beruht auf deiner eigenen Angabe, nicht auf einer Berechnung."
       : "Feiertage stammen nicht aus der Wissensbasis. Berücksichtigt sind nur die neun "
         + "bundesweit einheitlichen Feiertage – landesrechtliche Feiertage fehlen.";
     karte.appendChild(herkunft);
@@ -696,7 +696,7 @@ function pruefeListe() {
   kasten.appendChild(document.createTextNode(
     "Diese Prüfung sagt, ob eine Bezeichnung im Katalog der Betriebskostenverordnung steht "
     + "oder von ihm ausgenommen ist – mit dem Wortlaut daneben. Sie sagt nicht, ob die "
-    + "Position in Ihrem Fall zu Recht abgerechnet wurde und was daraus folgt. Ob eine "
+    + "Position in deinem Fall zu Recht abgerechnet wurde und was daraus folgt. Ob eine "
     + "Umlage wirksam vereinbart ist, steht im Mietvertrag; alles Weitere ist eine "
     + "rechtliche Bewertung, die ein Mensch treffen muss."));
   hinweisKarte.appendChild(kasten);
