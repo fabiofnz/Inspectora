@@ -1061,6 +1061,12 @@ main{padding-top:0}
 .assistant-gate-card .brand-mark{margin:0 auto 20px;width:44px;height:44px;font-size:19px}
 .assistant-gate-card h2{font-size:19px;font-weight:800;color:var(--text);margin-bottom:8px;letter-spacing:-.02em}
 .assistant-gate-card>p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:22px}
+/* Die globale Regel a{color:inherit;text-decoration:none} macht Links im
+   Fliesstext unsichtbar - hier stehen seit 23.09.2026 zwei, die man finden
+   koennen muss (Zugangscode anfragen, Weiterleitung zum Rechenwerkzeug).
+   Dieselbe Machart wie .about-text a, nur auf heller Flaeche: vorhandene
+   Akzentfarbe, kein neuer Wert. */
+.assistant-gate-card a{color:var(--primary);text-decoration:underline;text-underline-offset:2px}
 #assistantGateForm{display:flex;flex-direction:column;gap:12px}
 .assistant-gate-card input{
   width:100%;padding:12px 14px;

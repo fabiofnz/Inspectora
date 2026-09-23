@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <meta name="robots" content="noindex,nofollow">
   <title>Inspector – KI-Assistent von Inspectora</title>
-  <meta name="description" content="Inspector ist der KI-Assistent von Inspectora für die Immobilienverwaltung: Fachwissen, Gesetzestexte mit Quelle und Web-Suche (interner Test, Zugangscode erforderlich).">
+  <meta name="description" content="Inspector ist der KI-Assistent von Inspectora für die Immobilienverwaltung: Fachwissen, Gesetzestexte mit Quelle und Web-Suche (Testphase, Zugang für Fachleute).">
 
   <!-- Open Graph / Link-Vorschau -->
   <meta property="og:type" content="website">
@@ -36,7 +36,11 @@
   <main class="assistant-main">
     <div class="assistant-intro">
       <h1>Inspector</h1>
-      <p class="assistant-notice">Interner Test. Fachwissen zu Mietrecht-Grundlagen, WEG-Recht, Betriebskosten und Verwaltungsabläufen – keine Rechtsberatung, keine echten Mieterdaten eingeben.</p>
+      <!-- Offenlegung nach der Usage Policy von Anthropic (High-Risk-Fall "Legal",
+           Stand 15.09.2025): Der Hinweis muss sagen, dass die ANTWORTEN von einer
+           KI stammen - der Produktname allein reicht dafuer nicht. Er steht die
+           ganze Sitzung im Bild, weil die Chatkarte fuer sich scrollt. -->
+      <p class="assistant-notice">Testphase für Fachleute. Die Antworten erzeugt eine KI – auch dort, wo sie Paragraphen nennt. Prüfe sie, bevor du sie verwendest. Keine Rechtsberatung, keine echten Mieterdaten.</p>
     </div>
 
     <div class="assistant-layout">
@@ -90,8 +94,14 @@
     <div class="assistant-gate" id="assistantGate">
       <div class="assistant-gate-card">
         <div class="brand-mark" aria-hidden="true">I</div>
-        <h2>Zugangscode erforderlich</h2>
-        <p>Dieses Tool ist im internen Test. Bitte den Zugangscode eingeben, den du von deinem Team erhalten hast.</p>
+        <!-- Die Ueberschrift benennt eine inhaltliche Abgrenzung, keine technische
+             Huerde: Der Zugang ist Fachleuten vorbehalten, weil die Antworten einer
+             KI fachlich geprueft werden muessen, bevor jemand sie verwendet. Genau
+             darauf stuetzt sich die Auslegung der Usage-Policy-Anforderung
+             "qualified professional in that field". -->
+        <h2>Zugang für Fachleute</h2>
+        <p>Inspector ist ein Arbeitswerkzeug für Menschen, die beruflich mit Immobilienverwaltung zu tun haben. Die Antworten erzeugt eine KI – wer sie verwendet, muss sie fachlich prüfen können. Zugangscode auf Anfrage: <a href="mailto:kontakt.inspectora@gmail.com">kontakt.inspectora@gmail.com</a></p>
+        <p>Eigene Frage zur eigenen Abrechnung? Dafür gibt es die <a href="nebenkostenabrechnung-frist-pruefen.html">Nebenkostenabrechnung-Prüfung</a> – ohne Code, ohne KI, mit der Vorschrift zu jedem Schritt.</p>
         <form id="assistantGateForm">
           <input type="password" id="assistantGateInput" placeholder="Zugangscode" autocomplete="off" aria-label="Zugangscode">
           <button class="button primary" id="assistantGateButton" type="submit">Freischalten</button>
