@@ -186,9 +186,16 @@ main{padding-top:0}
 @keyframes ambientPulse{0%,100%{opacity:.65}50%{opacity:1}}
 .hero-copy{position:relative;z-index:1;padding:0}
 
+/* Unterlaengen-Polster (padding-bottom): Bei background-clip:text ist der
+   Buchstabe selbst durchsichtig - sichtbar wird er nur dort, wo der Hintergrund
+   des Elements liegt. Der Hintergrund endet am Inhaltskasten, und der ist wegen
+   der engen line-height rund .12em kuerzer als die Schrift hoch ist. Das "g" in
+   "belegen" ragt also unten heraus und hat dort keine Farbe mehr. Gemessen:
+   Kasten 408px, Schriftbild 420px. Das Polster verlaengert den Farbauftrag nach
+   unten, ohne den Zeilenabstand anzutasten. In em, damit es mit clamp mitwaechst. */
 .hero h1{
-  max-width:780px;color:#fff;
-  font-size:clamp(60px,7.5vw,100px);line-height:1.02;letter-spacing:-.054em;
+  max-width:780px;color:#fff;padding-bottom:.12em;
+  font-size:clamp(32px,4.6vw,58px);line-height:1.02;letter-spacing:-.054em;
   background:linear-gradient(100deg,#ffffff 0%,#e0e7ff 25%,#c4b5fd 48%,#e0e7ff 72%,#ffffff 100%);
   background-size:250% auto;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
   animation:headlineShimmer 7s linear infinite;
@@ -211,11 +218,13 @@ main{padding-top:0}
 @media(max-width:1020px){.hero{padding-top:108px}}
 @media(max-width:760px){
   .hero{grid-template-columns:1fr;min-height:auto;padding-top:96px;padding-bottom:60px;gap:40px}
-  .hero h1{font-size:46px;letter-spacing:-.042em}
+  /* Einspaltig steht der volle Seitenbereich zur Verfuegung - hier darf die
+     Zeile groesser werden als im zweispaltigen Hero. Eine clamp-Regel deckt
+     den ganzen Bereich ab; die fruehere Extrastufe bei 500px entfaellt. */
+  .hero h1{font-size:clamp(28px,6.5vw,52px);letter-spacing:-.042em}
   .hero-copy>p{font-size:16px}
   .hero-facts{grid-template-columns:1fr}
 }
-@media(max-width:500px){.hero h1{font-size:38px}}
 @media(prefers-reduced-motion:reduce){
   .hero h1{animation:none;-webkit-text-fill-color:#fff;background:none}
   .hero::before{animation:none}
@@ -245,10 +254,46 @@ main{padding-top:0}
    zweckentfremdet gewesen. */
 .section>*{position:relative;z-index:1}
 
+/* Glow je Abschnitt der Startseite. .section-breit selbst bleibt farblos -
+   die Abwechslung entsteht, wie im Kommentar oben beschrieben, ueber Farbe
+   und Position pro Abschnitt, nicht ueber Hell/Dunkel-Wechsel. Verwendet sind
+   ausschliesslich die Glow-Farben, die die Datei schon kennt: Indigo
+   rgb(79,70,229), Violett rgb(124,58,237) und der seltene Cyan-Akzent
+   rgb(14,165,233) aus dem Hero. Deckkraft im Band .09-.16 - also unter dem
+   Hero (bis .32), damit der Kopf der Seite der hellste Punkt bleibt.
+   Die Seite wechselt von Abschnitt zu Abschnitt. */
+#werkzeug{
+  background:
+    radial-gradient(ellipse 55% 50% at 10% 55%, rgba(79,70,229,.16), transparent 55%),
+    radial-gradient(ellipse 45% 40% at 90% 15%, rgba(124,58,237,.10), transparent 50%),
+    var(--dark);
+}
+#beleg{
+  background:
+    radial-gradient(ellipse 60% 55% at 88% 25%, rgba(124,58,237,.16), transparent 55%),
+    radial-gradient(ellipse 45% 40% at 8% 88%, rgba(14,165,233,.09), transparent 55%),
+    var(--dark);
+}
+#inspector{
+  background:
+    radial-gradient(ellipse 55% 50% at 92% 60%, rgba(79,70,229,.15), transparent 55%),
+    radial-gradient(ellipse 45% 40% at 10% 12%, rgba(124,58,237,.12), transparent 50%),
+    var(--dark);
+}
+/* Der ruhigste Abschnitt: ein einzelner Schein unten mittig. Er trifft auf
+   .about-section, deren Violett bei 50% 0% oben mittig sitzt - ueber die Naht
+   hinweg ergibt das einen durchgehenden Verlauf statt einer Kante. */
+#weg{
+  background:
+    radial-gradient(ellipse 50% 45% at 50% 100%, rgba(124,58,237,.10), transparent 60%),
+    var(--dark);
+}
+
 .section-heading{max-width:760px;padding-bottom:40px;margin-bottom:8px;border-bottom:1px solid var(--line-on-dark)}
 .section-heading h2,.tool-heading h2{line-height:1.05;letter-spacing:-.045em}
 .section-heading h2{
-  margin-top:12px;font-size:clamp(36px,4.5vw,58px);color:#fff;
+  /* Unterlaengen-Polster, siehe .hero h1 - dieselbe Ursache, gemessen 6px bei 58px */
+  margin-top:12px;padding-bottom:.12em;font-size:clamp(36px,4.5vw,58px);color:#fff;
   background:linear-gradient(135deg,#ffffff 0%,#DDD6FE 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;
 }
 .tool-heading h2{font-size:clamp(34px,4.2vw,54px)}
@@ -316,7 +361,7 @@ main{padding-top:0}
 .tool-heading{position:relative;z-index:1;display:flex;align-items:flex-end;justify-content:space-between;gap:24px;max-width:var(--max);margin:0 auto 30px;color:#fff}
 .tool-heading p{color:rgba(255,255,255,.52)}
 .tool-heading .button.secondary{color:rgba(255,255,255,.78);border-color:rgba(255,255,255,.16);background:rgba(255,255,255,.08)}
-.tool-section .tool-heading h2{background:linear-gradient(135deg,#ffffff 0%,#C7D2FE 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
+.tool-section .tool-heading h2{padding-bottom:.12em;background:linear-gradient(135deg,#ffffff 0%,#C7D2FE 100%);-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent}
 
 .tool-shell{
   position:relative;z-index:1;max-width:var(--max);margin:0 auto;overflow:hidden;
