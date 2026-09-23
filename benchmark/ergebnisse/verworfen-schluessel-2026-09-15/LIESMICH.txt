@@ -1,0 +1,28 @@
+Verworfener umlage-Lauf vom 15.09.2026 (claude-sonnet-5, 113 Fragen)
+
+Dieser Lauf zaehlt in keiner Serie mit und wird mit nichts zusammengelegt.
+Er liegt hier, damit nachvollziehbar ist, was es gab - nicht als Ergebnis.
+
+Warum verworfen: Der Schluessel enthielt 37 Fragen, deren unbedingte Antwort
+das Gesetz nicht traegt - § 2 Nr. 15 mit Bedingung und Befristung, Geraete- und
+Anlagenbegriffe (umlagefaehig ist der Betrieb, nicht die Anschaffung) und
+Ausschluesse, deren Beleg nur per Analogie oder gegen den Katalog traegt.
+Diese 37 Fragen wurden danach gestrichen; der Fragensatz schrumpfte auf 76.
+
+Gegen welche Fragendatei: SHA-256 10bb3190... - der Stand von Commit 6e94ad4.
+Wiederherstellen mit: git show 6e94ad4:benchmark/fragen-umlage.json
+Die veroeffentlichten Serien laufen gegen 74570428... (aeltere Serie) und
+b309d7d2... (veroeffentlichte Serie). Drei verschiedene Dateien, drei
+verschiedene Laufreihenfolgen - nichts davon gehoert zusammengerechnet.
+
+Bekannter Schoenheitsfehler: Der Pfad in quelle.ergebnisdatei der Auswertung
+zeigt noch auf den alten Ort, vor dem Verschieben in diesen Ordner. Die Datei
+wird nicht nachtraeglich bearbeitet - sie ist Beleg, und ihre SHA-256 ist
+anderswo festgehalten. Deshalb steht der Hinweis hier statt einer Korrektur.
+
+Veroeffentlichung (Fabio, 23.09.2026): Eine fruehere Fassung dieser Datei sagte
+"nicht veroeffentlichen". Das gilt nicht mehr. Der Lauf wird mit den uebrigen
+Ergebnisdateien veroeffentlicht und auf mietrecht-benchmark.html als verworfen
+benannt. Ihn zurueckzuhalten waere genau die stille Auswahl, die dieser
+Benchmark vermeiden soll. Unveraendert bleibt: kein Lauf, keine Nummer,
+zaehlt in keiner Quote mit.

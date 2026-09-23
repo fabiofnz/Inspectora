@@ -1,0 +1,1495 @@
+{
+  "auswertung": {
+    "erstellt": "2026-09-15T18:56:57.958Z",
+    "scorer": "benchmark/score.mjs",
+    "git_commit": "6e94ad475ea01711f6dc65c176f281f905dab6ea",
+    "regeln": {
+      "gelesen": "letzte nicht-leere Zeile der Roh-Antwort, nur Leerraum am Zeilenanfang und -ende entfernt",
+      "streng": {
+        "datum": "^ANTWORT: (\\d{2})\\.(\\d{2})\\.(\\d{4})$",
+        "ja-nein": "^ANTWORT: (ja|nein)$"
+      },
+      "erkennbar": {
+        "datum": "(?<!\\p{L})antwort[^\\p{L}\\p{N}]*:.*\\p{N}",
+        "ja-nein": "(?<!\\p{L})antwort[^\\p{L}\\p{N}]*:.*(?<!\\p{L})(?:ja|nein)(?!\\p{L})"
+      },
+      "vorrang": [
+        "fehler",
+        "abgelehnt",
+        "abgeschnitten",
+        "Schlusszeile"
+      ],
+      "quote": "richtig / (richtig + falsch); nicht-auswertbar, abgeschnitten, fehler, abgelehnt fliessen nicht ein",
+      "nicht_auswertbar": {
+        "format-abweichung": "letzte Zeile als Antwortzeile erkennbar, aber nicht exakt",
+        "falsche-position": "Antwortzeile vorhanden, aber nicht die letzte Zeile",
+        "keine-schlusszeile": "keine Antwortzeile in der gesamten Antwort"
+      }
+    }
+  },
+  "quelle": {
+    "ergebnisdatei": "benchmark/ergebnisse/2026-09-15-claude-sonnet-5-umlage-voll.json",
+    "ergebnisdatei_sha256": "804a12ea11ff19319e6b745fdd1b8dbfde1a702f75dfd54001af4a2dfaf83283",
+    "fragendatei": "benchmark/fragen-umlage.json",
+    "fragendatei_sha256": "10bb3190957de9c7afba542863513904d895c35c26f5ecac7cac539dab5dae7c",
+    "lauf": "voll",
+    "lauf_status": "abgeschlossen",
+    "gestartet": "2026-09-15T17:15:14.301Z",
+    "beendet": "2026-09-15T17:32:53.737Z",
+    "modell": {
+      "angefragt": "claude-sonnet-5",
+      "anbieter": "Anthropic",
+      "info": {
+        "id": "claude-sonnet-5",
+        "display_name": "Claude Sonnet 5",
+        "created_at": "2026-06-29T00:00:00Z"
+      }
+    },
+    "konfiguration": {
+      "parameter": {
+        "max_tokens": 64000
+      },
+      "systemprompt": null,
+      "fallbacks": null,
+      "anmerkung": "Variante A: weder thinking noch output_config gesetzt, nur das Pflichtfeld max_tokens. Laut API-Dokumentation laeuft Claude Sonnet 5 dann mit adaptivem Denken und effort high. Die Anbieter-Vorgabe ist der Messgegenstand."
+    }
+  },
+  "zusammenfassung": {
+    "antworten": 113,
+    "geplant": null,
+    "status": {
+      "richtig": 109,
+      "falsch": 4,
+      "nicht_auswertbar": {
+        "format-abweichung": 0,
+        "keine-schlusszeile": 0,
+        "falsche-position": 0
+      },
+      "abgeschnitten": 0,
+      "fehler": 0,
+      "abgelehnt": 0
+    }
+  },
+  "quoten": {
+    "nach_antworttyp": {
+      "ja-nein": {
+        "gewertet": 113,
+        "richtig": 109,
+        "falsch": 4,
+        "quote_richtig": 0.9646017699115044,
+        "nicht_auswertbar": {
+          "format-abweichung": 0,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0,
+        "nach_schluessel": {
+          "ja": {
+            "gewertet": 94,
+            "richtig": 90,
+            "falsch": 4,
+            "quote_richtig": 0.9574468085106383,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          },
+          "nein": {
+            "gewertet": 19,
+            "richtig": 19,
+            "falsch": 0,
+            "quote_richtig": 1,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          }
+        }
+      }
+    },
+    "nach_kategorie": [
+      {
+        "kategorie": "umlage-katalog-suchbegriff",
+        "antwort_typ": "ja-nein",
+        "gewertet": 59,
+        "richtig": 57,
+        "falsch": 2,
+        "quote_richtig": 0.9661016949152542,
+        "nicht_auswertbar": {
+          "format-abweichung": 0,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0,
+        "nach_schluessel": {
+          "ja": {
+            "gewertet": 59,
+            "richtig": 57,
+            "falsch": 2,
+            "quote_richtig": 0.9661016949152542,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          },
+          "nein": {
+            "gewertet": 0,
+            "richtig": 0,
+            "falsch": 0,
+            "quote_richtig": null,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          }
+        }
+      },
+      {
+        "kategorie": "umlage-katalog-wortlaut",
+        "antwort_typ": "ja-nein",
+        "gewertet": 35,
+        "richtig": 33,
+        "falsch": 2,
+        "quote_richtig": 0.9428571428571428,
+        "nicht_auswertbar": {
+          "format-abweichung": 0,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0,
+        "nach_schluessel": {
+          "ja": {
+            "gewertet": 35,
+            "richtig": 33,
+            "falsch": 2,
+            "quote_richtig": 0.9428571428571428,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          },
+          "nein": {
+            "gewertet": 0,
+            "richtig": 0,
+            "falsch": 0,
+            "quote_richtig": null,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          }
+        }
+      },
+      {
+        "kategorie": "umlage-ausschluss",
+        "antwort_typ": "ja-nein",
+        "gewertet": 19,
+        "richtig": 19,
+        "falsch": 0,
+        "quote_richtig": 1,
+        "nicht_auswertbar": {
+          "format-abweichung": 0,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0,
+        "nach_schluessel": {
+          "ja": {
+            "gewertet": 0,
+            "richtig": 0,
+            "falsch": 0,
+            "quote_richtig": null,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          },
+          "nein": {
+            "gewertet": 19,
+            "richtig": 19,
+            "falsch": 0,
+            "quote_richtig": 1,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          }
+        }
+      }
+    ]
+  },
+  "falsche_antworten": [
+    {
+      "frage_id": "umlage-waschmaschine",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Waschmaschine“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "ja",
+      "beleg_gesetz": "BetrKV",
+      "beleg_paragraph": "2 Nr. 16",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+      "rechenweg": {
+        "begriff": "Waschmaschine",
+        "eintrag": "betrkv-2-16",
+        "verdikt": "im-katalog",
+        "treffer": "suchbegriff",
+        "fundstelle": "§ 2 Nr. 16 BetrKV",
+        "kurztitel": "die Kosten des Betriebs der Einrichtungen für die Wäschepflege",
+        "gesetzestext": "16. die Kosten des Betriebs der Einrichtungen für die Wäschepflege,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Überwachung, Pflege und Reinigung der Einrichtungen, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit sowie die Kosten der Wasserversorgung entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind;",
+        "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+      },
+      "roh_antwort": "# Betriebskostenposition „Waschmaschine\"\n\nDie Position „Waschmaschine\" als solche ist **keine eigenständige umlagefähige Betriebskostenart** nach der Betriebskostenverordnung (BetrKV). Die BetrKV kennt in § 2 einen abschließenden Katalog von umlagefähigen Betriebskosten (Nr. 1-17).\n\n## Rechtliche Einordnung\n\n**Nicht umlagefähig sind insbesondere:**\n- Anschaffungskosten für eine Waschmaschine\n- Reparaturkosten der Waschmaschine\n- Instandhaltungs- und Instandsetzungskosten\n- Kosten für den Betrieb einer waschmaschine im Sinne von Wartung, wenn diese der Substanzerhaltung dient\n\nDiese Kosten zählen zu den **Instandhaltungskosten**, die der Vermieter selbst zu tragen hat (§ 535 Abs. 1 BGB) und die nicht auf die Mieter umgelegt werden dürfen.\n\n**Möglicherweise umlagefähig ist:**\n- Falls es sich um eine **Gemeinschaftswaschmaschine** handelt, könnten die **Betriebsstromkosten** für deren Betrieb ggf. unter § 2 Nr. 2 BetrKV (Wasserversorgung) oder als \"sonstige Betriebskosten\" nach § 2 Nr. 17 BetrKV fallen – dies muss jedoch im Mietvertrag ausdrücklich vereinbart sein.\n\n## Fazit\n\nDie pauschale Position „Waschmaschine\" in einer Betriebskostenabrechnung ist in dieser Form **grundsätzlich nicht zulässig** und nicht umlagefähig. Es müsste konkret aufgeschlüsselt werden, welche Kosten (z.B. nur Betriebsstrom für eine Gemeinschaftswaschmaschine) gemeint sind, und dies müsste zusätzlich im Mietvertrag als \"sonstige Betriebskosten\" vereinbart worden sein.\n\nANTWORT: nein"
+    },
+    {
+      "frage_id": "umlage-waeschepflege",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Wäschepflege“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "ja",
+      "beleg_gesetz": "BetrKV",
+      "beleg_paragraph": "2 Nr. 16",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+      "rechenweg": {
+        "begriff": "Wäschepflege",
+        "eintrag": "betrkv-2-16",
+        "verdikt": "im-katalog",
+        "treffer": "wortlaut",
+        "fundstelle": "§ 2 Nr. 16 BetrKV",
+        "kurztitel": "die Kosten des Betriebs der Einrichtungen für die Wäschepflege",
+        "gesetzestext": "16. die Kosten des Betriebs der Einrichtungen für die Wäschepflege,\nhierzu gehören die Kosten des Betriebsstroms, die Kosten der Überwachung, Pflege und Reinigung der Einrichtungen, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit sowie die Kosten der Wasserversorgung entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind;",
+        "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+      },
+      "roh_antwort": "# Betriebskosten „Wäschepflege“\n\nDie Betriebskostenverordnung (BetrKV) enthält in § 2 einen **abschließenden Katalog** von 17 Kostenarten, die als Betriebskosten auf Mieter umgelegt werden dürfen.\n\n## Prüfung der Position\n\nDie Bezeichnung „Wäschepflege“ ist in diesem Katalog **nicht enthalten**. Es gibt zwar in § 2 Nr. 13 BetrKV die Position:\n\n> „die Kosten des Betriebs der Gemeinschafts-Antennenanlage… sowie… **Betrieb der Wasch- und Trockeneinrichtungen**“\n\nDiese Position bezieht sich jedoch ausschließlich auf den **Betrieb technischer Gemeinschaftseinrichtungen** (z. B. Waschmaschinen/Trockner in einem Gemeinschaftswaschraum), also Stromkosten, Wartung, Wasserverbrauch dieser Geräte.\n\n„Wäschepflege“ als eigenständige Position ist davon zu unterscheiden – sie würde typischerweise Dienstleistungen wie:\n- Waschen von Treppenhausläufern\n- Reinigung von Gardinen in Gemeinschaftsräumen\n- oder ähnliche Serviceleistungen\n\numfassen. Solche **Dienstleistungskosten** sind nicht im Katalog des § 2 BetrKV aufgeführt.\n\n## Ergebnis\n\nDa die Betriebskostenverordnung eine **enumerative (abschließende) Aufzählung** darstellt und keine Öffnungsklausel für beliebige \"sonstige\" Kosten ohne ausdrückliche vertragliche Vereinbarung bietet (§ 2 Nr. 17 BetrKV erfordert eine konkrete Benennung im Mietvertrag), ist die Position „Wäschepflege“ **grundsätzlich nicht umlagefähig**, es sei denn:\n\n- sie wurde **ausdrücklich im Mietvertrag** als sonstige Betriebskostenart vereinbart, **oder**\n- sie lässt sich eindeutig unter § 2 Nr. 13 BetrKV (Betrieb von Gemeinschaftswaschanlagen) subsumieren.\n\nOhne diese Voraussetzungen ist die Position unzulässig und sollte vom Mieter beanstandet werden.\n\nANTWORT: nein"
+    },
+    {
+      "frage_id": "umlage-schaedlingsbekaempfung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Schädlingsbekämpfung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "ja",
+      "beleg_gesetz": "BetrKV",
+      "beleg_paragraph": "2 Nr. 9",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+      "rechenweg": {
+        "begriff": "Schädlingsbekämpfung",
+        "eintrag": "betrkv-2-9",
+        "verdikt": "im-katalog",
+        "treffer": "suchbegriff",
+        "fundstelle": "§ 2 Nr. 9 BetrKV",
+        "kurztitel": "die Kosten der Gebäudereinigung und Ungezieferbekämpfung",
+        "gesetzestext": "9. die Kosten der Gebäudereinigung und Ungezieferbekämpfung,\nzu den Kosten der Gebäudereinigung gehören die Kosten für die Säuberung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen, Fahrkorb des Aufzugs;",
+        "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+      },
+      "roh_antwort": "# Schädlingsbekämpfung in der Betriebskostenabrechnung\n\nDie Betriebskostenverordnung (BetrKV) enthält in § 2 einen **abschließenden Katalog** von 17 Kostenarten, die als Betriebskosten umgelegt werden dürfen (Nr. 1–16 sind konkret benannt, Nr. 17 ist ein Auffangtatbestand für „sonstige Betriebskosten\").\n\n**Wichtig:** Schädlingsbekämpfung ist **nicht ausdrücklich** als eigene Position in den Nrn. 1–16 aufgeführt (anders als z. B. Gartenpflege, Hauswart oder Müllbeseitigung).\n\n## Voraussetzungen für die Umlagefähigkeit\n\nDamit Kosten für Schädlingsbekämpfung dennoch auf den Mieter umgelegt werden können, müssen zwei Bedingungen erfüllt sein:\n\n1. **Ausdrückliche vertragliche Vereinbarung**: Die Position muss im Mietvertrag konkret als „sonstige Betriebskosten\" (§ 2 Nr. 17 BetrKV) benannt sein – ein pauschaler Verweis auf die BetrKV reicht laut Rechtsprechung nicht aus.\n\n2. **Regelmäßigkeit**: Es muss sich um **vorbeugende, wiederkehrende Maßnahmen** handeln (z. B. regelmäßige Kammerjäger-Kontrollen). Kosten für die **einmalige Beseitigung eines akuten Schädlingsbefalls** (z. B. Rattenbekämpfung nach konkretem Befall) gelten nicht als Betriebskosten, sondern als Erhaltungsaufwand des Vermieters und sind **nicht umlagefähig**.\n\n## Fazit\n\nOhne ausdrückliche vertragliche Regelung ist die Position „Schädlingsbekämpfung\" **nicht automatisch** umlagefähig. Sie zählt nicht zu den in der BetrKV konkret benannten Betriebskostenarten, sondern kann allenfalls über die Öffnungsklausel für „sonstige Betriebskosten\" umgelegt werden – und auch dann nur unter den genannten engen Voraussetzungen.\n\nANTWORT: nein"
+    },
+    {
+      "frage_id": "umlage-glasfaser",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "frage": "In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Glasfaser“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?",
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "ja",
+      "beleg_gesetz": "BetrKV",
+      "beleg_paragraph": "2 Nr. 15",
+      "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html",
+      "rechenweg": {
+        "begriff": "Glasfaser",
+        "eintrag": "betrkv-2-15",
+        "verdikt": "im-katalog",
+        "treffer": "wortlaut",
+        "fundstelle": "§ 2 Nr. 15 BetrKV",
+        "kurztitel": "die Kosten des Betriebs der Gemeinschafts-Antennenanlage",
+        "gesetzestext": "15. die Kosten\na) des Betriebs der Gemeinschafts-Antennenanlage,\nhierzu gehören die Kosten des Betriebsstroms und die Kosten der regelmäßigen Prüfung ihrer Betriebsbereitschaft einschließlich ihrer Einstellung durch eine Fachkraft,\nbis zum 30. Juni 2024 außerdem das Nutzungsentgelt für eine nicht zu dem Gebäude gehörende Antennenanlage sowie die Gebühren, die nach dem Urheberrechtsgesetz für die Kabelweitersendung entstehen,\noder\nb) des Betriebs der mit einem Breitbandnetz verbundenen privaten Verteilanlage,\nhierzu gehören die Kosten des Betriebsstroms,\nbis zum 30. Juni 2024 außerdem die weiteren Kosten entsprechend Buchstabe a, sowie die laufenden monatlichen Grundgebühren für Breitbandanschlüsse,\noder\nc) des Betriebs einer gebäudeinternen Verteilanlage, die vollständig mittels Glasfaser mit einem öffentlichen Netz mit sehr hoher Kapazität im Sinne des § 3 Nummer 33 des Telekommunikationsgesetzes verbunden ist, wenn der Mieter seinen Anbieter von öffentlich zugänglichen Telekommunikationsdiensten über seinen Anschluss frei wählen kann,\nhierzu gehören die Kosten des Betriebsstroms sowie ein Bereitstellungsentgelt gemäß § 72 Absatz 1 des Telekommunikationsgesetzes;",
+        "beleg_link": "https://www.gesetze-im-internet.de/betrkv/__2.html"
+      },
+      "roh_antwort": "# Glasfaser in der Betriebskostenabrechnung\n\nDie Betriebskostenverordnung (BetrKV) enthält in § 2 einen abschließenden Katalog von 17 umlagefähigen Kostenarten. „Glasfaser\" ist dort **nicht** als eigene Position aufgeführt.\n\n## Rechtslage seit Juli 2024\n\nMit dem **Telekommunikationsmodernisierungsgesetz (TKMoG)** wurde das sogenannte „Nebenkostenprivileg\" für TV-Kabelanschlüsse zum 1. Juli 2024 abgeschafft. Die bisherige Praxis, Kosten für Kabelanschluss oder Glasfaser über § 2 Nr. 15 BetrKV (Antennenanlage/Breitbandnetz) umzulegen, ist damit entfallen.\n\nStattdessen gilt nun:\n\n- Kosten für die **Bereitstellung eines Glasfaseranschlusses** können Vermieter über eine **separate monatliche Umlage** nach **§ 72 TKG** (Telekommunikationsgesetz) an Mieter weitergeben.\n- Diese Umlage ist **degressiv gestaffelt** und auf max. 60 Euro/Jahr begrenzt (mit jährlicher Reduzierung über 5 Jahre).\n- Diese Umlage erfolgt **außerhalb der klassischen Betriebskostenabrechnung nach BetrKV** – sie ist eine eigenständige telekommunikationsrechtliche Umlage, kein Bestandteil des BetrKV-Katalogs.\n\n## Fazit\n\nTaucht „Glasfaser\" als Position in einer **Betriebskostenabrechnung nach BetrKV** auf, handelt es sich **nicht** um eine nach der BetrKV umlagefähige Betriebskostenart. Eine Umlage der Glasfaserkosten ist nur über den gesonderten Mechanismus nach § 72 TKG zulässig, nicht über die BetrKV.\n\nANTWORT: nein"
+    }
+  ],
+  "nicht_auswertbar": {
+    "format-abweichung": [],
+    "keine-schlusszeile": [],
+    "falsche-position": []
+  },
+  "api_fehler": [],
+  "abgelehnt": [],
+  "abgeschnitten": [],
+  "einzelwertung": [
+    {
+      "frage_id": "umlage-feuerversicherung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-wasserversorgung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-trinkwasser",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-sanierung",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-wascheinrichtung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-versicherung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-papiertonne",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-lastenaufzug",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-gruenpflege",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-verwaltungskosten",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-schornsteinfeger",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-beleuchtung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-hausreinigung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-waschmaschine",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "falsch",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-gartenpflege",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-malerarbeiten",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-lift",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-kehrgebuehren",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-kaltwasser",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-gebaeudeversicherung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-instandsetzung",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-warmwasserversorgung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-kanalbenutzungsgebuehren",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-verbundene-heizungs-und-warmwasserversorgungsanlage",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-warmwasser",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-aufzugswartung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-verwalterhonorar",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-muellabfuhr",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-breitbandanschluss",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-heizoel",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-waeschepflege",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "falsch",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-spielplatz",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-reparatur",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-aussenanlagen",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-garten",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-muellgebuehren",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-ungeziefer",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-gruenanlagen",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-instandhaltung",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-gemeinschaftsantenne",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-wasser",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-kabelfernsehen",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-heizkosten",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-brennstoff",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-verwalterverguetung",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-frischwasser",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-schornsteinreinigung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-aufzugskosten",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-abwasser",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-reinigung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-instandhaltungsruecklage",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-muellentsorgung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-fernwaerme",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-elementarschaeden",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-treppenhausbeleuchtung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-verwaltung",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-wasserzaehler",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-trockner",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-schaedlingsbekaempfung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "falsch",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-grundsteuer",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-abfallgebuehren",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-allgemeinstrom",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-erneuerung",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-ungezieferbekaempfung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-kabelanschluss",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-sachversicherung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-haftpflichtversicherung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-warmwasserbereitung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-reparaturen",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-antenne",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-hausstrom",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-waermekosten",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-glasfaser",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "falsch",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-restmuell",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-aufsicht",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-kanalgebuehren",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-aussenbeleuchtung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-oeffentliche-lasten",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-aufzug",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-biotonne",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-geschaeftsfuehrung",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-strom-fuer-aussenbeleuchtung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-antennenanlage",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-kaminkehrer",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-laufende-oeffentliche-lasten",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-muell",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-modernisierung",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-wasseruhr",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-heizungsanlage",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-schmutzwasser",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-rasenpflege",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-heizung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-verwaltergebuehr",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-verbundene-anlage",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-personenaufzug",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-strassenreinigung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-abfallentsorgung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-hausverwaltung",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-glasversicherung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-treppenhausreinigung",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-breitbandkabel",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-waermelieferung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-erdgas",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-erhaltungsruecklage",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-regenwasser",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-muellbeseitigung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-niederschlagswasser",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-entwaesserung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-grundabgaben",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-schoenheitsreparaturen",
+      "kategorie": "umlage-ausschluss",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "umlage-waschkueche",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-gebaeudereinigung",
+      "kategorie": "umlage-katalog-wortlaut",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "umlage-fahrstuhl",
+      "kategorie": "umlage-katalog-suchbegriff",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    }
+  ]
+}

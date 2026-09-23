@@ -2,4 +2,9 @@ node_modules/
 .netlify/
 import-log.txt
 benchmark/PLAN.md
-benchmark/ergebnisse/
+
+# benchmark/ergebnisse/ ist bewusst NICHT ignoriert (23.09.2026).
+# Die Rohantworten sind der Beleg der Benchmark-Seite - ohne sie traegt
+# mietrecht-benchmark.html ihren eigenen Anspruch nicht. Auch der verworfene
+# Lauf liegt mit drin, gekennzeichnet: Ihn wegzulassen waere genau die stille
+# Auswahl, die dieser Benchmark vermeiden soll.

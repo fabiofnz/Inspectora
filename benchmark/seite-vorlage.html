@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mietrecht-Benchmark: claude-sonnet-5 auf 546 Fristen- und 76 Umlagefragen</title>
+  <meta name="description" content="Neun Läufe in drei Serien, ein Modell, 2.094 Antworten. Gemessen an Fragen, die § 556 BGB und § 2 BetrKV eindeutig beantworten. Der Antwortschlüssel ist gerechnet, alle Rohantworten stehen zum Herunterladen.">
+  <link rel="canonical" href="https://inspectora.tech/mietrecht-benchmark">
+
+  <!-- Open Graph / Link-Vorschau -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Inspectora">
+  <meta property="og:title" content="Mietrecht-Benchmark: claude-sonnet-5 auf 546 Fristen- und 76 Umlagefragen">
+  <meta property="og:description" content="Neun Läufe in drei Serien, ein Modell, 2.094 Antworten. Gemessen an Fragen, die § 556 BGB und § 2 BetrKV eindeutig beantworten. Der Antwortschlüssel ist gerechnet, alle Rohantworten stehen zum Herunterladen.">
+  <meta property="og:url" content="https://inspectora.tech/mietrecht-benchmark">
+  <meta property="og:image" content="https://inspectora.tech/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="assistant-body">
+  <header class="assistant-header">
+    <a class="assistant-brand" href="index.html" aria-label="Inspectora Startseite">
+      <span class="brand-mark">I</span>
+      <span><strong>Inspectora</strong><small>Mietrecht-Benchmark</small></span>
+    </a>
+    <a class="button secondary small" href="index.html">Zurück zur Startseite</a>
+  </header>
+
+  <main class="assistant-main">
+
+    <div class="assistant-intro">
+      <h1>Mietrecht-Benchmark: <span data-pruef="laeufe.gesamt">9</span> Läufe, ein Modell, <span data-pruef="antworten.gesamt">2.094</span> Antworten</h1>
+      <p class="bk-begriff">
+        Gemessen wurde <strong>claude-sonnet-5</strong> über die API an zwei Fragetypen, die das
+        Gesetz eindeutig beantwortet: Fristen nach § 556 Abs. 3 BGB mit den §§ 187, 188 und 193 BGB,
+        und Umlagefähigkeit nach § 2 BetrKV. Der Antwortschlüssel ist nicht von Hand geschrieben,
+        sondern gerechnet – von derselben Maschine, die auch das
+        <a href="nebenkostenabrechnung-frist-pruefen.html">Werkzeug zur Nebenkostenabrechnung</a>
+        antreibt, und vor dem ersten Lauf an 20 Fällen gegen den Gesetzestext geprüft.
+        Gemessen am 15., 16. und 17.09.2026.
+      </p>
+      <p class="assistant-notice">
+        Das hier ist eine Messung, keine Rechtsberatung – und kein Modellvergleich: geprüft wurde
+        ein einziges Modell über die API, nicht die Chat-App, die ein Nutzer vor sich hat. Alle
+        Rohantworten, der Fragensatz mit Schlüssel und die Auswertungen stehen unten zum
+        Herunterladen. Wer nachrechnen will, braucht dafür nichts von uns zu glauben.
+      </p>
+    </div>
+
+    <!-- ===================================================================
+         1 · Die zwei Befunde. Die Quoten stehen absichtlich weiter unten:
+         Sie ordnen die Befunde ein, sie sind nicht die Nachricht.
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="befunde">Die zwei Befunde</h2>
+
+    <section class="bk-karte">
+      <h2>1 · Welche Fragen falsch beantwortet werden, ist keine feste Eigenschaft des Modells</h2>
+      <p>Die Quote wiederholt sich von Lauf zu Lauf. Welche Frage kippt, nicht.</p>
+      <p>
+        Dabei sind zwei Verhaltensweisen zu sehen, nicht eine: Beim <strong>Rechnen</strong> streuen
+        die Fehler über den ganzen Fragensatz, beim <strong>Nachschlagen</strong> im Katalog
+        verdichten sie sich auf eine Handvoll verwandter Begriffe. Für die Auswertung heißt das:
+        Ein einzelner Lauf sagt ungefähr, <em>wie oft</em> ein Modell falsch liegt – nicht,
+        <em>wo</em>.
+      </p>
+      <p class="bk-grundlage">
+        <span data-pruef="fristen.falsch.antworten">6</span> Fehler in drei Fristenläufen –
+        auf <span data-pruef="fristen.falsch.fragen">6</span> verschiedenen Fragen. Keine davon zweimal.
+      </p>
+      <p><a class="bk-quelle" href="#befund-1">Zu den Zahlen und den Antworten im Wortlaut →</a></p>
+    </section>
+
+    <section class="bk-karte">
+      <h2>2 · Richtige Antworten stehen auf falschem Beleg</h2>
+      <p>Gewertet wird die Schlusszeile. Die Begründung darüber sieht niemand.</p>
+      <p>
+        Bei den schwierigen Begriffen steht dort fast nie die Nummer, auf die es ankommt. Eine gute
+        Quote enthält damit Antworten, deren Grundlage dem Gesetz widerspricht. Das ist keine
+        Randbeobachtung – es begrenzt, was eine Quote über ein Modell überhaupt aussagen kann.
+      </p>
+      <p class="bk-grundlage">
+        In <span data-pruef="umlage-neu.zitate.ohne-schluesselnummer">8</span> von
+        <span data-pruef="umlage-neu.gruppe.antworten">12</span> Antworten zur Begriffsgruppe
+        kommt die Schlüsselnummer in keiner Form vor.
+      </p>
+      <p><a class="bk-quelle" href="#befund-2">Zu den Belegen und den Antworten im Wortlaut →</a></p>
+    </section>
+
+    <!-- ===================================================================
+         2 · Fragensatz und Schluessel. Die ausgeschlossenen Fragen stehen
+         hier - nicht im Kleingedruckten, sondern dort, wo der Fragensatz
+         beschrieben wird.
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="fragen">Was gefragt wurde – und woher die Antwort kommt</h2>
+
+    <section class="bk-karte">
+      <h2>Der Fragensatz</h2>
+      <p>Zwei Fragendateien, beide maschinell erzeugt.</p>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Fragensatz</th><th>Fragen</th><th>Antworttyp</th><th>Grundlage</th><th>SHA-256 (Anfang)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fristen</td>
+              <td><span data-pruef="fristen.fragen">546</span></td>
+              <td>182 Datum · 364 Ja/Nein</td>
+              <td>§ 556 Abs. 3 BGB, §§ 187, 188, 193 BGB</td>
+              <td><span data-pruef="fristen.fragendatei.sha8">6b6fea44</span>…</td>
+            </tr>
+            <tr>
+              <td>Umlage</td>
+              <td><span data-pruef="umlage-neu.fragen">76</span></td>
+              <td>76 Ja/Nein</td>
+              <td>§ 2 BetrKV, § 1 Abs. 2 BetrKV</td>
+              <td><span data-pruef="umlage-neu.fragendatei.sha8">b309d7d2</span>…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Jede Frage trägt ihren Schlüssel, ihre Fundstelle, den Gesetzestext und den Rechenweg bei
+        sich. Die Reihenfolge der Fragen hängt nur an den Frage-IDs, nicht am Datum und nicht am
+        Zufall: gleiche Datei, gleiche Reihenfolge, in jedem Lauf.
+      </p>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Der Schlüssel ist gerechnet, nicht geschrieben</h2>
+      <p>Deshalb lässt er sich nachrechnen, statt geglaubt werden zu müssen.</p>
+      <p>
+        Beide Fragendateien entstehen aus derselben Rechenmaschine, die im Werkzeug zur
+        Nebenkostenabrechnung läuft. Für Fristen liefert sie das Fristende nach §§ 187, 188 BGB
+        und, getrennt davon, die Verschiebung nach § 193 BGB. Für Umlagefähigkeit ordnet sie die
+        Position einer Nummer des § 2 BetrKV oder einem Ausschluss in § 1 Abs. 2 BetrKV zu und gibt
+        die Fundstelle mit aus. Fehlt der Paragraph, sein Text oder der Link zur amtlichen Quelle,
+        rechnet sie nicht – aus einem ungeprüften Beleg kann so keine Frage entstehen.
+      </p>
+      <p>
+        Bevor der erste Lauf startete, wurden <strong>20 Fälle von Hand gegen den Gesetzestext
+        geprüft</strong>: 10 Fristen, davon 4 mit Verschiebung nach § 193 BGB, und 10 Begriffe,
+        davon 3 Ausschlüsse. Nicht die Maschine gegen sich selbst, sondern gegen das Gesetz.
+      </p>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Was absichtlich nicht gefragt wurde</h2>
+      <p>Eine Frage kommt nur in den Satz, wenn das Gesetz sie ohne Zusatzannahme beantwortet.</p>
+
+      <ol class="bk-schritte">
+        <li class="bk-schritt">
+          <strong>37 Umlagefragen gestrichen</strong>
+          <p>Weil der Wortlaut die unbedingte Antwort nicht trägt: 8 Begriffe aus § 2 Nr. 15
+          (Bedingung, Befristung zum 30.06.2024, nicht anwendbar auf Anlagen ab 01.12.2021),
+          27 Begriffe, die einen Gegenstand statt einer Kostenart benennen – umlagefähig ist der
+          <em>Betrieb</em>, nicht die Anschaffung –, und 7 Ausschlüsse, deren Beleg nur per
+          Analogie trägt. Überschneidungen einfach gezählt.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Die drei bekannten Lücken</strong>
+          <p>Winterdienst, Rauchmelder, Dachrinnenreinigung. Die BetrKV entscheidet sie nicht.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Fristfälle mit Start am 28.02. vor einem Schaltjahr</strong>
+          <p>„Ablauf des zwölften Monats“ lässt dort zwei Lesarten zu, die sich um einen Tag
+          unterscheiden. Das ist eine Rechtsfrage, keine Rechenfrage – der Benchmark entscheidet
+          sie nicht.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Fälle, in denen das Ereignis zwischen die beiden Fristenden fällt</strong>
+          <p>Ob § 193 BGB auf die Fristen des § 556 Abs. 3 BGB überhaupt anzuwenden ist, ist
+          umstritten. Deshalb: Fallen Basisdatum und verschobenes Datum zusammen, nennt die Frage
+          keine Norm; gehen sie auseinander, nennt sie § 193 BGB ausdrücklich – dann ist die
+          Antwort reine Rechnung. Dazwischen wird nicht gefragt.</p>
+        </li>
+      </ol>
+
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Das sind die leichten Fragen.</strong> Dieser Benchmark prüft ausschließlich
+        Fragen, die das Gesetz eindeutig beantwortet – nichts, wofür man Rechtsprechung, eine
+        Abwägung oder den Einzelfall braucht. Wenn ein Modell hier scheitert, ist alles
+        Schwierigere schlechter.
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         3 · Befund 1
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="befund-1">Befund 1: Rechnen streut, Nachschlagen verdichtet</h2>
+
+    <section class="bk-karte">
+      <h2>Fristen: <span data-pruef="fristen.falsch.antworten">6</span> Fehler, <span data-pruef="fristen.falsch.fragen">6</span> verschiedene Fragen, keine zweimal</h2>
+      <p>Drei Läufe, dieselben Fragen, dieselbe Reihenfolge, wortgleiche Anfragen. Nur die Zeit ist verschieden.</p>
+      <p>
+        Jede Frage, die in einem Lauf falsch beantwortet wurde, war in den beiden anderen richtig.
+      </p>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Frage</th><th>Schlüssel</th><th>Lauf 1</th><th>Lauf 2</th><th>Lauf 3</th></tr>
+          </thead>
+          <tbody>
+@@FRISTEN_FEHLER_ZEILEN@@
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Position = Stelle in der Laufreihenfolge, in allen drei Läufen dieselbe. Insgesamt wurden
+        <span data-pruef="fristen.unterschiedlich">29</span> der
+        <span data-pruef="fristen.fragen">546</span> Fragen über die drei Läufe hinweg
+        unterschiedlich beantwortet: <span data-pruef="fristen.falsch.fragen">6</span> mit einem
+        echten Fehler, <span data-pruef="fristen.nur-format">23</span> nur in der Form.
+      </p>
+
+      <div class="hg-hint-box">
+        <strong>Eine zweite Unruhe, im Format statt im Inhalt.</strong> Zusätzlich wichen
+        <span data-pruef="fristen.na.l1">5</span> → <span data-pruef="fristen.na.l2">9</span> →
+        <span data-pruef="fristen.na.l3">11</span> Antworten von der verlangten Schlusszeile ab,
+        meist <code>**ANTWORT: …**</code> statt <code>ANTWORT: …</code>. Inhaltlich waren alle
+        richtig, gewertet wurden sie trotzdem nicht. Drei Datenpunkte an zwei Tagen: steigend, aber
+        von Rauschen nicht zu unterscheiden. Das ist der Grund, warum neben jeder Quote steht, wie
+        viele Antworten nicht auswertbar waren – ein Modell, das anders formatiert, verliert einen
+        anderen Anteil seiner Antworten.
+      </div>
+    </section>
+
+@@FRISTEN_BEISPIELE@@
+
+    <section class="bk-karte">
+      <h2>Umlage: die Fehler fallen auf vier Begriffe – und die waren vorher benannt</h2>
+      <p>Beim Nachschlagen im Katalog verhält sich dasselbe Modell anders.</p>
+      <p>
+        Die Fehler streuen nicht, sie sitzen auf einem Feld verwandter Begriffe: Ungeziefer,
+        Schädlingsbekämpfung, Ungezieferbekämpfung (alle § 2 Nr. 9 BetrKV) und Wäschepflege
+        (§ 2 Nr. 16 BetrKV). Diese vier wurden <strong>vor</strong> dieser Serie benannt – aus der
+        vorangegangenen Serie, die auf einer anderen Fragendatei und in anderer Reihenfolge lief.
+        In der neuen Serie fällt <strong>jeder</strong> Fehler auf drei dieser vier Begriffe; die
+        übrigen <span data-pruef="umlage-neu.rest.antworten">216</span> Antworten sind fehlerfrei.
+      </p>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Begriff</th><th>Fundstelle</th><th>Pos.</th><th>Lauf 1</th><th>Lauf 2</th><th>Lauf 3</th></tr>
+          </thead>
+          <tbody>
+@@UMLAGE_GRUPPE_ZEILEN@@
+          </tbody>
+        </table>
+      </div>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Fragengruppe</th><th>Antworten</th><th>richtig</th><th>falsch</th><th>nicht auswertbar</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Begriffsgruppe (4 Begriffe)</td>
+              <td><span data-pruef="umlage-neu.gruppe.antworten">12</span></td>
+              <td><span data-pruef="umlage-neu.gruppe.richtig">7</span></td>
+              <td><strong><span data-pruef="umlage-neu.gruppe.falsch">4</span></strong></td>
+              <td><span data-pruef="umlage-neu.gruppe.na">1</span></td>
+            </tr>
+            <tr>
+              <td>Übrige § 2 Nr. 9: Reinigungsbegriffe</td>
+              <td><span data-pruef="umlage-neu.reinigung.antworten">12</span></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.reinigung.richtig">12</span></td>
+              <td>0</td><td>0</td>
+            </tr>
+            <tr>
+              <td>Übrige Fragen mit Schlüssel „ja“</td>
+              <td><span data-pruef="umlage-neu.restja.antworten">168</span></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.restja.richtig">168</span></td>
+              <td>0</td><td>0</td>
+            </tr>
+            <tr>
+              <td>Ausschlüsse (Schlüssel „nein“)</td>
+              <td><span data-pruef="umlage-neu.ausschluss.antworten">36</span></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.ausschluss.richtig">36</span></td>
+              <td>0</td><td>0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Die Gruppe ist nur deshalb als Gruppe erkennbar, weil ihre Nachbarschaft stabil ist –
+        die übrigen Begriffe derselben Nummer 9 sitzen in jedem Lauf richtig.
+      </p>
+
+      <div class="hg-hint-box">
+        <strong>Größenordnung, kein Beweis.</strong> Wären die Fehler gleichmäßig über die
+        <span data-pruef="umlage-neu.fragen">76</span> Fragen verteilt, läge die Wahrscheinlichkeit,
+        dass drei verschiedene falsche Fragen alle in einer vorher festgelegten Vierergruppe landen,
+        bei C(4,3)/C(76,3) = 4/70.300 ≈ <strong>0,006 %</strong>. Das ist gegen ein einfaches
+        Gleichverteilungsmodell gerechnet und sagt nur etwas über die Größenordnung – es ist kein
+        statistischer Nachweis.
+      </div>
+
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Die Vorhersage ist für Außenstehende nicht beweisbar.</strong> Dass die Gruppe vor
+        der Serie benannt wurde, ist bei uns dokumentiert – die Notiz liegt aber nicht im
+        Repository, und Commits belegen die Reihenfolge von Code und Läufen, nicht das Datum einer
+        Notiz. Nachträglich einchecken würde einen Zeitstempel erzeugen, der nichts beweist und wie
+        ein Beleg aussieht; das unterbleibt. Ab jetzt wird jede Vorhersage vor dem Lauf eingecheckt.
+      </div>
+
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Für genau diese vier Fragen ist der Reihenfolgetest schwach.</strong> Zwischen alter
+        und neuer Serie wechselten 62 der 76 Fragen ihren Platz – diese vier aber nur um 1 bis 4
+        Positionen. Jede Frage ist eine eigene Anfrage ohne Vorgeschichte, „Reihenfolge“ wirkt also
+        nur über Zeit und Nachbaranfragen. Ein Positionseffekt ist für diese vier nicht
+        ausgeschlossen. Ein starker Test wäre eine Fragendatei mit geänderten IDs; er ist notiert,
+        aber nicht gelaufen.
+      </div>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Die Replikation: dieselbe Gruppe, andere Datei, andere Reihenfolge</h2>
+      <p>Der Befund hat sich unter einer anderen Reihenfolge und an einem anderen Tag wiederholt.</p>
+      <p>
+        Vor der veröffentlichten Serie liefen drei weitere Läufe auf einer früheren Fassung der
+        Fragendatei (SHA-256 <span data-pruef="umlage-alt.fragendatei.sha8">74570428</span>…).
+        Schlüssel und Fragetexte sind identisch, die Kategorien und die Laufreihenfolge nicht –
+        deshalb werden die beiden Serien <strong>nicht zusammengelegt</strong>, sondern
+        nebeneinander gestellt.
+      </p>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Begriff</th><th>Alte Serie L1/L2/L3</th><th>Neue Serie L1/L2/L3</th><th>Position alt → neu</th></tr>
+          </thead>
+          <tbody>
+@@UMLAGE_VERGLEICH_ZEILEN@@
+          </tbody>
+        </table>
+      </div>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Fragengruppe</th><th>Alte Serie</th><th>Neue Serie</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Begriffsgruppe (12 Antworten)</td>
+              <td><span data-pruef="umlage-alt.gruppe.richtig">6</span> richtig · <strong><span data-pruef="umlage-alt.gruppe.falsch">6</span> falsch</strong></td>
+              <td><span data-pruef="umlage-neu.gruppe.richtig">7</span> richtig · <strong><span data-pruef="umlage-neu.gruppe.falsch">4</span> falsch</strong> · <span data-pruef="umlage-neu.gruppe.na">1</span> n. a.</td>
+            </tr>
+            <tr>
+              <td>§ 2 Nr. 9 Reinigungsbegriffe (12)</td>
+              <td class="hg-check-ok"><span data-pruef="umlage-alt.reinigung.richtig">12</span> richtig</td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.reinigung.richtig">12</span> richtig</td>
+            </tr>
+            <tr>
+              <td>Übrige „ja“-Fragen (168)</td>
+              <td class="hg-check-ok"><span data-pruef="umlage-alt.restja.richtig">168</span> richtig</td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.restja.richtig">168</span> richtig</td>
+            </tr>
+            <tr>
+              <td>Ausschlüsse (36)</td>
+              <td class="hg-check-ok"><span data-pruef="umlage-alt.ausschluss.richtig">36</span> richtig</td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.ausschluss.richtig">36</span> richtig</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Welcher Begriff der Gruppe kippt, wechselt weiterhin – Ungezieferbekämpfung war in der
+        alten Serie einmal falsch, in der neuen dreimal richtig. Stabil ist die Gruppe, nicht die
+        einzelne Frage. Auch das gehört zu Befund 1.
+      </p>
+    </section>
+
+@@UMLAGE_BEISPIELE@@
+
+    <!-- ===================================================================
+         4 · Befund 2
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="befund-2">Befund 2: Richtig geantwortet, falsch begründet</h2>
+
+    <section class="bk-karte">
+      <h2>Die Quote verbessert sich, das Nachschlagen nicht</h2>
+      <p>Gewertet wird die letzte Zeile der Antwort, mehr nicht.</p>
+      <p>
+        Das ist Absicht: Sobald eine Bewertung auslegen muss, wird sie angreifbar, und ein
+        Sprachmodell als Schiedsrichter kommt hier nicht in Frage. Der Preis dafür steht in den
+        <span data-pruef="umlage-neu.gruppe.antworten">12</span> Antworten der Begriffsgruppe. Ausgezählt wurde maschinell, welche Nummern des
+        § 2 BetrKV in jeder Antwort vorkommen:
+      </p>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>In den 12 Antworten der Begriffsgruppe</th><th>Anzahl</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Schlüsselnummer als „§ 2 Nr. n“ genannt</td>
+              <td><span data-pruef="umlage-neu.zitate.paragraphenform">3</span></td>
+            </tr>
+            <tr>
+              <td>Schlüsselnummer nur als Listenpunkt („16.“ in einer Aufzählung)</td>
+              <td><span data-pruef="umlage-neu.zitate.listenform">1</span></td>
+            </tr>
+            <tr>
+              <td><strong>Schlüsselnummer kommt in keiner Form vor</strong></td>
+              <td><strong><span data-pruef="umlage-neu.zitate.ohne-schluesselnummer">8</span></strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ol class="bk-schritte">
+        <li class="bk-schritt">
+          <strong>Ungezieferbekämpfung: dreimal richtig, dreimal aus falschem Grund</strong>
+          <p>Das Wort steht wörtlich in § 2 Nr. 9 BetrKV („die Kosten der Gebäudereinigung und
+          Ungezieferbekämpfung“). Keine der drei Antworten nennt Nr. 9. Alle drei sagen, der Posten
+          sei „nicht ausdrücklich“ im Katalog, verweisen auf Nr. 17 – „sonstige Betriebskosten“,
+          nur mit Mietvertragsvereinbarung – und kippen in der Schlusszeile trotzdem auf „ja“. In
+          der älteren Serie führte dieselbe Argumentation einmal zu „nein“.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Wäschepflege, Lauf 1: richtiger Wortlaut, falsche Nummer</strong>
+          <p>Die Antwort zitiert den Text von Nr. 16 und nennt ihn „§ 2 Nr. 13 BetrKV“.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Wäschepflege, Lauf 3: die einzige saubere Fundstelle</strong>
+          <p>Die erste Antwort in beiden Serien, die für Nr. 16 die richtige Fundstelle nennt.</p>
+        </li>
+      </ol>
+
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Was diese Auszählung nicht kann.</strong> „Genannt“ ist nicht „gestützt“: Eine
+        Antwort kann eine Nummer erwähnen und sie verwerfen. Umgekehrt zählt die Maschine eine
+        Nummer mit, die nur in einer vollständigen Aufzählung des Katalogs auftaucht – bei
+        Wäschepflege, Lauf 2, ist genau das der Fall, und dort führt das Erkennen von Nr. 16 sogar
+        zu einer Ablehnung. Diese Zahl steht deshalb <em>neben</em> der Quote und nie darin. Eine
+        belastbare Zitatprüfung müsste gelesen werden, nicht nur gezählt – das ist nicht gebaut.
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         5 · Quoten. Kontext, nicht Schlagzeile.
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="quoten">Die Quoten</h2>
+
+    <section class="bk-karte">
+      <h2>Wie diese Zahlen zu lesen sind</h2>
+      <p>Auf dieser Seite steht keine Quote allein.</p>
+      <div class="hg-hint-box">
+        <strong>Drei Läufe sind drei Ziehungen.</strong> Jede Quote wird als Spanne über drei Läufe
+        angegeben, mit den Einzelwerten und ihren Nennern daneben. Die Spanne ist der beobachtete
+        Bereich, kein Konfidenzintervall. Die Nenner unterscheiden sich zwischen den Läufen, weil
+        nicht auswertbare Antworten herausfallen – deshalb steht deren Zahl immer dabei. Quote =
+        richtig / (richtig + falsch); nicht auswertbare, abgeschnittene und abgelehnte Antworten
+        sowie API-Fehler fließen nicht ein.
+      </div>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Fristen · <span data-pruef="fristen.fragen">546</span> Fragen je Lauf</h2>
+      <p>Nach Antworttyp und Schlüsselwert getrennt – nie zu einer Zahl vermischt.</p>
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Antworttyp</th><th>Spanne</th><th>Lauf 1</th><th>Lauf 2</th><th>Lauf 3</th><th>n. a. je Lauf</th></tr>
+          </thead>
+          <tbody>
+@@FRISTEN_TYP_ZEILEN@@
+          </tbody>
+        </table>
+      </div>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Kategorie</th><th>Spanne</th><th>Lauf 1</th><th>Lauf 2</th><th>Lauf 3</th><th>n. a. je Lauf</th></tr>
+          </thead>
+          <tbody>
+@@FRISTEN_KAT_ZEILEN@@
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Über alle gewerteten Antworten: <span data-pruef="fristen.falschquote.spanne">0,19–0,56 %</span>
+        falsch. Nicht auswertbar ausschließlich wegen Formatabweichung
+        (<span data-pruef="fristen.na.l1">5</span> / <span data-pruef="fristen.na.l2">9</span> /
+        <span data-pruef="fristen.na.l3">11</span>); keine fehlende Schlusszeile, keine falsche
+        Position, keine abgeschnittene Antwort, kein API-Fehler, keine Ablehnung. Die Kategorie
+        <strong>frist-193-verschiebung</strong> ist die interessante: dort gehen eine
+        Rechenmaschine und ein Sprachmodell am weitesten auseinander.
+      </p>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Umlage · <span data-pruef="umlage-neu.fragen">76</span> Fragen je Lauf</h2>
+      <p>Die veröffentlichte Serie.</p>
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Auswertung</th><th>Spanne</th><th>Lauf 1</th><th>Lauf 2</th><th>Lauf 3</th><th>n. a. je Lauf</th></tr>
+          </thead>
+          <tbody>
+@@UMLAGE_NEU_ZEILEN@@
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Über alle gewerteten Antworten: <span data-pruef="umlage-neu.falschquote.spanne">1,32–2,63 %</span> falsch.
+      </p>
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Die „nein“-Quote steht auf 12 Fragen.</strong> 100 % über <span data-pruef="umlage-neu.ausschluss.fragen">12</span> Ausschlüsse ist
+        eine dünne Zahl, und sie soll auch dünn aussehen. Nach dem Streichen der 37 Fragen mit
+        nicht tragfähigem Schlüssel blieben nur diese <span data-pruef="umlage-neu.ausschluss.fragen">12</span> übrig.
+      </div>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Umlage · die ältere Serie</h2>
+      <p>Getrennt ausgewiesen, mit nichts zusammengelegt.</p>
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Auswertung</th><th>Spanne</th><th>Lauf 1</th><th>Lauf 2</th><th>Lauf 3</th><th>n. a. je Lauf</th></tr>
+          </thead>
+          <tbody>
+@@UMLAGE_ALT_ZEILEN@@
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Über alle gewerteten Antworten: <span data-pruef="umlage-alt.falschquote.spanne">1,32–3,95 %</span>
+        falsch. Die Kategorienzeilen der beiden Serien sind <strong>nicht</strong> vergleichbar:
+        Eine Korrektur an der Wortlaut-Erkennung hat 6 Begriffe von „Wortlaut“ nach „Suchbegriff“
+        verschoben (25/39/12 → 19/45/12). Schlüssel, Fragetexte und Belege blieben gleich.
+      </p>
+    </section>
+
+    <!-- ===================================================================
+         6 · Grenzen
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="grenzen">Was diese Messung nicht zeigt</h2>
+
+    <section class="bk-karte">
+      <h2>Die Grenzen, gesammelt</h2>
+      <p>Jede steht oben schon neben der Aussage, die sie begrenzt. Hier noch einmal zusammen.</p>
+
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Es sind die leichten Fragen.</strong> Der Benchmark prüft ausschließlich, was das
+        Gesetz eindeutig beantwortet – keine Rechtsprechung, keine Abwägung, keinen Einzelfall.
+        Wenn ein Modell hier scheitert, ist alles Schwierigere schlechter. Umgekehrt sagt ein gutes
+        Ergebnis hier nichts über schwierigere Fragen aus.
+      </div>
+
+      <ol class="bk-schritte">
+        <li class="bk-schritt">
+          <strong>Ein einziges Modell</strong>
+          <p>Gemessen wurde <code>claude-sonnet-5</code> (laut API <code>created_at
+          2026-06-29</code>). Mit einem Modell ist das ein Porträt, kein Vergleich. Ob sich das
+          Modell hinter der Kennung zwischen dem 15. und 17.09.2026 auf Anbieterseite verändert
+          hat, können wir nicht prüfen.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>API statt Chat-App</strong>
+          <p>Über die Programmierschnittstelle, ohne System-Prompt, ohne Websuche, ohne die
+          Zusätze, die eine Chat-Anwendung mitbringt. Das Ergebnis beschreibt das Modell, nicht das
+          Produkt, das ein Nutzer vor sich hat. Ein Vergleich von Hand in den Chat-Apps wäre eine
+          eigene, getrennt auszuweisende Messung – er ist nicht gelaufen.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Der Reihenfolgetest ist für die vier Begriffe der Gruppe schwach</strong>
+          <p>Sie wanderten zwischen den Serien nur um 1 bis 4 Positionen, während 62 von 76 Fragen
+          ihren Platz wechselten. Ein Positionseffekt ist dort nicht ausgeschlossen.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Die Vorhersage ist nicht beweisbar</strong>
+          <p>Dass die Begriffsgruppe vor der neuen Serie benannt wurde, ist bei uns dokumentiert,
+          für Außenstehende aber nicht nachweisbar. Nachträglich eingecheckt wird sie nicht.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>37 Umlagefragen sind ausgeschlossen</strong>
+          <p>Dazu die drei bekannten Lücken der BetrKV und die Fristfälle mit Start am 28.02. vor
+          einem Schaltjahr. Was bleibt, ist ein enger Ausschnitt: Fristen und Umlagefähigkeit,
+          nicht „das Mietrecht“.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>17 verbliebene Umlagefragen stehen unter einer Nummer, deren Wortlaut den Umfang einschränkt</strong>
+          <p>„zentrale“, „laufende“, „von den Bewohnern gemeinsam genutzte“. In einer
+          Betriebskostenabrechnung ist die enge Bedeutung die gemeinte – aber das ist eine Annahme,
+          und sie steht hier, statt stillschweigend im Schlüssel.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>An zwei Stellen ist der Schlüssel selbst eine Entscheidung</strong>
+          <p>Und die Antwort des Modells hat dort Substanz. Beide sind oben bei den Beispielen
+          ausgewiesen – nicht als schlichter Fehler.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Gewertet wird nur die Schlusszeile</strong>
+          <p>Das ist Befund 2. Eine gute Quote enthält Antworten mit falscher Begründung.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Wiederholungen können abweichen, und das lässt sich nicht abschalten</strong>
+          <p>Aktuelle Modelle nehmen den Parameter <code>temperature</code> nicht mehr an. Deshalb
+          drei Läufe und eine Spanne statt eines Einzelwerts – und deshalb ist eine Spanne aus drei
+          Ziehungen kein Konfidenzintervall.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Eine Momentaufnahme</strong>
+          <p>Modelle ändern sich. Das spricht dafür, die Messung zu wiederholen, nicht dagegen,
+          sie zu machen.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ===================================================================
+         7 · Methode
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="methode">Methode</h2>
+
+    <section class="bk-karte">
+      <h2>Wie gefragt wurde</h2>
+      <p>Frage im Wortlaut, Leerzeile, Formatzeile. Sonst nichts.</p>
+      <p>
+        Kein System-Prompt, keine Beispiele, keine Parameter außer dem Pflichtfeld
+        <code>max_tokens</code>. Das Modell läuft damit in der Voreinstellung des Anbieters, und
+        genau die ist der Messgegenstand.
+      </p>
+      <div class="bk-beleg">
+        <p class="bk-beleg-text">Letzte Zeile deiner Antwort genau in dieser Form: ANTWORT: TT.MM.JJJJ
+
+Letzte Zeile deiner Antwort genau in dieser Form: ANTWORT: ja oder ANTWORT: nein</p>
+        <p class="bk-beleg-fuss">Die beiden Formatzeilen, wortgleich in allen <span data-pruef="laeufe.gesamt">9</span> Läufen.</p>
+      </div>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Wie gewertet wurde</h2>
+      <p>Mechanisch, nie durch Auslegung.</p>
+      <ol class="bk-schritte">
+        <li class="bk-schritt">
+          <strong>Gelesen wird die letzte nicht-leere Zeile</strong>
+          <p>Sie zählt nur, wenn sie exakt <code>ANTWORT: ja</code>, <code>ANTWORT: nein</code>
+          oder <code>ANTWORT: TT.MM.JJJJ</code> lautet.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Erkennbar, aber nicht exakt = nicht auswertbar</strong>
+          <p>Nicht falsch. Dasselbe, wenn die Antwortzeile nicht die letzte Zeile ist oder ganz
+          fehlt. Diese Antworten fließen in keine Quote ein und werden überall mitgezählt.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Nie ein Sprachmodell als Schiedsrichter</strong>
+          <p>Datum, ja/nein, mehr wird nicht verglichen. Sobald eine Wertung auslegen muss, ist sie
+          angreifbar – und damit wertlos.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Quoten werden nie vermischt</strong>
+          <p>Datum und Ja/Nein getrennt, Ja/Nein zusätzlich nach Schlüsselwert getrennt. Eine
+          Ja/Nein-Frage hat eine Ratequote von 50 %, eine Datumsfrage praktisch null – ein
+          gemeinsamer Wert wäre bedeutungslos.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Die Läufe</h2>
+      <p>Anfragen laufen nacheinander, nie parallel.</p>
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Lauf</th><th>Start (UTC)</th><th>Ende (UTC)</th><th>Antworten</th><th>Fehler</th><th>abgeschnitten</th><th>Ergebnisdatei SHA-256</th></tr>
+          </thead>
+          <tbody>
+@@LAUF_ZEILEN@@
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Alle <span data-pruef="laeufe.gesamt">9</span> Läufe endeten mit Status „abgeschlossen“, ohne einen einzigen API-Fehler und
+        ohne abgeschnittene Antwort. SDK <code>@anthropic-ai/sdk 0.111.0</code>, Node
+        <code>v24.18.0</code>.
+      </p>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Zwei Regeln, die wir uns selbst auferlegt haben</h2>
+      <p>Beide entstanden aus einem Fehler, nicht aus Vorsicht.</p>
+      <ol class="bk-schritte">
+        <li class="bk-schritt">
+          <strong>Keine Commits während einer Messreihe</strong>
+          <p>Der Läufer schreibt den Commit-Stand beim Start mit; jeder Commit zwischen zwei Läufen
+          verschiebt diesen Stand, auch wenn er den Lauf nicht berührt. Zusätzlich steht seit dem
+          16.09.2026 der git-Blob-Hash von <code>run.mjs</code> in jeder Ergebnisdatei – der belegt,
+          dass dieselbe Datei lief; ein Commit-Hash legt es nur nahe.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Eine Vorhersage wird vor dem Lauf eingecheckt</strong>
+          <p>Eingeführt, nachdem die Vorhersage zur Begriffsgruppe zwar vorher feststand, aber
+          nicht beweisbar war.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Warum in den Dateien leere Denkblöcke stehen</h2>
+      <p>Damit sich niemand fragt, ob dort etwas zurückgehalten wurde.</p>
+      <p>
+        In den Rohdaten trägt fast jede Antwort einen <code>thinking</code>-Block, dessen Textfeld
+        leer ist: <span data-pruef="thinking.bloecke">1822</span> Blöcke über alle <span data-pruef="laeufe.gesamt">9</span> Läufe,
+        jeder mit Textlänge 0. Die Voreinstellung der Schnittstelle gibt den Denktext nicht zurück;
+        nachweisbar ist damit, <em>dass</em> für eine Antwort gedacht wurde, nicht <em>was</em>.
+        Ihn ausgeben zu lassen wäre ein zusätzlicher Parameter gewesen – und damit nicht mehr die
+        Voreinstellung des Anbieters, die hier gemessen werden soll. Was in den Blöcken an Zeichen
+        steht, ist eine Signatur der Schnittstelle, kein Inhalt.
+      </p>
+    </section>
+
+    <!-- ===================================================================
+         8 · Daten
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="daten">Daten zum Nachrechnen</h2>
+
+    <section class="bk-karte">
+      <h2>Alles, woraus diese Seite besteht</h2>
+      <p>Nichts davon ist zusammengefasst oder nachbearbeitet.</p>
+      <p>
+        Fragen, Schlüssel, Rohantworten und Auswertungen. Zu jeder Ergebnisdatei steht ihre SHA-256
+        oben in der Lauftabelle; jedes Beispiel auf dieser Seite nennt die Datei und die Position,
+        an der es dort steht. Der Code, der alles erzeugt hat, liegt im selben öffentlichen
+        Repository: <code>generiere-fristen.mjs</code>, <code>generiere-umlage.mjs</code>,
+        <code>run.mjs</code>, <code>score.mjs</code>.
+      </p>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Datei</th><th>Was drin steht</th><th>Größe</th></tr>
+          </thead>
+          <tbody>
+@@DOWNLOAD_ZEILEN@@
+          </tbody>
+        </table>
+      </div>
+
+      <p class="hg-result-note">
+        Der verworfene Lauf liegt mit dabei und ist als solcher gekennzeichnet: 113 Fragen vom
+        15.09.2026, gegen eine frühere Fragendatei
+        (SHA-256 <span data-pruef="verworfen.fragendatei.sha8">10bb3190</span>…), deren Schlüssel
+        bei 37 Fragen nicht trug. Er zählt in keiner Serie mit und wird mit nichts zusammengelegt.
+        Ihn wegzulassen wäre genau die stille Auswahl, die dieser Benchmark vermeiden soll.
+      </p>
+    </section>
+
+    <p class="bk-fuss">
+      Gesetzestexte aus der Wissensbasis von Inspectora, importiert von
+      <a href="https://www.gesetze-im-internet.de/" target="_blank" rel="noopener noreferrer">gesetze-im-internet.de</a>.
+      Maßgeblich ist immer der amtliche Text. Diese Seite veröffentlicht Messergebnisse und
+      beschreibt, was im Gesetz steht – sie berät nicht und sagt niemandem, was in seinem Fall zu
+      tun ist. Gemessen am 15.–17.09.2026 von Fabio für Inspectora. Stand dieser Seite: 23.09.2026.
+    </p>
+
+  </main>
+</body>
+</html>

@@ -1,0 +1,606 @@
+{
+  "auswertung": {
+    "erstellt": "2026-09-14T20:23:25.977Z",
+    "scorer": "benchmark/score.mjs",
+    "git_commit": "0f41cd0a64d746d8aeb9e8d227d049af75e0fed3",
+    "regeln": {
+      "gelesen": "letzte nicht-leere Zeile der Roh-Antwort, nur Leerraum am Zeilenanfang und -ende entfernt",
+      "streng": {
+        "datum": "^ANTWORT: (\\d{2})\\.(\\d{2})\\.(\\d{4})$",
+        "ja-nein": "^ANTWORT: (ja|nein)$"
+      },
+      "erkennbar": {
+        "datum": "(?<!\\p{L})antwort[^\\p{L}\\p{N}]*:.*\\p{N}",
+        "ja-nein": "(?<!\\p{L})antwort[^\\p{L}\\p{N}]*:.*(?<!\\p{L})(?:ja|nein)(?!\\p{L})"
+      },
+      "vorrang": [
+        "fehler",
+        "abgelehnt",
+        "abgeschnitten",
+        "Schlusszeile"
+      ],
+      "quote": "richtig / (richtig + falsch); nicht-auswertbar, abgeschnitten, fehler, abgelehnt fliessen nicht ein",
+      "nicht_auswertbar": {
+        "format-abweichung": "letzte Zeile als Antwortzeile erkennbar, aber nicht exakt",
+        "falsche-position": "Antwortzeile vorhanden, aber nicht die letzte Zeile",
+        "keine-schlusszeile": "keine Antwortzeile in der gesamten Antwort"
+      }
+    }
+  },
+  "quelle": {
+    "ergebnisdatei": "benchmark/ergebnisse/2026-09-14-claude-sonnet-5.json",
+    "ergebnisdatei_sha256": "ba6ef71a6ec3707705a94a2e476d903ac6b7ea2bbe5a60e31fe2700773f83ada",
+    "fragendatei": "benchmark/fragen-fristen.json",
+    "fragendatei_sha256": "6b6fea442b39d28ed403acbc30f649c9d330012af74559c8f70368b33e22a14d",
+    "lauf": "testlauf",
+    "lauf_status": "abgeschlossen",
+    "gestartet": "2026-09-14T20:08:10.791Z",
+    "beendet": "2026-09-14T20:11:25.794Z",
+    "modell": {
+      "angefragt": "claude-sonnet-5",
+      "anbieter": "Anthropic",
+      "info": {
+        "id": "claude-sonnet-5",
+        "display_name": "Claude Sonnet 5",
+        "created_at": "2026-06-29T00:00:00Z"
+      }
+    },
+    "konfiguration": {
+      "parameter": {
+        "max_tokens": 64000
+      },
+      "systemprompt": null,
+      "fallbacks": null,
+      "anmerkung": "Variante A: weder thinking noch output_config gesetzt, nur das Pflichtfeld max_tokens. Laut API-Dokumentation laeuft Claude Sonnet 5 dann mit adaptivem Denken und effort high. Die Anbieter-Vorgabe ist der Messgegenstand."
+    }
+  },
+  "zusammenfassung": {
+    "antworten": 20,
+    "geplant": 20,
+    "status": {
+      "richtig": 19,
+      "falsch": 0,
+      "nicht_auswertbar": {
+        "format-abweichung": 1,
+        "keine-schlusszeile": 0,
+        "falsche-position": 0
+      },
+      "abgeschnitten": 0,
+      "fehler": 0,
+      "abgelehnt": 0
+    }
+  },
+  "quoten": {
+    "nach_antworttyp": {
+      "datum": {
+        "gewertet": 10,
+        "richtig": 10,
+        "falsch": 0,
+        "quote_richtig": 1,
+        "nicht_auswertbar": {
+          "format-abweichung": 0,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0
+      },
+      "ja-nein": {
+        "gewertet": 9,
+        "richtig": 9,
+        "falsch": 0,
+        "quote_richtig": 1,
+        "nicht_auswertbar": {
+          "format-abweichung": 1,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0,
+        "nach_schluessel": {
+          "ja": {
+            "gewertet": 5,
+            "richtig": 5,
+            "falsch": 0,
+            "quote_richtig": 1,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          },
+          "nein": {
+            "gewertet": 4,
+            "richtig": 4,
+            "falsch": 0,
+            "quote_richtig": 1,
+            "nicht_auswertbar": {
+              "format-abweichung": 1,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          }
+        }
+      }
+    },
+    "nach_kategorie": [
+      {
+        "kategorie": "frist-193-verschiebung",
+        "antwort_typ": "datum",
+        "gewertet": 3,
+        "richtig": 3,
+        "falsch": 0,
+        "quote_richtig": 1,
+        "nicht_auswertbar": {
+          "format-abweichung": 0,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0
+      },
+      {
+        "kategorie": "frist-abrechnung-datum",
+        "antwort_typ": "datum",
+        "gewertet": 3,
+        "richtig": 3,
+        "falsch": 0,
+        "quote_richtig": 1,
+        "nicht_auswertbar": {
+          "format-abweichung": 0,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0
+      },
+      {
+        "kategorie": "frist-einwendung-datum",
+        "antwort_typ": "datum",
+        "gewertet": 3,
+        "richtig": 3,
+        "falsch": 0,
+        "quote_richtig": 1,
+        "nicht_auswertbar": {
+          "format-abweichung": 0,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0
+      },
+      {
+        "kategorie": "frist-februar",
+        "antwort_typ": "datum",
+        "gewertet": 1,
+        "richtig": 1,
+        "falsch": 0,
+        "quote_richtig": 1,
+        "nicht_auswertbar": {
+          "format-abweichung": 0,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0
+      },
+      {
+        "kategorie": "frist-193-verschiebung",
+        "antwort_typ": "ja-nein",
+        "gewertet": 3,
+        "richtig": 3,
+        "falsch": 0,
+        "quote_richtig": 1,
+        "nicht_auswertbar": {
+          "format-abweichung": 0,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0,
+        "nach_schluessel": {
+          "ja": {
+            "gewertet": 2,
+            "richtig": 2,
+            "falsch": 0,
+            "quote_richtig": 1,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          },
+          "nein": {
+            "gewertet": 1,
+            "richtig": 1,
+            "falsch": 0,
+            "quote_richtig": 1,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          }
+        }
+      },
+      {
+        "kategorie": "frist-abrechnung-gewahrt",
+        "antwort_typ": "ja-nein",
+        "gewertet": 3,
+        "richtig": 3,
+        "falsch": 0,
+        "quote_richtig": 1,
+        "nicht_auswertbar": {
+          "format-abweichung": 0,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0,
+        "nach_schluessel": {
+          "ja": {
+            "gewertet": 1,
+            "richtig": 1,
+            "falsch": 0,
+            "quote_richtig": 1,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          },
+          "nein": {
+            "gewertet": 2,
+            "richtig": 2,
+            "falsch": 0,
+            "quote_richtig": 1,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          }
+        }
+      },
+      {
+        "kategorie": "frist-einwendung-gewahrt",
+        "antwort_typ": "ja-nein",
+        "gewertet": 2,
+        "richtig": 2,
+        "falsch": 0,
+        "quote_richtig": 1,
+        "nicht_auswertbar": {
+          "format-abweichung": 1,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0,
+        "nach_schluessel": {
+          "ja": {
+            "gewertet": 1,
+            "richtig": 1,
+            "falsch": 0,
+            "quote_richtig": 1,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          },
+          "nein": {
+            "gewertet": 1,
+            "richtig": 1,
+            "falsch": 0,
+            "quote_richtig": 1,
+            "nicht_auswertbar": {
+              "format-abweichung": 1,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          }
+        }
+      },
+      {
+        "kategorie": "frist-februar",
+        "antwort_typ": "ja-nein",
+        "gewertet": 1,
+        "richtig": 1,
+        "falsch": 0,
+        "quote_richtig": 1,
+        "nicht_auswertbar": {
+          "format-abweichung": 0,
+          "keine-schlusszeile": 0,
+          "falsche-position": 0
+        },
+        "abgeschnitten": 0,
+        "fehler": 0,
+        "abgelehnt": 0,
+        "nach_schluessel": {
+          "ja": {
+            "gewertet": 1,
+            "richtig": 1,
+            "falsch": 0,
+            "quote_richtig": 1,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          },
+          "nein": {
+            "gewertet": 0,
+            "richtig": 0,
+            "falsch": 0,
+            "quote_richtig": null,
+            "nicht_auswertbar": {
+              "format-abweichung": 0,
+              "keine-schlusszeile": 0,
+              "falsche-position": 0
+            },
+            "abgeschnitten": 0,
+            "fehler": 0,
+            "abgelehnt": 0
+          }
+        }
+      }
+    ]
+  },
+  "falsche_antworten": [],
+  "nicht_auswertbar": {
+    "format-abweichung": [
+      {
+        "frage_id": "frist-einwendung-2019-03-02-ja-nein-2020-03-03",
+        "kategorie": "frist-einwendung-gewahrt",
+        "antwort_typ": "ja-nein",
+        "frage": "Eine Betriebskostenabrechnung ging dem Mieter am 02.03.2019 zu. Die Einwendungen des Mieters gingen dem Vermieter am 03.03.2020 zu. War die Einwendungsfrist gewahrt?",
+        "schlusszeile": "**ANTWORT: nein**",
+        "schluessel": "nein",
+        "roh_antwort": "# Prüfung der Einwendungsfrist (§ 556 Abs. 3 S. 5 BGB)\n\n## Rechtsgrundlage\nNach § 556 Abs. 3 S. 5 BGB muss der Mieter Einwendungen gegen die Betriebskostenabrechnung **innerhalb von 12 Monaten nach Zugang der Abrechnung** gegenüber dem Vermieter geltend machen. Diese Frist ist eine materielle Ausschlussfrist.\n\n## Fristberechnung\n\n**Fristbeginn:** Zugang der Abrechnung am 02.03.2019\n\n**Fristberechnung nach §§ 187 Abs. 1, 188 Abs. 2 BGB:**\n- Da es sich um eine nach Monaten bemessene Frist handelt, die mit einem Ereignis (Zugang) beginnt, wird der Tag des Zugangs nicht mitgerechnet (§ 187 Abs. 1 BGB).\n- Die Frist endet gemäß § 188 Abs. 2 BGB mit Ablauf desjenigen Tages des letzten Monats, der durch seine Benennung dem Tag entspricht, in den das Ereignis fällt.\n\n**Fristende:** 02.03.2020 (24:00 Uhr)\n\n## Prüfung des Fristendes auf Wochenendtag/Feiertag (§ 193 BGB)\nDer 02.03.2020 war ein **Montag** – kein Samstag, Sonntag oder gesetzlicher Feiertag. Eine Verschiebung nach § 193 BGB kommt daher nicht in Betracht.\n\n## Ergebnis\nDie Einwendungen des Mieters gingen dem Vermieter erst am **03.03.2020** zu – also **einen Tag nach Ablauf** der zwölfmonatigen Einwendungsfrist.\n\nDie Frist ist eine materiell-rechtliche Ausschlussfrist, die nicht verlängerbar ist. Die verspätet erhobenen Einwendungen sind daher **präkludiert** – der Mieter kann sich auf diese Einwendungen grundsätzlich nicht mehr berufen (Ausnahme: Der Mieter hat die Verspätung nicht zu vertreten, § 556 Abs. 3 S. 6 BGB).\n\n**ANTWORT: nein**"
+      }
+    ],
+    "keine-schlusszeile": [],
+    "falsche-position": []
+  },
+  "api_fehler": [],
+  "abgelehnt": [],
+  "abgeschnitten": [],
+  "einzelwertung": [
+    {
+      "frage_id": "frist-abrechnung-2019-05-31-datum",
+      "kategorie": "frist-193-verschiebung",
+      "antwort_typ": "datum",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: 02.06.2020",
+      "modell_antwort": "2020-06-02",
+      "schluessel": "2020-06-02"
+    },
+    {
+      "frage_id": "frist-einwendung-2020-08-28-datum",
+      "kategorie": "frist-193-verschiebung",
+      "antwort_typ": "datum",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: 30.08.2021",
+      "modell_antwort": "2021-08-30",
+      "schluessel": "2021-08-30"
+    },
+    {
+      "frage_id": "frist-einwendung-2027-09-02-datum",
+      "kategorie": "frist-193-verschiebung",
+      "antwort_typ": "datum",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: 04.09.2028",
+      "modell_antwort": "2028-09-04",
+      "schluessel": "2028-09-04"
+    },
+    {
+      "frage_id": "frist-abrechnung-2019-01-31-datum",
+      "kategorie": "frist-abrechnung-datum",
+      "antwort_typ": "datum",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: 31.01.2020",
+      "modell_antwort": "2020-01-31",
+      "schluessel": "2020-01-31"
+    },
+    {
+      "frage_id": "frist-abrechnung-2022-08-31-datum",
+      "kategorie": "frist-abrechnung-datum",
+      "antwort_typ": "datum",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: 31.08.2023",
+      "modell_antwort": "2023-08-31",
+      "schluessel": "2023-08-31"
+    },
+    {
+      "frage_id": "frist-abrechnung-2026-12-31-datum",
+      "kategorie": "frist-abrechnung-datum",
+      "antwort_typ": "datum",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: 31.12.2027",
+      "modell_antwort": "2027-12-31",
+      "schluessel": "2027-12-31"
+    },
+    {
+      "frage_id": "frist-einwendung-2019-03-02-datum",
+      "kategorie": "frist-einwendung-datum",
+      "antwort_typ": "datum",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: 02.03.2020",
+      "modell_antwort": "2020-03-02",
+      "schluessel": "2020-03-02"
+    },
+    {
+      "frage_id": "frist-einwendung-2023-12-09-datum",
+      "kategorie": "frist-einwendung-datum",
+      "antwort_typ": "datum",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: 09.12.2024",
+      "modell_antwort": "2024-12-09",
+      "schluessel": "2024-12-09"
+    },
+    {
+      "frage_id": "frist-einwendung-2027-06-26-datum",
+      "kategorie": "frist-einwendung-datum",
+      "antwort_typ": "datum",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: 26.06.2028",
+      "modell_antwort": "2028-06-26",
+      "schluessel": "2028-06-26"
+    },
+    {
+      "frage_id": "frist-abrechnung-2024-02-29-datum",
+      "kategorie": "frist-februar",
+      "antwort_typ": "datum",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: 28.02.2025",
+      "modell_antwort": "2025-02-28",
+      "schluessel": "2025-02-28"
+    },
+    {
+      "frage_id": "frist-abrechnung-2019-05-31-ja-nein-2020-05-31",
+      "kategorie": "frist-193-verschiebung",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "frist-einwendung-2027-09-02-ja-nein-2028-09-02",
+      "kategorie": "frist-193-verschiebung",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "frist-einwendung-2020-08-21-ja-nein-2021-08-24",
+      "kategorie": "frist-193-verschiebung",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "frist-abrechnung-2022-07-31-ja-nein-2023-07-31",
+      "kategorie": "frist-abrechnung-gewahrt",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "frist-abrechnung-2019-01-31-ja-nein-2020-02-01",
+      "kategorie": "frist-abrechnung-gewahrt",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "frist-abrechnung-2026-12-31-ja-nein-2028-01-01",
+      "kategorie": "frist-abrechnung-gewahrt",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "frist-einwendung-2023-12-03-ja-nein-2024-12-03",
+      "kategorie": "frist-einwendung-gewahrt",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    },
+    {
+      "frage_id": "frist-einwendung-2019-03-02-ja-nein-2020-03-03",
+      "kategorie": "frist-einwendung-gewahrt",
+      "antwort_typ": "ja-nein",
+      "status": "nicht-auswertbar",
+      "grund": "format-abweichung",
+      "schlusszeile": "**ANTWORT: nein**",
+      "modell_antwort": null,
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "frist-einwendung-2027-06-26-ja-nein-2028-06-27",
+      "kategorie": "frist-einwendung-gewahrt",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: nein",
+      "modell_antwort": "nein",
+      "schluessel": "nein"
+    },
+    {
+      "frage_id": "frist-abrechnung-2024-02-29-ja-nein-2025-02-28",
+      "kategorie": "frist-februar",
+      "antwort_typ": "ja-nein",
+      "status": "richtig",
+      "grund": null,
+      "schlusszeile": "ANTWORT: ja",
+      "modell_antwort": "ja",
+      "schluessel": "ja"
+    }
+  ]
+}

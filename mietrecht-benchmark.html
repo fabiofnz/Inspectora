@@ -1,0 +1,2185 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Mietrecht-Benchmark: claude-sonnet-5 auf 546 Fristen- und 76 Umlagefragen</title>
+  <meta name="description" content="Neun Läufe in drei Serien, ein Modell, 2.094 Antworten. Gemessen an Fragen, die § 556 BGB und § 2 BetrKV eindeutig beantworten. Der Antwortschlüssel ist gerechnet, alle Rohantworten stehen zum Herunterladen.">
+  <link rel="canonical" href="https://inspectora.tech/mietrecht-benchmark">
+
+  <!-- Open Graph / Link-Vorschau -->
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Inspectora">
+  <meta property="og:title" content="Mietrecht-Benchmark: claude-sonnet-5 auf 546 Fristen- und 76 Umlagefragen">
+  <meta property="og:description" content="Neun Läufe in drei Serien, ein Modell, 2.094 Antworten. Gemessen an Fragen, die § 556 BGB und § 2 BetrKV eindeutig beantworten. Der Antwortschlüssel ist gerechnet, alle Rohantworten stehen zum Herunterladen.">
+  <meta property="og:url" content="https://inspectora.tech/mietrecht-benchmark">
+  <meta property="og:image" content="https://inspectora.tech/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:locale" content="de_DE">
+  <meta name="twitter:card" content="summary_large_image">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body class="assistant-body">
+  <header class="assistant-header">
+    <a class="assistant-brand" href="index.html" aria-label="Inspectora Startseite">
+      <span class="brand-mark">I</span>
+      <span><strong>Inspectora</strong><small>Mietrecht-Benchmark</small></span>
+    </a>
+    <a class="button secondary small" href="index.html">Zurück zur Startseite</a>
+  </header>
+
+  <main class="assistant-main">
+
+    <div class="assistant-intro">
+      <h1>Mietrecht-Benchmark: <span data-pruef="laeufe.gesamt">9</span> Läufe, ein Modell, <span data-pruef="antworten.gesamt">2.094</span> Antworten</h1>
+      <p class="bk-begriff">
+        Gemessen wurde <strong>claude-sonnet-5</strong> über die API an zwei Fragetypen, die das
+        Gesetz eindeutig beantwortet: Fristen nach § 556 Abs. 3 BGB mit den §§ 187, 188 und 193 BGB,
+        und Umlagefähigkeit nach § 2 BetrKV. Der Antwortschlüssel ist nicht von Hand geschrieben,
+        sondern gerechnet – von derselben Maschine, die auch das
+        <a href="nebenkostenabrechnung-frist-pruefen.html">Werkzeug zur Nebenkostenabrechnung</a>
+        antreibt, und vor dem ersten Lauf an 20 Fällen gegen den Gesetzestext geprüft.
+        Gemessen am 15., 16. und 17.09.2026.
+      </p>
+      <p class="assistant-notice">
+        Das hier ist eine Messung, keine Rechtsberatung – und kein Modellvergleich: geprüft wurde
+        ein einziges Modell über die API, nicht die Chat-App, die ein Nutzer vor sich hat. Alle
+        Rohantworten, der Fragensatz mit Schlüssel und die Auswertungen stehen unten zum
+        Herunterladen. Wer nachrechnen will, braucht dafür nichts von uns zu glauben.
+      </p>
+    </div>
+
+    <!-- ===================================================================
+         1 · Die zwei Befunde. Die Quoten stehen absichtlich weiter unten:
+         Sie ordnen die Befunde ein, sie sind nicht die Nachricht.
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="befunde">Die zwei Befunde</h2>
+
+    <section class="bk-karte">
+      <h2>1 · Welche Fragen falsch beantwortet werden, ist keine feste Eigenschaft des Modells</h2>
+      <p>Die Quote wiederholt sich von Lauf zu Lauf. Welche Frage kippt, nicht.</p>
+      <p>
+        Dabei sind zwei Verhaltensweisen zu sehen, nicht eine: Beim <strong>Rechnen</strong> streuen
+        die Fehler über den ganzen Fragensatz, beim <strong>Nachschlagen</strong> im Katalog
+        verdichten sie sich auf eine Handvoll verwandter Begriffe. Für die Auswertung heißt das:
+        Ein einzelner Lauf sagt ungefähr, <em>wie oft</em> ein Modell falsch liegt – nicht,
+        <em>wo</em>.
+      </p>
+      <p class="bk-grundlage">
+        <span data-pruef="fristen.falsch.antworten">6</span> Fehler in drei Fristenläufen –
+        auf <span data-pruef="fristen.falsch.fragen">6</span> verschiedenen Fragen. Keine davon zweimal.
+      </p>
+      <p><a class="bk-quelle" href="#befund-1">Zu den Zahlen und den Antworten im Wortlaut →</a></p>
+    </section>
+
+    <section class="bk-karte">
+      <h2>2 · Richtige Antworten stehen auf falschem Beleg</h2>
+      <p>Gewertet wird die Schlusszeile. Die Begründung darüber sieht niemand.</p>
+      <p>
+        Bei den schwierigen Begriffen steht dort fast nie die Nummer, auf die es ankommt. Eine gute
+        Quote enthält damit Antworten, deren Grundlage dem Gesetz widerspricht. Das ist keine
+        Randbeobachtung – es begrenzt, was eine Quote über ein Modell überhaupt aussagen kann.
+      </p>
+      <p class="bk-grundlage">
+        In <span data-pruef="umlage-neu.zitate.ohne-schluesselnummer">8</span> von
+        <span data-pruef="umlage-neu.gruppe.antworten">12</span> Antworten zur Begriffsgruppe
+        kommt die Schlüsselnummer in keiner Form vor.
+      </p>
+      <p><a class="bk-quelle" href="#befund-2">Zu den Belegen und den Antworten im Wortlaut →</a></p>
+    </section>
+
+    <!-- ===================================================================
+         2 · Fragensatz und Schluessel. Die ausgeschlossenen Fragen stehen
+         hier - nicht im Kleingedruckten, sondern dort, wo der Fragensatz
+         beschrieben wird.
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="fragen">Was gefragt wurde – und woher die Antwort kommt</h2>
+
+    <section class="bk-karte">
+      <h2>Der Fragensatz</h2>
+      <p>Zwei Fragendateien, beide maschinell erzeugt.</p>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Fragensatz</th><th>Fragen</th><th>Antworttyp</th><th>Grundlage</th><th>SHA-256 (Anfang)</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fristen</td>
+              <td><span data-pruef="fristen.fragen">546</span></td>
+              <td>182 Datum · 364 Ja/Nein</td>
+              <td>§ 556 Abs. 3 BGB, §§ 187, 188, 193 BGB</td>
+              <td><span data-pruef="fristen.fragendatei.sha8">6b6fea44</span>…</td>
+            </tr>
+            <tr>
+              <td>Umlage</td>
+              <td><span data-pruef="umlage-neu.fragen">76</span></td>
+              <td>76 Ja/Nein</td>
+              <td>§ 2 BetrKV, § 1 Abs. 2 BetrKV</td>
+              <td><span data-pruef="umlage-neu.fragendatei.sha8">b309d7d2</span>…</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Jede Frage trägt ihren Schlüssel, ihre Fundstelle, den Gesetzestext und den Rechenweg bei
+        sich. Die Reihenfolge der Fragen hängt nur an den Frage-IDs, nicht am Datum und nicht am
+        Zufall: gleiche Datei, gleiche Reihenfolge, in jedem Lauf.
+      </p>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Der Schlüssel ist gerechnet, nicht geschrieben</h2>
+      <p>Deshalb lässt er sich nachrechnen, statt geglaubt werden zu müssen.</p>
+      <p>
+        Beide Fragendateien entstehen aus derselben Rechenmaschine, die im Werkzeug zur
+        Nebenkostenabrechnung läuft. Für Fristen liefert sie das Fristende nach §§ 187, 188 BGB
+        und, getrennt davon, die Verschiebung nach § 193 BGB. Für Umlagefähigkeit ordnet sie die
+        Position einer Nummer des § 2 BetrKV oder einem Ausschluss in § 1 Abs. 2 BetrKV zu und gibt
+        die Fundstelle mit aus. Fehlt der Paragraph, sein Text oder der Link zur amtlichen Quelle,
+        rechnet sie nicht – aus einem ungeprüften Beleg kann so keine Frage entstehen.
+      </p>
+      <p>
+        Bevor der erste Lauf startete, wurden <strong>20 Fälle von Hand gegen den Gesetzestext
+        geprüft</strong>: 10 Fristen, davon 4 mit Verschiebung nach § 193 BGB, und 10 Begriffe,
+        davon 3 Ausschlüsse. Nicht die Maschine gegen sich selbst, sondern gegen das Gesetz.
+      </p>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Was absichtlich nicht gefragt wurde</h2>
+      <p>Eine Frage kommt nur in den Satz, wenn das Gesetz sie ohne Zusatzannahme beantwortet.</p>
+
+      <ol class="bk-schritte">
+        <li class="bk-schritt">
+          <strong>37 Umlagefragen gestrichen</strong>
+          <p>Weil der Wortlaut die unbedingte Antwort nicht trägt: 8 Begriffe aus § 2 Nr. 15
+          (Bedingung, Befristung zum 30.06.2024, nicht anwendbar auf Anlagen ab 01.12.2021),
+          27 Begriffe, die einen Gegenstand statt einer Kostenart benennen – umlagefähig ist der
+          <em>Betrieb</em>, nicht die Anschaffung –, und 7 Ausschlüsse, deren Beleg nur per
+          Analogie trägt. Überschneidungen einfach gezählt.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Die drei bekannten Lücken</strong>
+          <p>Winterdienst, Rauchmelder, Dachrinnenreinigung. Die BetrKV entscheidet sie nicht.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Fristfälle mit Start am 28.02. vor einem Schaltjahr</strong>
+          <p>„Ablauf des zwölften Monats“ lässt dort zwei Lesarten zu, die sich um einen Tag
+          unterscheiden. Das ist eine Rechtsfrage, keine Rechenfrage – der Benchmark entscheidet
+          sie nicht.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Fälle, in denen das Ereignis zwischen die beiden Fristenden fällt</strong>
+          <p>Ob § 193 BGB auf die Fristen des § 556 Abs. 3 BGB überhaupt anzuwenden ist, ist
+          umstritten. Deshalb: Fallen Basisdatum und verschobenes Datum zusammen, nennt die Frage
+          keine Norm; gehen sie auseinander, nennt sie § 193 BGB ausdrücklich – dann ist die
+          Antwort reine Rechnung. Dazwischen wird nicht gefragt.</p>
+        </li>
+      </ol>
+
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Das sind die leichten Fragen.</strong> Dieser Benchmark prüft ausschließlich
+        Fragen, die das Gesetz eindeutig beantwortet – nichts, wofür man Rechtsprechung, eine
+        Abwägung oder den Einzelfall braucht. Wenn ein Modell hier scheitert, ist alles
+        Schwierigere schlechter.
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         3 · Befund 1
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="befund-1">Befund 1: Rechnen streut, Nachschlagen verdichtet</h2>
+
+    <section class="bk-karte">
+      <h2>Fristen: <span data-pruef="fristen.falsch.antworten">6</span> Fehler, <span data-pruef="fristen.falsch.fragen">6</span> verschiedene Fragen, keine zweimal</h2>
+      <p>Drei Läufe, dieselben Fragen, dieselbe Reihenfolge, wortgleiche Anfragen. Nur die Zeit ist verschieden.</p>
+      <p>
+        Jede Frage, die in einem Lauf falsch beantwortet wurde, war in den beiden anderen richtig.
+      </p>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Frage</th><th>Schlüssel</th><th>Lauf 1</th><th>Lauf 2</th><th>Lauf 3</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="#bsp-frist-einwendung-2024-10-11-datum">Zugang 11.10.2024 – Einwendungen bis wann? · § 193 BGB genannt</a><br><small>Pos. <span data-pruef="fristen.fehler.frist-einwendung-2024-10-11-datum.position">47</span> · frist-einwendung-2024-10-11-datum</small></td>
+              <td><span data-pruef="fristen.fehler.frist-einwendung-2024-10-11-datum.schluessel">13.10.2025</span></td>
+              <td class="hg-check-ok"><span data-pruef="fristen.fehler.frist-einwendung-2024-10-11-datum.l1">richtig</span></td>
+              <td><strong><span data-pruef="fristen.fehler.frist-einwendung-2024-10-11-datum.l2">11.10.2025</span></strong></td>
+              <td class="hg-check-ok"><span data-pruef="fristen.fehler.frist-einwendung-2024-10-11-datum.l3">richtig</span></td>
+            </tr>
+            <tr>
+              <td><a href="#bsp-frist-einwendung-2024-08-04-ja-nein-2025-08-05">Zugang 04.08.2024, Einwendungen am 05.08.2025 – gewahrt?</a><br><small>Pos. <span data-pruef="fristen.fehler.frist-einwendung-2024-08-04-ja-nein-2025-08-05.position">84</span> · frist-einwendung-2024-08-04-ja-nein-2025-08-05</small></td>
+              <td><span data-pruef="fristen.fehler.frist-einwendung-2024-08-04-ja-nein-2025-08-05.schluessel">nein</span></td>
+              <td><strong><span data-pruef="fristen.fehler.frist-einwendung-2024-08-04-ja-nein-2025-08-05.l1">ja</span></strong></td>
+              <td class="hg-check-ok"><span data-pruef="fristen.fehler.frist-einwendung-2024-08-04-ja-nein-2025-08-05.l2">richtig</span></td>
+              <td class="hg-check-ok"><span data-pruef="fristen.fehler.frist-einwendung-2024-08-04-ja-nein-2025-08-05.l3">richtig</span></td>
+            </tr>
+            <tr>
+              <td><a href="#bsp-frist-einwendung-2023-03-07-ja-nein-2024-03-08">Zugang 07.03.2023, Einwendungen am 08.03.2024 – gewahrt?</a><br><small>Pos. <span data-pruef="fristen.fehler.frist-einwendung-2023-03-07-ja-nein-2024-03-08.position">150</span> · frist-einwendung-2023-03-07-ja-nein-2024-03-08</small></td>
+              <td><span data-pruef="fristen.fehler.frist-einwendung-2023-03-07-ja-nein-2024-03-08.schluessel">nein</span></td>
+              <td class="hg-check-ok"><span data-pruef="fristen.fehler.frist-einwendung-2023-03-07-ja-nein-2024-03-08.l1">richtig</span></td>
+              <td class="hg-check-ok"><span data-pruef="fristen.fehler.frist-einwendung-2023-03-07-ja-nein-2024-03-08.l2">richtig</span></td>
+              <td><strong><span data-pruef="fristen.fehler.frist-einwendung-2023-03-07-ja-nein-2024-03-08.l3">ja</span></strong></td>
+            </tr>
+            <tr>
+              <td><a href="#bsp-frist-abrechnung-2019-05-31-datum">Zeitraum bis 31.05.2019 – Abrechnung bis wann? · § 193 BGB genannt</a><br><small>Pos. <span data-pruef="fristen.fehler.frist-abrechnung-2019-05-31-datum.position">331</span> · frist-abrechnung-2019-05-31-datum</small></td>
+              <td><span data-pruef="fristen.fehler.frist-abrechnung-2019-05-31-datum.schluessel">02.06.2020</span></td>
+              <td class="hg-check-ok"><span data-pruef="fristen.fehler.frist-abrechnung-2019-05-31-datum.l1">richtig</span></td>
+              <td><strong><span data-pruef="fristen.fehler.frist-abrechnung-2019-05-31-datum.l2">01.06.2020</span></strong></td>
+              <td class="hg-check-ok"><span data-pruef="fristen.fehler.frist-abrechnung-2019-05-31-datum.l3">richtig</span></td>
+            </tr>
+            <tr>
+              <td><a href="#bsp-frist-einwendung-2026-05-11-datum">Zugang 11.05.2026 – Einwendungen bis wann?</a><br><small>Pos. <span data-pruef="fristen.fehler.frist-einwendung-2026-05-11-datum.position">371</span> · frist-einwendung-2026-05-11-datum</small></td>
+              <td><span data-pruef="fristen.fehler.frist-einwendung-2026-05-11-datum.schluessel">11.05.2027</span></td>
+              <td class="hg-check-ok"><span data-pruef="fristen.fehler.frist-einwendung-2026-05-11-datum.l1">richtig</span></td>
+              <td><strong><span data-pruef="fristen.fehler.frist-einwendung-2026-05-11-datum.l2">31.05.2027</span></strong></td>
+              <td class="hg-check-ok"><span data-pruef="fristen.fehler.frist-einwendung-2026-05-11-datum.l3">richtig</span></td>
+            </tr>
+            <tr>
+              <td><a href="#bsp-frist-einwendung-2027-09-02-datum">Zugang 02.09.2027 – Einwendungen bis wann? · § 193 BGB genannt</a><br><small>Pos. <span data-pruef="fristen.fehler.frist-einwendung-2027-09-02-datum.position">530</span> · frist-einwendung-2027-09-02-datum</small></td>
+              <td><span data-pruef="fristen.fehler.frist-einwendung-2027-09-02-datum.schluessel">04.09.2028</span></td>
+              <td><strong><span data-pruef="fristen.fehler.frist-einwendung-2027-09-02-datum.l1">03.09.2028</span></strong></td>
+              <td class="hg-check-ok"><span data-pruef="fristen.fehler.frist-einwendung-2027-09-02-datum.l2">richtig</span></td>
+              <td class="hg-check-ok"><span data-pruef="fristen.fehler.frist-einwendung-2027-09-02-datum.l3">richtig</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Position = Stelle in der Laufreihenfolge, in allen drei Läufen dieselbe. Insgesamt wurden
+        <span data-pruef="fristen.unterschiedlich">29</span> der
+        <span data-pruef="fristen.fragen">546</span> Fragen über die drei Läufe hinweg
+        unterschiedlich beantwortet: <span data-pruef="fristen.falsch.fragen">6</span> mit einem
+        echten Fehler, <span data-pruef="fristen.nur-format">23</span> nur in der Form.
+      </p>
+
+      <div class="hg-hint-box">
+        <strong>Eine zweite Unruhe, im Format statt im Inhalt.</strong> Zusätzlich wichen
+        <span data-pruef="fristen.na.l1">5</span> → <span data-pruef="fristen.na.l2">9</span> →
+        <span data-pruef="fristen.na.l3">11</span> Antworten von der verlangten Schlusszeile ab,
+        meist <code>**ANTWORT: …**</code> statt <code>ANTWORT: …</code>. Inhaltlich waren alle
+        richtig, gewertet wurden sie trotzdem nicht. Drei Datenpunkte an zwei Tagen: steigend, aber
+        von Rauschen nicht zu unterscheiden. Das ist der Grund, warum neben jeder Quote steht, wie
+        viele Antworten nicht auswertbar waren – ein Modell, das anders formatiert, verliert einen
+        anderen Anteil seiner Antworten.
+      </div>
+    </section>
+
+    <h2 class="bk-abschnitt" id="fristen-beispiele">Die <span data-pruef="fristen.falsch.antworten">6</span> Fristenfehler, jeder in allen drei Läufen</h2>
+    <p class="hg-result-note">Jede dieser Fragen wurde zweimal richtig und einmal falsch beantwortet. Der Rechenweg darunter ist der des Schlüssels – Schritt für Schritt, mit der Vorschrift zu jedem Schritt.</p>
+    <section class="bk-karte" id="bsp-frist-einwendung-2024-10-11-datum">
+      <h2>Zugang 11.10.2024 – Einwendungen bis wann? · § 193 BGB genannt</h2>
+      <p>frist-einwendung-2024-10-11-datum · Position 47 von 546</p>
+      <p>Eine Betriebskostenabrechnung ging dem Mieter am 11.10.2024 zu. Bis wann müssen Einwendungen des Mieters gegen die Abrechnung dem Vermieter unter Berücksichtigung von § 193 BGB spätestens zugehen?</p>
+      <p class="bk-grundlage">Schlüssel: 13.10.2025 · § 556 Abs. 3 Satz 5 BGB</p>
+      <ol class="bk-schritte">
+          <li class="bk-schritt">
+            <strong>§ 187 Abs. 1 BGB</strong>
+            <p>Fristbeginn: Der 11.10.2024 ist der Tag des Ereignisses (Zugang der Abrechnung) und wird nicht mitgerechnet.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__187.html" target="_blank" rel="noopener noreferrer">§ 187 Abs. 1 BGB im Wortlaut →</a>
+          </li>
+          <li class="bk-schritt">
+            <strong>§ 188 Abs. 2 BGB</strong>
+            <p>Fristende: Die Zwölfmonatsfrist endet mit Ablauf des Tages im zwölften Monat, der durch seine Zahl dem 11.10.2024 entspricht.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__188.html" target="_blank" rel="noopener noreferrer">§ 188 Abs. 2 BGB im Wortlaut →</a>
+          </li>
+          <li class="bk-schritt">
+            <strong>§ 193 BGB</strong>
+            <p>Das Fristende fällt auf einen Tag, an dem eine Frist nach § 193 BGB nicht endet: Sonnabend. An seine Stelle tritt der nächste Werktag: Montag, 13.10.2025.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__193.html" target="_blank" rel="noopener noreferrer">§ 193 BGB im Wortlaut →</a>
+          </li>
+      </ol>
+
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 1 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2024-10-11-datum:1"># Berechnung der Einwendungsfrist
+
+## Rechtliche Grundlage
+Nach **§ 556 Abs. 3 Satz 5 BGB** hat der Mieter **12 Monate** ab Zugang der Abrechnung Zeit, um Einwendungen gegen die Betriebskostenabrechnung zu erheben.
+
+## Fristberechnung
+
+**1. Schritt: Grundfrist berechnen**
+- Zugang der Abrechnung: 11.10.2024
+- Fristende (12 Monate): 11.10.2025
+
+**2. Schritt: Wochentag prüfen**
+Der 11.10.2025 fällt auf einen **Samstag**.
+
+**3. Schritt: § 193 BGB anwenden**
+Nach § 193 BGB gilt: Fällt das Ende einer Frist auf einen Samstag, Sonntag oder gesetzlichen Feiertag, so tritt an dessen Stelle der nächste Werktag.
+
+Der nächste Werktag nach Samstag, 11.10.2025, ist **Montag, der 13.10.2025** (kein Feiertag).
+
+## Ergebnis
+Die Einwendungen des Mieters müssen dem Vermieter somit spätestens am 13.10.2025 zugehen.
+
+ANTWORT: 13.10.2025</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-15-claude-sonnet-5-fristen-voll.json</code>, Position 47 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.1.sha16">47f1bcdfc8752613</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 2 im Wortlaut (falsch)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2024-10-11-datum:2"># Berechnung der Einwendungsfrist
+
+## Rechtsgrundlage
+Nach **§ 556 Abs. 3 Satz 5 BGB** hat der Mieter Einwendungen gegen die Betriebskostenabrechnung spätestens bis zum Ablauf des **zwölften Monats nach Zugang** der Abrechnung geltend zu machen.
+
+## Fristberechnung
+
+**Zugang der Abrechnung:** 11.10.2024
+
+**Fristberechnung nach § 188 Abs. 2 BGB:**
+Die Jahresfrist endet mit Ablauf desjenigen Tages des nächsten Jahres, der durch seine Benennung dem Ereignistag entspricht.
+
+→ Fristende: **11.10.2025**
+
+## Prüfung nach § 193 BGB
+
+§ 193 BGB verlängert die Frist auf den nächsten Werktag, wenn das Fristende auf einen Samstag, Sonntag oder gesetzlichen Feiertag fällt.
+
+**Wochentag des 11.10.2025:** Dienstag (kein Samstag, Sonntag oder Feiertag)
+
+Der Tag der Deutschen Einheit (3.10.) liegt nicht auf dem Fristende, und der 11.10.2025 fällt auf einen regulären Werktag (Dienstag).
+
+## Ergebnis
+
+Da der 11.10.2025 ein normaler Werktag ist, kommt § 193 BGB hier **nicht zur Anwendung** – eine Verschiebung der Frist entfällt.
+
+Die Einwendungen des Mieters müssen dem Vermieter somit spätestens am **11.10.2025** zugehen.
+
+ANTWORT: 11.10.2025</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-16-claude-sonnet-5-fristen-voll-lauf2.json</code>, Position 47 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.2.sha16">523bf5eefb6571af</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 3 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2024-10-11-datum:3"># Berechnung der Einwendungsfrist
+
+## 1. Gesetzliche Grundlage
+Nach § 556 Abs. 3 Satz 5 BGB muss der Mieter Einwendungen gegen die Betriebskostenabrechnung **spätestens bis zum Ablauf von 12 Monaten nach Zugang der Abrechnung** erheben.
+
+## 2. Fristberechnung
+- Zugang der Abrechnung: **11.10.2024**
+- Fristende (12 Monate später): **11.10.2025**
+
+## 3. Prüfung nach § 193 BGB
+Der 11.10.2025 fällt auf einen **Samstag**.
+
+Nach § 193 BGB gilt: Fällt das Ende einer Frist auf einen Samstag, Sonntag oder gesetzlichen Feiertag, so verschiebt sich die Frist auf den nächsten Werktag.
+
+- Samstag, 11.10.2025 → kein Werktag
+- Sonntag, 12.10.2025 → kein Werktag
+- Montag, 13.10.2025 → Werktag (kein Feiertag)
+
+## 4. Ergebnis
+Die Einwendungen des Mieters müssen dem Vermieter somit spätestens am **Montag, den 13.10.2025** zugehen.
+
+ANTWORT: 13.10.2025</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-16-claude-sonnet-5-fristen-voll-lauf3.json</code>, Position 47 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.3.sha16">22369ad6ab1e3268</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+    </section>
+
+    <section class="bk-karte" id="bsp-frist-einwendung-2024-08-04-ja-nein-2025-08-05">
+      <h2>Zugang 04.08.2024, Einwendungen am 05.08.2025 – gewahrt?</h2>
+      <p>frist-einwendung-2024-08-04-ja-nein-2025-08-05 · Position 84 von 546</p>
+      <p>Eine Betriebskostenabrechnung ging dem Mieter am 04.08.2024 zu. Die Einwendungen des Mieters gingen dem Vermieter am 05.08.2025 zu. War die Einwendungsfrist gewahrt?</p>
+      <p class="bk-grundlage">Schlüssel: nein · § 556 Abs. 3 Satz 5 BGB</p>
+      <ol class="bk-schritte">
+          <li class="bk-schritt">
+            <strong>§ 187 Abs. 1 BGB</strong>
+            <p>Fristbeginn: Der 04.08.2024 ist der Tag des Ereignisses (Zugang der Abrechnung) und wird nicht mitgerechnet.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__187.html" target="_blank" rel="noopener noreferrer">§ 187 Abs. 1 BGB im Wortlaut →</a>
+          </li>
+          <li class="bk-schritt">
+            <strong>§ 188 Abs. 2 BGB</strong>
+            <p>Fristende: Die Zwölfmonatsfrist endet mit Ablauf des Tages im zwölften Monat, der durch seine Zahl dem 04.08.2024 entspricht.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__188.html" target="_blank" rel="noopener noreferrer">§ 188 Abs. 2 BGB im Wortlaut →</a>
+          </li>
+          <li class="bk-schritt">
+            <strong>§ 193 BGB</strong>
+            <p>Das Fristende fällt auf einen Montag und ist nach der bundeseinheitlichen Liste kein Feiertag. § 193 BGB führt hier zu keiner Verschiebung.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__193.html" target="_blank" rel="noopener noreferrer">§ 193 BGB im Wortlaut →</a>
+          </li>
+      </ol>
+
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 1 im Wortlaut (falsch)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2024-08-04-ja-nein-2025-08-05:1"># Prüfung der Einwendungsfrist gemäß § 556 Abs. 3 S. 5 BGB
+
+## Fristdauer
+Die Einwendungsfrist für Betriebskostenabrechnungen beträgt **12 Monate** ab Zugang der Abrechnung (§ 556 Abs. 3 S. 5 BGB).
+
+## Fristberechnung
+
+**Zugang der Abrechnung:** 04.08.2024
+
+**Fristbeginn** (§ 187 Abs. 1 BGB):
+Da der Fristbeginn an ein Ereignis (Zugang) anknüpft, wird der Tag des Zugangs selbst nicht mitgerechnet. Die Frist beginnt daher am **05.08.2024**.
+
+**Fristende** (§ 188 Abs. 2 BGB):
+Bei einer nach Monaten (hier: Jahren) bestimmten Frist endet diese mit Ablauf desjenigen Tages des letzten Monats, der durch seine Zahl dem Tag entspricht, an welchem die Frist zu laufen begonnen hat.
+
+Da die Frist am 05.08.2024 zu laufen begann, endet sie mit Ablauf des **05.08.2025**.
+
+## Ergebnis
+
+Die Einwendungen des Mieters gingen dem Vermieter am **05.08.2025** zu – also noch am letzten Tag der Frist, innerhalb der Frist.
+
+Die Einwendungsfrist wurde somit **gewahrt**.
+
+---
+
+ANTWORT: ja</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-15-claude-sonnet-5-fristen-voll.json</code>, Position 84 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.1.sha16">47f1bcdfc8752613</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 2 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2024-08-04-ja-nein-2025-08-05:2"># Prüfung der Einwendungsfrist nach § 556 Abs. 3 S. 5 BGB
+
+## Rechtliche Grundlage
+Der Mieter kann Einwendungen gegen die Betriebskostenabrechnung nur innerhalb von **12 Monaten** nach Zugang der Abrechnung geltend machen (§ 556 Abs. 3 S. 5 BGB). Nach Ablauf dieser Frist ist der Mieter mit Einwendungen ausgeschlossen, es sei denn, er hat die Verspätung nicht zu vertreten.
+
+## Fristberechnung
+
+**Zugang der Abrechnung:** 04.08.2024
+
+**Fristbeginn:** Gemäß § 187 Abs. 1 BGB beginnt die Frist am Tag nach dem Ereignis, also am 05.08.2024.
+
+**Fristende:** Gemäß § 188 Abs. 2 BGB endet eine nach Monaten bemessene Frist mit dem Ablauf desjenigen Tages des letzten Monats, der durch seine Zahl dem Tag entspricht, in den das Ereignis fällt.
+
+→ Die 12-Monats-Frist endet somit am **04.08.2025** (24:00 Uhr).
+
+## Zugang der Einwendungen
+Die Einwendungen des Mieters gingen dem Vermieter erst am **05.08.2025** zu.
+
+## Ergebnis
+Der Zugang der Einwendungen erfolgte **einen Tag nach Fristablauf**. Die Einwendungsfrist wurde damit nicht gewahrt.
+
+ANTWORT: nein</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-16-claude-sonnet-5-fristen-voll-lauf2.json</code>, Position 84 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.2.sha16">523bf5eefb6571af</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 3 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2024-08-04-ja-nein-2025-08-05:3"># Prüfung der Einwendungsfrist gem. § 556 Abs. 3 S. 5 BGB
+
+## Rechtliche Grundlage
+Nach § 556 Abs. 3 S. 5 BGB hat der Mieter Einwendungen gegen die Betriebskostenabrechnung **spätestens bis zum Ablauf des zwölften Monats nach Zugang der Abrechnung** dem Vermieter mitzuteilen.
+
+## Fristberechnung
+
+**Zugang der Abrechnung:** 04.08.2024
+
+**Fristbeginn** (§ 187 Abs. 1 BGB):
+Da es sich um ein Ereignis (Zugang) handelt, wird der Tag des Zugangs nicht mitgerechnet. Die Frist beginnt am 05.08.2024.
+
+**Fristende** (§ 188 Abs. 2 BGB):
+Die Frist endet mit Ablauf desjenigen Tages des letzten Monats, der durch seine Zahl dem Tag des Ereignisses entspricht. Das Ereignis (Zugang) fiel auf den 04.08.2024.
+
+→ Die Frist endet somit am **04.08.2025** (24:00 Uhr).
+
+## Zugang der Einwendungen
+Die Einwendungen des Mieters gingen dem Vermieter erst am **05.08.2025** zu – also **einen Tag nach Ablauf der Zwölfmonatsfrist**.
+
+## Ergebnis
+Die Einwendungsfrist wurde **nicht gewahrt**, da der Zugang beim Vermieter erst nach Fristablauf erfolgte.
+
+ANTWORT: nein</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-16-claude-sonnet-5-fristen-voll-lauf3.json</code>, Position 84 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.3.sha16">22369ad6ab1e3268</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+    </section>
+
+    <section class="bk-karte" id="bsp-frist-einwendung-2023-03-07-ja-nein-2024-03-08">
+      <h2>Zugang 07.03.2023, Einwendungen am 08.03.2024 – gewahrt?</h2>
+      <p>frist-einwendung-2023-03-07-ja-nein-2024-03-08 · Position 150 von 546</p>
+      <p>Eine Betriebskostenabrechnung ging dem Mieter am 07.03.2023 zu. Die Einwendungen des Mieters gingen dem Vermieter am 08.03.2024 zu. War die Einwendungsfrist gewahrt?</p>
+      <p class="bk-grundlage">Schlüssel: nein · § 556 Abs. 3 Satz 5 BGB</p>
+      <ol class="bk-schritte">
+          <li class="bk-schritt">
+            <strong>§ 187 Abs. 1 BGB</strong>
+            <p>Fristbeginn: Der 07.03.2023 ist der Tag des Ereignisses (Zugang der Abrechnung) und wird nicht mitgerechnet.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__187.html" target="_blank" rel="noopener noreferrer">§ 187 Abs. 1 BGB im Wortlaut →</a>
+          </li>
+          <li class="bk-schritt">
+            <strong>§ 188 Abs. 2 BGB</strong>
+            <p>Fristende: Die Zwölfmonatsfrist endet mit Ablauf des Tages im zwölften Monat, der durch seine Zahl dem 07.03.2023 entspricht.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__188.html" target="_blank" rel="noopener noreferrer">§ 188 Abs. 2 BGB im Wortlaut →</a>
+          </li>
+          <li class="bk-schritt">
+            <strong>§ 193 BGB</strong>
+            <p>Das Fristende fällt auf einen Donnerstag und ist nach der bundeseinheitlichen Liste kein Feiertag. § 193 BGB führt hier zu keiner Verschiebung.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__193.html" target="_blank" rel="noopener noreferrer">§ 193 BGB im Wortlaut →</a>
+          </li>
+      </ol>
+
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 1 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2023-03-07-ja-nein-2024-03-08:1"># Prüfung der Einwendungsfrist nach § 556 Abs. 3 S. 5 BGB
+
+## Rechtsgrundlage
+Der Mieter kann dem Vermieter **Einwendungen gegen die Abrechnung** grundsätzlich nur bis zum **Ablauf des zwölften Monats nach Zugang der Abrechnung** mitteilen (§ 556 Abs. 3 S. 5 BGB).
+
+## Fristberechnung
+
+**Zugang der Abrechnung:** 07.03.2023
+
+**Fristbeginn:** Gemäß § 187 Abs. 1 BGB wird bei Ereignisfristen der Tag des Ereignisses (hier: Zugang) nicht mitgerechnet. Die Frist beginnt somit am 08.03.2023.
+
+**Fristende:** Nach § 188 Abs. 2 BGB endet die Frist mit Ablauf desjenigen Tages des letzten Monats, welcher durch seine Zahl dem Tag entspricht, an dem das fristauslösende Ereignis (Zugang) stattfand.
+
+→ Die Frist endete somit am **07.03.2024** (24:00 Uhr).
+
+## Zugang der Einwendungen
+Die Einwendungen des Mieters gingen dem Vermieter erst am **08.03.2024** zu – also **einen Tag nach Fristablauf**.
+
+## Ergebnis
+Die Einwendungsfrist war zum Zeitpunkt des Zugangs der Einwendungen bereits abgelaufen. Die Frist wurde **nicht gewahrt**.
+
+---
+
+ANTWORT: nein</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-15-claude-sonnet-5-fristen-voll.json</code>, Position 150 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.1.sha16">47f1bcdfc8752613</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 2 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2023-03-07-ja-nein-2024-03-08:2"># Prüfung der Einwendungsfrist gemäß § 556 Abs. 3 BGB
+
+## Rechtliche Grundlage
+Nach § 556 Abs. 3 Satz 6 BGB hat der Mieter Einwendungen gegen die Betriebskostenabrechnung **spätestens bis zum Ablauf des zwölften Monats nach Zugang der Abrechnung** dem Vermieter mitzuteilen.
+
+## Fristberechnung
+
+**Fristbeginn:**
+- Zugang der Abrechnung: 07.03.2023
+- Gemäß § 187 Abs. 1 BGB wird der Tag des fristauslösenden Ereignisses (Zugang) bei der Berechnung nicht mitgerechnet
+- Die Frist beginnt somit am 08.03.2023
+
+**Fristende:**
+- Gemäß § 188 Abs. 2 BGB endet eine nach Monaten bestimmte Frist mit Ablauf desjenigen Tages des letzten Monats, der durch seine Zahl dem Tag des fristauslösenden Ereignisses entspricht
+- Das Ereignis (Zugang) fiel auf den 7. Tag des Monats
+- Die 12-Monats-Frist endet daher mit Ablauf des **07.03.2024** (24:00 Uhr)
+
+## Ergebnis
+Die Einwendungen des Mieters sind dem Vermieter erst am **08.03.2024** zugegangen – also einen Tag nach Ablauf der gesetzlichen Frist.
+
+Die Einwendungsfrist wurde damit **nicht gewahrt**. Der Mieter könnte seine Einwendungen nur noch geltend machen, wenn er die verspätete Geltendmachung nicht zu vertreten hat (§ 556 Abs. 3 Satz 5 BGB).
+
+ANTWORT: nein</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-16-claude-sonnet-5-fristen-voll-lauf2.json</code>, Position 150 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.2.sha16">523bf5eefb6571af</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 3 im Wortlaut (falsch)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2023-03-07-ja-nein-2024-03-08:3"># Prüfung der Einwendungsfrist nach § 556 Abs. 3 S. 5 BGB
+
+## Rechtliche Grundlage
+Nach § 556 Abs. 3 S. 5 BGB muss der Mieter Einwendungen gegen die Betriebskostenabrechnung **spätestens bis zum Ablauf des zwölften Monats nach Zugang der Abrechnung** geltend machen.
+
+## Fristberechnung
+
+**Zugang der Abrechnung:** 07.03.2023
+
+**Fristbeginn** (§ 187 Abs. 1 BGB):
+Da der Zugang ein Ereignis ist, wird der Tag des Zugangs nicht mitgerechnet. Die Frist beginnt somit am **08.03.2023**.
+
+**Fristende** (§ 188 Abs. 2 BGB):
+Bei einer nach Monaten bestimmten Frist endet diese mit Ablauf des Tages des letzten Monats, der durch seine Zahl dem Tag entspricht, an dem die Frist zu laufen begann.
+
+- Fristbeginn: 08.03.2023
+- Ende der 12-Monats-Frist: **08.03.2024, 24:00 Uhr**
+
+## Ergebnis
+
+Die Einwendungen gingen dem Vermieter am **08.03.2024** zu – also noch am letzten Tag der Frist, vor Fristablauf um Mitternacht.
+
+Die Einwendungsfrist wurde damit **gewahrt**.
+
+ANTWORT: ja</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-16-claude-sonnet-5-fristen-voll-lauf3.json</code>, Position 150 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.3.sha16">22369ad6ab1e3268</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+    </section>
+
+    <section class="bk-karte" id="bsp-frist-abrechnung-2019-05-31-datum">
+      <h2>Zeitraum bis 31.05.2019 – Abrechnung bis wann? · § 193 BGB genannt</h2>
+      <p>frist-abrechnung-2019-05-31-datum · Position 331 von 546</p>
+      <p>Der Abrechnungszeitraum einer Betriebskostenabrechnung endete am 31.05.2019. Bis wann muss die Abrechnung dem Mieter unter Berücksichtigung von § 193 BGB spätestens zugehen?</p>
+      <p class="bk-grundlage">Schlüssel: 02.06.2020 · § 556 Abs. 3 Satz 2 BGB</p>
+      <ol class="bk-schritte">
+          <li class="bk-schritt">
+            <strong>§ 187 Abs. 1 BGB</strong>
+            <p>Fristbeginn: Der 31.05.2019 ist der Tag des Ereignisses (Ende des Abrechnungszeitraums) und wird nicht mitgerechnet.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__187.html" target="_blank" rel="noopener noreferrer">§ 187 Abs. 1 BGB im Wortlaut →</a>
+          </li>
+          <li class="bk-schritt">
+            <strong>§ 188 Abs. 2 BGB</strong>
+            <p>Fristende: Die Zwölfmonatsfrist endet mit Ablauf des Tages im zwölften Monat, der durch seine Zahl dem 31.05.2019 entspricht.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__188.html" target="_blank" rel="noopener noreferrer">§ 188 Abs. 2 BGB im Wortlaut →</a>
+          </li>
+          <li class="bk-schritt">
+            <strong>§ 193 BGB</strong>
+            <p>Das Fristende fällt auf einen Tag, an dem eine Frist nach § 193 BGB nicht endet: Sonntag. An seine Stelle tritt der nächste Werktag: Dienstag, 02.06.2020.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__193.html" target="_blank" rel="noopener noreferrer">§ 193 BGB im Wortlaut →</a>
+          </li>
+      </ol>
+
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 1 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-abrechnung-2019-05-31-datum:1"># Berechnung der Abrechnungsfrist
+
+## Grundlage: § 556 Abs. 3 BGB
+Der Vermieter muss die Betriebskostenabrechnung dem Mieter **spätestens bis zum Ablauf des zwölften Monats nach Ende des Abrechnungszeitraums** zugehen lassen.
+
+## Fristberechnung
+- Abrechnungszeitraum endet: 31.05.2019
+- Zwölf Monate später: 31.05.2020
+
+## Prüfung nach § 193 BGB
+§ 193 BGB bestimmt: Fällt das Ende einer Frist auf einen Samstag, Sonntag oder gesetzlichen Feiertag, so tritt an dessen Stelle der nächste Werktag.
+
+Der 31.05.2020 ist ein **Sonntag** (Pfingstsonntag).
+
+Der darauffolgende Tag, der 01.06.2020, ist Pfingstmontag – ebenfalls ein gesetzlicher Feiertag.
+
+Somit verschiebt sich das Fristende weiter auf den nächsten Werktag: **Dienstag, den 02.06.2020**.
+
+ANTWORT: 02.06.2020</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-15-claude-sonnet-5-fristen-voll.json</code>, Position 331 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.1.sha16">47f1bcdfc8752613</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 2 im Wortlaut (falsch)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-abrechnung-2019-05-31-datum:2"># Berechnung der Abrechnungsfrist
+
+## Grundlage: § 556 Abs. 3 BGB
+Die Betriebskostenabrechnung muss dem Mieter **spätestens bis zum Ablauf des zwölften Monats nach Ende des Abrechnungszeitraums** zugehen.
+
+## Berechnung der Frist
+- Abrechnungszeitraum endet: **31.05.2019**
+- Zwölf Monate später: **31.05.2020**
+
+## Prüfung nach § 193 BGB
+Der 31.05.2020 fällt auf einen **Sonntag**.
+
+Gemäß § 193 BGB gilt: Fällt der letzte Tag einer Frist auf einen Sonntag, Samstag oder gesetzlichen Feiertag, so tritt an dessen Stelle der nächste Werktag.
+
+Der nächste Werktag ist **Montag, der 01.06.2020** (kein Feiertag).
+
+## Ergebnis
+Die Betriebskostenabrechnung muss dem Mieter somit spätestens am 01.06.2020 zugehen, damit die Frist gewahrt ist.
+
+ANTWORT: 01.06.2020</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-16-claude-sonnet-5-fristen-voll-lauf2.json</code>, Position 331 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.2.sha16">523bf5eefb6571af</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 3 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-abrechnung-2019-05-31-datum:3"># Berechnung der Abrechnungsfrist
+
+## 1. Gesetzliche Frist nach § 556 Abs. 3 BGB
+Die Betriebskostenabrechnung muss dem Mieter spätestens **bis zum Ablauf des zwölften Monats nach Ende des Abrechnungszeitraums** zugehen.
+
+- Abrechnungszeitraum endet: **31.05.2019**
+- Fristende demnach: **31.05.2020**
+
+## 2. Prüfung des Fristendes anhand des Kalenders 2020
+
+Der 31.05.2020 fällt auf einen **Sonntag**.
+
+Der darauffolgende Tag, der **01.06.2020**, ist **Pfingstmontag** – ein gesetzlicher Feiertag in ganz Deutschland.
+
+## 3. Anwendung von § 193 BGB
+
+Nach § 193 BGB gilt: Fällt das Ende einer Frist auf einen Sonntag, Sonnabend oder einen am Erklärungsort staatlich anerkannten allgemeinen Feiertag, so tritt an die Stelle eines solchen Tages der nächste Werktag.
+
+Da sowohl der 31.05.2020 (Sonntag) als auch der 01.06.2020 (Pfingstmontag) keine Werktage sind, verschiebt sich die Frist auf den nächsten Werktag:
+
+**Dienstag, den 02.06.2020**
+
+## Ergebnis
+
+Die Betriebskostenabrechnung muss dem Mieter spätestens am 02.06.2020 zugehen.
+
+ANTWORT: 02.06.2020</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-16-claude-sonnet-5-fristen-voll-lauf3.json</code>, Position 331 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.3.sha16">22369ad6ab1e3268</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+    </section>
+
+    <section class="bk-karte" id="bsp-frist-einwendung-2026-05-11-datum">
+      <h2>Zugang 11.05.2026 – Einwendungen bis wann?</h2>
+      <p>frist-einwendung-2026-05-11-datum · Position 371 von 546</p>
+      <p>Eine Betriebskostenabrechnung ging dem Mieter am 11.05.2026 zu. Bis wann müssen Einwendungen des Mieters gegen die Abrechnung dem Vermieter spätestens zugehen?</p>
+      <p class="bk-grundlage">Schlüssel: 11.05.2027 · § 556 Abs. 3 Satz 5 BGB</p>
+      <ol class="bk-schritte">
+          <li class="bk-schritt">
+            <strong>§ 187 Abs. 1 BGB</strong>
+            <p>Fristbeginn: Der 11.05.2026 ist der Tag des Ereignisses (Zugang der Abrechnung) und wird nicht mitgerechnet.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__187.html" target="_blank" rel="noopener noreferrer">§ 187 Abs. 1 BGB im Wortlaut →</a>
+          </li>
+          <li class="bk-schritt">
+            <strong>§ 188 Abs. 2 BGB</strong>
+            <p>Fristende: Die Zwölfmonatsfrist endet mit Ablauf des Tages im zwölften Monat, der durch seine Zahl dem 11.05.2026 entspricht.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__188.html" target="_blank" rel="noopener noreferrer">§ 188 Abs. 2 BGB im Wortlaut →</a>
+          </li>
+          <li class="bk-schritt">
+            <strong>§ 193 BGB</strong>
+            <p>Das Fristende fällt auf einen Dienstag und ist nach der bundeseinheitlichen Liste kein Feiertag. § 193 BGB führt hier zu keiner Verschiebung.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__193.html" target="_blank" rel="noopener noreferrer">§ 193 BGB im Wortlaut →</a>
+          </li>
+      </ol>
+<div class="hg-hint-box hg-hint-warn"><strong>Hier ist der Schlüssel selbst eine Entscheidung.</strong> Die Antwort aus Lauf 2 liest „Ablauf des zwölften Monats“ als Kalendermonat und landet beim Monatsletzten – sie sagt das auch offen. Der Benchmark folgt der anderen Lesart: zwölf Monate nach §§ 187 Abs. 1, 188 Abs. 2 BGB, gleiche Tageszahl. Das ist die herrschende – der BGH spricht von einer „zwölfmonatigen Einwendungsfrist“, die Kalendermonats-Lesart wird nirgends vertreten. Die Antwort wird also unter einer dokumentierten Entscheidung als falsch gewertet, nicht als schlichter Rechenfehler. Die Fälle, in denen beide Lesarten ernsthaft auseinandergehen (Start am 28.02. vor einem Schaltjahr), sind aus dem Fragensatz heraus.</div>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 1 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2026-05-11-datum:1"># Einwendungsfrist bei Betriebskostenabrechnung
+
+Nach **§ 556 Abs. 3 Satz 5 BGB** muss der Mieter Einwendungen gegen die Betriebskostenabrechnung innerhalb von **12 Monaten nach Zugang der Abrechnung** dem Vermieter mitteilen.
+
+**Berechnung:**
+- Zugang der Abrechnung: 11.05.2026
+- Fristende: 12 Monate später = 11.05.2027
+
+Die Einwendungen müssen dem Vermieter also spätestens am 11.05.2027 zugehen (nicht nur abgesendet werden – maßgeblich ist der tatsächliche Zugang beim Vermieter).
+
+ANTWORT: 11.05.2027</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-15-claude-sonnet-5-fristen-voll.json</code>, Position 371 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.1.sha16">47f1bcdfc8752613</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 2 im Wortlaut (falsch)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2026-05-11-datum:2"># Berechnung der Einwendungsfrist gemäß § 556 Abs. 3 S. 5 BGB
+
+**Rechtliche Grundlage:**
+Nach § 556 Abs. 3 Satz 5 BGB muss der Mieter Einwendungen gegen die Betriebskostenabrechnung **spätestens bis zum Ablauf des zwölften Monats nach Zugang der Abrechnung** dem Vermieter mitteilen.
+
+**Berechnung:**
+
+- Zugang der Abrechnung: **11.05.2026**
+- Die Frist von zwölf Monaten beginnt mit dem Zugang und endet mit Ablauf des zwölften Monats, gerechnet ab dem Monat des Zugangs.
+- Der Zugang erfolgte im Mai 2026 → der "zwölfte Monat nach Zugang" ist somit der **Mai 2027**.
+- Die Frist endet daher mit **Ablauf des Monats Mai 2027**, also am letzten Tag dieses Monats.
+
+**Ergebnis:**
+
+Die Einwendungen müssen dem Vermieter spätestens bis zum **31.05.2027** (24:00 Uhr) zugehen. Danach ist der Mieter mit Einwendungen grundsätzlich ausgeschlossen (Ausschlussfrist), sofern er die Verspätung zu vertreten hat.
+
+ANTWORT: 31.05.2027</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-16-claude-sonnet-5-fristen-voll-lauf2.json</code>, Position 371 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.2.sha16">523bf5eefb6571af</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 3 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2026-05-11-datum:3"># Berechnung der Einwendungsfrist
+
+## Rechtsgrundlage
+Nach **§ 556 Abs. 3 Satz 5 BGB** hat der Mieter nach Zugang der Abrechnung **12 Monate** Zeit, um Einwendungen gegen die Betriebskostenabrechnung geltend zu machen.
+
+## Fristberechnung
+
+**Zugang der Abrechnung:** 11.05.2026
+
+**Fristbeginn:** Der Tag des Zugangs wird gemäß § 187 Abs. 1 BGB nicht mitgerechnet.
+
+**Fristdauer:** 12 Monate (= 1 Jahr)
+
+**Fristende:** Gemäß § 188 Abs. 2 BGB endet eine Jahresfrist mit dem Ablauf desjenigen Tages des letzten Monats, der durch seine Zahl dem Tag entspricht, in den das fristauslösende Ereignis fällt.
+
+→ Die Frist endet somit am **11.05.2027** (24:00 Uhr).
+
+## Ergebnis
+Die Einwendungen des Mieters müssen dem Vermieter **spätestens bis zum 11.05.2027** zugehen. Danach ist der Mieter grundsätzlich mit Einwendungen ausgeschlossen (Ausschlussfrist), es sei denn, er hat die Verspätung nicht zu vertreten (§ 556 Abs. 3 Satz 6 BGB).
+
+ANTWORT: 11.05.2027</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-16-claude-sonnet-5-fristen-voll-lauf3.json</code>, Position 371 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.3.sha16">22369ad6ab1e3268</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+    </section>
+
+    <section class="bk-karte" id="bsp-frist-einwendung-2027-09-02-datum">
+      <h2>Zugang 02.09.2027 – Einwendungen bis wann? · § 193 BGB genannt</h2>
+      <p>frist-einwendung-2027-09-02-datum · Position 530 von 546</p>
+      <p>Eine Betriebskostenabrechnung ging dem Mieter am 02.09.2027 zu. Bis wann müssen Einwendungen des Mieters gegen die Abrechnung dem Vermieter unter Berücksichtigung von § 193 BGB spätestens zugehen?</p>
+      <p class="bk-grundlage">Schlüssel: 04.09.2028 · § 556 Abs. 3 Satz 5 BGB</p>
+      <ol class="bk-schritte">
+          <li class="bk-schritt">
+            <strong>§ 187 Abs. 1 BGB</strong>
+            <p>Fristbeginn: Der 02.09.2027 ist der Tag des Ereignisses (Zugang der Abrechnung) und wird nicht mitgerechnet.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__187.html" target="_blank" rel="noopener noreferrer">§ 187 Abs. 1 BGB im Wortlaut →</a>
+          </li>
+          <li class="bk-schritt">
+            <strong>§ 188 Abs. 2 BGB</strong>
+            <p>Fristende: Die Zwölfmonatsfrist endet mit Ablauf des Tages im zwölften Monat, der durch seine Zahl dem 02.09.2027 entspricht.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__188.html" target="_blank" rel="noopener noreferrer">§ 188 Abs. 2 BGB im Wortlaut →</a>
+          </li>
+          <li class="bk-schritt">
+            <strong>§ 193 BGB</strong>
+            <p>Das Fristende fällt auf einen Tag, an dem eine Frist nach § 193 BGB nicht endet: Sonnabend. An seine Stelle tritt der nächste Werktag: Montag, 04.09.2028.</p>
+            <a class="bk-quelle" href="https://www.gesetze-im-internet.de/bgb/__193.html" target="_blank" rel="noopener noreferrer">§ 193 BGB im Wortlaut →</a>
+          </li>
+      </ol>
+
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 1 im Wortlaut (falsch)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2027-09-02-datum:1"># Fristberechnung Betriebskostenabrechnung
+
+## Rechtsgrundlage
+Nach **§ 556 Abs. 3 Satz 5 BGB** muss der Mieter Einwendungen gegen die Betriebskostenabrechnung **spätestens bis zum Ablauf des zwölften Monats nach Zugang der Abrechnung** dem Vermieter mitteilen.
+
+## Fristberechnung
+
+**Zugang der Abrechnung:** 02.09.2027
+
+**Fristende (12 Monate):** 
+Die Frist endet nach § 188 Abs. 2 BGB mit Ablauf des Tages des letzten Monats, der durch seine Zahl dem Tag des Zugangs entspricht.
+
+→ 02.09.2028
+
+## Prüfung § 193 BGB
+
+Der 02.09.2028 fällt auf einen **Sonntag**.
+
+Da nach § 193 BGB eine Frist, die an einem Sonntag, Sonnabend oder gesetzlichen Feiertag endet, sich auf den **nächsten Werktag** verschiebt, endet die Frist am darauffolgenden Montag.
+
+Der 03.09.2028 (Montag) ist kein gesetzlicher Feiertag, sodass die Frist an diesem Tag endet.
+
+## Ergebnis
+
+Die Einwendungen des Mieters müssen dem Vermieter spätestens am **03.09.2028** zugehen.
+
+ANTWORT: 03.09.2028</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-15-claude-sonnet-5-fristen-voll.json</code>, Position 530 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.1.sha16">47f1bcdfc8752613</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 2 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2027-09-02-datum:2">**Fristberechnung:**
+
+Die Abrechnungsfrist des Mieters für Einwendungen beträgt gemäß § 556 Abs. 3 Satz 5 BGB **12 Monate** ab Zugang der Betriebskostenabrechnung.
+
+- Zugang der Abrechnung: 02.09.2027
+- Fristende (12 Monate später): 02.09.2028
+
+**Prüfung nach § 193 BGB:**
+
+Der 02.09.2028 fällt auf einen **Samstag**. Nach § 193 BGB verschiebt sich das Fristende in einem solchen Fall auf den nächstfolgenden Werktag.
+
+- Sonntag, 03.09.2028 → ebenfalls kein Werktag
+- Montag, 04.09.2028 → Werktag
+
+Die Einwendungen des Mieters müssen dem Vermieter daher spätestens am Montag, den 04.09.2028, zugehen.
+
+ANTWORT: 04.09.2028</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-16-claude-sonnet-5-fristen-voll-lauf2.json</code>, Position 530 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.2.sha16">523bf5eefb6571af</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 3 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="fristen:frist-einwendung-2027-09-02-datum:3"># Lösung
+
+## 1. Fristbeginn und Fristdauer
+Nach § 556 Abs. 3 S. 5 BGB muss der Mieter Einwendungen gegen die Betriebskostenabrechnung **spätestens bis zum Ablauf des zwölften Monats** nach Zugang der Abrechnung geltend machen.
+
+**Zugang der Abrechnung:** 02.09.2027 (Donnerstag)
+
+## 2. Berechnung der Frist (§ 188 Abs. 2 BGB)
+Die Frist endet zwölf Monate später, also am:
+
+**02.09.2028**
+
+## 3. Prüfung nach § 193 BGB
+Der 02.09.2028 fällt auf einen **Samstag**.
+
+Da nach § 193 BGB eine Frist, die an einem Samstag, Sonntag oder gesetzlichen Feiertag endet, sich auf den nächsten Werktag verschiebt, verlängert sich die Frist:
+
+- Samstag, 02.09.2028 → fällt aus
+- Sonntag, 03.09.2028 → fällt aus
+- **Montag, 04.09.2028** → nächster Werktag (kein Feiertag)
+
+## Ergebnis
+Die Einwendungen des Mieters müssen dem Vermieter spätestens am Montag, den 04.09.2028 zugehen.
+
+ANTWORT: 04.09.2028</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-16-claude-sonnet-5-fristen-voll-lauf3.json</code>, Position 530 von 546. SHA-256 der Datei: <code><span data-pruef="lauf.fristen.3.sha16">22369ad6ab1e3268</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Umlage: die Fehler fallen auf vier Begriffe – und die waren vorher benannt</h2>
+      <p>Beim Nachschlagen im Katalog verhält sich dasselbe Modell anders.</p>
+      <p>
+        Die Fehler streuen nicht, sie sitzen auf einem Feld verwandter Begriffe: Ungeziefer,
+        Schädlingsbekämpfung, Ungezieferbekämpfung (alle § 2 Nr. 9 BetrKV) und Wäschepflege
+        (§ 2 Nr. 16 BetrKV). Diese vier wurden <strong>vor</strong> dieser Serie benannt – aus der
+        vorangegangenen Serie, die auf einer anderen Fragendatei und in anderer Reihenfolge lief.
+        In der neuen Serie fällt <strong>jeder</strong> Fehler auf drei dieser vier Begriffe; die
+        übrigen <span data-pruef="umlage-neu.rest.antworten">216</span> Antworten sind fehlerfrei.
+      </p>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Begriff</th><th>Fundstelle</th><th>Pos.</th><th>Lauf 1</th><th>Lauf 2</th><th>Lauf 3</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="#bsp-umlage-ungeziefer">Ungeziefer</a><br><small>umlage-ungeziefer</small></td>
+              <td>§ 2 Nr. 9 BetrKV</td>
+              <td><span data-pruef="umlage-neu.gruppe.umlage-ungeziefer.position">25</span></td>
+              <td><strong><span data-pruef="umlage-neu.gruppe.umlage-ungeziefer.l1">falsch</span></strong></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.gruppe.umlage-ungeziefer.l2">richtig</span></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.gruppe.umlage-ungeziefer.l3">richtig</span></td>
+            </tr>
+            <tr>
+              <td><a href="#bsp-umlage-waeschepflege">Wäschepflege</a><br><small>umlage-waeschepflege</small></td>
+              <td>§ 2 Nr. 16 BetrKV</td>
+              <td><span data-pruef="umlage-neu.gruppe.umlage-waeschepflege.position">26</span></td>
+              <td class="hg-check-warn"><span data-pruef="umlage-neu.gruppe.umlage-waeschepflege.l1">n. a.</span></td>
+              <td><strong><span data-pruef="umlage-neu.gruppe.umlage-waeschepflege.l2">falsch</span></strong></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.gruppe.umlage-waeschepflege.l3">richtig</span></td>
+            </tr>
+            <tr>
+              <td><a href="#bsp-umlage-schaedlingsbekaempfung">Schädlingsbekämpfung</a><br><small>umlage-schaedlingsbekaempfung</small></td>
+              <td>§ 2 Nr. 9 BetrKV</td>
+              <td><span data-pruef="umlage-neu.gruppe.umlage-schaedlingsbekaempfung.position">40</span></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.gruppe.umlage-schaedlingsbekaempfung.l1">richtig</span></td>
+              <td><strong><span data-pruef="umlage-neu.gruppe.umlage-schaedlingsbekaempfung.l2">falsch</span></strong></td>
+              <td><strong><span data-pruef="umlage-neu.gruppe.umlage-schaedlingsbekaempfung.l3">falsch</span></strong></td>
+            </tr>
+            <tr>
+              <td><a href="#bsp-umlage-ungezieferbekaempfung">Ungezieferbekämpfung</a><br><small>umlage-ungezieferbekaempfung</small></td>
+              <td>§ 2 Nr. 9 BetrKV</td>
+              <td><span data-pruef="umlage-neu.gruppe.umlage-ungezieferbekaempfung.position">43</span></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.gruppe.umlage-ungezieferbekaempfung.l1">richtig</span></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.gruppe.umlage-ungezieferbekaempfung.l2">richtig</span></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.gruppe.umlage-ungezieferbekaempfung.l3">richtig</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Fragengruppe</th><th>Antworten</th><th>richtig</th><th>falsch</th><th>nicht auswertbar</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Begriffsgruppe (4 Begriffe)</td>
+              <td><span data-pruef="umlage-neu.gruppe.antworten">12</span></td>
+              <td><span data-pruef="umlage-neu.gruppe.richtig">7</span></td>
+              <td><strong><span data-pruef="umlage-neu.gruppe.falsch">4</span></strong></td>
+              <td><span data-pruef="umlage-neu.gruppe.na">1</span></td>
+            </tr>
+            <tr>
+              <td>Übrige § 2 Nr. 9: Reinigungsbegriffe</td>
+              <td><span data-pruef="umlage-neu.reinigung.antworten">12</span></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.reinigung.richtig">12</span></td>
+              <td>0</td><td>0</td>
+            </tr>
+            <tr>
+              <td>Übrige Fragen mit Schlüssel „ja“</td>
+              <td><span data-pruef="umlage-neu.restja.antworten">168</span></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.restja.richtig">168</span></td>
+              <td>0</td><td>0</td>
+            </tr>
+            <tr>
+              <td>Ausschlüsse (Schlüssel „nein“)</td>
+              <td><span data-pruef="umlage-neu.ausschluss.antworten">36</span></td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.ausschluss.richtig">36</span></td>
+              <td>0</td><td>0</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Die Gruppe ist nur deshalb als Gruppe erkennbar, weil ihre Nachbarschaft stabil ist –
+        die übrigen Begriffe derselben Nummer 9 sitzen in jedem Lauf richtig.
+      </p>
+
+      <div class="hg-hint-box">
+        <strong>Größenordnung, kein Beweis.</strong> Wären die Fehler gleichmäßig über die
+        <span data-pruef="umlage-neu.fragen">76</span> Fragen verteilt, läge die Wahrscheinlichkeit,
+        dass drei verschiedene falsche Fragen alle in einer vorher festgelegten Vierergruppe landen,
+        bei C(4,3)/C(76,3) = 4/70.300 ≈ <strong>0,006 %</strong>. Das ist gegen ein einfaches
+        Gleichverteilungsmodell gerechnet und sagt nur etwas über die Größenordnung – es ist kein
+        statistischer Nachweis.
+      </div>
+
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Die Vorhersage ist für Außenstehende nicht beweisbar.</strong> Dass die Gruppe vor
+        der Serie benannt wurde, ist bei uns dokumentiert – die Notiz liegt aber nicht im
+        Repository, und Commits belegen die Reihenfolge von Code und Läufen, nicht das Datum einer
+        Notiz. Nachträglich einchecken würde einen Zeitstempel erzeugen, der nichts beweist und wie
+        ein Beleg aussieht; das unterbleibt. Ab jetzt wird jede Vorhersage vor dem Lauf eingecheckt.
+      </div>
+
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Für genau diese vier Fragen ist der Reihenfolgetest schwach.</strong> Zwischen alter
+        und neuer Serie wechselten 62 der 76 Fragen ihren Platz – diese vier aber nur um 1 bis 4
+        Positionen. Jede Frage ist eine eigene Anfrage ohne Vorgeschichte, „Reihenfolge“ wirkt also
+        nur über Zeit und Nachbaranfragen. Ein Positionseffekt ist für diese vier nicht
+        ausgeschlossen. Ein starker Test wäre eine Fragendatei mit geänderten IDs; er ist notiert,
+        aber nicht gelaufen.
+      </div>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Die Replikation: dieselbe Gruppe, andere Datei, andere Reihenfolge</h2>
+      <p>Der Befund hat sich unter einer anderen Reihenfolge und an einem anderen Tag wiederholt.</p>
+      <p>
+        Vor der veröffentlichten Serie liefen drei weitere Läufe auf einer früheren Fassung der
+        Fragendatei (SHA-256 <span data-pruef="umlage-alt.fragendatei.sha8">74570428</span>…).
+        Schlüssel und Fragetexte sind identisch, die Kategorien und die Laufreihenfolge nicht –
+        deshalb werden die beiden Serien <strong>nicht zusammengelegt</strong>, sondern
+        nebeneinander gestellt.
+      </p>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Begriff</th><th>Alte Serie L1/L2/L3</th><th>Neue Serie L1/L2/L3</th><th>Position alt → neu</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Ungeziefer<br><small>§ 2 Nr. 9 BetrKV</small></td>
+              <td><span data-pruef="umlage-alt.gruppe.umlage-ungeziefer.l1" hidden>falsch</span>✗ <span data-pruef="umlage-alt.gruppe.umlage-ungeziefer.l2" hidden>richtig</span>✔ <span data-pruef="umlage-alt.gruppe.umlage-ungeziefer.l3" hidden>richtig</span>✔</td>
+              <td><span data-pruef="umlage-neu.gruppe.umlage-ungeziefer.l1" hidden>falsch</span>✗ <span data-pruef="umlage-neu.gruppe.umlage-ungeziefer.l2" hidden>richtig</span>✔ <span data-pruef="umlage-neu.gruppe.umlage-ungeziefer.l3" hidden>richtig</span>✔</td>
+              <td><span data-pruef="umlage-alt.gruppe.umlage-ungeziefer.position">26</span> → <span data-pruef="umlage-neu.gruppe.umlage-ungeziefer.position">25</span></td>
+            </tr>
+            <tr>
+              <td>Wäschepflege<br><small>§ 2 Nr. 16 BetrKV</small></td>
+              <td><span data-pruef="umlage-alt.gruppe.umlage-waeschepflege.l1" hidden>richtig</span>✔ <span data-pruef="umlage-alt.gruppe.umlage-waeschepflege.l2" hidden>falsch</span>✗ <span data-pruef="umlage-alt.gruppe.umlage-waeschepflege.l3" hidden>falsch</span>✗</td>
+              <td><span data-pruef="umlage-neu.gruppe.umlage-waeschepflege.l1" hidden>n. a.</span>– <span data-pruef="umlage-neu.gruppe.umlage-waeschepflege.l2" hidden>falsch</span>✗ <span data-pruef="umlage-neu.gruppe.umlage-waeschepflege.l3" hidden>richtig</span>✔</td>
+              <td><span data-pruef="umlage-alt.gruppe.umlage-waeschepflege.position">24</span> → <span data-pruef="umlage-neu.gruppe.umlage-waeschepflege.position">26</span></td>
+            </tr>
+            <tr>
+              <td>Schädlingsbekämpfung<br><small>§ 2 Nr. 9 BetrKV</small></td>
+              <td><span data-pruef="umlage-alt.gruppe.umlage-schaedlingsbekaempfung.l1" hidden>richtig</span>✔ <span data-pruef="umlage-alt.gruppe.umlage-schaedlingsbekaempfung.l2" hidden>falsch</span>✗ <span data-pruef="umlage-alt.gruppe.umlage-schaedlingsbekaempfung.l3" hidden>falsch</span>✗</td>
+              <td><span data-pruef="umlage-neu.gruppe.umlage-schaedlingsbekaempfung.l1" hidden>richtig</span>✔ <span data-pruef="umlage-neu.gruppe.umlage-schaedlingsbekaempfung.l2" hidden>falsch</span>✗ <span data-pruef="umlage-neu.gruppe.umlage-schaedlingsbekaempfung.l3" hidden>falsch</span>✗</td>
+              <td><span data-pruef="umlage-alt.gruppe.umlage-schaedlingsbekaempfung.position">37</span> → <span data-pruef="umlage-neu.gruppe.umlage-schaedlingsbekaempfung.position">40</span></td>
+            </tr>
+            <tr>
+              <td>Ungezieferbekämpfung<br><small>§ 2 Nr. 9 BetrKV</small></td>
+              <td><span data-pruef="umlage-alt.gruppe.umlage-ungezieferbekaempfung.l1" hidden>richtig</span>✔ <span data-pruef="umlage-alt.gruppe.umlage-ungezieferbekaempfung.l2" hidden>richtig</span>✔ <span data-pruef="umlage-alt.gruppe.umlage-ungezieferbekaempfung.l3" hidden>falsch</span>✗</td>
+              <td><span data-pruef="umlage-neu.gruppe.umlage-ungezieferbekaempfung.l1" hidden>richtig</span>✔ <span data-pruef="umlage-neu.gruppe.umlage-ungezieferbekaempfung.l2" hidden>richtig</span>✔ <span data-pruef="umlage-neu.gruppe.umlage-ungezieferbekaempfung.l3" hidden>richtig</span>✔</td>
+              <td><span data-pruef="umlage-alt.gruppe.umlage-ungezieferbekaempfung.position">47</span> → <span data-pruef="umlage-neu.gruppe.umlage-ungezieferbekaempfung.position">43</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Fragengruppe</th><th>Alte Serie</th><th>Neue Serie</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Begriffsgruppe (12 Antworten)</td>
+              <td><span data-pruef="umlage-alt.gruppe.richtig">6</span> richtig · <strong><span data-pruef="umlage-alt.gruppe.falsch">6</span> falsch</strong></td>
+              <td><span data-pruef="umlage-neu.gruppe.richtig">7</span> richtig · <strong><span data-pruef="umlage-neu.gruppe.falsch">4</span> falsch</strong> · <span data-pruef="umlage-neu.gruppe.na">1</span> n. a.</td>
+            </tr>
+            <tr>
+              <td>§ 2 Nr. 9 Reinigungsbegriffe (12)</td>
+              <td class="hg-check-ok"><span data-pruef="umlage-alt.reinigung.richtig">12</span> richtig</td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.reinigung.richtig">12</span> richtig</td>
+            </tr>
+            <tr>
+              <td>Übrige „ja“-Fragen (168)</td>
+              <td class="hg-check-ok"><span data-pruef="umlage-alt.restja.richtig">168</span> richtig</td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.restja.richtig">168</span> richtig</td>
+            </tr>
+            <tr>
+              <td>Ausschlüsse (36)</td>
+              <td class="hg-check-ok"><span data-pruef="umlage-alt.ausschluss.richtig">36</span> richtig</td>
+              <td class="hg-check-ok"><span data-pruef="umlage-neu.ausschluss.richtig">36</span> richtig</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Welcher Begriff der Gruppe kippt, wechselt weiterhin – Ungezieferbekämpfung war in der
+        alten Serie einmal falsch, in der neuen dreimal richtig. Stabil ist die Gruppe, nicht die
+        einzelne Frage. Auch das gehört zu Befund 1.
+      </p>
+    </section>
+
+    <h2 class="bk-abschnitt" id="umlage-beispiele">Die Begriffsgruppe, alle <span data-pruef="umlage-neu.gruppe.antworten">12</span> Antworten im Wortlaut</h2>
+    <p class="hg-result-note">Diese <span data-pruef="umlage-neu.gruppe.antworten">12</span> Antworten tragen beide Befunde. Wer nachlesen will, ob eine als richtig gewertete Antwort auf der richtigen Vorschrift steht, findet das hier – ungekürzt.</p>
+    <section class="bk-karte" id="bsp-umlage-ungeziefer">
+      <h2>„Ungeziefer“</h2>
+      <p>umlage-ungeziefer · Position 25 von 76</p>
+      <p>In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Ungeziefer“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?</p>
+      <p class="bk-grundlage">Schlüssel: ja · § 2 Nr. 9 BetrKV</p>
+      <details class="bk-beleg">
+        <summary>Der Gesetzestext, gegen den geprüft wurde</summary>
+        <pre class="bk-beleg-text">9. die Kosten der Gebäudereinigung und Ungezieferbekämpfung,
+zu den Kosten der Gebäudereinigung gehören die Kosten für die Säuberung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen, Fahrkorb des Aufzugs;</pre>
+        <p class="bk-beleg-fuss">Aus <code>wissensbasis/gesetze.json</code>, Eintrag <code>betrkv-2-9</code>. Amtliche Quelle: <a href="https://www.gesetze-im-internet.de/betrkv/__2.html" target="_blank" rel="noopener noreferrer">§ 2 Nr. 9 BetrKV</a></p>
+      </details>
+
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 1 im Wortlaut (falsch)</summary>
+          <pre class="bk-beleg-text" data-roh="umlage-neu:umlage-ungeziefer:1"># Betriebskosten „Ungeziefer“ nach BetrKV
+
+Die Betriebskostenverordnung (BetrKV) enthält in § 2 einen abschließenden Katalog von 16 konkret benannten Betriebskostenarten (z. B. Grundsteuer, Wasserversorgung, Müllbeseitigung, Gebäudereinigung, Gartenpflege etc.) sowie eine 17. Position „sonstige Betriebskosten".
+
+**Wichtige Punkte zur Einordnung:**
+
+1. **Kein eigener Kostenpunkt**: „Ungeziefer" bzw. Schädlingsbekämpfung ist in § 2 Nr. 1–16 BetrKV **nicht ausdrücklich aufgeführt**.
+
+2. **Nur über „sonstige Betriebskosten" möglich**: Eine Umlage kommt allenfalls über § 2 Nr. 17 BetrKV („sonstige Betriebskosten") in Betracht – aber nur unter engen Voraussetzungen:
+   - Es muss sich um **regelmäßig wiederkehrende, vorbeugende** Maßnahmen handeln (z. B. turnusmäßige Schädlingsbekämpfung in Gemeinschaftsräumen).
+   - Diese Position muss **ausdrücklich im Mietvertrag** als umlagefähig vereinbart sein.
+
+3. **Nicht umlagefähig sind**:
+   - Einmalige Kosten zur Bekämpfung eines **akuten Befalls** (z. B. Kakerlaken, Ratten) – das gilt als Instandhaltungs-/Instandsetzungsmaßnahme und ist vom **Vermieter selbst zu tragen**.
+   - Kosten ohne vertragliche Grundlage.
+
+**Fazit**: Die pauschale Position „Ungeziefer" in einer Betriebskostenabrechnung ist grundsätzlich **nicht automatisch umlagefähig**. Sie gehört nicht zum festen Katalog der BetrKV und darf nur unter den genannten engen Voraussetzungen (Regelmäßigkeit + vertragliche Vereinbarung) als „sonstige Betriebskosten" abgerechnet werden.
+
+ANTWORT: nein</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf1.json</code>, Position 25 von 76. SHA-256 der Datei: <code><span data-pruef="lauf.umlage-neu.1.sha16">323df5a7430e812a</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 2 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="umlage-neu:umlage-ungeziefer:2"># Betriebskosten „Ungeziefer" – rechtliche Einordnung
+
+Die Position „Ungeziefer" bzw. genauer **„Kosten der Ungezieferbekämpfung"** ist in der Betriebskostenverordnung (BetrKV) ausdrücklich aufgeführt.
+
+## Rechtsgrundlage
+
+Nach **§ 2 Nr. 9 BetrKV** gehören zu den umlagefähigen Betriebskosten:
+
+&gt; „die Kosten der Ungezieferbekämpfung"
+
+Dies ist eine der 17 im Betriebskostenkatalog der BetrKV ausdrücklich genannten Kostenarten.
+
+## Wichtige Voraussetzungen für die Umlage
+
+Damit diese Kosten tatsächlich wirksam auf den Mieter umgelegt werden können, müssen jedoch folgende Punkte beachtet werden:
+
+1. **Mietvertragliche Vereinbarung**: Die Umlage der Betriebskosten muss im Mietvertrag vereinbart sein (i.d.R. durch Verweis auf die Betriebskostenverordnung oder Anlage 3 zu § 27 II. BV).
+
+2. **Regelmäßige/vorbeugende Maßnahmen**: Umlagefähig sind grundsätzlich nur **regelmäßige, vorbeugende** Maßnahmen zur Ungezieferbekämpfung (z.B. routinemäßige Schädlingsbekämpfung in bestimmten Abständen).
+
+3. **Abgrenzung zu Reparatur-/Sanierungskosten**: Nicht umlagefähig sind Kosten für eine **einmalige, akute Bekämpfung** eines bereits bestehenden massiven Befalls (z.B. Kakerlaken- oder Rattenbefall), wenn dies als außergewöhnliche Maßnahme statt als regelmäßige Vorsorge einzustufen ist. Solche Kosten fallen eher unter Instandhaltung und sind vom Vermieter zu tragen.
+
+## Fazit
+
+Die Position „Ungeziefer" ist dem Grunde nach in der BetrKV als umlagefähige Betriebskostenart vorgesehen. Ob sie im konkreten Einzelfall auch tatsächlich zulässig umgelegt wurde, hängt von der Art der durchgeführten Maßnahme (regelmäßig vs. einmalig) sowie von der vertraglichen Vereinbarung ab.
+
+ANTWORT: ja</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf2.json</code>, Position 25 von 76. SHA-256 der Datei: <code><span data-pruef="lauf.umlage-neu.2.sha16">89e08bcf62e867f9</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 3 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="umlage-neu:umlage-ungeziefer:3"># Betriebskosten „Ungeziefer" nach BetrKV
+
+Die Betriebskostenverordnung (BetrKV) listet in **§ 2 Nr. 9** ausdrücklich folgende Position auf:
+
+&gt; „die Kosten für die Bekämpfung von Ungeziefer"
+
+Diese Position ist somit **explizit als eigene Betriebskostenart** in der BetrKV genannt und grundsätzlich auf die Mieter umlagefähig.
+
+## Wichtige Einschränkungen
+
+Allerdings gibt es in der Rechtsprechung Differenzierungen, die bei der praktischen Anwendung relevant sind:
+
+1. **Regelmäßige/vorbeugende Maßnahmen** (z. B. turnusmäßige Schädlingsbekämpfung, Rattenköderstationen) sind grundsätzlich umlagefähig.
+
+2. **Einmalige Bekämpfung eines akuten Befalls** wird von manchen Gerichten unterschiedlich beurteilt:
+   - Teilweise wird dies noch als umlagefähig angesehen, wenn kein Verschulden des Vermieters vorliegt.
+   - Teilweise wird argumentiert, dass ein einmaliger, außergewöhnlicher Befall eher der Instandhaltung zuzurechnen ist und damit **nicht** umlagefähig ist (§ 1 Abs. 2 Nr. 2 BetrKV – Instandhaltungskosten sind ausdrücklich ausgeschlossen).
+
+3. **Voraussetzung**: Die Kosten müssen in der Abrechnung nachvollziehbar und im vereinbarten Verteilerschlüssel korrekt dargestellt sein.
+
+## Fazit
+
+Die Position „Ungeziefer" bzw. „Ungezieferbekämpfung" ist grundsätzlich eine gesetzlich vorgesehene, umlagefähige Betriebskostenart. Ob sie im Einzelfall zulässig abgerechnet wurde, hängt von den Umständen (regelmäßig vs. einmalig/außergewöhnlich) ab.
+
+ANTWORT: ja</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf3.json</code>, Position 25 von 76. SHA-256 der Datei: <code><span data-pruef="lauf.umlage-neu.3.sha16">8fbd43c53d4be89e</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+    </section>
+
+    <section class="bk-karte" id="bsp-umlage-waeschepflege">
+      <h2>„Wäschepflege“</h2>
+      <p>umlage-waeschepflege · Position 26 von 76</p>
+      <p>In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Wäschepflege“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?</p>
+      <p class="bk-grundlage">Schlüssel: ja · § 2 Nr. 16 BetrKV</p>
+      <details class="bk-beleg">
+        <summary>Der Gesetzestext, gegen den geprüft wurde</summary>
+        <pre class="bk-beleg-text">16. die Kosten des Betriebs der Einrichtungen für die Wäschepflege,
+hierzu gehören die Kosten des Betriebsstroms, die Kosten der Überwachung, Pflege und Reinigung der Einrichtungen, der regelmäßigen Prüfung ihrer Betriebsbereitschaft und Betriebssicherheit sowie die Kosten der Wasserversorgung entsprechend Nummer 2, soweit sie nicht dort bereits berücksichtigt sind;</pre>
+        <p class="bk-beleg-fuss">Aus <code>wissensbasis/gesetze.json</code>, Eintrag <code>betrkv-2-16</code>. Amtliche Quelle: <a href="https://www.gesetze-im-internet.de/betrkv/__2.html" target="_blank" rel="noopener noreferrer">§ 2 Nr. 16 BetrKV</a></p>
+      </details>
+<div class="hg-hint-box hg-hint-warn"><strong>Auch hier ist der Schlüssel eine Entscheidung.</strong> Lauf 2 findet Nr. 16 und führt sie richtig auf, argumentiert dann aber: Die Vorschrift spricht von den Kosten des <em>Betriebs der Einrichtungen</em> für die Wäschepflege; eine blanke Rechnungszeile „Wäschepflege“ zeigt nicht, dass es um eine solche Einrichtung geht. Das ist kein Nachschlagefehler – es ist derselbe Einwand, den wir bei den Gerätebegriffen (Waschküche, Waschmaschine, Trockner) akzeptiert und die Fragen deshalb gestrichen haben. „Wäschepflege“ ist in der Begriffsdatei als Kostenart geführt, deshalb steht der Schlüssel – und deshalb wird diese Antwort unter einer dokumentierten Entscheidung als falsch gewertet. Ob die Einstufung als Kostenart gegen diesen Einwand hält, ist offen.</div>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 1 im Wortlaut (nicht auswertbar)</summary>
+          <pre class="bk-beleg-text" data-roh="umlage-neu:umlage-waeschepflege:1"># Betriebskosten „Wäschepflege“
+
+Die Betriebskostenverordnung (BetrKV) enthält in **§ 2 Nr. 13** ausdrücklich die Position:
+
+&gt; „die Kosten des Betriebs der Einrichtungen für die Wäschepflege“
+
+Diese Kosten umfassen typischerweise:
+
+- Wasserverbrauch für Gemeinschaftswaschmaschinen/-trockner
+- Energiekosten (Strom, Gas) für den Betrieb dieser Geräte
+- Kosten für Bedienung, Überwachung und Pflege der Anlagen
+- Wartungskosten der gemeinschaftlichen Wascheinrichtungen
+
+**Wichtig:** Es muss sich um eine **gemeinschaftlich genutzte Einrichtung** (z. B. Waschküche im Mehrfamilienhaus) handeln – nicht um private Kosten der Mieter für ihre eigene Wäsche in der Wohnung.
+
+Voraussetzung für die Umlage ist zudem, dass:
+- diese Kostenart im Mietvertrag als umlagefähig vereinbart wurde,
+- die Kosten korrekt und nachvollziehbar abgerechnet werden (z. B. nach Verbrauch oder Wohnfläche),
+- die Einrichtung tatsächlich vorhanden und den Mietern zugänglich ist.
+
+**ANTWORT: ja**</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf1.json</code>, Position 26 von 76. SHA-256 der Datei: <code><span data-pruef="lauf.umlage-neu.1.sha16">323df5a7430e812a</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 2 im Wortlaut (falsch)</summary>
+          <pre class="bk-beleg-text" data-roh="umlage-neu:umlage-waeschepflege:2"># Betriebskostenabrechnung: Position „Wäschepflege"
+
+Die Betriebskostenverordnung (BetrKV) enthält in § 2 einen **abschließenden Katalog** von 17 umlagefähigen Betriebskostenarten:
+
+1. Grundsteuer
+2. Wasserversorgung
+3. Entwässerung
+4. Heizung
+5. Warmwasser
+6. verbundene Heizungs- und Warmwasserversorgungsanlagen
+7. Aufzug
+8. Straßenreinigung/Müllbeseitigung
+9. Gebäudereinigung/Ungezieferbekämpfung
+10. Gartenpflege
+11. Beleuchtung
+12. Schornsteinreinigung
+13. Sach- und Haftpflichtversicherung
+14. Hauswart
+15. Gemeinschafts-Antennenanlage/Kabelanschluss
+16. Einrichtungen für Wäschepflege
+17. sonstige Betriebskosten
+
+**Wichtig:** Position 16 spricht von „**Einrichtungen** für die Wäschepflege" – gemeint sind damit die Betriebskosten für vorhandene Gemeinschaftseinrichtungen wie Waschküchen oder Trockenräume (z.B. Stromkosten, Wartung, Wasserverbrauch der Waschmaschinen).
+
+Eine allgemeine Position „**Wäschepflege**" ohne Bezug zu einer solchen Gemeinschaftseinrichtung ist dagegen **nicht umlagefähig**. Es kommt also darauf an, was konkret gemeint ist:
+
+- ✅ Umlagefähig: Betriebskosten einer Gemeinschaftswaschküche (Strom, Wasser, Wartung der Geräte)
+- ❌ Nicht umlagefähig: Kosten für tatsächliche Wäschereinigung, Waschmittel oder Dienstleistungen der Wäschepflege
+
+Ohne weitere Konkretisierung in der Abrechnung ist die pauschale Position „Wäschepflege" **nicht ohne Weiteres als umlagefähig anzusehen** – der Vermieter müsste erläutern, dass es sich um Betriebskosten einer entsprechenden Einrichtung handelt.
+
+ANTWORT: nein</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf2.json</code>, Position 26 von 76. SHA-256 der Datei: <code><span data-pruef="lauf.umlage-neu.2.sha16">89e08bcf62e867f9</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 3 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="umlage-neu:umlage-waeschepflege:3"># Betriebskostenverordnung und „Wäschepflege"
+
+Die Betriebskostenverordnung (BetrKV) enthält in **§ 2 Nr. 16 BetrKV** ausdrücklich die Position:
+
+&gt; „die Kosten des Betriebs der Einrichtungen für die Wäschepflege"
+
+Dies umfasst insbesondere:
+- Kosten für **gemeinschaftlich genutzte Waschmaschinen und Trockner** im Haus (z. B. in einer Waschküche)
+- Betriebsstrom, Wasser, Wartung dieser Einrichtungen
+
+**Wichtige Einschränkung:** 
+Umlagefähig sind nur die **laufenden Betriebskosten** dieser Einrichtungen (Strom, Wasser, Wartung, Reparaturen im Rahmen der Instandhaltung). **Nicht umlagefähig** sind dagegen:
+- Anschaffungskosten der Geräte (das wären Kapitalkosten/Investitionen)
+- Kosten für einen externen Wäscheservice als Dienstleistung an die Mieter (das wäre keine Betriebskostenposition, sondern eine gesonderte Leistung)
+
+**Fazit:** Wenn sich die Position „Wäschepflege" in der Abrechnung auf die Betriebskosten einer gemeinschaftlichen Wascheinrichtung bezieht (z. B. Stromkosten für die Waschküche), ist sie grundsätzlich umlagefähig nach § 2 Nr. 16 BetrKV. Für eine genaue Beurteilung sollte jedoch geprüft werden, was konkret unter dieser Position abgerechnet wird, und ob dies auch im Mietvertrag entsprechend vereinbart wurde.
+
+ANTWORT: ja</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf3.json</code>, Position 26 von 76. SHA-256 der Datei: <code><span data-pruef="lauf.umlage-neu.3.sha16">8fbd43c53d4be89e</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+    </section>
+
+    <section class="bk-karte" id="bsp-umlage-schaedlingsbekaempfung">
+      <h2>„Schädlingsbekämpfung“</h2>
+      <p>umlage-schaedlingsbekaempfung · Position 40 von 76</p>
+      <p>In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Schädlingsbekämpfung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?</p>
+      <p class="bk-grundlage">Schlüssel: ja · § 2 Nr. 9 BetrKV</p>
+      <details class="bk-beleg">
+        <summary>Der Gesetzestext, gegen den geprüft wurde</summary>
+        <pre class="bk-beleg-text">9. die Kosten der Gebäudereinigung und Ungezieferbekämpfung,
+zu den Kosten der Gebäudereinigung gehören die Kosten für die Säuberung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen, Fahrkorb des Aufzugs;</pre>
+        <p class="bk-beleg-fuss">Aus <code>wissensbasis/gesetze.json</code>, Eintrag <code>betrkv-2-9</code>. Amtliche Quelle: <a href="https://www.gesetze-im-internet.de/betrkv/__2.html" target="_blank" rel="noopener noreferrer">§ 2 Nr. 9 BetrKV</a></p>
+      </details>
+
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 1 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="umlage-neu:umlage-schaedlingsbekaempfung:1"># Schädlingsbekämpfung als Betriebskostenposition
+
+## Grundsätzliche Einordnung
+
+Die Schädlingsbekämpfung wird in der Betriebskostenverordnung (BetrKV) als Beispiel unter **§ 2 Nr. 17 BetrKV** ("sonstige Betriebskosten") genannt. Diese Kategorie erfasst Kosten, die zwar nicht in den Nummern 1–16 explizit aufgeführt sind, aber dennoch laufend entstehen und umlagefähig sein können.
+
+## Wichtige Einschränkung
+
+Die Umlagefähigkeit ist jedoch an eine entscheidende Voraussetzung geknüpft:
+
+- **Regelmäßige/vorbeugende Maßnahmen** (z. B. wiederkehrende Bekämpfung von Ungeziefer in Kellern, Müllräumen oder Gemeinschaftsflächen) sind grundsätzlich umlagefähig.
+- **Einmalige Maßnahmen** zur Beseitigung eines akuten Schädlingsbefalls (z. B. plötzlicher Kakerlaken- oder Rattenbefall) gelten hingegen als **Instandhaltungskosten** und sind **nicht umlagefähig**. Diese fallen in den Verantwortungsbereich des Vermieters als Erhaltungsmaßnahme.
+
+## Formale Voraussetzung
+
+Zusätzlich muss die Position "Schädlingsbekämpfung" im Mietvertrag ausdrücklich als umlagefähige Betriebskostenart vereinbart worden sein (entweder durch Verweis auf § 2 Nr. 17 BetrKV oder explizite Nennung), da es sich um eine "sonstige" Kostenart handelt, die nicht automatisch durch einen pauschalen Verweis auf die "Betriebskosten gemäß Anlage 3 zu § 27 II. BV" erfasst wird – hier gehen die Meinungen in der Rechtsprechung teilweise auseinander.
+
+## Fazit
+
+Schädlingsbekämpfung **kann** zu den umlagefähigen Betriebskosten zählen, aber **nur unter der Voraussetzung**, dass es sich um regelmäßige, vorbeugende Maßnahmen handelt und diese im Mietvertrag entsprechend vereinbart wurden. Eine pauschale Bejahung ist also nicht möglich – es kommt auf den Einzelfall an.
+
+ANTWORT: ja</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf1.json</code>, Position 40 von 76. SHA-256 der Datei: <code><span data-pruef="lauf.umlage-neu.1.sha16">323df5a7430e812a</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 2 im Wortlaut (falsch)</summary>
+          <pre class="bk-beleg-text" data-roh="umlage-neu:umlage-schaedlingsbekaempfung:2"># Schädlingsbekämpfung in der Betriebskostenabrechnung
+
+Die Betriebskostenverordnung (BetrKV) enthält in § 2 einen abschließenden Katalog von 17 umlagefähigen Betriebskostenarten (z. B. Grundsteuer, Wasserversorgung, Heizkosten, Gebäudereinigung, Gartenpflege, Versicherungen usw.).
+
+**Schädlingsbekämpfung ist dort nicht als eigene Position aufgeführt.**
+
+Sie kann daher nur dann auf den Mieter umgelegt werden, wenn:
+
+1. Sie ausdrücklich als **„sonstige Betriebskosten“** (§ 2 Nr. 17 BetrKV) im Mietvertrag vereinbart wurde, und
+2. es sich um **regelmäßig wiederkehrende, vorbeugende Maßnahmen** handelt (z. B. jährliche Schädlingsprävention im Rahmen eines Wartungsvertrags).
+
+**Nicht umlagefähig** sind dagegen Kosten für die **Beseitigung eines konkreten, akuten Schädlingsbefalls** (z. B. Kammerjäger wegen Kakerlaken oder Rattenbefall). Diese gelten als Instandhaltungskosten und fallen in den Verantwortungsbereich des Vermieters – sie dürfen nicht auf den Mieter abgewälzt werden.
+
+## Fazit
+Da Schädlingsbekämpfung nicht im gesetzlichen Katalog der BetrKV enthalten ist, zählt sie **nicht automatisch** zu den umlagefähigen Betriebskosten. Eine Umlage ist nur ausnahmsweise möglich, wenn eine ausdrückliche vertragliche Vereinbarung als „sonstige Betriebskosten“ vorliegt und es sich um vorbeugende, wiederkehrende Maßnahmen handelt.
+
+ANTWORT: nein</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf2.json</code>, Position 40 von 76. SHA-256 der Datei: <code><span data-pruef="lauf.umlage-neu.2.sha16">89e08bcf62e867f9</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 3 im Wortlaut (falsch)</summary>
+          <pre class="bk-beleg-text" data-roh="umlage-neu:umlage-schaedlingsbekaempfung:3"># Schädlingsbekämpfung als Betriebskostenposition
+
+Die Betriebskostenverordnung (BetrKV) enthält in § 2 einen abschließenden Katalog von 17 Betriebskostenarten (Nr. 1–16 sowie die Öffnungsklausel „sonstige Betriebskosten" in Nr. 17).
+
+**Wichtig:** Die „Schädlingsbekämpfung" ist **nicht** als eigenständiger Punkt im Katalog des § 2 BetrKV aufgeführt.
+
+## Voraussetzungen für eine Umlage
+
+Nach der Rechtsprechung (u. a. BGH) kann Schädlingsbekämpfung nur dann als „sonstige Betriebskosten" (§ 2 Nr. 17 BetrKV) auf die Mieter umgelegt werden, wenn:
+
+1. **Regelmäßigkeit**: Es sich um vorbeugende, wiederkehrende Maßnahmen handelt (z. B. regelmäßige Rattenbekämpfung in Kellern oder Müllräumen)
+2. **Vertragliche Vereinbarung**: Die Position explizit im Mietvertrag als umlagefähige Betriebskostenart benannt ist
+
+**Nicht umlagefähig** sind dagegen:
+- Einmalige, akute Bekämpfungsmaßnahmen (z. B. bei plötzlichem Schädlingsbefall)
+- Kosten, die durch Instandhaltungsmängel verursacht wurden
+- Position ohne konkrete vertragliche Grundlage
+
+## Fazit
+
+Da Schädlingsbekämpfung kein eigenständiger Betriebskostenpunkt der BetrKV ist, sondern nur unter engen Voraussetzungen als „sonstige Betriebskosten" umlagefähig sein kann, ist sie **grundsätzlich nicht automatisch** umlagefähig.
+
+ANTWORT: nein</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf3.json</code>, Position 40 von 76. SHA-256 der Datei: <code><span data-pruef="lauf.umlage-neu.3.sha16">8fbd43c53d4be89e</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+    </section>
+
+    <section class="bk-karte" id="bsp-umlage-ungezieferbekaempfung">
+      <h2>„Ungezieferbekämpfung“</h2>
+      <p>umlage-ungezieferbekaempfung · Position 43 von 76</p>
+      <p>In einer Betriebskostenabrechnung für eine Mietwohnung steht die Position „Ungezieferbekämpfung“. Zählt diese Position nach der Betriebskostenverordnung zu den umlagefähigen Betriebskosten?</p>
+      <p class="bk-grundlage">Schlüssel: ja · § 2 Nr. 9 BetrKV</p>
+      <details class="bk-beleg">
+        <summary>Der Gesetzestext, gegen den geprüft wurde</summary>
+        <pre class="bk-beleg-text">9. die Kosten der Gebäudereinigung und Ungezieferbekämpfung,
+zu den Kosten der Gebäudereinigung gehören die Kosten für die Säuberung der von den Bewohnern gemeinsam genutzten Gebäudeteile, wie Zugänge, Flure, Treppen, Keller, Bodenräume, Waschküchen, Fahrkorb des Aufzugs;</pre>
+        <p class="bk-beleg-fuss">Aus <code>wissensbasis/gesetze.json</code>, Eintrag <code>betrkv-2-9</code>. Amtliche Quelle: <a href="https://www.gesetze-im-internet.de/betrkv/__2.html" target="_blank" rel="noopener noreferrer">§ 2 Nr. 9 BetrKV</a></p>
+      </details>
+<div class="hg-hint-box"><strong>Dreimal richtig, dreimal aus falschem Grund.</strong> Das Wort steht wörtlich in § 2 Nr. 9 BetrKV. Keine der drei Antworten nennt Nr. 9; alle drei argumentieren über Nr. 17 („sonstige Betriebskosten“, nur mit Mietvertragsvereinbarung) und kippen in der Schlusszeile trotzdem auf „ja“. In der älteren Serie führte dieselbe Argumentation einmal zu „nein“.</div>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 1 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="umlage-neu:umlage-ungezieferbekaempfung:1"># Ungezieferbekämpfung als Betriebskosten
+
+Die Position „Ungezieferbekämpfung" ist in der Betriebskostenverordnung (BetrKV) nicht explizit als eigener Kostenpunkt aufgeführt, kann aber unter bestimmten Voraussetzungen zu den **„sonstigen Betriebskosten"** gemäß § 2 Nr. 17 BetrKV zählen.
+
+## Voraussetzungen für die Umlagefähigkeit:
+
+1. **Ausdrückliche Vereinbarung im Mietvertrag**: Da es sich um „sonstige Betriebskosten" handelt, muss diese Position konkret im Mietvertrag benannt sein – ein pauschaler Verweis auf die Betriebskostenverordnung reicht nicht aus.
+
+2. **Regelmäßigkeit/Vorbeugender Charakter**: Nur wenn es sich um eine **regelmäßige, vorbeugende Maßnahme** handelt (z. B. ein laufender Vertrag mit einem Schädlingsbekämpfer zur Prävention), kann sie als Betriebskosten umgelegt werden.
+
+## Wichtige Einschränkung:
+
+Eine **einmalige, anlassbezogene Bekämpfung** wegen akuten Schädlingsbefalls (z. B. Kakerlaken, Ratten) zählt grundsätzlich **nicht** zu den umlagefähigen Betriebskosten. Diese fällt unter die **Instandhaltungspflicht des Vermieters** (§ 535 BGB) und muss von ihm selbst getragen werden, da es sich um die Beseitigung eines Mangels handelt.
+
+## Fazit:
+
+Die Umlagefähigkeit hängt vom **Einzelfall** ab:
+- ✅ Regelmäßige, präventive Maßnahmen + vertragliche Vereinbarung → umlagefähig
+- ❌ Einmalige Bekämpfung akuten Befalls → nicht umlagefähig (Vermieterpflicht)
+
+ANTWORT: ja</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf1.json</code>, Position 43 von 76. SHA-256 der Datei: <code><span data-pruef="lauf.umlage-neu.1.sha16">323df5a7430e812a</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 2 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="umlage-neu:umlage-ungezieferbekaempfung:2"># Ungezieferbekämpfung in der Betriebskostenabrechnung
+
+Die Position „Ungezieferbekämpfung" ist in der Betriebskostenverordnung (BetrKV) nicht als eigener, ausdrücklich benannter Kostenpunkt aufgeführt. Sie kann jedoch unter § 2 Nr. 17 BetrKV als „sonstige Betriebskosten" umlagefähig sein.
+
+**Voraussetzungen für die Umlagefähigkeit:**
+
+1. **Ausdrückliche Vereinbarung im Mietvertrag**: Da es sich um „sonstige Betriebskosten" handelt, muss diese Position explizit im Mietvertrag benannt sein (pauschale Klauseln wie „sonstige Betriebskosten" reichen laut BGH-Rechtsprechung nicht aus).
+
+2. **Regelmäßigkeit**: Es muss sich um wiederkehrende, vorbeugende Maßnahmen handeln (z. B. regelmäßige Schädlingsprävention in einem Mehrfamilienhaus).
+
+**Nicht umlagefähig sind hingegen:**
+
+- Einmalige Bekämpfungsmaßnahmen bei akutem Schädlingsbefall (z. B. Kammerjäger wegen Kakerlaken- oder Bettwanzenbefalls) – diese gelten als **Instandhaltungs- bzw. Instandsetzungskosten** und sind vom Vermieter zu tragen, nicht umlagefähig auf die Mieter.
+
+**Fazit**: Die „Ungezieferbekämpfung" kann grundsätzlich zu den umlagefähigen Betriebskosten zählen, aber nur unter den genannten Voraussetzungen (vertragliche Vereinbarung + regelmäßige/vorbeugende Maßnahme). Bei einmaligen Bekämpfungsaktionen scheidet eine Umlage aus.
+
+ANTWORT: ja</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf2.json</code>, Position 43 von 76. SHA-256 der Datei: <code><span data-pruef="lauf.umlage-neu.2.sha16">89e08bcf62e867f9</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+        <details class="bk-beleg">
+          <summary>Antwort Lauf 3 im Wortlaut (richtig)</summary>
+          <pre class="bk-beleg-text" data-roh="umlage-neu:umlage-ungezieferbekaempfung:3"># Ungezieferbekämpfung als Betriebskostenposition
+
+Die Position „Ungezieferbekämpfung“ ist **nicht ausdrücklich** im Betriebskostenkatalog des § 2 BetrKV (Nr. 1–16) aufgeführt. Sie kann jedoch unter § 2 Nr. 17 BetrKV als „sonstige Betriebskosten“ umlagefähig sein.
+
+**Voraussetzungen dafür:**
+
+1. **Regelmäßigkeit**: Es muss sich um wiederkehrende, vorbeugende Maßnahmen handeln (z. B. regelmäßige Schädlingsbekämpfung/Kammerjäger-Verträge), nicht um eine einmalige Bekämpfung eines akuten Befalls.
+2. **Vertragliche Vereinbarung**: „Sonstige Betriebskosten“ nach Nr. 17 sind nur dann umlagefähig, wenn sie im Mietvertrag konkret benannt sind – ein pauschaler Verweis auf „sonstige Betriebskosten“ reicht laut BGH-Rechtsprechung nicht aus.
+3. **Abgrenzung zur Instandhaltung**: Wird ein akuter Schädlingsbefall (z. B. Kakerlaken, Mäuse) einmalig beseitigt, handelt es sich um nicht umlagefähige Instandhaltungs-/Instandsetzungskosten, die der Vermieter selbst tragen muss.
+
+**Fazit:** Ungezieferbekämpfung kann zu den umlagefähigen Betriebskosten zählen, aber nur unter bestimmten Bedingungen (Regelmäßigkeit, konkrete vertragliche Vereinbarung). Sie ist nicht automatisch durch den gesetzlichen Katalog abgedeckt.
+
+ANTWORT: ja</pre>
+          <p class="bk-beleg-fuss">Aus <code>2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf3.json</code>, Position 43 von 76. SHA-256 der Datei: <code><span data-pruef="lauf.umlage-neu.3.sha16">8fbd43c53d4be89e</span>…</code> (vollständig in der Lauftabelle)</p>
+        </details>
+    </section>
+
+    <!-- ===================================================================
+         4 · Befund 2
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="befund-2">Befund 2: Richtig geantwortet, falsch begründet</h2>
+
+    <section class="bk-karte">
+      <h2>Die Quote verbessert sich, das Nachschlagen nicht</h2>
+      <p>Gewertet wird die letzte Zeile der Antwort, mehr nicht.</p>
+      <p>
+        Das ist Absicht: Sobald eine Bewertung auslegen muss, wird sie angreifbar, und ein
+        Sprachmodell als Schiedsrichter kommt hier nicht in Frage. Der Preis dafür steht in den
+        <span data-pruef="umlage-neu.gruppe.antworten">12</span> Antworten der Begriffsgruppe. Ausgezählt wurde maschinell, welche Nummern des
+        § 2 BetrKV in jeder Antwort vorkommen:
+      </p>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>In den 12 Antworten der Begriffsgruppe</th><th>Anzahl</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Schlüsselnummer als „§ 2 Nr. n“ genannt</td>
+              <td><span data-pruef="umlage-neu.zitate.paragraphenform">3</span></td>
+            </tr>
+            <tr>
+              <td>Schlüsselnummer nur als Listenpunkt („16.“ in einer Aufzählung)</td>
+              <td><span data-pruef="umlage-neu.zitate.listenform">1</span></td>
+            </tr>
+            <tr>
+              <td><strong>Schlüsselnummer kommt in keiner Form vor</strong></td>
+              <td><strong><span data-pruef="umlage-neu.zitate.ohne-schluesselnummer">8</span></strong></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <ol class="bk-schritte">
+        <li class="bk-schritt">
+          <strong>Ungezieferbekämpfung: dreimal richtig, dreimal aus falschem Grund</strong>
+          <p>Das Wort steht wörtlich in § 2 Nr. 9 BetrKV („die Kosten der Gebäudereinigung und
+          Ungezieferbekämpfung“). Keine der drei Antworten nennt Nr. 9. Alle drei sagen, der Posten
+          sei „nicht ausdrücklich“ im Katalog, verweisen auf Nr. 17 – „sonstige Betriebskosten“,
+          nur mit Mietvertragsvereinbarung – und kippen in der Schlusszeile trotzdem auf „ja“. In
+          der älteren Serie führte dieselbe Argumentation einmal zu „nein“.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Wäschepflege, Lauf 1: richtiger Wortlaut, falsche Nummer</strong>
+          <p>Die Antwort zitiert den Text von Nr. 16 und nennt ihn „§ 2 Nr. 13 BetrKV“.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Wäschepflege, Lauf 3: die einzige saubere Fundstelle</strong>
+          <p>Die erste Antwort in beiden Serien, die für Nr. 16 die richtige Fundstelle nennt.</p>
+        </li>
+      </ol>
+
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Was diese Auszählung nicht kann.</strong> „Genannt“ ist nicht „gestützt“: Eine
+        Antwort kann eine Nummer erwähnen und sie verwerfen. Umgekehrt zählt die Maschine eine
+        Nummer mit, die nur in einer vollständigen Aufzählung des Katalogs auftaucht – bei
+        Wäschepflege, Lauf 2, ist genau das der Fall, und dort führt das Erkennen von Nr. 16 sogar
+        zu einer Ablehnung. Diese Zahl steht deshalb <em>neben</em> der Quote und nie darin. Eine
+        belastbare Zitatprüfung müsste gelesen werden, nicht nur gezählt – das ist nicht gebaut.
+      </div>
+    </section>
+
+    <!-- ===================================================================
+         5 · Quoten. Kontext, nicht Schlagzeile.
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="quoten">Die Quoten</h2>
+
+    <section class="bk-karte">
+      <h2>Wie diese Zahlen zu lesen sind</h2>
+      <p>Auf dieser Seite steht keine Quote allein.</p>
+      <div class="hg-hint-box">
+        <strong>Drei Läufe sind drei Ziehungen.</strong> Jede Quote wird als Spanne über drei Läufe
+        angegeben, mit den Einzelwerten und ihren Nennern daneben. Die Spanne ist der beobachtete
+        Bereich, kein Konfidenzintervall. Die Nenner unterscheiden sich zwischen den Läufen, weil
+        nicht auswertbare Antworten herausfallen – deshalb steht deren Zahl immer dabei. Quote =
+        richtig / (richtig + falsch); nicht auswertbare, abgeschnittene und abgelehnte Antworten
+        sowie API-Fehler fließen nicht ein.
+      </div>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Fristen · <span data-pruef="fristen.fragen">546</span> Fragen je Lauf</h2>
+      <p>Nach Antworttyp und Schlüsselwert getrennt – nie zu einer Zahl vermischt.</p>
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Antworttyp</th><th>Spanne</th><th>Lauf 1</th><th>Lauf 2</th><th>Lauf 3</th><th>n. a. je Lauf</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ja/Nein</strong></td>
+              <td><strong><span data-pruef="fristen.typ.ja-nein.spanne">99,7–100,0 %</span></strong></td>
+              <td><span data-pruef="fristen.typ.ja-nein.l1">359/360</span></td><td><span data-pruef="fristen.typ.ja-nein.l2">355/355</span></td><td><span data-pruef="fristen.typ.ja-nein.l3">352/353</span></td>
+              <td><span data-pruef="fristen.typ.ja-nein.l1.na">4</span> / <span data-pruef="fristen.typ.ja-nein.l2.na">9</span> / <span data-pruef="fristen.typ.ja-nein.l3.na">11</span></td>
+            </tr>
+            <tr>
+              <td>↳ Schlüssel „ja“</td>
+              <td><strong><span data-pruef="fristen.typ.ja-nein.ja.spanne">100,0 %</span></strong></td>
+              <td><span data-pruef="fristen.typ.ja-nein.ja.l1">179/179</span></td><td><span data-pruef="fristen.typ.ja-nein.ja.l2">174/174</span></td><td><span data-pruef="fristen.typ.ja-nein.ja.l3">171/171</span></td>
+              <td><span data-pruef="fristen.typ.ja-nein.ja.l1.na">3</span> / <span data-pruef="fristen.typ.ja-nein.ja.l2.na">8</span> / <span data-pruef="fristen.typ.ja-nein.ja.l3.na">11</span></td>
+            </tr>
+            <tr>
+              <td>↳ Schlüssel „nein“</td>
+              <td><strong><span data-pruef="fristen.typ.ja-nein.nein.spanne">99,4–100,0 %</span></strong></td>
+              <td><span data-pruef="fristen.typ.ja-nein.nein.l1">180/181</span></td><td><span data-pruef="fristen.typ.ja-nein.nein.l2">181/181</span></td><td><span data-pruef="fristen.typ.ja-nein.nein.l3">181/182</span></td>
+              <td><span data-pruef="fristen.typ.ja-nein.nein.l1.na">1</span> / <span data-pruef="fristen.typ.ja-nein.nein.l2.na">1</span> / <span data-pruef="fristen.typ.ja-nein.nein.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td><strong>Datum</strong></td>
+              <td><strong><span data-pruef="fristen.typ.datum.spanne">98,4–100,0 %</span></strong></td>
+              <td><span data-pruef="fristen.typ.datum.l1">180/181</span></td><td><span data-pruef="fristen.typ.datum.l2">179/182</span></td><td><span data-pruef="fristen.typ.datum.l3">182/182</span></td>
+              <td><span data-pruef="fristen.typ.datum.l1.na">1</span> / <span data-pruef="fristen.typ.datum.l2.na">0</span> / <span data-pruef="fristen.typ.datum.l3.na">0</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Kategorie</th><th>Spanne</th><th>Lauf 1</th><th>Lauf 2</th><th>Lauf 3</th><th>n. a. je Lauf</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Einwendungsfrist – gewahrt?<br><small>frist-einwendung-gewahrt · Ja/Nein</small></td>
+              <td><strong><span data-pruef="fristen.kat.frist-einwendung-gewahrt.ja-nein.spanne">99,2–100,0 %</span></strong></td>
+              <td><span data-pruef="fristen.kat.frist-einwendung-gewahrt.ja-nein.l1">127/128</span></td><td><span data-pruef="fristen.kat.frist-einwendung-gewahrt.ja-nein.l2">128/128</span></td><td><span data-pruef="fristen.kat.frist-einwendung-gewahrt.ja-nein.l3">126/127</span></td>
+              <td><span data-pruef="fristen.kat.frist-einwendung-gewahrt.ja-nein.l1.na">0</span> / <span data-pruef="fristen.kat.frist-einwendung-gewahrt.ja-nein.l2.na">0</span> / <span data-pruef="fristen.kat.frist-einwendung-gewahrt.ja-nein.l3.na">1</span></td>
+            </tr>
+            <tr>
+              <td>Einwendungsfrist – Datum<br><small>frist-einwendung-datum · Datum</small></td>
+              <td><strong><span data-pruef="fristen.kat.frist-einwendung-datum.datum.spanne">98,4–100,0 %</span></strong></td>
+              <td><span data-pruef="fristen.kat.frist-einwendung-datum.datum.l1">64/64</span></td><td><span data-pruef="fristen.kat.frist-einwendung-datum.datum.l2">63/64</span></td><td><span data-pruef="fristen.kat.frist-einwendung-datum.datum.l3">64/64</span></td>
+              <td><span data-pruef="fristen.kat.frist-einwendung-datum.datum.l1.na">0</span> / <span data-pruef="fristen.kat.frist-einwendung-datum.datum.l2.na">0</span> / <span data-pruef="fristen.kat.frist-einwendung-datum.datum.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>Abrechnungsfrist – gewahrt?<br><small>frist-abrechnung-gewahrt · Ja/Nein</small></td>
+              <td><strong><span data-pruef="fristen.kat.frist-abrechnung-gewahrt.ja-nein.spanne">100,0 %</span></strong></td>
+              <td><span data-pruef="fristen.kat.frist-abrechnung-gewahrt.ja-nein.l1">124/124</span></td><td><span data-pruef="fristen.kat.frist-abrechnung-gewahrt.ja-nein.l2">121/121</span></td><td><span data-pruef="fristen.kat.frist-abrechnung-gewahrt.ja-nein.l3">123/123</span></td>
+              <td><span data-pruef="fristen.kat.frist-abrechnung-gewahrt.ja-nein.l1.na">0</span> / <span data-pruef="fristen.kat.frist-abrechnung-gewahrt.ja-nein.l2.na">3</span> / <span data-pruef="fristen.kat.frist-abrechnung-gewahrt.ja-nein.l3.na">1</span></td>
+            </tr>
+            <tr>
+              <td>Abrechnungsfrist – Datum<br><small>frist-abrechnung-datum · Datum</small></td>
+              <td><strong><span data-pruef="fristen.kat.frist-abrechnung-datum.datum.spanne">100,0 %</span></strong></td>
+              <td><span data-pruef="fristen.kat.frist-abrechnung-datum.datum.l1">62/62</span></td><td><span data-pruef="fristen.kat.frist-abrechnung-datum.datum.l2">62/62</span></td><td><span data-pruef="fristen.kat.frist-abrechnung-datum.datum.l3">62/62</span></td>
+              <td><span data-pruef="fristen.kat.frist-abrechnung-datum.datum.l1.na">0</span> / <span data-pruef="fristen.kat.frist-abrechnung-datum.datum.l2.na">0</span> / <span data-pruef="fristen.kat.frist-abrechnung-datum.datum.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>§ 193 BGB verschiebt das Fristende<br><small>frist-193-verschiebung · Ja/Nein</small></td>
+              <td><strong><span data-pruef="fristen.kat.frist-193-verschiebung.ja-nein.spanne">100,0 %</span></strong></td>
+              <td><span data-pruef="fristen.kat.frist-193-verschiebung.ja-nein.l1">100/100</span></td><td><span data-pruef="fristen.kat.frist-193-verschiebung.ja-nein.l2">98/98</span></td><td><span data-pruef="fristen.kat.frist-193-verschiebung.ja-nein.l3">96/96</span></td>
+              <td><span data-pruef="fristen.kat.frist-193-verschiebung.ja-nein.l1.na">4</span> / <span data-pruef="fristen.kat.frist-193-verschiebung.ja-nein.l2.na">6</span> / <span data-pruef="fristen.kat.frist-193-verschiebung.ja-nein.l3.na">8</span></td>
+            </tr>
+            <tr>
+              <td>§ 193 BGB verschiebt das Fristende<br><small>frist-193-verschiebung · Datum</small></td>
+              <td><strong><span data-pruef="fristen.kat.frist-193-verschiebung.datum.spanne">96,2–100,0 %</span></strong></td>
+              <td><span data-pruef="fristen.kat.frist-193-verschiebung.datum.l1">50/51</span></td><td><span data-pruef="fristen.kat.frist-193-verschiebung.datum.l2">50/52</span></td><td><span data-pruef="fristen.kat.frist-193-verschiebung.datum.l3">52/52</span></td>
+              <td><span data-pruef="fristen.kat.frist-193-verschiebung.datum.l1.na">1</span> / <span data-pruef="fristen.kat.frist-193-verschiebung.datum.l2.na">0</span> / <span data-pruef="fristen.kat.frist-193-verschiebung.datum.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>Fälle rund um den 29.02.<br><small>frist-februar · Ja/Nein</small></td>
+              <td><strong><span data-pruef="fristen.kat.frist-februar.ja-nein.spanne">100,0 %</span></strong></td>
+              <td><span data-pruef="fristen.kat.frist-februar.ja-nein.l1">8/8</span></td><td><span data-pruef="fristen.kat.frist-februar.ja-nein.l2">8/8</span></td><td><span data-pruef="fristen.kat.frist-februar.ja-nein.l3">7/7</span></td>
+              <td><span data-pruef="fristen.kat.frist-februar.ja-nein.l1.na">0</span> / <span data-pruef="fristen.kat.frist-februar.ja-nein.l2.na">0</span> / <span data-pruef="fristen.kat.frist-februar.ja-nein.l3.na">1</span></td>
+            </tr>
+            <tr>
+              <td>Fälle rund um den 29.02.<br><small>frist-februar · Datum</small></td>
+              <td><strong><span data-pruef="fristen.kat.frist-februar.datum.spanne">100,0 %</span></strong></td>
+              <td><span data-pruef="fristen.kat.frist-februar.datum.l1">4/4</span></td><td><span data-pruef="fristen.kat.frist-februar.datum.l2">4/4</span></td><td><span data-pruef="fristen.kat.frist-februar.datum.l3">4/4</span></td>
+              <td><span data-pruef="fristen.kat.frist-februar.datum.l1.na">0</span> / <span data-pruef="fristen.kat.frist-februar.datum.l2.na">0</span> / <span data-pruef="fristen.kat.frist-februar.datum.l3.na">0</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Über alle gewerteten Antworten: <span data-pruef="fristen.falschquote.spanne">0,19–0,56 %</span>
+        falsch. Nicht auswertbar ausschließlich wegen Formatabweichung
+        (<span data-pruef="fristen.na.l1">5</span> / <span data-pruef="fristen.na.l2">9</span> /
+        <span data-pruef="fristen.na.l3">11</span>); keine fehlende Schlusszeile, keine falsche
+        Position, keine abgeschnittene Antwort, kein API-Fehler, keine Ablehnung. Die Kategorie
+        <strong>frist-193-verschiebung</strong> ist die interessante: dort gehen eine
+        Rechenmaschine und ein Sprachmodell am weitesten auseinander.
+      </p>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Umlage · <span data-pruef="umlage-neu.fragen">76</span> Fragen je Lauf</h2>
+      <p>Die veröffentlichte Serie.</p>
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Auswertung</th><th>Spanne</th><th>Lauf 1</th><th>Lauf 2</th><th>Lauf 3</th><th>n. a. je Lauf</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ja/Nein</strong></td>
+              <td><strong><span data-pruef="umlage-neu.typ.ja-nein.spanne">97,4–98,7 %</span></strong></td>
+              <td><span data-pruef="umlage-neu.typ.ja-nein.l1">74/75</span></td><td><span data-pruef="umlage-neu.typ.ja-nein.l2">74/76</span></td><td><span data-pruef="umlage-neu.typ.ja-nein.l3">75/76</span></td>
+              <td><span data-pruef="umlage-neu.typ.ja-nein.l1.na">1</span> / <span data-pruef="umlage-neu.typ.ja-nein.l2.na">0</span> / <span data-pruef="umlage-neu.typ.ja-nein.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>↳ Schlüssel „ja“</td>
+              <td><strong><span data-pruef="umlage-neu.typ.ja-nein.ja.spanne">96,9–98,4 %</span></strong></td>
+              <td><span data-pruef="umlage-neu.typ.ja-nein.ja.l1">62/63</span></td><td><span data-pruef="umlage-neu.typ.ja-nein.ja.l2">62/64</span></td><td><span data-pruef="umlage-neu.typ.ja-nein.ja.l3">63/64</span></td>
+              <td><span data-pruef="umlage-neu.typ.ja-nein.ja.l1.na">1</span> / <span data-pruef="umlage-neu.typ.ja-nein.ja.l2.na">0</span> / <span data-pruef="umlage-neu.typ.ja-nein.ja.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>↳ Schlüssel „nein“</td>
+              <td><strong><span data-pruef="umlage-neu.typ.ja-nein.nein.spanne">100,0 %</span></strong></td>
+              <td><span data-pruef="umlage-neu.typ.ja-nein.nein.l1">12/12</span></td><td><span data-pruef="umlage-neu.typ.ja-nein.nein.l2">12/12</span></td><td><span data-pruef="umlage-neu.typ.ja-nein.nein.l3">12/12</span></td>
+              <td><span data-pruef="umlage-neu.typ.ja-nein.nein.l1.na">0</span> / <span data-pruef="umlage-neu.typ.ja-nein.nein.l2.na">0</span> / <span data-pruef="umlage-neu.typ.ja-nein.nein.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>Begriff über Suchbegriff zugeordnet<br><small>umlage-katalog-suchbegriff · Ja/Nein</small></td>
+              <td><strong><span data-pruef="umlage-neu.kat.umlage-katalog-suchbegriff.ja-nein.spanne">97,8 %</span></strong></td>
+              <td><span data-pruef="umlage-neu.kat.umlage-katalog-suchbegriff.ja-nein.l1">44/45</span></td><td><span data-pruef="umlage-neu.kat.umlage-katalog-suchbegriff.ja-nein.l2">44/45</span></td><td><span data-pruef="umlage-neu.kat.umlage-katalog-suchbegriff.ja-nein.l3">44/45</span></td>
+              <td><span data-pruef="umlage-neu.kat.umlage-katalog-suchbegriff.ja-nein.l1.na">0</span> / <span data-pruef="umlage-neu.kat.umlage-katalog-suchbegriff.ja-nein.l2.na">0</span> / <span data-pruef="umlage-neu.kat.umlage-katalog-suchbegriff.ja-nein.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>Begriff steht als ganzes Wort im Gesetz<br><small>umlage-katalog-wortlaut · Ja/Nein</small></td>
+              <td><strong><span data-pruef="umlage-neu.kat.umlage-katalog-wortlaut.ja-nein.spanne">94,7–100,0 %</span></strong></td>
+              <td><span data-pruef="umlage-neu.kat.umlage-katalog-wortlaut.ja-nein.l1">18/18</span></td><td><span data-pruef="umlage-neu.kat.umlage-katalog-wortlaut.ja-nein.l2">18/19</span></td><td><span data-pruef="umlage-neu.kat.umlage-katalog-wortlaut.ja-nein.l3">19/19</span></td>
+              <td><span data-pruef="umlage-neu.kat.umlage-katalog-wortlaut.ja-nein.l1.na">1</span> / <span data-pruef="umlage-neu.kat.umlage-katalog-wortlaut.ja-nein.l2.na">0</span> / <span data-pruef="umlage-neu.kat.umlage-katalog-wortlaut.ja-nein.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>Ausschluss nach § 1 Abs. 2 BetrKV<br><small>umlage-ausschluss · Ja/Nein</small></td>
+              <td><strong><span data-pruef="umlage-neu.kat.umlage-ausschluss.ja-nein.spanne">100,0 %</span></strong></td>
+              <td><span data-pruef="umlage-neu.kat.umlage-ausschluss.ja-nein.l1">12/12</span></td><td><span data-pruef="umlage-neu.kat.umlage-ausschluss.ja-nein.l2">12/12</span></td><td><span data-pruef="umlage-neu.kat.umlage-ausschluss.ja-nein.l3">12/12</span></td>
+              <td><span data-pruef="umlage-neu.kat.umlage-ausschluss.ja-nein.l1.na">0</span> / <span data-pruef="umlage-neu.kat.umlage-ausschluss.ja-nein.l2.na">0</span> / <span data-pruef="umlage-neu.kat.umlage-ausschluss.ja-nein.l3.na">0</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Über alle gewerteten Antworten: <span data-pruef="umlage-neu.falschquote.spanne">1,32–2,63 %</span> falsch.
+      </p>
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Die „nein“-Quote steht auf 12 Fragen.</strong> 100 % über <span data-pruef="umlage-neu.ausschluss.fragen">12</span> Ausschlüsse ist
+        eine dünne Zahl, und sie soll auch dünn aussehen. Nach dem Streichen der 37 Fragen mit
+        nicht tragfähigem Schlüssel blieben nur diese <span data-pruef="umlage-neu.ausschluss.fragen">12</span> übrig.
+      </div>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Umlage · die ältere Serie</h2>
+      <p>Getrennt ausgewiesen, mit nichts zusammengelegt.</p>
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Auswertung</th><th>Spanne</th><th>Lauf 1</th><th>Lauf 2</th><th>Lauf 3</th><th>n. a. je Lauf</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><strong>Ja/Nein</strong></td>
+              <td><strong><span data-pruef="umlage-alt.typ.ja-nein.spanne">96,1–98,7 %</span></strong></td>
+              <td><span data-pruef="umlage-alt.typ.ja-nein.l1">75/76</span></td><td><span data-pruef="umlage-alt.typ.ja-nein.l2">74/76</span></td><td><span data-pruef="umlage-alt.typ.ja-nein.l3">73/76</span></td>
+              <td><span data-pruef="umlage-alt.typ.ja-nein.l1.na">0</span> / <span data-pruef="umlage-alt.typ.ja-nein.l2.na">0</span> / <span data-pruef="umlage-alt.typ.ja-nein.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>↳ Schlüssel „ja“</td>
+              <td><strong><span data-pruef="umlage-alt.typ.ja-nein.ja.spanne">95,3–98,4 %</span></strong></td>
+              <td><span data-pruef="umlage-alt.typ.ja-nein.ja.l1">63/64</span></td><td><span data-pruef="umlage-alt.typ.ja-nein.ja.l2">62/64</span></td><td><span data-pruef="umlage-alt.typ.ja-nein.ja.l3">61/64</span></td>
+              <td><span data-pruef="umlage-alt.typ.ja-nein.ja.l1.na">0</span> / <span data-pruef="umlage-alt.typ.ja-nein.ja.l2.na">0</span> / <span data-pruef="umlage-alt.typ.ja-nein.ja.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>↳ Schlüssel „nein“</td>
+              <td><strong><span data-pruef="umlage-alt.typ.ja-nein.nein.spanne">100,0 %</span></strong></td>
+              <td><span data-pruef="umlage-alt.typ.ja-nein.nein.l1">12/12</span></td><td><span data-pruef="umlage-alt.typ.ja-nein.nein.l2">12/12</span></td><td><span data-pruef="umlage-alt.typ.ja-nein.nein.l3">12/12</span></td>
+              <td><span data-pruef="umlage-alt.typ.ja-nein.nein.l1.na">0</span> / <span data-pruef="umlage-alt.typ.ja-nein.nein.l2.na">0</span> / <span data-pruef="umlage-alt.typ.ja-nein.nein.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>Begriff über Suchbegriff zugeordnet<br><small>umlage-katalog-suchbegriff · Ja/Nein</small></td>
+              <td><strong><span data-pruef="umlage-alt.kat.umlage-katalog-suchbegriff.ja-nein.spanne">97,4–100,0 %</span></strong></td>
+              <td><span data-pruef="umlage-alt.kat.umlage-katalog-suchbegriff.ja-nein.l1">39/39</span></td><td><span data-pruef="umlage-alt.kat.umlage-katalog-suchbegriff.ja-nein.l2">38/39</span></td><td><span data-pruef="umlage-alt.kat.umlage-katalog-suchbegriff.ja-nein.l3">38/39</span></td>
+              <td><span data-pruef="umlage-alt.kat.umlage-katalog-suchbegriff.ja-nein.l1.na">0</span> / <span data-pruef="umlage-alt.kat.umlage-katalog-suchbegriff.ja-nein.l2.na">0</span> / <span data-pruef="umlage-alt.kat.umlage-katalog-suchbegriff.ja-nein.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>Begriff steht als ganzes Wort im Gesetz<br><small>umlage-katalog-wortlaut · Ja/Nein</small></td>
+              <td><strong><span data-pruef="umlage-alt.kat.umlage-katalog-wortlaut.ja-nein.spanne">92,0–96,0 %</span></strong></td>
+              <td><span data-pruef="umlage-alt.kat.umlage-katalog-wortlaut.ja-nein.l1">24/25</span></td><td><span data-pruef="umlage-alt.kat.umlage-katalog-wortlaut.ja-nein.l2">24/25</span></td><td><span data-pruef="umlage-alt.kat.umlage-katalog-wortlaut.ja-nein.l3">23/25</span></td>
+              <td><span data-pruef="umlage-alt.kat.umlage-katalog-wortlaut.ja-nein.l1.na">0</span> / <span data-pruef="umlage-alt.kat.umlage-katalog-wortlaut.ja-nein.l2.na">0</span> / <span data-pruef="umlage-alt.kat.umlage-katalog-wortlaut.ja-nein.l3.na">0</span></td>
+            </tr>
+            <tr>
+              <td>Ausschluss nach § 1 Abs. 2 BetrKV<br><small>umlage-ausschluss · Ja/Nein</small></td>
+              <td><strong><span data-pruef="umlage-alt.kat.umlage-ausschluss.ja-nein.spanne">100,0 %</span></strong></td>
+              <td><span data-pruef="umlage-alt.kat.umlage-ausschluss.ja-nein.l1">12/12</span></td><td><span data-pruef="umlage-alt.kat.umlage-ausschluss.ja-nein.l2">12/12</span></td><td><span data-pruef="umlage-alt.kat.umlage-ausschluss.ja-nein.l3">12/12</span></td>
+              <td><span data-pruef="umlage-alt.kat.umlage-ausschluss.ja-nein.l1.na">0</span> / <span data-pruef="umlage-alt.kat.umlage-ausschluss.ja-nein.l2.na">0</span> / <span data-pruef="umlage-alt.kat.umlage-ausschluss.ja-nein.l3.na">0</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Über alle gewerteten Antworten: <span data-pruef="umlage-alt.falschquote.spanne">1,32–3,95 %</span>
+        falsch. Die Kategorienzeilen der beiden Serien sind <strong>nicht</strong> vergleichbar:
+        Eine Korrektur an der Wortlaut-Erkennung hat 6 Begriffe von „Wortlaut“ nach „Suchbegriff“
+        verschoben (25/39/12 → 19/45/12). Schlüssel, Fragetexte und Belege blieben gleich.
+      </p>
+    </section>
+
+    <!-- ===================================================================
+         6 · Grenzen
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="grenzen">Was diese Messung nicht zeigt</h2>
+
+    <section class="bk-karte">
+      <h2>Die Grenzen, gesammelt</h2>
+      <p>Jede steht oben schon neben der Aussage, die sie begrenzt. Hier noch einmal zusammen.</p>
+
+      <div class="hg-hint-box hg-hint-warn">
+        <strong>Es sind die leichten Fragen.</strong> Der Benchmark prüft ausschließlich, was das
+        Gesetz eindeutig beantwortet – keine Rechtsprechung, keine Abwägung, keinen Einzelfall.
+        Wenn ein Modell hier scheitert, ist alles Schwierigere schlechter. Umgekehrt sagt ein gutes
+        Ergebnis hier nichts über schwierigere Fragen aus.
+      </div>
+
+      <ol class="bk-schritte">
+        <li class="bk-schritt">
+          <strong>Ein einziges Modell</strong>
+          <p>Gemessen wurde <code>claude-sonnet-5</code> (laut API <code>created_at
+          2026-06-29</code>). Mit einem Modell ist das ein Porträt, kein Vergleich. Ob sich das
+          Modell hinter der Kennung zwischen dem 15. und 17.09.2026 auf Anbieterseite verändert
+          hat, können wir nicht prüfen.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>API statt Chat-App</strong>
+          <p>Über die Programmierschnittstelle, ohne System-Prompt, ohne Websuche, ohne die
+          Zusätze, die eine Chat-Anwendung mitbringt. Das Ergebnis beschreibt das Modell, nicht das
+          Produkt, das ein Nutzer vor sich hat. Ein Vergleich von Hand in den Chat-Apps wäre eine
+          eigene, getrennt auszuweisende Messung – er ist nicht gelaufen.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Der Reihenfolgetest ist für die vier Begriffe der Gruppe schwach</strong>
+          <p>Sie wanderten zwischen den Serien nur um 1 bis 4 Positionen, während 62 von 76 Fragen
+          ihren Platz wechselten. Ein Positionseffekt ist dort nicht ausgeschlossen.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Die Vorhersage ist nicht beweisbar</strong>
+          <p>Dass die Begriffsgruppe vor der neuen Serie benannt wurde, ist bei uns dokumentiert,
+          für Außenstehende aber nicht nachweisbar. Nachträglich eingecheckt wird sie nicht.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>37 Umlagefragen sind ausgeschlossen</strong>
+          <p>Dazu die drei bekannten Lücken der BetrKV und die Fristfälle mit Start am 28.02. vor
+          einem Schaltjahr. Was bleibt, ist ein enger Ausschnitt: Fristen und Umlagefähigkeit,
+          nicht „das Mietrecht“.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>17 verbliebene Umlagefragen stehen unter einer Nummer, deren Wortlaut den Umfang einschränkt</strong>
+          <p>„zentrale“, „laufende“, „von den Bewohnern gemeinsam genutzte“. In einer
+          Betriebskostenabrechnung ist die enge Bedeutung die gemeinte – aber das ist eine Annahme,
+          und sie steht hier, statt stillschweigend im Schlüssel.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>An zwei Stellen ist der Schlüssel selbst eine Entscheidung</strong>
+          <p>Und die Antwort des Modells hat dort Substanz. Beide sind oben bei den Beispielen
+          ausgewiesen – nicht als schlichter Fehler.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Gewertet wird nur die Schlusszeile</strong>
+          <p>Das ist Befund 2. Eine gute Quote enthält Antworten mit falscher Begründung.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Wiederholungen können abweichen, und das lässt sich nicht abschalten</strong>
+          <p>Aktuelle Modelle nehmen den Parameter <code>temperature</code> nicht mehr an. Deshalb
+          drei Läufe und eine Spanne statt eines Einzelwerts – und deshalb ist eine Spanne aus drei
+          Ziehungen kein Konfidenzintervall.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Eine Momentaufnahme</strong>
+          <p>Modelle ändern sich. Das spricht dafür, die Messung zu wiederholen, nicht dagegen,
+          sie zu machen.</p>
+        </li>
+      </ol>
+    </section>
+
+    <!-- ===================================================================
+         7 · Methode
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="methode">Methode</h2>
+
+    <section class="bk-karte">
+      <h2>Wie gefragt wurde</h2>
+      <p>Frage im Wortlaut, Leerzeile, Formatzeile. Sonst nichts.</p>
+      <p>
+        Kein System-Prompt, keine Beispiele, keine Parameter außer dem Pflichtfeld
+        <code>max_tokens</code>. Das Modell läuft damit in der Voreinstellung des Anbieters, und
+        genau die ist der Messgegenstand.
+      </p>
+      <div class="bk-beleg">
+        <p class="bk-beleg-text">Letzte Zeile deiner Antwort genau in dieser Form: ANTWORT: TT.MM.JJJJ
+
+Letzte Zeile deiner Antwort genau in dieser Form: ANTWORT: ja oder ANTWORT: nein</p>
+        <p class="bk-beleg-fuss">Die beiden Formatzeilen, wortgleich in allen <span data-pruef="laeufe.gesamt">9</span> Läufen.</p>
+      </div>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Wie gewertet wurde</h2>
+      <p>Mechanisch, nie durch Auslegung.</p>
+      <ol class="bk-schritte">
+        <li class="bk-schritt">
+          <strong>Gelesen wird die letzte nicht-leere Zeile</strong>
+          <p>Sie zählt nur, wenn sie exakt <code>ANTWORT: ja</code>, <code>ANTWORT: nein</code>
+          oder <code>ANTWORT: TT.MM.JJJJ</code> lautet.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Erkennbar, aber nicht exakt = nicht auswertbar</strong>
+          <p>Nicht falsch. Dasselbe, wenn die Antwortzeile nicht die letzte Zeile ist oder ganz
+          fehlt. Diese Antworten fließen in keine Quote ein und werden überall mitgezählt.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Nie ein Sprachmodell als Schiedsrichter</strong>
+          <p>Datum, ja/nein, mehr wird nicht verglichen. Sobald eine Wertung auslegen muss, ist sie
+          angreifbar – und damit wertlos.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Quoten werden nie vermischt</strong>
+          <p>Datum und Ja/Nein getrennt, Ja/Nein zusätzlich nach Schlüsselwert getrennt. Eine
+          Ja/Nein-Frage hat eine Ratequote von 50 %, eine Datumsfrage praktisch null – ein
+          gemeinsamer Wert wäre bedeutungslos.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Die Läufe</h2>
+      <p>Anfragen laufen nacheinander, nie parallel.</p>
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Lauf</th><th>Start (UTC)</th><th>Ende (UTC)</th><th>Antworten</th><th>Fehler</th><th>abgeschnitten</th><th>Ergebnisdatei SHA-256</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>Fristen · Lauf 1</td>
+              <td><span data-pruef="lauf.fristen.1.gestartet">2026-09-15T15:45:36.997Z</span></td>
+              <td><span data-pruef="lauf.fristen.1.beendet">2026-09-15T17:15:13.853Z</span></td>
+              <td><span data-pruef="lauf.fristen.1.antworten">546</span></td>
+              <td><span data-pruef="lauf.fristen.1.fehler">0</span></td>
+              <td><span data-pruef="lauf.fristen.1.abgeschnitten">0</span></td>
+              <td><small><span data-pruef="lauf.fristen.1.sha256">47f1bcdfc8752613b7a145cfc96f8bb6717eca8ad316318ac2416b573b1b7a90</span></small></td>
+            </tr>
+            <tr>
+              <td>Fristen · Lauf 2</td>
+              <td><span data-pruef="lauf.fristen.2.gestartet">2026-09-16T15:22:37.201Z</span></td>
+              <td><span data-pruef="lauf.fristen.2.beendet">2026-09-16T16:51:38.356Z</span></td>
+              <td><span data-pruef="lauf.fristen.2.antworten">546</span></td>
+              <td><span data-pruef="lauf.fristen.2.fehler">0</span></td>
+              <td><span data-pruef="lauf.fristen.2.abgeschnitten">0</span></td>
+              <td><small><span data-pruef="lauf.fristen.2.sha256">523bf5eefb6571afd236b1b7c80060cfb0a993e5b2117f4103e8a23481db24de</span></small></td>
+            </tr>
+            <tr>
+              <td>Fristen · Lauf 3</td>
+              <td><span data-pruef="lauf.fristen.3.gestartet">2026-09-16T16:51:39.243Z</span></td>
+              <td><span data-pruef="lauf.fristen.3.beendet">2026-09-16T18:22:33.372Z</span></td>
+              <td><span data-pruef="lauf.fristen.3.antworten">546</span></td>
+              <td><span data-pruef="lauf.fristen.3.fehler">0</span></td>
+              <td><span data-pruef="lauf.fristen.3.abgeschnitten">0</span></td>
+              <td><small><span data-pruef="lauf.fristen.3.sha256">22369ad6ab1e32680e14a0e0b0a1987ad38c2a15646221f9ddddda32d83e65aa</span></small></td>
+            </tr>
+            <tr>
+              <td>Umlage (veröffentlicht) · Lauf 1</td>
+              <td><span data-pruef="lauf.umlage-neu.1.gestartet">2026-09-17T15:38:46.313Z</span></td>
+              <td><span data-pruef="lauf.umlage-neu.1.beendet">2026-09-17T15:49:39.626Z</span></td>
+              <td><span data-pruef="lauf.umlage-neu.1.antworten">76</span></td>
+              <td><span data-pruef="lauf.umlage-neu.1.fehler">0</span></td>
+              <td><span data-pruef="lauf.umlage-neu.1.abgeschnitten">0</span></td>
+              <td><small><span data-pruef="lauf.umlage-neu.1.sha256">323df5a7430e812a2d962e2fc02f920406416910c3ca38852a93702df870a6df</span></small></td>
+            </tr>
+            <tr>
+              <td>Umlage (veröffentlicht) · Lauf 2</td>
+              <td><span data-pruef="lauf.umlage-neu.2.gestartet">2026-09-17T15:49:40.724Z</span></td>
+              <td><span data-pruef="lauf.umlage-neu.2.beendet">2026-09-17T16:00:50.162Z</span></td>
+              <td><span data-pruef="lauf.umlage-neu.2.antworten">76</span></td>
+              <td><span data-pruef="lauf.umlage-neu.2.fehler">0</span></td>
+              <td><span data-pruef="lauf.umlage-neu.2.abgeschnitten">0</span></td>
+              <td><small><span data-pruef="lauf.umlage-neu.2.sha256">89e08bcf62e867f9621b7afe420eda65cc1021cb35c11aaac998a8d35184ea0e</span></small></td>
+            </tr>
+            <tr>
+              <td>Umlage (veröffentlicht) · Lauf 3</td>
+              <td><span data-pruef="lauf.umlage-neu.3.gestartet">2026-09-17T16:00:50.762Z</span></td>
+              <td><span data-pruef="lauf.umlage-neu.3.beendet">2026-09-17T16:11:36.943Z</span></td>
+              <td><span data-pruef="lauf.umlage-neu.3.antworten">76</span></td>
+              <td><span data-pruef="lauf.umlage-neu.3.fehler">0</span></td>
+              <td><span data-pruef="lauf.umlage-neu.3.abgeschnitten">0</span></td>
+              <td><small><span data-pruef="lauf.umlage-neu.3.sha256">8fbd43c53d4be89e55bce5cda443accc5919d3aa8dd5d2782563699b36b825b2</span></small></td>
+            </tr>
+            <tr>
+              <td>Umlage (ältere Serie) · Lauf 1</td>
+              <td><span data-pruef="lauf.umlage-alt.1.gestartet">2026-09-15T21:23:29.135Z</span></td>
+              <td><span data-pruef="lauf.umlage-alt.1.beendet">2026-09-15T21:34:05.756Z</span></td>
+              <td><span data-pruef="lauf.umlage-alt.1.antworten">76</span></td>
+              <td><span data-pruef="lauf.umlage-alt.1.fehler">0</span></td>
+              <td><span data-pruef="lauf.umlage-alt.1.abgeschnitten">0</span></td>
+              <td><small><span data-pruef="lauf.umlage-alt.1.sha256">1fe6eab2a85a1ed6074e4a22fe3fbc43c26293976140bf86a3350f53707e026d</span></small></td>
+            </tr>
+            <tr>
+              <td>Umlage (ältere Serie) · Lauf 2</td>
+              <td><span data-pruef="lauf.umlage-alt.2.gestartet">2026-09-16T18:39:27.890Z</span></td>
+              <td><span data-pruef="lauf.umlage-alt.2.beendet">2026-09-16T18:50:22.558Z</span></td>
+              <td><span data-pruef="lauf.umlage-alt.2.antworten">76</span></td>
+              <td><span data-pruef="lauf.umlage-alt.2.fehler">0</span></td>
+              <td><span data-pruef="lauf.umlage-alt.2.abgeschnitten">0</span></td>
+              <td><small><span data-pruef="lauf.umlage-alt.2.sha256">43ccde6cdf2100e8ad01a649a6d6e91141d69510c8e1d8c5f1030cfbb37eac8e</span></small></td>
+            </tr>
+            <tr>
+              <td>Umlage (ältere Serie) · Lauf 3</td>
+              <td><span data-pruef="lauf.umlage-alt.3.gestartet">2026-09-16T18:50:23.264Z</span></td>
+              <td><span data-pruef="lauf.umlage-alt.3.beendet">2026-09-16T19:01:00.114Z</span></td>
+              <td><span data-pruef="lauf.umlage-alt.3.antworten">76</span></td>
+              <td><span data-pruef="lauf.umlage-alt.3.fehler">0</span></td>
+              <td><span data-pruef="lauf.umlage-alt.3.abgeschnitten">0</span></td>
+              <td><small><span data-pruef="lauf.umlage-alt.3.sha256">e9fafdc1d59ebc77de5ce7985f006be8721e25f4b901ca76c5414c4baaebbfd1</span></small></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <p class="hg-result-note">
+        Alle <span data-pruef="laeufe.gesamt">9</span> Läufe endeten mit Status „abgeschlossen“, ohne einen einzigen API-Fehler und
+        ohne abgeschnittene Antwort. SDK <code>@anthropic-ai/sdk 0.111.0</code>, Node
+        <code>v24.18.0</code>.
+      </p>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Zwei Regeln, die wir uns selbst auferlegt haben</h2>
+      <p>Beide entstanden aus einem Fehler, nicht aus Vorsicht.</p>
+      <ol class="bk-schritte">
+        <li class="bk-schritt">
+          <strong>Keine Commits während einer Messreihe</strong>
+          <p>Der Läufer schreibt den Commit-Stand beim Start mit; jeder Commit zwischen zwei Läufen
+          verschiebt diesen Stand, auch wenn er den Lauf nicht berührt. Zusätzlich steht seit dem
+          16.09.2026 der git-Blob-Hash von <code>run.mjs</code> in jeder Ergebnisdatei – der belegt,
+          dass dieselbe Datei lief; ein Commit-Hash legt es nur nahe.</p>
+        </li>
+        <li class="bk-schritt">
+          <strong>Eine Vorhersage wird vor dem Lauf eingecheckt</strong>
+          <p>Eingeführt, nachdem die Vorhersage zur Begriffsgruppe zwar vorher feststand, aber
+          nicht beweisbar war.</p>
+        </li>
+      </ol>
+    </section>
+
+    <section class="bk-karte">
+      <h2>Warum in den Dateien leere Denkblöcke stehen</h2>
+      <p>Damit sich niemand fragt, ob dort etwas zurückgehalten wurde.</p>
+      <p>
+        In den Rohdaten trägt fast jede Antwort einen <code>thinking</code>-Block, dessen Textfeld
+        leer ist: <span data-pruef="thinking.bloecke">1805</span> Blöcke über alle <span data-pruef="laeufe.gesamt">9</span> Läufe,
+        jeder mit Textlänge 0. Die Voreinstellung der Schnittstelle gibt den Denktext nicht zurück;
+        nachweisbar ist damit, <em>dass</em> für eine Antwort gedacht wurde, nicht <em>was</em>.
+        Ihn ausgeben zu lassen wäre ein zusätzlicher Parameter gewesen – und damit nicht mehr die
+        Voreinstellung des Anbieters, die hier gemessen werden soll. Was in den Blöcken an Zeichen
+        steht, ist eine Signatur der Schnittstelle, kein Inhalt.
+      </p>
+    </section>
+
+    <!-- ===================================================================
+         8 · Daten
+         =================================================================== -->
+
+    <h2 class="bk-abschnitt" id="daten">Daten zum Nachrechnen</h2>
+
+    <section class="bk-karte">
+      <h2>Alles, woraus diese Seite besteht</h2>
+      <p>Nichts davon ist zusammengefasst oder nachbearbeitet.</p>
+      <p>
+        Fragen, Schlüssel, Rohantworten und Auswertungen. Zu jeder Ergebnisdatei steht ihre SHA-256
+        oben in der Lauftabelle; jedes Beispiel auf dieser Seite nennt die Datei und die Position,
+        an der es dort steht. Der Code, der alles erzeugt hat, liegt im selben öffentlichen
+        Repository: <code>generiere-fristen.mjs</code>, <code>generiere-umlage.mjs</code>,
+        <code>run.mjs</code>, <code>score.mjs</code>.
+      </p>
+
+      <div class="hg-table-wrap">
+        <table class="hg-table">
+          <thead>
+            <tr><th>Datei</th><th>Was drin steht</th><th>Größe</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td><a href="benchmark/fragen-fristen.json" download>fragen-fristen.json</a></td>
+              <td>546 Fristenfragen mit Schlüssel, Fundstelle und Rechenweg</td>
+              <td><span data-pruef="download.benchmark/fragen-fristen.json.groesse">1012 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/fragen-umlage.json" download>fragen-umlage.json</a></td>
+              <td>76 Umlagefragen mit Schlüssel, Fundstelle und Gesetzestext</td>
+              <td><span data-pruef="download.benchmark/fragen-umlage.json.groesse">99 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-15-claude-sonnet-5-fristen-voll.json" download>ergebnisse/2026-09-15-claude-sonnet-5-fristen-voll.json</a></td>
+              <td>Fristen, Rohantworten</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-15-claude-sonnet-5-fristen-voll.json.groesse">2,4 MB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-15-claude-sonnet-5-fristen-voll-auswertung.json" download>ergebnisse/2026-09-15-claude-sonnet-5-fristen-voll-auswertung.json</a></td>
+              <td>Fristen, Auswertung</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-15-claude-sonnet-5-fristen-voll-auswertung.json.groesse">187 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-16-claude-sonnet-5-fristen-voll-lauf2.json" download>ergebnisse/2026-09-16-claude-sonnet-5-fristen-voll-lauf2.json</a></td>
+              <td>Fristen, Rohantworten</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-16-claude-sonnet-5-fristen-voll-lauf2.json.groesse">2,3 MB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-16-claude-sonnet-5-fristen-voll-lauf2-auswertung.json" download>ergebnisse/2026-09-16-claude-sonnet-5-fristen-voll-lauf2-auswertung.json</a></td>
+              <td>Fristen, Auswertung</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-16-claude-sonnet-5-fristen-voll-lauf2-auswertung.json.groesse">196 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-16-claude-sonnet-5-fristen-voll-lauf3.json" download>ergebnisse/2026-09-16-claude-sonnet-5-fristen-voll-lauf3.json</a></td>
+              <td>Fristen, Rohantworten</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-16-claude-sonnet-5-fristen-voll-lauf3.json.groesse">2,4 MB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-16-claude-sonnet-5-fristen-voll-lauf3-auswertung.json" download>ergebnisse/2026-09-16-claude-sonnet-5-fristen-voll-lauf3-auswertung.json</a></td>
+              <td>Fristen, Auswertung</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-16-claude-sonnet-5-fristen-voll-lauf3-auswertung.json.groesse">194 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf1.json" download>ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf1.json</a></td>
+              <td>Umlage (veröffentlichte Serie), Rohantworten</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf1.json.groesse">320 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf1-auswertung.json" download>ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf1-auswertung.json</a></td>
+              <td>Umlage (veröffentlichte Serie), Auswertung</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf1-auswertung.json.groesse">33 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf2.json" download>ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf2.json</a></td>
+              <td>Umlage (veröffentlichte Serie), Rohantworten</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf2.json.groesse">328 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf2-auswertung.json" download>ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf2-auswertung.json</a></td>
+              <td>Umlage (veröffentlichte Serie), Auswertung</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf2-auswertung.json.groesse">34 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf3.json" download>ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf3.json</a></td>
+              <td>Umlage (veröffentlichte Serie), Rohantworten</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf3.json.groesse">310 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf3-auswertung.json" download>ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf3-auswertung.json</a></td>
+              <td>Umlage (veröffentlichte Serie), Auswertung</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-17-claude-sonnet-5-umlage-voll-b309d7d2-lauf3-auswertung.json.groesse">31 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-15-claude-sonnet-5-umlage-voll.json" download>ergebnisse/2026-09-15-claude-sonnet-5-umlage-voll.json</a></td>
+              <td>Umlage (ältere Serie), Rohantworten</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-15-claude-sonnet-5-umlage-voll.json.groesse">313 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-15-claude-sonnet-5-umlage-voll-auswertung.json" download>ergebnisse/2026-09-15-claude-sonnet-5-umlage-voll-auswertung.json</a></td>
+              <td>Umlage (ältere Serie), Auswertung</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-15-claude-sonnet-5-umlage-voll-auswertung.json.groesse">30 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-16-claude-sonnet-5-umlage-voll-lauf2.json" download>ergebnisse/2026-09-16-claude-sonnet-5-umlage-voll-lauf2.json</a></td>
+              <td>Umlage (ältere Serie), Rohantworten</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-16-claude-sonnet-5-umlage-voll-lauf2.json.groesse">320 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-16-claude-sonnet-5-umlage-voll-lauf2-auswertung.json" download>ergebnisse/2026-09-16-claude-sonnet-5-umlage-voll-lauf2-auswertung.json</a></td>
+              <td>Umlage (ältere Serie), Auswertung</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-16-claude-sonnet-5-umlage-voll-lauf2-auswertung.json.groesse">34 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-16-claude-sonnet-5-umlage-voll-lauf3.json" download>ergebnisse/2026-09-16-claude-sonnet-5-umlage-voll-lauf3.json</a></td>
+              <td>Umlage (ältere Serie), Rohantworten</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-16-claude-sonnet-5-umlage-voll-lauf3.json.groesse">312 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/2026-09-16-claude-sonnet-5-umlage-voll-lauf3-auswertung.json" download>ergebnisse/2026-09-16-claude-sonnet-5-umlage-voll-lauf3-auswertung.json</a></td>
+              <td>Umlage (ältere Serie), Auswertung</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/2026-09-16-claude-sonnet-5-umlage-voll-lauf3-auswertung.json.groesse">36 KB</span></td>
+            </tr>
+            <tr>
+              <td><a href="benchmark/ergebnisse/verworfen-schluessel-2026-09-15/2026-09-15-claude-sonnet-5-umlage-voll.json" download>ergebnisse/verworfen-schluessel-2026-09-15/2026-09-15-claude-sonnet-5-umlage-voll.json</a></td>
+              <td>Verworfener Lauf, Rohantworten – zählt in keiner Serie mit</td>
+              <td><span data-pruef="download.benchmark/ergebnisse/verworfen-schluessel-2026-09-15/2026-09-15-claude-sonnet-5-umlage-voll.json.groesse">493 KB</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p class="hg-result-note">
+        Der verworfene Lauf liegt mit dabei und ist als solcher gekennzeichnet: 113 Fragen vom
+        15.09.2026, gegen eine frühere Fragendatei
+        (SHA-256 <span data-pruef="verworfen.fragendatei.sha8">10bb3190</span>…), deren Schlüssel
+        bei 37 Fragen nicht trug. Er zählt in keiner Serie mit und wird mit nichts zusammengelegt.
+        Ihn wegzulassen wäre genau die stille Auswahl, die dieser Benchmark vermeiden soll.
+      </p>
+    </section>
+
+    <p class="bk-fuss">
+      Gesetzestexte aus der Wissensbasis von Inspectora, importiert von
+      <a href="https://www.gesetze-im-internet.de/" target="_blank" rel="noopener noreferrer">gesetze-im-internet.de</a>.
+      Maßgeblich ist immer der amtliche Text. Diese Seite veröffentlicht Messergebnisse und
+      beschreibt, was im Gesetz steht – sie berät nicht und sagt niemandem, was in seinem Fall zu
+      tun ist. Gemessen am 15.–17.09.2026 von Fabio für Inspectora. Stand dieser Seite: 23.09.2026.
+    </p>
+
+  </main>
+</body>
+</html>

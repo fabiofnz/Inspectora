@@ -1,0 +1,17 @@
+# Zeilenenden der Benchmark-Dateien nicht anfassen.
+#
+# core.autocrlf steht auf true. Ohne diese Regel bekaeme jeder, der das Repo
+# unter Windows klont, die Fragen- und Ergebnisdateien mit CRLF - und damit
+# andere Bytes und eine andere SHA-256 als die, die auf mietrecht-benchmark.html
+# veroeffentlicht ist. Die Seite lebt davon, dass ein Fremder genau diese Hashes
+# nachrechnen kann; eine Pruefsumme, die nach dem Klonen nicht mehr stimmt,
+# waere schlimmer als gar keine.
+#
+# Betrifft auch die Seite selbst: pruefe-seite.mjs vergleicht die eingebetteten
+# Rohantworten zeichengenau mit den Ergebnisdateien. Wuerde nur eine der beiden
+# Seiten umgewandelt, schluege der Waechter bei jedem frischen Klon an.
+
+benchmark/fragen-*.json      -text
+benchmark/ergebnisse/**      -text
+mietrecht-benchmark.html     -text
+benchmark/seite-vorlage.html -text

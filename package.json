@@ -17,6 +17,8 @@
     "pruefe-wissensbasis:negativkontrolle": "node scripts/pruefe-wissensbasis-negativkontrolle.js",
     "pruefe-betriebskosten": "node scripts/pruefe-betriebskosten.js",
     "pruefe-betriebskosten:negativkontrolle": "node scripts/pruefe-betriebskosten-negativkontrolle.js",
+    "baue-seite": "node benchmark/baue-seite.mjs",
+    "pruefe-seite": "node benchmark/pruefe-seite.mjs",
     "pruefe-aktualitaet": "node scripts/pruefe-aktualitaet.js",
     "pruefe-aktualitaet:negativkontrolle": "node scripts/pruefe-aktualitaet-negativkontrolle.js",
     "aktualitaet:status": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/aufgabe-einrichten.ps1 -Status"
