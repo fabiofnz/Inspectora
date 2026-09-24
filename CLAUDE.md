@@ -32,7 +32,7 @@ Website: inspectora.tech · Hosting: Netlify · Repo: fabiofnz/Inspectora (öffe
 - Zugangsschutz über `ASSISTANT_ACCESS_CODE` (serverseitig geprüft)
 - Streaming (wortweise), Web-Suche (`web_search_20250305`), Datei-Upload (PDF + Bilder)
 - Mehrere parallele Chats mit Volltextsuche, localStorage-Keys `inspectora_chats_v1` / `inspectora_active_chat_v1`
-- Markdown via marked + DOMPurify (jsDelivr CDN)
+- Markdown via marked 13.0.3 + DOMPurify 3.4.16, selbst gehostet in `vendor/` (Herkunft und SHA-256: `vendor/QUELLEN.md`)
 - Feedback-Buttons (👍/👎) → `netlify/functions/feedback.mjs` (Functions v2!) → Netlify Blobs, Store `assistant-feedback`
 
 **Wissensbasis**
@@ -50,6 +50,7 @@ Website: inspectora.tech · Hosting: Netlify · Repo: fabiofnz/Inspectora (öffe
 - **Netlify Functions:** Neue Functions immer im **v2-Format** (`export default`, Web Request/Response, `.mjs`). Nur so funktioniert Netlify Blobs ohne Zusatzkonfiguration. `generate-protokoll.js` ist noch v1 – nicht anfassen, läuft.
 - **Design:** dunkel mit Lila-Akzenten. Immer die vorhandenen CSS-Variablen in `styles.css` nutzen, keine neuen Farbwerte hart eintragen.
 - **Sprache:** Alle Texte im Interface auf Deutsch.
+- **Keine externen Einbindungen.** Schrift (`fonts/`) und Bibliotheken (`vendor/`) liegen im Repo; keine Seite lädt etwas von fremden Servern. `npm run validate-site` prüft das (Abschnitt 7), die Negativkontrolle beweist, dass die Prüfung anschlägt.
 - **Keine Secrets im Code.** Niemals API-Keys, Zugangscodes oder Token in Dateien schreiben – ausschließlich Netlify-Umgebungsvariablen.
 - **Kein base64 im localStorage.** Datei-Uploads nur als Platzhalter `[Datei: name.pdf]` im Verlauf speichern.
 - **Fehler nicht still verschlucken**, wenn sie diagnostisch wichtig sind. Bei Hintergrund-Operationen (z.B. Feedback senden) auch **Erfolg** loggen, nicht nur Fehler – sonst ist im Netlify-Log nicht unterscheidbar, ob etwas lief oder gar nicht aufgerufen wurde.

@@ -31,8 +31,8 @@
 // schlaegt an.
 //
 // Geprueft wird ausserdem ueber ALLE Seiten (vorher nur index.html):
-// doppelte IDs, tote Sprungmarken, fehlende lokale Dateien, CSS-Klammern und
-// Schluesselmuster.
+// doppelte IDs, tote Sprungmarken, fehlende lokale Dateien, CSS-Klammern,
+// Schluesselmuster und externe Einbindungen (Abschnitt 7).
 
 import fs from "node:fs";
 import path from "node:path";
@@ -101,6 +101,15 @@ for (const [name, html] of seiten) {
     if (!fs.existsSync(path.join(root, ziel.split("#")[0]))) {
       fail(`${name}: verweist auf fehlende Datei: ${ziel}`);
     }
+  }
+}
+// Auch url() in styles.css - vor allem die Schriftdateien. Ein falscher Pfad
+// dort faellt sonst niemandem auf: Der Browser nimmt still die Systemschrift.
+for (const ziel of new Set(alle(css, /url\(\s*["']?([^"')]+?)["']?\s*\)/g))) {
+  if (/^(data:|https?:|\/\/|#)/i.test(ziel)) continue;
+  verweise++;
+  if (!fs.existsSync(path.join(root, ziel.split(/[?#]/)[0]))) {
+    fail(`styles.css: verweist auf fehlende Datei: ${ziel}`);
   }
 }
 if (!fehlerZahl) pass(`Alle lokalen Verweise aufloesbar (${verweise} geprueft)`);
@@ -182,6 +191,114 @@ const zusammen = [...seiten.values()].join("\n") + "\n" + css + "\n" + js;
 const gefunden = schluesselMuster.flatMap((m) => zusammen.match(m) ?? []);
 if (gefunden.length) fail("Moegliches Schluessel- oder Tokenmuster in oeffentlichen Dateien gefunden");
 else pass("Keine gaengigen Schluesselmuster gefunden");
+
+// --- 7 · Externe Einbindungen ---------------------------------------------
+//
+// Keine Seite darf beim Laden einen fremden Server ansprechen. Jede solche
+// Anfrage uebertraegt die IP-Adresse der Besucher dorthin (DSGVO), und eine
+// Datei hinter "marked@13" kann sich aendern, ohne dass hier ein Commit
+// passiert. Schriften und Bibliotheken liegen deshalb in fonts/ und vendor/
+// (Herkunft und Pruefsummen: vendor/QUELLEN.md).
+//
+// Verboten ist, was LAEDT: src/srcset/poster/data an Medien- und Skript-Tags,
+// <link href> (ausser canonical/alternate - die laden nichts), url() und
+// @import in CSS und <style>, und in eigenem JavaScript import/fetch/.src mit
+// absoluter Adresse sowie dynamisch erzeugte <script>/<link>.
+// Erlaubt bleiben normale Links (<a href>) und <meta content> (og:image muss
+// laut Protokoll absolut sein und wird nur von Vorschau-Diensten abgerufen).
+//
+// Geprueft werden alle Seiten, die Vorlage der Benchmark-Seite (sonst kommt
+// die Einbindung beim naechsten "npm run baue-seite" zurueck), styles.css und
+// das eigene JavaScript. vendor/ bleibt aussen vor: Das sind unveraenderte
+// Fremddateien, die nichts nachladen - geprueft wurde das im Browser.
+//
+// Grenze: Das sind Textmuster, kein Browser. Eine Adresse, die erst zur
+// Laufzeit zusammengesetzt wird, sieht diese Pruefung nicht.
+
+const extern = (url) => /^\s*(https?:|wss?:)?\/\//i.test(url);
+const VORLAGE = "benchmark/seite-vorlage.html";
+
+const htmlQuellen = new Map(seiten);
+if (fs.existsSync(path.join(root, VORLAGE))) {
+  htmlQuellen.set(VORLAGE, fs.readFileSync(path.join(root, VORLAGE), "utf8"));
+}
+const jsQuellen = new Map();
+for (const ordner of [".", "kern"]) {
+  const voll = path.join(root, ordner);
+  if (!fs.existsSync(voll)) continue;
+  for (const f of fs.readdirSync(voll).filter((f) => /\.(js|mjs)$/.test(f)).sort()) {
+    const rel = ordner === "." ? f : `${ordner}/${f}`;
+    jsQuellen.set(rel, fs.readFileSync(path.join(root, rel), "utf8"));
+  }
+}
+
+// Tags mit ladenden Attributen - gilt fuer HTML und fuer HTML-Vorlagen in JS.
+function externeTags(text) {
+  const funde = [];
+  for (const m of text.matchAll(/<(script|img|iframe|frame|source|video|audio|track|embed|object|input)\b[^>]*>/gi)) {
+    for (const a of m[0].matchAll(/\s(src|srcset|poster|data)\s*=\s*["']([^"']*)["']/gi)) {
+      const urls = a[1].toLowerCase() === "srcset" ? a[2].split(",").map((s) => s.trim().split(/\s+/)[0]) : [a[2]];
+      for (const u of urls) if (extern(u)) funde.push(`<${m[1]} ${a[1]}="${u}">`);
+    }
+  }
+  for (const m of text.matchAll(/<link\b[^>]*>/gi)) {
+    const rel = (m[0].match(/\srel\s*=\s*["']([^"']*)["']/i)?.[1] ?? "").toLowerCase().split(/\s+/);
+    const href = m[0].match(/\shref\s*=\s*["']([^"']*)["']/i)?.[1] ?? "";
+    if (extern(href) && !rel.every((r) => r === "canonical" || r === "alternate")) {
+      funde.push(`<link rel="${rel.join(" ")}" href="${href}">`);
+    }
+  }
+  return funde;
+}
+
+// url() und @import - fuer styles.css, <style>-Bloecke und style-Attribute.
+function externesCss(text) {
+  return [
+    ...alle(text, /@import\s+(?:url\(\s*)?["']?([^"')\s;]+)/gi).filter(extern).map((u) => `@import ${u}`),
+    ...alle(text, /url\(\s*["']?([^"')]+?)["']?\s*\)/gi).filter(extern).map((u) => `url(${u})`),
+  ];
+}
+
+function externesJs(text) {
+  const muster = [
+    /\bimport\s*(?:[\w*{}\s,]+\s*from\s*)?["'`]([^"'`]+)["'`]/g,
+    /\bimport\(\s*["'`]([^"'`]+)/g,
+    /\b(?:fetch|importScripts|new\s+(?:Worker|SharedWorker|EventSource|WebSocket))\(\s*["'`]([^"'`]+)/g,
+    /\.src\s*=\s*["'`]([^"'`]+)/g,
+    /\.setAttribute\(\s*["'](?:src|href)["']\s*,\s*["'`]([^"'`]+)/g,
+  ];
+  const funde = muster.flatMap((m) => alle(text, m).filter(extern));
+  // Dynamisch erzeugte Skripte/Stylesheets: Ziel meist nicht als Text sichtbar,
+  // also grundsaetzlich melden. Heute gibt es keine - wer eins braucht, soll
+  // hier bewusst eine Ausnahme eintragen, statt dass es still durchrutscht.
+  for (const m of text.matchAll(/createElement\(\s*["'`](script|link)["'`]\s*\)/g)) {
+    funde.push(`createElement("${m[1]}")`);
+  }
+  return funde;
+}
+
+let externGeprueft = 0;
+const externFunde = [];
+for (const [name, html] of htmlQuellen) {
+  externGeprueft++;
+  const stile = [
+    ...alle(html, /<style\b[^>]*>([\s\S]*?)<\/style>/gi),
+    ...alle(html, /\sstyle\s*=\s*"([^"]*)"/gi),
+    ...alle(html, /\sstyle\s*=\s*'([^']*)'/gi),
+  ].join("\n");
+  for (const f of [...externeTags(html), ...externesCss(stile)]) externFunde.push(`${name}: ${f}`);
+}
+externGeprueft++;
+for (const f of externesCss(css)) externFunde.push(`styles.css: ${f}`);
+for (const [name, text] of jsQuellen) {
+  externGeprueft++;
+  for (const f of [...externeTags(text), ...externesJs(text)]) externFunde.push(`${name}: ${f}`);
+}
+if (externFunde.length) {
+  for (const f of externFunde) fail(`externe Einbindung: ${f}`);
+} else {
+  pass(`Keine externen Einbindungen (${externGeprueft} Dateien: Seiten, Vorlage, styles.css, eigenes JS)`);
+}
 
 // --- Ergebnis -------------------------------------------------------------
 

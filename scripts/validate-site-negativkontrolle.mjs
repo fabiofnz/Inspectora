@@ -40,6 +40,11 @@ const PRUEFER = path.join(HIER, "validate-site.mjs");
 const MITNEHMEN = fs
   .readdirSync(ROOT)
   .filter((f) => /\.(html|css|js|mjs|xml)$/.test(f) && fs.statSync(path.join(ROOT, f)).isFile());
+// Seit die Schrift und die Bibliotheken selbst gehostet sind, verweisen Seiten
+// und styles.css auch in Unterordner. Ohne sie schlaegt schon der Vorlauf an.
+// Die Vorlage der Benchmark-Seite gehoert zur Pruefung auf externe Einbindungen.
+const ORDNER_MITNEHMEN = ["fonts", "vendor", "kern"];
+const EINZELN_MITNEHMEN = ["benchmark/seite-vorlage.html"];
 
 // Jede Mutation bricht genau eine Pruefung. "erwartet" ist ein Textstueck, das
 // in der Fehlermeldung von validate-site.mjs vorkommen muss.
@@ -113,11 +118,86 @@ const MUTATIONEN = [
       fs.writeFileSync(p, s + "\n// AIzaSyD" + "x".repeat(30) + "\n");
     },
   },
+  // --- Externe Einbindungen (Abschnitt 7) ---------------------------------
+  // Je eine Mutation pro Weg, auf dem eine fremde Datei wieder hereinkommen
+  // kann. Die ersten beiden sind genau die Zeilen, die vorher drinstanden.
+  {
+    name: "jsPDF wieder vom CDN",
+    erwartet: "externe Einbindung: weg-verwaltung.html",
+    mutiere: (dir) => ersetze(dir, "weg-verwaltung.html",
+      '<script src="vendor/jspdf-2.5.1.umd.min.js"></script>',
+      '<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>'),
+  },
+  {
+    name: "Google Fonts wieder im Seitenkopf",
+    erwartet: "externe Einbindung: index.html",
+    mutiere: (dir) => ersetze(dir, "index.html",
+      '<link rel="stylesheet" href="styles.css">',
+      '<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">\n  <link rel="stylesheet" href="styles.css">'),
+  },
+  {
+    name: "Google Fonts in der Vorlage der Benchmark-Seite",
+    erwartet: "externe Einbindung: benchmark/seite-vorlage.html",
+    mutiere: (dir) => ersetze(dir, "benchmark/seite-vorlage.html",
+      '<link rel="stylesheet" href="styles.css">',
+      '<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>\n  <link rel="stylesheet" href="styles.css">'),
+  },
+  {
+    name: "Protokollrelatives Skript (//cdn…) ohne https:",
+    erwartet: "externe Einbindung: ki-assistent.html",
+    mutiere: (dir) => ersetze(dir, "ki-assistent.html",
+      '<script src="vendor/marked-13.0.3.min.js"></script>',
+      '<script src="//cdn.jsdelivr.net/npm/marked@13/marked.min.js"></script>'),
+  },
+  {
+    name: "@import einer fremden Schrift in styles.css",
+    erwartet: "externe Einbindung: styles.css",
+    mutiere: (dir) => {
+      const p = path.join(dir, "styles.css");
+      fs.writeFileSync(p, "@import url('https://fonts.googleapis.com/css2?family=Inter');\n" + fs.readFileSync(p, "utf8"));
+    },
+  },
+  {
+    name: "Fremdes Hintergrundbild im style-Attribut",
+    erwartet: "externe Einbindung: index.html",
+    mutiere: (dir) => ersetze(dir, "index.html", "</main>",
+      '<div style="background:url(https://example.com/bild.png)"></div></main>'),
+  },
+  {
+    name: "Skript, das zur Laufzeit nachgeladen wird",
+    erwartet: "externe Einbindung: assistant.js",
+    mutiere: (dir) => {
+      const p = path.join(dir, "assistant.js");
+      fs.writeFileSync(p, fs.readFileSync(p, "utf8") +
+        '\nconst s = document.createElement("script"); s.src = "https://unpkg.com/x"; document.head.append(s);\n');
+    },
+  },
+  {
+    name: "Schriftdatei, auf die styles.css zeigt, fehlt",
+    erwartet: "styles.css: verweist auf fehlende Datei",
+    mutiere: (dir) => fs.rmSync(path.join(dir, "fonts", "plus-jakarta-sans-latin.woff2")),
+  },
 ];
 
 function kopiereNach(dir) {
   fs.mkdirSync(dir, { recursive: true });
   for (const f of MITNEHMEN) fs.copyFileSync(path.join(ROOT, f), path.join(dir, f));
+  for (const o of ORDNER_MITNEHMEN) {
+    if (fs.existsSync(path.join(ROOT, o))) fs.cpSync(path.join(ROOT, o), path.join(dir, o), { recursive: true });
+  }
+  for (const f of EINZELN_MITNEHMEN) {
+    fs.mkdirSync(path.dirname(path.join(dir, f)), { recursive: true });
+    fs.copyFileSync(path.join(ROOT, f), path.join(dir, f));
+  }
+}
+
+// Ersetzt genau eine bekannte Stelle - und bricht ab, wenn es sie nicht gibt.
+// Sonst "erkennt" die Kontrolle einen Fehler, der nie eingebaut wurde.
+function ersetze(dir, datei, alt, neu) {
+  const p = path.join(dir, datei);
+  const s = fs.readFileSync(p, "utf8");
+  if (!s.includes(alt)) throw new Error(`${datei}: Ankerstelle nicht gefunden: ${alt}`);
+  fs.writeFileSync(p, s.replace(alt, neu));
 }
 
 function pruefe(dir) {
