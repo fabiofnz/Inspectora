@@ -103,8 +103,9 @@ Legal and professional content — statute text, property and tenancy law, anyth
 
 ## Knowledge base
 
-- `wissensbasis/gesetze.json` – 181 paragraphs (WEG, BGB §§ 535–580a, BetrKV, HeizkostenV, WoFlV), officially imported from gesetze-im-internet.de.
-- `wissensbasis/themen-mapping.json` – 87 paragraphs mapped to everyday search terms. `titel_pruefung` is the safeguard against wrong assignment.
+- `wissensbasis/gesetze.json` – the knowledge base paragraphs (e.g. WEG, BGB, BetrKV), officially imported from gesetze-im-internet.de.
+- `wissensbasis/themen-mapping.json` – paragraphs mapped to everyday search terms.
+- **Never write counts into docs.** How many paragraphs from which laws, and how many have topics, comes live from `/.netlify/functions/wissensbasis-status` (counted from `gesetze.json` at runtime). Handwritten numbers go stale silently; the derived one cannot. `titel_pruefung` is the safeguard against wrong assignment.
 - Loaded via static import: `with { type: "json" }`.
 - `scripts/import-gesetze.js` **runs locally only** — Claude Code Web has no network access, the proxy returns 403. Never try to run download scripts in the web environment.
 

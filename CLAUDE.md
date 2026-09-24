@@ -36,7 +36,7 @@ Website: inspectora.tech · Hosting: Netlify · Repo: fabiofnz/Inspectora (öffe
 - Feedback-Buttons (👍/👎) → `netlify/functions/feedback.mjs` (Functions v2!) → Netlify Blobs, Store `assistant-feedback`. Nach sechs Monaten gelöscht durch die geplante Function `feedback-aufraeumen.mjs` (täglich; Logik in `netlify/lib/feedback-frist.mjs`, Test `npm run pruefe-feedback-frist`)
 
 **Wissensbasis**
-- `wissensbasis/gesetze.json` – 181 Paragraphen (WEG, BGB §§ 535–580a, BetrKV, HeizkostenV, WoFlV)
+- `wissensbasis/gesetze.json` – die Paragraphen der Wissensbasis (z. B. WEG, BGB, BetrKV). **Keine Zahlen hier eintragen:** Wie viele Paragraphen aus welchen Gesetzen drinstehen, liefert live `/.netlify/functions/wissensbasis-status` (gezählt aus `gesetze.json`) – handgeschriebene Zahlen veralten still, die abgeleitete nicht.
 - `wissensbasis/themen-mapping.json` – Alltags-Suchbegriffe je Paragraph, mit `titel_pruefung` als Sicherung
 - `scripts/import-gesetze.js` – Import von gesetze-im-internet.de, **läuft nur lokal** (Netzzugang nötig)
 - Die Edge Function lädt gesetze.json per statischem Import `with { type: "json" }`
