@@ -28,15 +28,13 @@
 
 "use strict";
 
-import {
-  istGueltigesDatum, plusMonate, plusTage, wochentag, wochentagName,
-  formatiereDeutsch, formatiereMitWochentag, SONNTAG, SONNABEND,
-} from "./datum.mjs";
-import { feiertagName, ABDECKUNG, NICHT_ABGEDECKT } from "./feiertage.mjs";
+import { istGueltigesDatum } from "./datum.mjs";
+import { ABDECKUNG, NICHT_ABGEDECKT } from "./feiertage.mjs";
+import { ladeBelege } from "./belege.mjs";
+import { monatsfrist } from "./fristbausteine.mjs";
 
-// Jeder Beleg muss von der amtlichen Quelle stammen. Das wird geprueft, nicht
-// vorausgesetzt: ein Eintrag mit leerem oder fremdem Link zaehlt als fehlend.
-const QUELLE_PRAEFIX = "https://www.gesetze-im-internet.de/";
+// Belege laedt kern/belege.mjs - fuer alle Module gleich. Jeder Beleg muss von der
+// amtlichen Quelle stammen; ein Eintrag mit leerem oder fremdem Link zaehlt als fehlend.
 
 export const FRIST_MONATE = 12;
 
@@ -69,170 +67,24 @@ export const BENOETIGTE_BELEGE = [
 // ---------------------------------------------------------------------------
 
 export function belegeLaden(korpus) {
-  const fehlend = [];
-  const belege = {};
-
-  if (!Array.isArray(korpus) || korpus.length === 0) {
-    return {
-      ok: false,
-      belege: {},
-      fehlend: BENOETIGTE_BELEGE.map((b) => ({
-        ...b, grund: "Wissensbasis nicht geladen oder leer",
-      })),
-    };
-  }
-
-  for (const gesucht of BENOETIGTE_BELEGE) {
-    const eintrag = korpus.find(
-      (p) => p && p.gesetz === gesucht.gesetz && p.paragraph === gesucht.paragraph,
-    );
-    if (!eintrag) {
-      fehlend.push({ ...gesucht, grund: "Paragraph nicht in der Wissensbasis" });
-      continue;
-    }
-    if (typeof eintrag.text !== "string" || eintrag.text.trim().length === 0) {
-      fehlend.push({ ...gesucht, grund: "Paragraph ohne Text" });
-      continue;
-    }
-    if (typeof eintrag.quelle !== "string" || !eintrag.quelle.startsWith(QUELLE_PRAEFIX)) {
-      fehlend.push({ ...gesucht, grund: "Kein Link auf die amtliche Quelle" });
-      continue;
-    }
-    belege[gesucht.schluessel] = {
-      schluessel: gesucht.schluessel,
-      gesetz: eintrag.gesetz,
-      gesetz_lang: eintrag.gesetz_lang || eintrag.gesetz,
-      paragraph: eintrag.paragraph,
-      titel: eintrag.titel || "",
-      text: eintrag.text,
-      quelle: eintrag.quelle,
-      stand: eintrag.stand || "",
-      hinweis: eintrag.hinweis || "",
-    };
-  }
-
-  return { ok: fehlend.length === 0, belege, fehlend };
+  return ladeBelege(korpus, BENOETIGTE_BELEGE);
 }
 
 // ---------------------------------------------------------------------------
-// § 193 BGB - Verschiebung auf den naechsten Werktag
-// ---------------------------------------------------------------------------
-
-// Warum ein Tag nach § 193 BGB nicht als Fristende taugt - oder null, wenn er taugt.
-// "bestaetigt" sind Tage, die der Nutzer selbst als Feiertag markiert hat; sie sind
-// getrennt gefuehrt, weil sie eine andere Herkunft haben als die berechneten.
-function hinderungsgrund(iso, bestaetigt) {
-  const tag = wochentag(iso);
-  if (tag === SONNTAG)   return { art: "sonntag",   text: "Sonntag",   herkunft: "gesetz" };
-  if (tag === SONNABEND) return { art: "sonnabend", text: "Sonnabend", herkunft: "gesetz" };
-  if (bestaetigt.includes(iso)) {
-    return {
-      art: "feiertag", text: "gesetzlicher Feiertag (Angabe des Nutzers)",
-      herkunft: "nutzerangabe",
-    };
-  }
-  const name = feiertagName(iso);
-  if (name) {
-    return { art: "feiertag", text: name + " (bundeseinheitlicher Feiertag)", herkunft: ABDECKUNG };
-  }
-  return null;
-}
-
-function verschiebeNachWerktag(basisIso, bestaetigt) {
-  const kette = [];
-  let aktuell = basisIso;
-  // Obergrenze als Reissleine: gaebe hinderungsgrund fuer jeden Tag einen Grund
-  // zurueck, waere das sonst eine Endlosschleife im Browser des Nutzers.
-  for (let i = 0; i < 10; i++) {
-    const grund = hinderungsgrund(aktuell, bestaetigt);
-    if (!grund) break;
-    kette.push({ iso: aktuell, ...grund });
-    aktuell = plusTage(aktuell, 1);
-  }
-  return {
-    verschoben: kette.length > 0,
-    zielIso: aktuell,
-    kette,
-    // Der erste Grund ist der, den die Oberflaeche nennt: er betrifft das
-    // eigentliche Fristende nach §§ 187/188.
-    grund: kette.length > 0 ? kette[0] : null,
-  };
-}
-
-// ---------------------------------------------------------------------------
-// Eine Frist
+// Eine Frist - Rechenkette aus kern/fristbausteine.mjs, hier nur die Anbindung an § 556
 // ---------------------------------------------------------------------------
 
 function berechneFrist({ schluessel, titel, grundlage, satz, startIso, startLabel, bestaetigt }) {
-  const { iso: basisIso, abs3Angewendet } = plusMonate(startIso, FRIST_MONATE);
-  const verschiebung = verschiebeNachWerktag(basisIso, bestaetigt);
-
-  const schritte = [
-    {
-      beleg: "bgb-187", bezeichnung: "§ 187 Abs. 1 BGB",
-      erklaerung: "Fristbeginn: Der " + formatiereDeutsch(startIso)
-        + " ist der Tag des Ereignisses (" + startLabel
-        + ") und wird nicht mitgerechnet.",
-    },
-    {
-      beleg: "bgb-188", bezeichnung: "§ 188 Abs. 2 BGB",
-      erklaerung: "Fristende: Die Zwölfmonatsfrist endet mit Ablauf des Tages im zwölften "
-        + "Monat, der durch seine Zahl dem " + formatiereDeutsch(startIso) + " entspricht.",
-    },
-  ];
-
-  if (abs3Angewendet) {
-    schritte.push({
-      beleg: "bgb-188", bezeichnung: "§ 188 Abs. 3 BGB",
-      erklaerung: "Diesen Tag gibt es im Zielmonat nicht. Die Frist endet deshalb mit Ablauf "
-        + "des letzten Tages dieses Monats.",
-    });
-  }
-
-  schritte.push({
-    beleg: "bgb-193", bezeichnung: "§ 193 BGB",
-    erklaerung: verschiebung.verschoben
-      // Der Grund wird hinter einem Doppelpunkt eingesetzt und nicht in den Satz
-      // eingebaut. Sonst muesste der Text mitgebeugt werden ("auf einen gesetzlichen
-      // Feiertag", aber "auf den Tag der Deutschen Einheit") - und eine Ausgabe, die
-      // Faelle raten muss, wird irgendwann falsch.
-      ? "Das Fristende fällt auf einen Tag, an dem eine Frist nach § 193 BGB nicht endet: "
-        + verschiebung.grund.text + ". An seine Stelle tritt der nächste Werktag: "
-        + formatiereMitWochentag(verschiebung.zielIso) + "."
-      : "Das Fristende fällt auf einen " + wochentagName(basisIso) + " und ist nach der "
-        + "bundeseinheitlichen Liste kein Feiertag. § 193 BGB führt hier zu keiner Verschiebung.",
+  const f = monatsfrist({
+    startIso, monate: FRIST_MONATE, startLabel, bestaetigt,
+    bezeichnung: { frist: "Zwölfmonatsfrist", monat: "zwölften" },
   });
-
+  // Reihenfolge der Schluessel wie vorher: Die Benchmark-Fragedateien enthalten
+  // dieses Objekt und sollen byte-gleich bleiben.
   return {
-    schluessel,
-    titel,
-    grundlage,
-    satz,
-    startIso,
-    startLabel,
-    schritte,
-    basis: {
-      iso: basisIso,
-      anzeige: formatiereMitWochentag(basisIso),
-      abs3Angewendet,
-    },
-    verschiebung: {
-      verschoben: verschiebung.verschoben,
-      zielIso: verschiebung.zielIso,
-      anzeige: formatiereMitWochentag(verschiebung.zielIso),
-      grund: verschiebung.grund,
-      kette: verschiebung.kette,
-    },
-    // Frage an den Nutzer: Ist der Tag, auf den die Frist am Ende faellt, bei ihm
-    // ein landesrechtlicher Feiertag? Nur sinnvoll, wenn der Tag nicht ohnehin
-    // schon als Hinderungsgrund erkannt ist.
-    feiertagsfrage: hinderungsgrund(verschiebung.zielIso, bestaetigt) === null
-      ? {
-          iso: verschiebung.zielIso,
-          anzeige: formatiereMitWochentag(verschiebung.zielIso),
-          bereitsBestaetigt: bestaetigt.includes(verschiebung.zielIso),
-        }
-      : null,
+    schluessel, titel, grundlage, satz, startIso, startLabel,
+    schritte: f.schritte, basis: f.basis, verschiebung: f.verschiebung,
+    feiertagsfrage: f.feiertagsfrage,
   };
 }
 
@@ -266,6 +118,7 @@ export function pruefeFristen(eingabe, korpus) {
       fehlend: geladen.fehlend,
       abrechnungsfrist: null,
       einwendungsfrist: null,
+      ...grundform(),
     };
   }
 
@@ -286,6 +139,7 @@ export function pruefeFristen(eingabe, korpus) {
     return {
       ok: false, grund: "eingabe", fehler, belege: geladen.belege,
       abrechnungsfrist: null, einwendungsfrist: null,
+      ...grundform(),
     };
   }
 
@@ -345,5 +199,41 @@ export function pruefeFristen(eingabe, korpus) {
     feiertagsabdeckung: { abdeckung: ABDECKUNG, nichtAbgedeckt: NICHT_ABGEDECKT },
     abrechnungsfrist,
     einwendungsfrist,
+    // Gemeinsames Ergebnisformat (kern/ergebnis.mjs) - zusaetzlich, die Felder
+    // darueber bleiben unveraendert, weil Oberflaeche, Tests und Benchmark sie lesen.
+    ...grundform(),
+    teile: [abrechnungsfrist, einwendungsfrist].filter(Boolean).map((f) => ({
+      schluessel: f.schluessel,
+      titel: f.titel,
+      ergebnis: {
+        fristendeIso: f.basis.iso,
+        nach193Iso: f.verschiebung.zielIso,
+        bewertung: f.bewertung ? f.bewertung.status : null,
+      },
+      schritte: f.schritte,
+    })),
+    grenzen: GRENZEN,
+    annahmen: [],
   };
+}
+
+// ---------------------------------------------------------------------------
+// Gemeinsames Ergebnisformat
+// ---------------------------------------------------------------------------
+
+export const MODUL = { id: "nebenkosten-frist", version: "1.0.0" };
+
+// Wo dieses Modul aufhoert. Steht im Ergebnis, damit es niemand als vollstaendige
+// Antwort liest - auch nicht der Assistent, der das Modul spaeter aufruft.
+export const GRENZEN = [
+  "Geprüft wird nur der Zeitpunkt nach § 556 Abs. 3 BGB, nicht der Inhalt der Abrechnung.",
+  "Feiertage: nur die bundeseinheitlichen. Landesrechtliche Feiertage findet dieses Modul "
+    + "nicht – sie müssen selbst bestätigt werden.",
+  "Ob § 193 BGB auf diese Fristen anzuwenden ist, ist Auslegung. Deshalb stehen immer beide "
+    + "Daten da: nach §§ 187, 188 BGB und nach § 193 BGB verschoben.",
+  "Keine Rechtsberatung.",
+];
+
+function grundform() {
+  return { modul: MODUL.id, version: MODUL.version };
 }

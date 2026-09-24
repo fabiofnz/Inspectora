@@ -60,7 +60,8 @@
 
 "use strict";
 
-const QUELLE_PRAEFIX = "https://www.gesetze-im-internet.de/";
+// Belege laedt kern/belege.mjs - fuer alle Module gleich.
+import { ladeBelege } from "./belege.mjs";
 
 export const BENOETIGTE_BELEGE = [
   { schluessel: "betrkv-2", gesetz: "BetrKV", paragraph: "§ 2", zweck: "Katalog der Betriebskosten" },
@@ -97,39 +98,7 @@ export const IMMER_MIT_VORBEHALT = {
 // ---------------------------------------------------------------------------
 
 export function belegeLaden(korpus) {
-  const fehlend = [];
-  const belege = {};
-
-  if (!Array.isArray(korpus) || korpus.length === 0) {
-    return {
-      ok: false, belege: {},
-      fehlend: BENOETIGTE_BELEGE.map((b) => ({ ...b, grund: "Wissensbasis nicht geladen oder leer" })),
-    };
-  }
-
-  for (const gesucht of BENOETIGTE_BELEGE) {
-    const eintrag = korpus.find(
-      (p) => p && p.gesetz === gesucht.gesetz && p.paragraph === gesucht.paragraph);
-    if (!eintrag) { fehlend.push({ ...gesucht, grund: "Paragraph nicht in der Wissensbasis" }); continue; }
-    if (typeof eintrag.text !== "string" || eintrag.text.trim().length === 0) {
-      fehlend.push({ ...gesucht, grund: "Paragraph ohne Text" }); continue;
-    }
-    if (typeof eintrag.quelle !== "string" || !eintrag.quelle.startsWith(QUELLE_PRAEFIX)) {
-      fehlend.push({ ...gesucht, grund: "Kein Link auf die amtliche Quelle" }); continue;
-    }
-    belege[gesucht.schluessel] = {
-      schluessel: gesucht.schluessel,
-      gesetz: eintrag.gesetz,
-      gesetz_lang: eintrag.gesetz_lang || eintrag.gesetz,
-      paragraph: eintrag.paragraph,
-      titel: eintrag.titel || "",
-      text: eintrag.text,
-      quelle: eintrag.quelle,
-      stand: eintrag.stand || "",
-      hinweis: eintrag.hinweis || "",
-    };
-  }
-  return { ok: fehlend.length === 0, belege, fehlend };
+  return ladeBelege(korpus, BENOETIGTE_BELEGE);
 }
 
 // ---------------------------------------------------------------------------
@@ -556,19 +525,19 @@ export function pruefePositionen(eingabe, korpus, begriffsdatei) {
 
   const geladen = belegeLaden(korpus);
   if (!geladen.ok) {
-    return { ok: false, grund: "belege-fehlen", fehlend: geladen.fehlend, positionen: [], nichtGewertet: [] };
+    return { ok: false, grund: "belege-fehlen", fehlend: geladen.fehlend, positionen: [], nichtGewertet: [], ...grundform() };
   }
 
   const begriffe = begriffeAufbereiten(begriffsdatei);
   if (begriffe.length === 0) {
-    return { ok: false, grund: "begriffe-fehlen", positionen: [], nichtGewertet: [] };
+    return { ok: false, grund: "begriffe-fehlen", positionen: [], nichtGewertet: [], ...grundform() };
   }
 
   const katalog = parseKatalog(geladen.belege["betrkv-2"].text);
   const ausschluesse = parseAusschluesse(geladen.belege["betrkv-1"].text);
 
   if (katalog.items.length === 0 || ausschluesse.posten.length === 0) {
-    return { ok: false, grund: "katalog-unlesbar", positionen: [], nichtGewertet: [] };
+    return { ok: false, grund: "katalog-unlesbar", positionen: [], nichtGewertet: [], ...grundform() };
   }
 
   const rohzeilen = String(text).split(/\r?\n/);
@@ -620,7 +589,52 @@ export function pruefePositionen(eingabe, korpus, begriffsdatei) {
         (p) => p.verdikt !== VERDIKT.UNBEKANNT && !p.abdeckung.vollstaendig).length,
       nichtGewertet: nichtGewertet.length,
     },
+    // Gemeinsames Ergebnisformat (kern/ergebnis.mjs) - zusaetzlich; die Felder
+    // darueber bleiben unveraendert, weil Oberflaeche, Tests und Benchmark sie lesen.
+    ...grundform(),
+    teile: positionen.map((p, i) => ({
+      schluessel: "position-" + (i + 1),
+      titel: p.bezeichnung,
+      ergebnis: { verdikt: p.verdikt, vollstaendigBewertet: p.abdeckung.vollstaendig },
+      schritte: alsSchritte(p),
+    })),
+    grenzen: GRENZEN,
+    annahmen: [],
+    hinweise: [],
   };
+}
+
+// ---------------------------------------------------------------------------
+// Gemeinsames Ergebnisformat
+// ---------------------------------------------------------------------------
+
+export const MODUL = { id: "nebenkosten-positionen", version: "1.0.0" };
+
+export const GRENZEN = [
+  "Zugeordnet wird nur nach dem Wortlaut der §§ 1 und 2 BetrKV – nicht nach Rechtsprechung "
+    + "und nicht nach dem Mietvertrag.",
+  "Ob eine Position im Einzelfall umgelegt werden darf, hängt zusätzlich vom Mietvertrag ab.",
+  "Beträge werden nicht geprüft und nicht summiert.",
+  "Keine Rechtsberatung.",
+];
+
+function grundform() {
+  return { modul: MODUL.id, version: MODUL.version };
+}
+
+// Die Fundstellen einer Position als Rechenschritte. Jeder Schritt zeigt auf den
+// Beleg, aus dem er stammt: Katalog = § 2, Ausschluss = § 1 Abs. 2. Eine Luecke
+// ("im Wortlaut nicht genannt") belegt sich am Wortlaut des § 2, der sie nicht nennt.
+function alsSchritte(p) {
+  const schritte = p.fundstellen.map((f) => ({
+    beleg: f.art === "ausschluss" ? "betrkv-1" : "betrkv-2",
+    bezeichnung: f.bezeichnung,
+    erklaerung: (f.art === "ausschluss" ? "Ausgeschlossen: " : "Im Katalog: ") + f.kurztitel,
+  }));
+  for (const l of p.luecken || []) {
+    schritte.push({ beleg: "betrkv-2", bezeichnung: "§ 2 BetrKV", erklaerung: l.hinweis });
+  }
+  return schritte;
 }
 
 // Bringt die Begriffsdatei in die Form, die ordneZeileZu erwartet, und wirft

@@ -34,3 +34,8 @@ jobs:
       # eingebauter Negativkontrolle.
       - name: Check feedback retention logic
         run: node scripts/pruefe-feedback-frist.mjs
+
+      # Gemeinsame Schicht der Engine: Modulverzeichnis, Ergebnisformat, Belegregeln,
+      # Laender, Benchmark-Fragedateien byte-gleich neu erzeugt. Mit Negativkontrolle.
+      - name: Check engine core
+        run: node scripts/pruefe-kern.mjs

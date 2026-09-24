@@ -41,6 +41,14 @@ Website: inspectora.tech · Hosting: Netlify · Repo: fabiofnz/Inspectora (öffe
 - `scripts/import-gesetze.js` – Import von gesetze-im-internet.de, **läuft nur lokal** (Netzzugang nötig)
 - Die Edge Function lädt gesetze.json per statischem Import `with { type: "json" }`
 
+**Engine: ein Kern, viele Module** (`kern/`)
+- Module sind reine Funktionen (kein DOM, kein `fs`) – laufen im Browser, in Node und später in der Edge Function als Werkzeug des Assistenten.
+- `kern/module.mjs` – Verzeichnis aller Module: ID, Version, Eingabeschema (JSON Schema), Beispiel, `rechne()`, Benchmark-Kategorie. **Neues Modul = hier eintragen.**
+- `kern/ergebnis.mjs` – gemeinsames Ergebnisformat: `teile` mit `schritte` (jeder mit Beleg), **`grenzen` Pflicht**, `annahmen`.
+- `kern/belege.mjs` – Belege laden. `bundesrecht` nur mit Link auf gesetze-im-internet.de; `landesrecht` nur mit `gueltig_ab`, `geprueft_am` **und `bestaetigt_von`** (Fabio bestätigt jeden Landessatz selbst an der Quelle).
+- `kern/fristbausteine.mjs` – §§ 187, 188, 193 BGB für alle Fristen; `kern/region.mjs` – die 16 Länder (Sätze erst mit bestätigtem Beleg).
+- `npm run pruefe-kern` – prüft das alles, inkl. Benchmark-Fragedateien byte-gleich neu erzeugt; mit Negativkontrolle.
+
 ---
 
 ## Konventionen

@@ -43,7 +43,9 @@ import { zuIso, plusTage, tageImMonat, wochentag, formatiereDeutsch, istSchaltja
 const LOG = "[generiere-fristen]";
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const GESETZE_PFAD = path.resolve(HIER, "../wissensbasis/gesetze.json");
-const AUSGABE_PFAD = path.resolve(HIER, "fragen-fristen.json");
+// BENCHMARK_AUSGABE: anderer Zielpfad - damit scripts/pruefe-kern.mjs neu erzeugen
+// und byte-genau vergleichen kann, ohne die veroeffentlichte Datei anzufassen.
+const AUSGABE_PFAD = process.env.BENCHMARK_AUSGABE || path.resolve(HIER, "fragen-fristen.json");
 
 const JAHR_VON = 2019;
 const JAHR_BIS = 2026;

@@ -46,7 +46,9 @@ const LOG = "[generiere-umlage]";
 const HIER = path.dirname(fileURLToPath(import.meta.url));
 const GESETZE_PFAD = path.resolve(HIER, "../wissensbasis/gesetze.json");
 const BEGRIFFE_PFAD = path.resolve(HIER, "../wissensbasis/betriebskosten-begriffe.json");
-const AUSGABE_PFAD = path.resolve(HIER, "fragen-umlage.json");
+// BENCHMARK_AUSGABE: anderer Zielpfad - damit scripts/pruefe-kern.mjs neu erzeugen
+// und byte-genau vergleichen kann, ohne die veroeffentlichte Datei anzufassen.
+const AUSGABE_PFAD = process.env.BENCHMARK_AUSGABE || path.resolve(HIER, "fragen-umlage.json");
 
 const QUELLE_PRAEFIX = "https://www.gesetze-im-internet.de/";
 

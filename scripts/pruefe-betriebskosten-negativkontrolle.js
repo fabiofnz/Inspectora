@@ -29,7 +29,7 @@ const GESETZE_PFAD  = path.join(ROOT, "wissensbasis/gesetze.json");
 const BEGRIFFE_PFAD = path.join(ROOT, "wissensbasis/betriebskosten-begriffe.json");
 const PRUEFER       = path.join(ROOT, "scripts/pruefe-betriebskosten.js");
 
-const KERN_DATEIEN = ["datum.mjs", "feiertage.mjs", "frist.mjs", "katalog.mjs"];
+const KERN_DATEIEN = ["datum.mjs", "feiertage.mjs", "belege.mjs", "fristbausteine.mjs", "frist.mjs", "katalog.mjs"];
 
 // Jede Mutation bricht genau eine Pruefung. "erwartet" ist die Ueberschrift, unter
 // der pruefe-betriebskosten.js den Befund melden muss.
@@ -49,30 +49,30 @@ const MUTATIONEN = [
   {
     name: "Fristende um einen Tag verschoben (§ 187 Abs. 1 falsch angewendet)",
     erwartet: "Fristende nach §§ 187, 188, 193 BGB",
-    datei: "frist.mjs",
-    suchen: "const { iso: basisIso, abs3Angewendet } = plusMonate(startIso, FRIST_MONATE);",
-    ersetzen: "const _roh = plusMonate(startIso, FRIST_MONATE);\n"
+    datei: "fristbausteine.mjs",
+    suchen: "const { iso: basisIso, abs3Angewendet } = plusMonate(startIso, monate);",
+    ersetzen: "const _roh = plusMonate(startIso, monate);\n"
       + "  const basisIso = plusTage(_roh.iso, 1);\n"
       + "  const abs3Angewendet = _roh.abs3Angewendet;",
   },
   {
     name: "§ 193 kennt den Sonnabend nicht mehr",
     erwartet: "Fristende nach §§ 187, 188, 193 BGB",
-    datei: "frist.mjs",
+    datei: "fristbausteine.mjs",
     suchen: "if (tag === SONNABEND)",
     ersetzen: "if (false && tag === SONNABEND)",
   },
   {
     name: "§ 193 kennt den Sonntag nicht mehr",
     erwartet: "Fristende nach §§ 187, 188, 193 BGB",
-    datei: "frist.mjs",
+    datei: "fristbausteine.mjs",
     suchen: "if (tag === SONNTAG)",
     ersetzen: "if (false && tag === SONNTAG)",
   },
   {
     name: "§ 193 kennt keine Feiertage mehr",
     erwartet: "Fristende nach §§ 187, 188, 193 BGB",
-    datei: "frist.mjs",
+    datei: "fristbausteine.mjs",
     suchen: "  if (name) {",
     ersetzen: "  if (false && name) {",
   },
@@ -107,14 +107,14 @@ const MUTATIONEN = [
   {
     name: "Nutzerangabe sieht aus wie eine Berechnung",
     erwartet: "Vom Nutzer bestaetigter Feiertag",
-    datei: "frist.mjs",
+    datei: "fristbausteine.mjs",
     suchen: 'text: "gesetzlicher Feiertag (Angabe des Nutzers)",\n      herkunft: "nutzerangabe",',
     ersetzen: 'text: "gesetzlicher Feiertag (Angabe des Nutzers)",\n      herkunft: ABDECKUNG,',
   },
   {
     name: "Ein Rechenschritt zeigt auf einen Beleg, den es nicht gibt",
     erwartet: "Jeder Rechenschritt haengt an einem Beleg",
-    datei: "frist.mjs",
+    datei: "fristbausteine.mjs",
     suchen: 'beleg: "bgb-193", bezeichnung: "§ 193 BGB",',
     ersetzen: 'beleg: "bgb-999", bezeichnung: "§ 193 BGB",',
   },
