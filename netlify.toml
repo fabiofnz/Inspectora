@@ -6,3 +6,16 @@
 [[edge_functions]]
   path = "/.netlify/functions/assistant-chat"
   function = "assistant-chat"
+
+# Die WEG-Werkzeuge (Einladung, Protokoll, Wirtschaftsplan) sind entfernt.
+# Die Seite war bei Google indexiert - ohne Weiterleitung gaebe es 404.
+# Beide Adressen, weil Netlify die Seite mit und ohne .html ausgeliefert hat.
+[[redirects]]
+  from = "/weg-verwaltung"
+  to = "/"
+  status = 301
+
+[[redirects]]
+  from = "/weg-verwaltung.html"
+  to = "/"
+  status = 301

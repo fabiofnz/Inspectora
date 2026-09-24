@@ -10,11 +10,11 @@
 // schlechter als keiner: Er erzeugt Vertrauen, das er nicht deckt. Dieselbe
 // Fehlerklasse wie ein Beleg, der amtlicher aussieht, als er ist.
 //
-// Der Kern ist die Frage, welche IDs zu welcher Seite gehoeren. Seit die
-// WEG-Werkzeuge auf einer eigenen Seite liegen, referenziert app.js IDs, die
-// es auf index.html zu Recht nicht gibt. Eine gepflegte Liste "welches Modul
-// gehoert wohin" waere genau die Sorte Nebenbuchhaltung, die veraltet, ohne
-// dass es auffaellt. Deshalb wird die Zuordnung abgeleitet:
+// Der Kern ist die Frage, welche IDs zu welcher Seite gehoeren. Laedt mehr als
+// eine Seite app.js, referenziert app.js IDs, die es auf einer davon zu Recht
+// nicht gibt. Eine gepflegte Liste "welches Modul gehoert wohin" waere genau
+// die Sorte Nebenbuchhaltung, die veraltet, ohne dass es auffaellt. Deshalb
+// wird die Zuordnung abgeleitet:
 //
 //   1. app.js in seine Top-Level-IIFEs zerlegen (ein Modul = ein Block).
 //   2. Je Block alle referenzierten IDs sammeln.
@@ -24,8 +24,8 @@
 //   4. Fordern: Es muss mindestens EINE Seite geben, die alle uebrigen IDs
 //      des Blocks enthaelt.
 //
-// Das ist genau die Zusicherung, die zur Laufzeit gilt. Jedes Werkzeugmodul
-// steigt ueber seine Wurzel-ID aus (#invTool / #wegTool / #hgTool); wo diese
+// Das ist genau die Zusicherung, die zur Laufzeit gilt. Jedes Modul steigt
+// aus, wenn seine Wurzel-ID fehlt (z.B. #kbCount, #menuToggle); wo diese
 // Wurzel steht, muss auch alles Uebrige stehen. Faellt eine ID aus ihrer
 // Seite heraus, hat keine Seite mehr den vollstaendigen Satz - und das Skript
 // schlaegt an.

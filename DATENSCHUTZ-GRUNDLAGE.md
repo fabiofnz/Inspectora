@@ -1,6 +1,6 @@
 # Datenschutz – Bestandsaufnahme (Grundlage, kein Rechtstext)
 
-Stand: 24.09.2026, Code-Stand `8e61ecc` + dieser Commit.
+Stand: 24.09.2026, aktualisiert nach dem Entfernen der WEG-Werkzeuge.
 Zweck: Grundlage für die spätere Datenschutzerklärung. **Das hier ist keine
 Datenschutzerklärung** und ersetzt keine rechtliche Durchsicht.
 
@@ -21,9 +21,9 @@ teilweise je nach Tarif.
 | 2 | Netlify Analytics | aus den Server-Logs abgeleitet | Netlify | OFFEN | Ja |
 | 3 | KI-Assistent | Chatverlauf (bis 60 Nachrichten), hochgeladene PDFs/Bilder, Dateinamen | Netlify Edge Function → Anthropic | Anthropic laut Quelle 30 Tage, Ausnahmen – OFFEN für dieses Konto | Ja – Anthropic PBC, USA |
 | 4 | Web-Suche des Assistenten | Suchanfragen, die das Modell aus der Frage bildet | Anthropic → Suchanbieter | OFFEN | Ja |
-| 5 | KI-Protokollformulierung (WEG) | WEG-Bezeichnung, Ort, Versammlungsleiter, TOP-Texte und -Notizen | Netlify Function → Anthropic | wie 3 | Ja |
+| 5 | ~~KI-Protokollformulierung (WEG)~~ – **entfernt 24.09.2026** | bis dahin: WEG-Bezeichnung, Ort, Versammlungsleiter, TOP-Texte | Netlify Function → Anthropic | wie 3 | Ja |
 | 6 | Feedback (👍/👎) | Frage, Antwort, Kommentar, Zeitstempel, Metadaten | Netlify Blobs | **unbegrenzt** – kein Löschcode | Ja (Netlify); Speicherort OFFEN |
-| 7 | localStorage im Browser | Chats, Zugangscode, WEG-/Einladungs-/Hausgeld-Entwürfe | nur Gerät der Nutzer | bis der Nutzer löscht | Nein |
+| 7 | localStorage im Browser | Chats, Zugangscode (Assistent) | nur Gerät der Nutzer | bis der Nutzer löscht | Nein |
 | 8 | Kontakt per E-Mail | alles, was jemand schreibt, + Absenderadresse | Gmail (Google) | OFFEN | Ja – Google LLC, USA |
 | 9 | Bis 24.09.2026: Google Fonts, jsDelivr, cdnjs | IP-Adresse, User-Agent, Referrer | Google, jsDelivr, Cloudflare | bei den Anbietern | Ja – **seit `ed53a21` abgestellt** |
 
@@ -38,23 +38,16 @@ lädt keine Seite etwas von fremden Servern (`npm run validate-site`, Abschnitt 
 Das sind keine Formulierungsfragen – hier stimmt die Seite heute nicht mit sich selbst
 oder mit den Projektleitplanken überein.
 
-**A. Der Protokoll-Generator sagt „keine externe Verarbeitung" – das stimmt nicht.**
-`weg-verwaltung.html:205`, im Abschnitt `#wegTool`:
-„Alle Eingaben bleiben in deinem Browser – keine Audioaufnahme, keine externe
-Verarbeitung." Im selben Werkzeug schickt der Knopf „Protokoll mit KI formulieren"
-(`weg-verwaltung.html:257`) die Protokolldaten an Netlify und von dort an Anthropic
-in den USA (siehe 5). Ein beruhigender Hinweis, der nicht stimmt, ist schlimmer als
-keiner – und widerspricht der Leitplanke „warnen, nicht beruhigen".
-Die gleichlautenden Hinweise bei Einladungs-Generator (`:107`) und Hausgeld-Rechner
-(`:305`) stimmen: Beide haben keinen Netzaufruf.
+**A. ✓ Erledigt (24.09.2026): Der Protokoll-Generator versprach „keine externe
+Verarbeitung", schickte aber auf Knopfdruck Protokolldaten an Anthropic.** Die
+WEG-Werkzeuge sind samt Seite entfernt (siehe 5). Mit ihnen entfallen auch die
+Werbe-Aussagen „Lokal gespeichert, keine Cloud-Pflicht" (Startseite) und „ohne
+Online-Datenspeicherung" (Fußzeile) – Grundsatz jetzt in CLAUDE.md:
+Datenschutz-Aussagen gehören in die Datenschutzerklärung, nicht in Werbetexte.
 
-**B. Der KI-Endpunkt des Protokoll-Generators hat keinen Zugangscode.**
-`netlify/functions/generate-protokoll.js` prüft keinen Code (anders als Assistent und
-Feedback). Jeder, der die Adresse kennt, kann darüber Texte an Anthropic schicken –
-auf Kosten des API-Kontos, und mit beliebigen Inhalten. Datenschutzrelevant, weil es
-eine offene Übermittlung in die USA ist, die nicht an die Zugangsregeln des
-Assistenten gebunden ist. (Die Datei ist laut CLAUDE.md „nicht anfassen" – deshalb nur
-gemeldet.)
+**B. ✓ Erledigt (24.09.2026): Der KI-Endpunkt `generate-protokoll` hatte keinen
+Zugangscode.** Die Function ist gelöscht; `/.netlify/functions/generate-protokoll`
+gibt es nicht mehr.
 
 **C. Feedback wird ohne Frist gespeichert.**
 Es gibt keinen Code, der Einträge im Store `assistant-feedback` löscht (Suche nach
@@ -68,6 +61,20 @@ Hochgeladene Dateien werden im Verlauf nur als `[Datei: name.pdf]` gespeichert
 (`assistant.js`, `userContentToText`) – aber dieser Text geht bei jeder Folgefrage
 wieder an Anthropic und bei Feedback in die Blobs. Dateinamen wie
 „Abrechnung_Müller_Hauptstr12.pdf" sind personenbezogen.
+
+**E. Weitere Datenschutz-Aussagen außerhalb der Datenschutzerklärung.**
+Nach dem Grundsatz in CLAUDE.md (Datenschutz-Aussagen nur in der
+Datenschutzerklärung) noch zu entscheiden – noch nicht geändert:
+- `index.html`, Abschnitt `#werkzeug`: Chips „Ohne Anmeldung" und „Nichts verlässt
+  deinen Browser", dazu der Satz „…gespeichert und nichts an eine KI geschickt". Für den
+  Betriebskosten-Prüfer inhaltlich richtig (siehe 7, 10), aber eine Zusage in einem
+  Werbetext.
+- `ki-assistent.html:69`: „Verlauf wird nur lokal in diesem Browser gespeichert." Stimmt
+  für den Verlauf – aber jede Nachricht geht an Anthropic (3), Feedback in die Blobs (6).
+  Liest sich beruhigender, als es ist.
+- `nebenkostenabrechnung-frist-pruefen.html:42`, `:51–52`, `:106`: Aussagen, dass keine
+  Daten das Gerät verlassen. Stehen dort, wo Daten eingegeben werden – teils Warnung
+  („Bitte keine personenbezogenen Daten"), teils Zusage.
 
 ---
 
@@ -85,10 +92,6 @@ Traffic-Logs.
 - `feedback.mjs`: `[feedback] gespeichert: <key>` bzw. Fehlerobjekt – **kein Inhalt**.
 - `assistant-chat.js`: nur eine Fehlermeldung, wenn `gesetze.json` kaputt ist – **kein
   Chatinhalt**.
-- `generate-protokoll.js`: bei Fehler das Fehlerobjekt des Anthropic-SDK. Der Prompt
-  wird nicht geloggt. Das Fehlerobjekt enthält laut SDK-Code (lokal installierte
-  Version, `node_modules/@anthropic-ai/sdk/core/error.js`) Status, Antwort-Header und
-  Fehlertext der Antwort – nicht die Anfrage.
 - `wissensbasis-status.mjs`: nur Fehlermeldung, keine Nutzerdaten.
 
 **Wie lange:** OFFEN. Laut Netlify-Doku zeigen Function-Logs je nach Tarif bis zu
@@ -174,23 +177,18 @@ er sitzt → Anthropic-Unterauftragsverarbeiterliste und Doku zum Web-Search-Too
 Ob eine Suche stattfand, wird dem Browser gemeldet (`webSearchUsed`) und landet beim
 Feedback in den Blobs.
 
-## 5 · KI-Protokollformulierung (WEG-Protokoll-Generator)
+## 5 · KI-Protokollformulierung (WEG-Protokoll-Generator) – entfernt
 
-**Weg:** `weg-verwaltung.html` → Knopf „Protokoll mit KI formulieren" → `app.js:423`
-`POST /.netlify/functions/generate-protokoll` → Anthropic (`generate-protokoll.js:120`).
-**Nur auf Knopfdruck** – ohne Klick geht nichts raus.
+**Bis 24.09.2026** schickte der WEG-Protokoll-Generator auf Knopfdruck über
+`netlify/functions/generate-protokoll.js` an Anthropic: WEG-Bezeichnung, Datum, Ort,
+Versammlungsleiter (Name), Anzahl anwesender/vertretener Eigentümer,
+Beschlussfähigkeit + Notiz, je TOP Titel, Notizen (Freitext), Beschlussantrag,
+Stimmenzahlen. Ohne Zugangscode (Befund B), mit falschem Hinweis (Befund A).
 
-**Browser → Netlify:** das **komplette** Protokollobjekt `wegState.current`
-(`app.js:426`) – alles, was im Formular steht.
-
-**Netlify → Anthropic:** nur diese Felder (`buildUserPrompt`, `generate-protokoll.js`):
-WEG-Bezeichnung, Datum, Ort, **Versammlungsleiter (Name)**, Anzahl anwesender und
-vertretener Eigentümer, Beschlussfähigkeit + Notiz, je TOP: Titel, **Diskussion/Notizen
-(Freitext)**, Beschlussantrag, Stimmenzahlen. In Namen, Ort und Freitexten stehen in
-der Praxis Personen und Anschriften.
-
-**Zugangsschutz:** keiner (Befund B). **Hinweis im Interface:** falsch (Befund A).
-**Wie lange / außerhalb EU:** wie bei 3.
+**Seit Commit „WEG-Werkzeuge entfernt"** gibt es weder Seite noch Function; die
+Adressen `/weg-verwaltung` und `/weg-verwaltung.html` leiten per 301 auf `/`. Relevant
+nur, falls der Rechtstext auch die Vergangenheit abdecken soll (Aufbewahrung bei
+Anthropic wie unter 3).
 
 ## 6 · Feedback → Netlify Blobs
 
@@ -225,9 +223,9 @@ werden mit Frage und Antwort gespeichert, um den Assistenten zu verbessern."
 
 ## 7 · localStorage im Browser, je Seite
 
-Bleibt auf dem Gerät, geht an niemanden (außer wie unter 3/5/6 beschrieben, wenn der
+Bleibt auf dem Gerät, geht an niemanden (außer wie unter 3/6 beschrieben, wenn der
 Nutzer etwas absendet). Keine Ablaufzeit – bleibt, bis der Nutzer es löscht (im
-Werkzeug oder über die Browser-Einstellungen). Keine Cookies.
+Assistenten oder über die Browser-Einstellungen). Keine Cookies.
 
 | Seite | Schlüssel | Inhalt | Personenbezug möglich |
 |---|---|---|---|
@@ -236,23 +234,25 @@ Werkzeug oder über die Browser-Einstellungen). Keine Cookies.
 | | `inspectora_assistant_chat_v1` | Altformat, wird beim Laden übernommen und dann entfernt (`assistant.js:166`; der Kommentar in Zeile 7 „never deleted here" ist veraltet) | ja |
 | | `inspectora_assistant_code_v1` | Zugangscode im Klartext | nein, aber Geheimnis |
 | | `inspectora_feedback_hint_v1` | `"1"`, wenn der Feedback-Hinweis gezeigt wurde | nein |
-| `weg-verwaltung.html` | `inspectora_weg_protocols_v1`, `inspectora_weg_draft_v1` | Versammlungsprotokolle und Entwurf (Namen, Ort, TOPs, Notizen) | ja |
-| | `inspectora_invitations_v1`, `inspectora_invitation_draft_v1` | Einladungen und Entwurf | ja |
-| | `inspectora_hg_plans_v1`, `inspectora_hg_draft_v1` | Wirtschaftspläne: Einheiten mit **Eigentümernamen**, MEA, Flächen, Kosten | ja |
 | `nebenkostenabrechnung-frist-pruefen.html` | – | **bewusst nichts** (`betriebskosten-pruefer.js`, Kopfkommentar) | – |
 | `index.html`, `mietrecht-benchmark.html` | – | nichts | – |
 
 Datei-Uploads werden **nicht** im localStorage gespeichert, nur der Platzhalter
 `[Datei: name]` (Projektregel „kein base64 im localStorage", im Code eingehalten).
 
-Andere Browser-Zugriffe: `navigator.clipboard.writeText` (Text kopieren, `app.js`,
-`assistant.js`) – schreibt nur in die lokale Zwischenablage. PDF-Export (jsPDF) läuft
-komplett im Browser, nichts geht raus.
+Andere Browser-Zugriffe: `navigator.clipboard.writeText` (Antwort kopieren,
+`assistant.js`) – schreibt nur in die lokale Zwischenablage.
+
+**Entfallen mit den WEG-Werkzeugen (24.09.2026):** `inspectora_weg_protocols_v1`,
+`inspectora_weg_draft_v1`, `inspectora_invitations_v1`, `inspectora_invitation_draft_v1`,
+`inspectora_hg_plans_v1`, `inspectora_hg_draft_v1`. Kein Code liest oder schreibt sie
+mehr. Wer die Werkzeuge früher benutzt hat, hat die Daten noch in seinem Browser –
+Inspectora zeigt sie nicht mehr an und löscht sie auch nicht.
 
 ## 8 · Kontakt per E-Mail
 
-**Aus dem Code:** `mailto:kontakt.inspectora@gmail.com` in `index.html:206`,
-`index.html:236`, `ki-assistent.html:100` (Zugangscode anfragen). Kein Kontaktformular.
+**Aus dem Code:** `mailto:kontakt.inspectora@gmail.com` in `index.html:205`,
+`index.html:215`, `ki-assistent.html:100` (Zugangscode anfragen). Kein Kontaktformular.
 
 **Daten:** Absenderadresse, Name (falls im Absender), Inhalt der Mail, Anhänge.
 **Wohin:** Google (Gmail). **Wie lange:** OFFEN – so lange die Mails im Postfach liegen;
@@ -275,7 +275,7 @@ Rechtstext auch die Vergangenheit abdecken soll.
 ## 10 · Sonstiges, geprüft
 
 - **`wissensbasis-status`** (`netlify/functions/wissensbasis-status.mjs`, aufgerufen von
-  `app.js:2213` auf der Startseite): GET ohne Nutzerdaten, liefert nur Zählwerte. Nur
+  `app.js:136` auf der Startseite): GET ohne Nutzerdaten, liefert nur Zählwerte. Nur
   der normale Hosting-Log (1).
 - **Betriebskosten-Prüfer** lädt nur `wissensbasis/*.json` von der eigenen Domain;
   Eingaben verlassen das Gerät nicht.
@@ -301,4 +301,5 @@ Rechtstext auch die Vergangenheit abdecken soll.
 | O7 | Suchanbieter hinter der Web-Suche | Anthropic-Unterauftragsverarbeiterliste |
 | O8 | Gmail als geschäftliche Kontaktadresse | rechtliche Durchsicht |
 | O9 | Speicherdauer für Feedback festlegen – und Löschweg bauen | Entscheidung Fabio (Befund C) |
-| O10 | Hinweis im Protokoll-Generator korrigieren, Zugangsschutz für `generate-protokoll` | Entscheidung Fabio (Befunde A, B) |
+| O10 | ✓ erledigt 24.09.2026 – Protokoll-Generator samt Function entfernt | Befunde A, B |
+| O11 | Datenschutz-Aussagen auf Startseite, Assistent, Nebenkosten-Seite: bleiben, umformulieren oder raus? | Entscheidung Fabio (Befund E) |

@@ -125,7 +125,7 @@ git push
 |---|---|
 | Website zeigt Änderung nicht | Netlify → **Deploys** (steht "Published"?), dann Strg+Shift+R |
 | Assistent antwortet nicht | Netlify → **Logs & metrics → Edge Functions** |
-| Feedback/Protokoll-Generator hakt | Netlify → **Logs & metrics → Functions** |
+| Feedback hakt | Netlify → **Logs & metrics → Functions** |
 | Etwas im Browser kaputt | **F12** → Tab **Console** (rote Fehler) |
 | Wird überhaupt etwas gesendet? | **F12** → Tab **Netzwerk**, dann Aktion auslösen |
 | Gespeicherte Rückmeldungen ansehen | Netlify → **Blobs** → Store `assistant-feedback` |

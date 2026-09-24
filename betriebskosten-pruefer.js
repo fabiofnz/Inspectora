@@ -6,9 +6,8 @@
 // laeuft in scripts/pruefe-betriebskosten.js unter Test - was hier im Browser
 // angezeigt wird, ist damit dasselbe, was dort nachgerechnet wurde.
 //
-// Kein localStorage, bewusst. Die anderen Werkzeuge speichern ihre Projekte lokal;
-// hier waere das falsch: In einer Betriebskostenabrechnung stehen Name und Anschrift
-// des Mieters. Was nicht gespeichert wird, kann auch nicht liegen bleiben.
+// Kein localStorage, bewusst. In einer Betriebskostenabrechnung stehen Name und
+// Anschrift des Mieters. Was nicht gespeichert wird, kann auch nicht liegen bleiben.
 //
 // Es gibt auf dieser Seite ausserdem keinen einzigen Netzaufruf ausser dem Laden der
 // Wissensbasis - keine Function, keine Edge Function, keine KI. Die Eingaben des

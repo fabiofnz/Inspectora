@@ -2,7 +2,7 @@
   "name": "inspectora",
   "private": true,
   "version": "1.0.0",
-  "description": "Inspectora – WEG-Verwaltung digital. Statische Website mit Netlify Functions.",
+  "description": "Inspectora – Fristen und Betriebskosten aus dem Gesetzestext gerechnet. Statische Website mit Netlify Functions.",
   "dependencies": {
     "@anthropic-ai/sdk": "^0.111.0",
     "@netlify/blobs": "^10.7.9"

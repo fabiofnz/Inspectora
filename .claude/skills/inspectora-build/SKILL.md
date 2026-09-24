@@ -38,7 +38,6 @@ When no source exists, the correct output is **"I don't have anything on that"**
 |---|---|---|
 | **New** functions | **v2**: `.mjs`, `export default`, Web `Request`/`Response` | `netlify/functions/` |
 | Edge Functions | Deno, Web standard APIs | `netlify/edge-functions/` |
-| `generate-protokoll.js` | still **v1** – **do not touch**, it works | `netlify/functions/` |
 
 **Why v2 is mandatory:** Netlify Blobs only works in v2 format without extra configuration. A v1 function using Blobs fails at runtime, not at deploy time — so the error only appears live.
 
@@ -136,7 +135,7 @@ Every statute output carries paragraph, law and the deep link to the official so
 |---|---|
 | Change not visible | Netlify → Deploys ("Published"?), then Ctrl+Shift+R |
 | Assistant not responding | Netlify → Logs & metrics → **Edge Functions** |
-| Feedback or protocol generator failing | Netlify → Logs & metrics → **Functions** |
+| Feedback failing | Netlify → Logs & metrics → **Functions** |
 | Something broken in the browser | F12 → Console |
 | Is anything being sent at all? | F12 → Network, then trigger the action |
 

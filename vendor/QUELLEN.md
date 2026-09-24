@@ -1,7 +1,7 @@
 # Selbst gehostete Fremddateien
 
 Seit dem 24.09.2026 lädt keine Seite mehr etwas von fremden Servern. Alles, was vorher
-von Google Fonts, jsDelivr oder cdnjs kam, liegt hier im Repo. `npm run validate-site`
+von Google Fonts oder jsDelivr kam, liegt hier im Repo. `npm run validate-site`
 schlägt an, sobald wieder eine externe Einbindung auftaucht.
 
 **Warum:** Jeder Aufruf eines fremden Servers überträgt die IP-Adresse der Besucher
@@ -17,19 +17,20 @@ stimmt die Prüfsumme nicht mehr, und niemand kann mehr nachweisen, was hier lä
 |---|---|---|---|
 | `marked-13.0.3.min.js` | marked 13.0.3, `marked.min.js` | MIT (`LICENSE-marked.md`) | `5adea7d8ee41a700fccc14bb9d503104f0470cc17a84ad3e167d3f5251eae0da` |
 | `purify-3.4.16.min.js` | dompurify 3.4.16, `dist/purify.min.js` | MPL-2.0 oder Apache-2.0 (`LICENSE-dompurify.txt`) | `2c90a9b46d6463f26038a29b686e82bc91de01fdac9d5229e7cfe3b360134ea2` |
-| `jspdf-2.5.1.umd.min.js` | jspdf 2.5.1, `dist/jspdf.umd.min.js` | MIT (`LICENSE-jspdf.txt`) | `98ccf17aa10c20bb1301762618fcc9b6ab3a4e7f26b6071d64d0b41154df3875` |
 
 **Welche Version:** Vorher standen `marked@13` und `dompurify@3` in der Seite – also die
 jeweils neueste 13.x bzw. 3.x. Festgelegt wurde die Version, die jsDelivr am 24.09.2026
 dafür tatsächlich ausgeliefert hat (Antwort-Header `X-JSD-Version`), nicht die neueste.
 Sonst hätte sich beim Umzug nebenbei das Verhalten des Assistenten geändert.
-jsPDF war schon vorher fest auf 2.5.1.
+
+**Entfernt:** jsPDF 2.5.1 (PDF-Export der WEG-Werkzeuge) – mit den WEG-Werkzeugen am
+24.09.2026 gelöscht, nichts anderes hat es benutzt. Datei und Lizenz stehen in der git-Historie.
 
 **Wie geprüft:**
 1. npm-Tarball gegen `dist.integrity` aus der npm-Registry (SHA-512 über das ganze Paket –
    npm veröffentlicht keine Prüfsumme je Datei).
 2. SHA-256 der Datei aus dem Tarball verglichen mit
-   - der Datei-Prüfsumme der jsDelivr-API (`data.jsdelivr.com/v1/packages/npm/<paket>@<version>?structure=flat`) bzw. dem SRI-Wert von cdnjs (jsPDF),
+   - der Datei-Prüfsumme der jsDelivr-API (`data.jsdelivr.com/v1/packages/npm/<paket>@<version>?structure=flat`),
    - den Bytes, die die bisher eingebundene CDN-Adresse am 24.09.2026 ausgeliefert hat.
 
 Alle drei Quellen stimmten je Datei überein.

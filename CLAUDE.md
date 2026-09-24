@@ -41,13 +41,11 @@ Website: inspectora.tech · Hosting: Netlify · Repo: fabiofnz/Inspectora (öffe
 - `scripts/import-gesetze.js` – Import von gesetze-im-internet.de, **läuft nur lokal** (Netzzugang nötig)
 - Die Edge Function lädt gesetze.json per statischem Import `with { type: "json" }`
 
-**Ältere Tools** (clientseitig, localStorage, PDF-Export): WEG-Einladungs-Generator, WEG-Protokoll-Generator (mit KI über `netlify/functions/generate-protokoll.js`, Functions v1), Hausgeld-/Wirtschaftsplan-Rechner, Objektaufnahme (zurückgestuft)
-
 ---
 
 ## Konventionen
 
-- **Netlify Functions:** Neue Functions immer im **v2-Format** (`export default`, Web Request/Response, `.mjs`). Nur so funktioniert Netlify Blobs ohne Zusatzkonfiguration. `generate-protokoll.js` ist noch v1 – nicht anfassen, läuft.
+- **Netlify Functions:** Neue Functions immer im **v2-Format** (`export default`, Web Request/Response, `.mjs`). Nur so funktioniert Netlify Blobs ohne Zusatzkonfiguration.
 - **Design:** dunkel mit Lila-Akzenten. Immer die vorhandenen CSS-Variablen in `styles.css` nutzen, keine neuen Farbwerte hart eintragen.
 - **Sprache:** Alle Texte im Interface auf Deutsch.
 - **Keine externen Einbindungen.** Schrift (`fonts/`) und Bibliotheken (`vendor/`) liegen im Repo; keine Seite lädt etwas von fremden Servern. `npm run validate-site` prüft das (Abschnitt 7), die Negativkontrolle beweist, dass die Prüfung anschlägt.
@@ -60,6 +58,7 @@ Website: inspectora.tech · Hosting: Netlify · Repo: fabiofnz/Inspectora (öffe
 ## Leitplanken (bei jeder Änderung prüfen)
 
 - **Keine personenbezogenen Daten** durch die externe KI (DSGVO). Hinweise im Interface entsprechend formulieren – warnen, nicht beruhigen.
+- **Datenschutz-Aussagen stehen nicht in Werbetexten**, sondern in der Datenschutzerklärung – dort vollständig, geprüft und datiert. Keine Vertrauens-Chips, keine Fußzeilen-Zusagen über Daten („lokal gespeichert", „keine Cloud"): Das ist Beruhigen statt Warnen. Erlaubt sind Warnungen dort, wo Daten eingegeben werden („Bitte keine echten Mieterdaten").
 - **Keine Rechtsberatung** (RDG). Alle Ausgaben sind unverbindliche Entwürfe, der Mensch trägt die Verantwortung.
 - **Der Assistent zitiert nur, was in der Wissensbasis steht.** Niemals Paragraphen oder Wortlaute erfinden lassen.
 - **Ton des Assistenten:** natürlich, dialogisch, kurz. Die Wissensbasis verbessert das Wissen, nicht den Ton. Keine Disclaimer-Wände, kein Gesetzesstil.
@@ -71,4 +70,4 @@ Website: inspectora.tech · Hosting: Netlify · Repo: fabiofnz/Inspectora (öffe
 - Hosting = Netlify (nicht Vercel)
 - Repo bleibt öffentlich
 - Der KI-Assistent ist ein allgemeiner Chat, **kein** Tool mit Vorlagen-Buttons
-- Einladungs-Generator und Beschluss-Sammlung werden **nicht** mit KI verbunden
+- Die WEG-Werkzeuge (Einladungs-, Protokoll-Generator, Hausgeld-/Wirtschaftsplan-Rechner) sind entfernt (24.09.2026): nicht genutzt, verwässerten, was Inspectora ist. Der Code liegt in der git-Historie, `/weg-verwaltung` leitet per 301 auf `/`. WEG-**Recht** bleibt Thema von Assistent und Wissensbasis.

@@ -52,24 +52,15 @@ const MUTATIONEN = [
   {
     name: "ID verschwindet aus der Seite, die das Modul traegt",
     erwartet: "keine Seite enthaelt alle",
-    mutiere: (dir) => {
-      const p = path.join(dir, "weg-verwaltung.html");
-      const s = fs.readFileSync(p, "utf8");
-      if (!s.includes('id="wegTopList"')) throw new Error("wegTopList nicht gefunden");
-      fs.writeFileSync(p, s.replace('id="wegTopList"', 'id="wegTopListe"'));
-    },
+    // #kbCount wird in app.js per getElementById nachgeschlagen.
+    mutiere: (dir) => ersetze(dir, "index.html", 'id="kbCount"', 'id="kbZahl"'),
   },
   {
     name: 'ID, die nur ueber den Kurzhelfer $("#x") referenziert wird, faellt weg',
     erwartet: "keine Seite enthaelt alle",
-    mutiere: (dir) => {
-      // #hgQuickGrid wird in app.js ausschliesslich als $('#hgQuickGrid')
-      // nachgeschlagen - genau die Form, die der alte Pruefer nicht sah.
-      const p = path.join(dir, "weg-verwaltung.html");
-      const s = fs.readFileSync(p, "utf8");
-      if (!s.includes('id="hgQuickGrid"')) throw new Error("hgQuickGrid nicht gefunden");
-      fs.writeFileSync(p, s.replace('id="hgQuickGrid"', 'id="hgQuickGitter"'));
-    },
+    // #menuToggle wird in app.js ausschliesslich als $("#menuToggle")
+    // nachgeschlagen - genau die Form, die der alte Pruefer nicht sah.
+    mutiere: (dir) => ersetze(dir, "index.html", 'id="menuToggle"', 'id="menuSchalter"'),
   },
   {
     name: "Doppelte ID auf einer Seite",
@@ -92,11 +83,7 @@ const MUTATIONEN = [
   {
     name: "Verweis auf eine Seite, die es nicht gibt",
     erwartet: "fehlende Datei",
-    mutiere: (dir) => {
-      const p = path.join(dir, "index.html");
-      const s = fs.readFileSync(p, "utf8");
-      fs.writeFileSync(p, s.replace('href="weg-verwaltung.html"', 'href="weg-werkzeuge.html"'));
-    },
+    mutiere: (dir) => ersetze(dir, "index.html", 'href="ki-assistent.html"', 'href="ki-assistant.html"'),
   },
   {
     name: "CSS-Klammer fehlt",
@@ -122,11 +109,11 @@ const MUTATIONEN = [
   // Je eine Mutation pro Weg, auf dem eine fremde Datei wieder hereinkommen
   // kann. Die ersten beiden sind genau die Zeilen, die vorher drinstanden.
   {
-    name: "jsPDF wieder vom CDN",
-    erwartet: "externe Einbindung: weg-verwaltung.html",
-    mutiere: (dir) => ersetze(dir, "weg-verwaltung.html",
-      '<script src="vendor/jspdf-2.5.1.umd.min.js"></script>',
-      '<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>'),
+    name: "DOMPurify wieder vom CDN",
+    erwartet: "externe Einbindung: ki-assistent.html",
+    mutiere: (dir) => ersetze(dir, "ki-assistent.html",
+      '<script src="vendor/purify-3.4.16.min.js"></script>',
+      '<script src="https://cdn.jsdelivr.net/npm/dompurify@3/dist/purify.min.js"></script>'),
   },
   {
     name: "Google Fonts wieder im Seitenkopf",
