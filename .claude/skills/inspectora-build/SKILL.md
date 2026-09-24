@@ -96,7 +96,7 @@ Legal and professional content — statute text, property and tenancy law, anyth
 ## Security
 
 - **Never** write API keys, access codes or tokens into files — not as placeholders, not in examples. Netlify environment variables only.
-- **No base64 in localStorage.** Store file uploads in the history as a placeholder only: `[Datei: name.pdf]`.
+- **No base64 in localStorage.** Store file uploads in the history as a placeholder only: `[Datei: PDF]` or `[Datei: Bild]` — never the file name, because the history goes to Anthropic with every follow-up question and into feedback.
 - The repo is **public**. Anything committed is readable by anyone. Check before every commit.
 
 ---

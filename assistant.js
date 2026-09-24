@@ -4,7 +4,7 @@
   // Storage keys
   const CHATS_KEY    = "inspectora_chats_v1";
   const ACTIVE_KEY   = "inspectora_active_chat_v1";
-  const OLD_CHAT_KEY = "inspectora_assistant_chat_v1"; // legacy – kept as backup, never deleted here
+  const OLD_CHAT_KEY = "inspectora_assistant_chat_v1"; // legacy – migrated to CHATS_KEY on load, then removed
   const CODE_KEY     = "inspectora_assistant_code_v1";
   const FB_HINT_KEY  = "inspectora_feedback_hint_v1"; // once-shown transparency note
 
@@ -120,6 +120,26 @@
     }
   }
 
+  // File names never leave the device: the history keeps only the file type.
+  // Older versions stored "[Datei: Abrechnung_Mueller.pdf]" – and the history
+  // goes to Anthropic with every follow-up question and into feedback. So old
+  // placeholders are rewritten on load, and once more right before sending.
+  const FILE_PLACEHOLDER = /\[Datei: ([^\]\n]*)\]/g;
+  function stripFileNames(text) {
+    if (typeof text !== "string") return text;
+    return text.replace(FILE_PLACEHOLDER, (_, name) =>
+      name === "PDF" || name === "Bild" ? `[Datei: ${name}]`
+        : /\.pdf$/i.test(name.trim()) ? "[Datei: PDF]" : "[Datei: Bild]"
+    );
+  }
+  function stripChat(c) {
+    return {
+      ...c,
+      title: stripFileNames(c.title),
+      messages: c.messages.map((m) => ({ ...m, content: stripFileNames(m.content) })),
+    };
+  }
+
   function loadChats() {
     // 1. Try new multi-chat format
     try {
@@ -127,14 +147,17 @@
       if (raw) {
         const stored = JSON.parse(raw);
         if (Array.isArray(stored) && stored.length > 0) {
-          const valid = stored.filter(isValidChat).map((c) => ({
+          const unstripped = stored.filter(isValidChat).map((c) => ({
             ...c,
             messages: c.messages.filter(isValidMessage),
           }));
+          const valid = unstripped.map(stripChat);
           if (valid.length > 0) {
             chats = valid;
             const storedActive = localStorage.getItem(ACTIVE_KEY) || "";
             activeId = chats.find((c) => c.id === storedActive) ? storedActive : chats[0].id;
+            // Persist rewritten placeholders right away, not only on the next message.
+            if (JSON.stringify(valid) !== JSON.stringify(unstripped)) saveChats();
             return;
           }
         }
@@ -147,7 +170,8 @@
       if (oldRaw) {
         const oldData = JSON.parse(oldRaw);
         if (Array.isArray(oldData) && oldData.length > 0) {
-          const messages = oldData.filter(isValidMessage);
+          const messages = oldData.filter(isValidMessage)
+            .map((m) => ({ ...m, content: stripFileNames(m.content) }));
           if (messages.length > 0) {
             const firstUser = messages.find((m) => m.role === "user");
             const title = firstUser
@@ -406,7 +430,7 @@
       if (localStorage.getItem(FB_HINT_KEY)) return false;
       localStorage.setItem(FB_HINT_KEY, "1");
     } catch { return false; }
-    toast("Rückmeldungen werden mit Frage und Antwort gespeichert, um den Assistenten zu verbessern.", 5500);
+    toast("Rückmeldungen werden mit Frage und Antwort sechs Monate gespeichert, um den Assistenten zu verbessern.", 5500);
     return true;
   }
 
@@ -417,7 +441,7 @@
   function sendFeedback(msg, question, rating, comment) {
     const payload = {
       rating,
-      question: question || "",
+      question: stripFileNames(question || ""),
       answer: msg.content || "",
       comment: comment || "",
       kbUsed:        msg.meta?.kbUsed        ?? null,
@@ -802,7 +826,8 @@
 
   function userContentToText(text, files) {
     if (!files.length) return text;
-    return `${files.map((f) => `[Datei: ${f.name}]`).join(" ")}\n${text}`;
+    // Only the type, never the name – see stripFileNames.
+    return `${files.map((f) => `[Datei: ${f.isImage ? "Bild" : "PDF"}]`).join(" ")}\n${text}`;
   }
 
   // ── Send ───────────────────────────────────────────────────────────────────
@@ -883,7 +908,7 @@
       const target           = chats.find((c) => c.id === streamChatId);
       const priorMessages    = target ? target.messages.slice(0, -1) : [];
       const messagesPayload  = [
-        ...priorMessages.map((m) => ({ role: m.role, content: m.content })),
+        ...priorMessages.map((m) => ({ role: m.role, content: stripFileNames(m.content) })),
         { role: "user", content: userContent },
       ];
 

@@ -29,3 +29,8 @@ jobs:
 
       - name: Validate website structure
         run: node scripts/validate-site.mjs
+
+      # Loeschfrist fuer Feedback (sechs Monate). Ohne Abhaengigkeiten, mit
+      # eingebauter Negativkontrolle.
+      - name: Check feedback retention logic
+        run: node scripts/pruefe-feedback-frist.mjs

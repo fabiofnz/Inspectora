@@ -33,7 +33,7 @@ Website: inspectora.tech · Hosting: Netlify · Repo: fabiofnz/Inspectora (öffe
 - Streaming (wortweise), Web-Suche (`web_search_20250305`), Datei-Upload (PDF + Bilder)
 - Mehrere parallele Chats mit Volltextsuche, localStorage-Keys `inspectora_chats_v1` / `inspectora_active_chat_v1`
 - Markdown via marked 13.0.3 + DOMPurify 3.4.16, selbst gehostet in `vendor/` (Herkunft und SHA-256: `vendor/QUELLEN.md`)
-- Feedback-Buttons (👍/👎) → `netlify/functions/feedback.mjs` (Functions v2!) → Netlify Blobs, Store `assistant-feedback`
+- Feedback-Buttons (👍/👎) → `netlify/functions/feedback.mjs` (Functions v2!) → Netlify Blobs, Store `assistant-feedback`. Nach sechs Monaten gelöscht durch die geplante Function `feedback-aufraeumen.mjs` (täglich; Logik in `netlify/lib/feedback-frist.mjs`, Test `npm run pruefe-feedback-frist`)
 
 **Wissensbasis**
 - `wissensbasis/gesetze.json` – 181 Paragraphen (WEG, BGB §§ 535–580a, BetrKV, HeizkostenV, WoFlV)
@@ -50,7 +50,7 @@ Website: inspectora.tech · Hosting: Netlify · Repo: fabiofnz/Inspectora (öffe
 - **Sprache:** Alle Texte im Interface auf Deutsch.
 - **Keine externen Einbindungen.** Schrift (`fonts/`) und Bibliotheken (`vendor/`) liegen im Repo; keine Seite lädt etwas von fremden Servern. `npm run validate-site` prüft das (Abschnitt 7), die Negativkontrolle beweist, dass die Prüfung anschlägt.
 - **Keine Secrets im Code.** Niemals API-Keys, Zugangscodes oder Token in Dateien schreiben – ausschließlich Netlify-Umgebungsvariablen.
-- **Kein base64 im localStorage.** Datei-Uploads nur als Platzhalter `[Datei: name.pdf]` im Verlauf speichern.
+- **Kein base64 im localStorage.** Datei-Uploads nur als Platzhalter `[Datei: PDF]` bzw. `[Datei: Bild]` im Verlauf speichern – **ohne Dateinamen**, denn der Verlauf geht bei jeder Folgefrage an Anthropic und ins Feedback.
 - **Fehler nicht still verschlucken**, wenn sie diagnostisch wichtig sind. Bei Hintergrund-Operationen (z.B. Feedback senden) auch **Erfolg** loggen, nicht nur Fehler – sonst ist im Netlify-Log nicht unterscheidbar, ob etwas lief oder gar nicht aufgerufen wurde.
 
 ---

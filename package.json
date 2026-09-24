@@ -23,6 +23,7 @@
     "pruefe-seite": "node benchmark/pruefe-seite.mjs",
     "pruefe-aktualitaet": "node scripts/pruefe-aktualitaet.js",
     "pruefe-aktualitaet:negativkontrolle": "node scripts/pruefe-aktualitaet-negativkontrolle.js",
-    "aktualitaet:status": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/aufgabe-einrichten.ps1 -Status"
+    "aktualitaet:status": "powershell -NoProfile -ExecutionPolicy Bypass -File scripts/aufgabe-einrichten.ps1 -Status",
+    "pruefe-feedback-frist": "node scripts/pruefe-feedback-frist.mjs"
   }
 }

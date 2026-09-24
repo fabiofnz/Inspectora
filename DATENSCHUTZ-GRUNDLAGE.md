@@ -1,6 +1,6 @@
 # Datenschutz – Bestandsaufnahme (Grundlage, kein Rechtstext)
 
-Stand: 24.09.2026, aktualisiert nach dem Entfernen der WEG-Werkzeuge.
+Stand: 24.09.2026, aktualisiert nach Befunden C–F (Feedback-Frist, Dateinamen, Zusagen entfernt, GitHub Pages).
 Zweck: Grundlage für die spätere Datenschutzerklärung. **Das hier ist keine
 Datenschutzerklärung** und ersetzt keine rechtliche Durchsicht.
 
@@ -19,13 +19,14 @@ teilweise je nach Tarif.
 |---|---|---|---|---|---|
 | 1 | Hosting (jeder Seitenaufruf) | IP-Adresse, Zeitpunkt, URL, User-Agent, Referrer | Netlify | OFFEN (tarifabhängig) | Ja – Netlify Inc., USA |
 | 2 | Netlify Analytics | aus den Server-Logs abgeleitet | Netlify | OFFEN | Ja |
-| 3 | KI-Assistent | Chatverlauf (bis 60 Nachrichten), hochgeladene PDFs/Bilder, Dateinamen | Netlify Edge Function → Anthropic | Anthropic laut Quelle 30 Tage, Ausnahmen – OFFEN für dieses Konto | Ja – Anthropic PBC, USA |
+| 3 | KI-Assistent | Chatverlauf (bis 60 Nachrichten), hochgeladene PDFs/Bilder (ohne Dateinamen) | Netlify Edge Function → Anthropic | Anthropic laut Quelle 30 Tage, Ausnahmen – OFFEN für dieses Konto | Ja – Anthropic PBC, USA |
 | 4 | Web-Suche des Assistenten | Suchanfragen, die das Modell aus der Frage bildet | Anthropic → Suchanbieter | OFFEN | Ja |
 | 5 | ~~KI-Protokollformulierung (WEG)~~ – **entfernt 24.09.2026** | bis dahin: WEG-Bezeichnung, Ort, Versammlungsleiter, TOP-Texte | Netlify Function → Anthropic | wie 3 | Ja |
-| 6 | Feedback (👍/👎) | Frage, Antwort, Kommentar, Zeitstempel, Metadaten | Netlify Blobs | **unbegrenzt** – kein Löschcode | Ja (Netlify); Speicherort OFFEN |
+| 6 | Feedback (👍/👎) | Frage, Antwort, Kommentar, Zeitstempel, Metadaten | Netlify Blobs | **sechs Monate**, täglich geprüft – Nachweis im Betrieb offen (O12) | Ja (Netlify); Speicherort OFFEN |
 | 7 | localStorage im Browser | Chats, Zugangscode (Assistent) | nur Gerät der Nutzer | bis der Nutzer löscht | Nein |
 | 8 | Kontakt per E-Mail | alles, was jemand schreibt, + Absenderadresse | Gmail (Google) | OFFEN | Ja – Google LLC, USA |
 | 9 | Bis 24.09.2026: Google Fonts, jsDelivr, cdnjs | IP-Adresse, User-Agent, Referrer | Google, jsDelivr, Cloudflare | bei den Anbietern | Ja – **seit `ed53a21` abgestellt** |
+| 10 | GitHub Pages (zweite Kopie der Website) | IP-Adresse, User-Agent, Referrer | GitHub (Microsoft) | OFFEN | Ja – USA; **wird abgeschaltet** (O13) |
 
 Nicht gefunden: Cookies, Tracking-Skripte, Analyse-Snippets, Netlify Forms, Netlify
 Identity, eingebettete Karten/Videos, Social-Media-Plugins. Nach dem Stand von heute
@@ -49,32 +50,40 @@ Datenschutz-Aussagen gehören in die Datenschutzerklärung, nicht in Werbetexte.
 Zugangscode.** Die Function ist gelöscht; `/.netlify/functions/generate-protokoll`
 gibt es nicht mehr.
 
-**C. Feedback wird ohne Frist gespeichert.**
-Es gibt keinen Code, der Einträge im Store `assistant-feedback` löscht (Suche nach
-`assistant-feedback`, `getStore`, `.delete(` im ganzen Repo: nur `feedback.mjs`, nur
-Schreiben). Frage und Antwort können trotz Warnhinweis personenbezogene Daten
-enthalten. Für den Rechtstext braucht es eine Speicherdauer – und dann auch einen Weg,
-sie einzuhalten.
+**C. ✓ Umgesetzt (24.09.2026) – Nachweis im Betrieb steht aus: Feedback wird nach
+sechs Monaten gelöscht.** Geplante Function `netlify/functions/feedback-aufraeumen.mjs`,
+täglich 00:00 UTC; Logik in `netlify/lib/feedback-frist.mjs`, geprüft mit
+`npm run pruefe-feedback-frist` (Grenzfälle + Negativkontrolle, läuft auch in GitHub
+Actions). Einzelheiten unter 6. **Offen (O12):** Ob Netlify sie tatsächlich täglich
+startet, zeigt nur das Function-Log – erst danach stimmt die Frist im Rechtstext.
 
-**D. Dateinamen wandern mit.**
-Hochgeladene Dateien werden im Verlauf nur als `[Datei: name.pdf]` gespeichert
-(`assistant.js`, `userContentToText`) – aber dieser Text geht bei jeder Folgefrage
-wieder an Anthropic und bei Feedback in die Blobs. Dateinamen wie
-„Abrechnung_Müller_Hauptstr12.pdf" sind personenbezogen.
+**D. ✓ Erledigt (24.09.2026): Dateinamen verlassen das Gerät nicht mehr.** Im Verlauf,
+in Folgefragen an Anthropic und im Feedback steht nur noch `[Datei: PDF]` bzw.
+`[Datei: Bild]` (`assistant.js`, `userContentToText`). Ältere Verläufe mit
+`[Datei: Abrechnung_Müller.pdf]` werden beim Laden umgeschrieben und gespeichert
+(`stripFileNames` in `loadChats`), und vor jedem Senden noch einmal. Im Browser
+nachgeprüft: alter Verlauf mit zwei Dateinamen, Feedback, Folgefrage und ein echter
+Upload – in keiner Anfrage und nicht im localStorage ein Name. Der Name steht nur
+noch lokal im Anhang-Chip vor dem Absenden. **Grenze:** Metadaten *in* der Datei
+(z. B. Autor im PDF) gehen mit dem Dateiinhalt an Anthropic.
 
-**E. Weitere Datenschutz-Aussagen außerhalb der Datenschutzerklärung.**
-Nach dem Grundsatz in CLAUDE.md (Datenschutz-Aussagen nur in der
-Datenschutzerklärung) noch zu entscheiden – noch nicht geändert:
-- `index.html`, Abschnitt `#werkzeug`: Chips „Ohne Anmeldung" und „Nichts verlässt
-  deinen Browser", dazu der Satz „…gespeichert und nichts an eine KI geschickt". Für den
-  Betriebskosten-Prüfer inhaltlich richtig (siehe 7, 10), aber eine Zusage in einem
-  Werbetext.
-- `ki-assistent.html:69`: „Verlauf wird nur lokal in diesem Browser gespeichert." Stimmt
-  für den Verlauf – aber jede Nachricht geht an Anthropic (3), Feedback in die Blobs (6).
-  Liest sich beruhigender, als es ist.
-- `nebenkostenabrechnung-frist-pruefen.html:42`, `:51–52`, `:106`: Aussagen, dass keine
-  Daten das Gerät verlassen. Stehen dort, wo Daten eingegeben werden – teils Warnung
-  („Bitte keine personenbezogenen Daten"), teils Zusage.
+**E. ✓ Erledigt (24.09.2026): Datenschutz-Zusagen außerhalb der
+Datenschutzerklärung entfernt**, nach dem Grundsatz in CLAUDE.md:
+- Startseite `#werkzeug`: Chip „Nichts verlässt deinen Browser" und die Sätze „Die
+  Berechnung läuft vollständig in deinem Browser. Es wird nichts übertragen, nichts
+  gespeichert und nichts an eine KI geschickt." entfernt. „Ohne Anmeldung" bleibt
+  (keine Datenschutz-Zusage). Meta-Beschreibung: „Ohne Anmeldung, im Browser." →
+  „Ohne Anmeldung."
+- Assistent: „Verlauf wird nur lokal in diesem Browser gespeichert." entfernt. Unter dem
+  Eingabefeld (`ki-assistent.html:84`) jetzt die Warnung: „Deine Nachrichten und
+  Dateien gehen zur Beantwortung an Anthropic (USA). Keine Namen, Anschriften oder
+  Vertragsdaten eingeben."
+- Nebenkosten-Seite: Zusagen („nichts übertragen", „damit keine Daten das Gerät
+  verlassen", „Zwar verlässt nichts … deinen Browser", Meta „nichts wird übertragen")
+  entfernt; Warnungen („Bitte keine personenbezogenen Daten …") bleiben.
+- Feedback-Hinweis nennt jetzt die Frist (Warnung an der Eingabestelle, siehe 6).
+
+**F. GitHub Pages veröffentlichte das ganze Repo als zweite Website** – siehe 11.
 
 ---
 
@@ -93,6 +102,8 @@ Traffic-Logs.
 - `assistant-chat.js`: nur eine Fehlermeldung, wenn `gesetze.json` kaputt ist – **kein
   Chatinhalt**.
 - `wissensbasis-status.mjs`: nur Fehlermeldung, keine Nutzerdaten.
+- `feedback-aufraeumen.mjs`: Zahlen je Lauf; bei Problemen die betroffenen Schlüssel.
+  Schlüssel enthalten nur Zeitstempel und Zufallsteil – keinen Inhalt.
 
 **Wie lange:** OFFEN. Laut Netlify-Doku zeigen Function-Logs je nach Tarif bis zu
 7 Tage; die Aufbewahrung der Traffic-/Zugriffslogs hängt vom Tarif ab. Allgemein laut
@@ -128,7 +139,7 @@ Falls aktiv: welche Daten, wie lange → Netlify-Doku zu Analytics/Observability
 **Weg:** `ki-assistent.html` → `assistant.js` → `POST /.netlify/functions/assistant-chat`
 (Edge Function `netlify/edge-functions/assistant-chat.js`) → `https://api.anthropic.com/v1/messages`.
 
-**Was der Browser an Netlify schickt** (`assistant.js`, ab Zeile ~883):
+**Was der Browser an Netlify schickt** (`assistant.js`, ab Zeile ~910):
 - Header `x-access-code` (Zugangscode – kein personenbezogenes Datum, aber ein Geheimnis)
 - `messages`: der **gesamte bisherige Verlauf des Chats** als Text (bis 60 Nachrichten,
   je bis 8.000 Zeichen – Grenzen in `assistant-chat.js:175–176`), plus bei der
@@ -136,7 +147,8 @@ Falls aktiv: welche Daten, wie lange → Netlify-Doku zu Analytics/Observability
 - **Datei-Uploads:** PDF, JPEG, PNG, GIF, WebP (`ALLOWED_MEDIA_TYPES`,
   `assistant-chat.js:177`) als base64. Der volle Dateiinhalt geht **einmal** mit der
   Nachricht mit, bei der er hochgeladen wird; frühere Nachrichten gehen nur als Text mit
-  (`[Datei: name]`, siehe Befund D).
+  (`[Datei: PDF]` / `[Datei: Bild]`, **ohne Dateinamen** – Befund D). Der
+  Dateiinhalt selbst (samt eingebetteter Metadaten) geht unverändert mit.
 
 **Was die Edge Function an Anthropic schickt** (`assistant-chat.js:281–299`):
 `model`, `max_tokens`, `stream`, `system` (System-Prompt + Paragraphen aus der
@@ -202,7 +214,7 @@ Anthropic wie unter 3).
 |---|---|---|
 | `timestamp` | Zeitpunkt (Server) | – |
 | `rating` | `positiv` / `negativ` | – |
-| `question` | die Frage zur Antwort (inkl. `[Datei: name]`) | 20.000 Zeichen |
+| `question` | die Frage zur Antwort (ggf. mit `[Datei: PDF]`/`[Datei: Bild]`, ohne Dateinamen) | 20.000 Zeichen |
 | `answer` | die Antwort des Assistenten | 20.000 Zeichen |
 | `comment` | Freitext bei 👎 | 2.000 Zeichen |
 | `kbUsed` | ob die Wissensbasis gegriffen hat | – |
@@ -213,10 +225,23 @@ Anthropic wie unter 3).
 in `feedback.mjs` stimmen hier überein).
 
 **Hinweis im Interface:** einmalig beim ersten Feedback ein Toast: „Rückmeldungen
-werden mit Frage und Antwort gespeichert, um den Assistenten zu verbessern."
-(`assistant.js:409`). Danach nie wieder (`inspectora_feedback_hint_v1`).
+werden mit Frage und Antwort sechs Monate gespeichert, um den Assistenten zu
+verbessern." (`assistant.js:433`). Danach nie wieder (`inspectora_feedback_hint_v1`).
 
-**Wie lange:** unbegrenzt – es gibt keinen Löschcode (Befund C).
+**Wie lange:** sechs Kalendermonate, danach gelöscht (Befund C). Umsetzung:
+- `netlify/functions/feedback-aufraeumen.mjs` – geplante Function (v2,
+  `schedule: "@daily"`, 00:00 UTC). Läuft nur im Produktions-Deploy, ist nicht per URL
+  aufrufbar.
+- `netlify/lib/feedback-frist.mjs` – die Logik. Das Datum steht im Schlüssel
+  (`feedback:<ISO-Zeitstempel>-<Zufall>`), der Eintrag muss dafür nicht gelesen werden.
+  Grenze = heute minus sechs Kalendermonate; gibt es den Tag im Zielmonat nicht, der
+  letzte Tag des Monats (31.08. → 28.02.). Gelöscht wird, was **älter** ist.
+- Ein Schlüssel ohne lesbares Datum wird **nicht** gelöscht, sondern im Log gemeldet.
+- Jeder Lauf loggt, auch ohne Löschung: `[feedback-aufraeumen] Grenze …: N geprueft,
+  M geloescht, …` (Netlify → Logs & metrics → Functions).
+- **Formulierung für den Rechtstext:** „…nach sechs Monaten gelöscht (täglich
+  geprüft)" – gelöscht wird spätestens einen Tag nach Fristablauf.
+- **Nachweis im Betrieb: OFFEN (O12)** – erste Log-Zeile nach dem Deploy ansehen.
 **Wo:** OFFEN – in welcher Region Netlify Blobs speichert.
 → Netlify-Doku zu Blobs (docs.netlify.com → Netlify Blobs), Netlify-DPA.
 **Außerhalb EU:** Netlify USA; Speicherort OFFEN.
@@ -231,14 +256,15 @@ Assistenten oder über die Browser-Einstellungen). Keine Cookies.
 |---|---|---|---|
 | `ki-assistent.html` | `inspectora_chats_v1` | alle Chats: Titel, Nachrichten, Antworten, Bewertungen, Zeitstempel | ja – was Nutzer eintippen |
 | | `inspectora_active_chat_v1` | ID des offenen Chats | nein |
-| | `inspectora_assistant_chat_v1` | Altformat, wird beim Laden übernommen und dann entfernt (`assistant.js:166`; der Kommentar in Zeile 7 „never deleted here" ist veraltet) | ja |
+| | `inspectora_assistant_chat_v1` | Altformat, wird beim Laden übernommen und dann entfernt (`assistant.js:190`) | ja |
 | | `inspectora_assistant_code_v1` | Zugangscode im Klartext | nein, aber Geheimnis |
 | | `inspectora_feedback_hint_v1` | `"1"`, wenn der Feedback-Hinweis gezeigt wurde | nein |
 | `nebenkostenabrechnung-frist-pruefen.html` | – | **bewusst nichts** (`betriebskosten-pruefer.js`, Kopfkommentar) | – |
 | `index.html`, `mietrecht-benchmark.html` | – | nichts | – |
 
 Datei-Uploads werden **nicht** im localStorage gespeichert, nur der Platzhalter
-`[Datei: name]` (Projektregel „kein base64 im localStorage", im Code eingehalten).
+`[Datei: PDF]` / `[Datei: Bild]` – ohne Dateinamen (Projektregel „kein base64 im
+localStorage", im Code eingehalten; Befund D).
 
 Andere Browser-Zugriffe: `navigator.clipboard.writeText` (Antwort kopieren,
 `assistant.js`) – schreibt nur in die lokale Zwischenablage.
@@ -251,8 +277,8 @@ Inspectora zeigt sie nicht mehr an und löscht sie auch nicht.
 
 ## 8 · Kontakt per E-Mail
 
-**Aus dem Code:** `mailto:kontakt.inspectora@gmail.com` in `index.html:205`,
-`index.html:215`, `ki-assistent.html:100` (Zugangscode anfragen). Kein Kontaktformular.
+**Aus dem Code:** `mailto:kontakt.inspectora@gmail.com` in `index.html:203`,
+`index.html:213`, `ki-assistent.html:99` (Zugangscode anfragen). Kein Kontaktformular.
 
 **Daten:** Absenderadresse, Name (falls im Absender), Inhalt der Mail, Anhänge.
 **Wohin:** Google (Gmail). **Wie lange:** OFFEN – so lange die Mails im Postfach liegen;
@@ -286,6 +312,23 @@ Rechtstext auch die Vergangenheit abdecken soll.
   nicht im Repo; `benchmark/ergebnisse/` enthält nur Modellantworten auf eigene
   Testfragen).
 
+## 11 · GitHub Pages: zweite Website aus dem Repo – wird abgeschaltet
+
+**Gefunden am 24.09.2026:** Neben Netlify veröffentlichte GitHub Pages bei jedem Push
+das **ganze Repo** unter `https://fabiofnz.github.io/Inspectora/` – die Seiten, aber
+auch `DATENSCHUTZ-GRUNDLAGE.md`, `benchmark/run.mjs` und alles andere (jeweils HTTP 200
+gemessen; GitHub-Actions-Lauf „pages build and deployment" bei jedem Commit).
+
+**Daten:** Wer diese Adresse aufrief, schickte IP-Adresse, User-Agent und Referrer an
+GitHub (Microsoft, **USA**). Der Assistent funktionierte dort nicht (die Functions gibt es
+nur auf Netlify) – Chat-Inhalte sind darüber also nicht abgeflossen.
+**Wie lange:** bei GitHub, OFFEN → GitHub-Datenschutzerklärung
+([docs.github.com/site-policy/privacy-policies](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement)).
+
+**Status:** Abschaltung durch Fabio beschlossen (GitHub → Settings → Pages).
+Beim Commit dieser Fassung antwortete die Adresse noch mit 200. **Offen (O13):**
+Nachweis, dass sie nicht mehr antwortet – danach hier als geschlossen eintragen.
+
 ---
 
 ## Offene Punkte – Sammelliste zum Abarbeiten
@@ -300,6 +343,8 @@ Rechtstext auch die Vergangenheit abdecken soll.
 | O6 | Anthropic: DPA / Commercial Terms, Rechtsgrundlage Übermittlung, Unterauftragsverarbeiter | trust.anthropic.com, Commercial Terms |
 | O7 | Suchanbieter hinter der Web-Suche | Anthropic-Unterauftragsverarbeiterliste |
 | O8 | Gmail als geschäftliche Kontaktadresse | rechtliche Durchsicht |
-| O9 | Speicherdauer für Feedback festlegen – und Löschweg bauen | Entscheidung Fabio (Befund C) |
+| O9 | ✓ erledigt 24.09.2026 – sechs Monate, geplante Function (Befund C) | Nachweis siehe O12 |
 | O10 | ✓ erledigt 24.09.2026 – Protokoll-Generator samt Function entfernt | Befunde A, B |
-| O11 | Datenschutz-Aussagen auf Startseite, Assistent, Nebenkosten-Seite: bleiben, umformulieren oder raus? | Entscheidung Fabio (Befund E) |
+| O11 | ✓ erledigt 24.09.2026 – Zusagen entfernt, Warnungen bleiben (Befund E) | – |
+| O12 | Läuft `feedback-aufraeumen` täglich? Erste Log-Zeile `[feedback-aufraeumen] …` | Netlify → Logs & metrics → Functions |
+| O13 | GitHub Pages abgeschaltet? `https://fabiofnz.github.io/Inspectora/` darf nicht mehr antworten | `curl -I` auf die Adresse |
