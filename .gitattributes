@@ -15,3 +15,9 @@ benchmark/fragen-*.json      -text
 benchmark/ergebnisse/**      -text
 mietrecht-benchmark.html     -text
 benchmark/seite-vorlage.html -text
+
+# Dasselbe fuer die selbst gehosteten Fremddateien: vendor/QUELLEN.md nennt ihre
+# SHA-256. Nach einem Klon unter Windows muessen die Dateien auf der Platte
+# dieselben Bytes haben, sonst laesst sich die Herkunft nicht mehr nachpruefen.
+vendor/**                    -text
+fonts/**                     -text

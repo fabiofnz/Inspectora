@@ -417,8 +417,7 @@ main{padding-top:0}
   .hero h1{animation:none;-webkit-text-fill-color:#fff;background:none}
   .hero::before{animation:none}
   .hero .eyebrow::before{animation:none}
-  .inspector-panel{animation:none}
-  .about-card{animation:none}
+  /* .inspector-panel und .about-card: siehe nach .about-card - hier stuenden sie vor ihren Regeln und verloeren. */
 }
 
 /* 6 · Sektionen – Basis ---------------------------------------------------
@@ -671,7 +670,7 @@ main{padding-top:0}
   box-shadow:0 0 0 1px rgba(124,58,237,.14) inset, 0 24px 64px rgba(0,0,0,.45);
   animation:previewGlow 7s ease-in-out infinite;
 }
-/* "Bewegung reduzieren": muss HINTER beiden previewGlow-Regeln stehen. Der Block oben (reduced-motion bei .hero) steht davor und verliert bei gleicher Spezifitaet - dort wirkungslos. */
+/* "Bewegung reduzieren": muss HINTER beiden previewGlow-Regeln stehen. Im reduced-motion-Block bei .hero stuende es davor und verloere bei gleicher Spezifitaet. */
 @media(prefers-reduced-motion:reduce){.inspector-panel,.about-card{animation:none}}
 .about-card::before{
   content:"";position:absolute;inset:0;pointer-events:none;
