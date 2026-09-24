@@ -1,6 +1,6 @@
 # Datenschutz – Bestandsaufnahme (Grundlage, kein Rechtstext)
 
-Stand: 24.09.2026, aktualisiert nach Befunden C–F (Feedback-Frist, Dateinamen, Zusagen entfernt, GitHub Pages).
+Stand: 24.09.2026, aktualisiert nach Befunden C–F (Feedback-Frist, Dateinamen, Zusagen entfernt, GitHub Pages abgeschaltet).
 Zweck: Grundlage für die spätere Datenschutzerklärung. **Das hier ist keine
 Datenschutzerklärung** und ersetzt keine rechtliche Durchsicht.
 
@@ -26,7 +26,7 @@ teilweise je nach Tarif.
 | 7 | localStorage im Browser | Chats, Zugangscode (Assistent) | nur Gerät der Nutzer | bis der Nutzer löscht | Nein |
 | 8 | Kontakt per E-Mail | alles, was jemand schreibt, + Absenderadresse | Gmail (Google) | OFFEN | Ja – Google LLC, USA |
 | 9 | Bis 24.09.2026: Google Fonts, jsDelivr, cdnjs | IP-Adresse, User-Agent, Referrer | Google, jsDelivr, Cloudflare | bei den Anbietern | Ja – **seit `ed53a21` abgestellt** |
-| 10 | GitHub Pages (zweite Kopie der Website) | IP-Adresse, User-Agent, Referrer | GitHub (Microsoft) | OFFEN | Ja – USA; **wird abgeschaltet** (O13) |
+| 10 | ~~GitHub Pages (zweite Kopie der Website)~~ – **abgeschaltet 24.09.2026** | bis dahin: IP-Adresse, User-Agent, Referrer | GitHub (Microsoft) | bei GitHub, OFFEN | Ja – USA; geschlossen |
 
 Nicht gefunden: Cookies, Tracking-Skripte, Analyse-Snippets, Netlify Forms, Netlify
 Identity, eingebettete Karten/Videos, Social-Media-Plugins. Nach dem Stand von heute
@@ -83,7 +83,8 @@ Datenschutzerklärung entfernt**, nach dem Grundsatz in CLAUDE.md:
   entfernt; Warnungen („Bitte keine personenbezogenen Daten …") bleiben.
 - Feedback-Hinweis nennt jetzt die Frist (Warnung an der Eingabestelle, siehe 6).
 
-**F. GitHub Pages veröffentlichte das ganze Repo als zweite Website** – siehe 11.
+**F. ✓ Erledigt (24.09.2026): GitHub Pages veröffentlichte das ganze Repo als zweite
+Website.** Abgeschaltet, nachgemessen – siehe 11.
 
 ---
 
@@ -312,7 +313,7 @@ Rechtstext auch die Vergangenheit abdecken soll.
   nicht im Repo; `benchmark/ergebnisse/` enthält nur Modellantworten auf eigene
   Testfragen).
 
-## 11 · GitHub Pages: zweite Website aus dem Repo – wird abgeschaltet
+## 11 · GitHub Pages: zweite Website aus dem Repo – geschlossen
 
 **Gefunden am 24.09.2026:** Neben Netlify veröffentlichte GitHub Pages bei jedem Push
 das **ganze Repo** unter `https://fabiofnz.github.io/Inspectora/` – die Seiten, aber
@@ -325,9 +326,11 @@ nur auf Netlify) – Chat-Inhalte sind darüber also nicht abgeflossen.
 **Wie lange:** bei GitHub, OFFEN → GitHub-Datenschutzerklärung
 ([docs.github.com/site-policy/privacy-policies](https://docs.github.com/en/site-policy/privacy-policies/github-general-privacy-statement)).
 
-**Status:** Abschaltung durch Fabio beschlossen (GitHub → Settings → Pages).
-Beim Commit dieser Fassung antwortete die Adresse noch mit 200. **Offen (O13):**
-Nachweis, dass sie nicht mehr antwortet – danach hier als geschlossen eintragen.
+**Status: geschlossen.** Von Fabio abgeschaltet (GitHub → Settings → Pages), am
+24.09.2026 nachgemessen: `https://fabiofnz.github.io/Inspectora/`, `/index.html`,
+`/ki-assistent.html`, `/DATENSCHUTZ-GRUNDLAGE.md`, `/benchmark/run.mjs` antworten mit
+**404**. Für Commit `d4ae17e` gab es keinen Lauf „pages build and deployment" mehr.
+Relevant nur noch, falls der Rechtstext die Vergangenheit abdecken soll.
 
 ---
 
@@ -347,4 +350,4 @@ Nachweis, dass sie nicht mehr antwortet – danach hier als geschlossen eintrage
 | O10 | ✓ erledigt 24.09.2026 – Protokoll-Generator samt Function entfernt | Befunde A, B |
 | O11 | ✓ erledigt 24.09.2026 – Zusagen entfernt, Warnungen bleiben (Befund E) | – |
 | O12 | Läuft `feedback-aufraeumen` täglich? Erste Log-Zeile `[feedback-aufraeumen] …` | Netlify → Logs & metrics → Functions |
-| O13 | GitHub Pages abgeschaltet? `https://fabiofnz.github.io/Inspectora/` darf nicht mehr antworten | `curl -I` auf die Adresse |
+| O13 | ✓ erledigt 24.09.2026 – GitHub Pages abgeschaltet, alle Adressen 404 | – |
