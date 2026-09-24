@@ -53,82 +53,14 @@ initHeaderScroll();
 
 })();
 
-/* ── Gruppierte Navigation: Dropdowns + aktiver Bereich ─────────── */
-// Nur Navigations-Verhalten, keine geteilten Funktionen oder IDs.
-(()=>{"use strict";
-const groups=[...document.querySelectorAll('[data-nav-group]')];
-if(!groups.length)return;
-
-function closeGroup(g){
-  g.classList.remove('open');
-  const trigger=g.querySelector('[data-nav-toggle]');
-  if(trigger)trigger.setAttribute('aria-expanded','false');
-}
-function closeAllGroups(except){
-  groups.forEach(g=>{if(g!==except)closeGroup(g)});
-}
-function toggleGroup(g){
-  const wasOpen=g.classList.contains('open');
-  closeAllGroups(g);
-  g.classList.toggle('open',!wasOpen);
-  const trigger=g.querySelector('[data-nav-toggle]');
-  if(trigger)trigger.setAttribute('aria-expanded',String(!wasOpen));
-}
-
-groups.forEach(g=>{
-  const trigger=g.querySelector('[data-nav-toggle]');
-  if(!trigger)return;
-  trigger.addEventListener('click',e=>{
-    e.stopPropagation();
-    toggleGroup(g);
-  });
-});
-
-document.addEventListener('click',e=>{
-  if(!e.target.closest('[data-nav-group]'))closeAllGroups();
-});
-document.addEventListener('keydown',e=>{
-  if(e.key==='Escape')closeAllGroups();
-});
-document.querySelectorAll('.nav-panel a').forEach(a=>a.addEventListener('click',()=>closeAllGroups()));
-document.getElementById('menuToggle')?.addEventListener('click',()=>closeAllGroups());
-
-/* Aktiven Bereich im Menü hervorheben */
-const navTargets=[...document.querySelectorAll('[data-nav-sections]')];
-if(navTargets.length&&'IntersectionObserver' in window){
-  const sectionMap=new Map();
-  navTargets.forEach(el=>{
-    (el.dataset.navSections||'').split(/\s+/).filter(Boolean).forEach(id=>{
-      if(!sectionMap.has(id))sectionMap.set(id,[]);
-      sectionMap.get(id).push(el);
-    });
-  });
-  const sections=[...sectionMap.keys()].map(id=>document.getElementById(id)).filter(Boolean);
-  let currentId=null;
-  function setCurrent(id){
-    if(id===currentId)return;
-    currentId=id;
-    navTargets.forEach(el=>el.classList.remove('nav-current'));
-    (sectionMap.get(id)||[]).forEach(el=>el.classList.add('nav-current'));
-  }
-  const observer=new IntersectionObserver(entries=>{
-    entries.forEach(entry=>{
-      if(entry.isIntersecting)setCurrent(entry.target.id);
-    });
-  },{rootMargin:'-40% 0px -55% 0px',threshold:0});
-  sections.forEach(s=>observer.observe(s));
-}
-})();
-
 // Wissensbasis-Zahl im Inspector-Panel. Holt die tatsächliche Anzahl der
 // Paragraphen aus der Netlify Function, damit die Angabe nicht veraltet.
 // Ohne JavaScript oder bei einem Fehler bleibt der Fallback-Text aus dem HTML
 // stehen – der ist bewusst ohne Zahl formuliert und deshalb auch dann richtig.
 // Grundsatz: lieber ungenauer als eine Zahl, die nicht belegt ist.
 //
-// Bewusst ein eigener Block: Die $-Helfer weiter oben sind jeweils nur in ihrem
-// eigenen IIFE sichtbar, und der Navigations-Block darüber steigt früh aus,
-// wenn eine Seite keine Nav-Gruppen hat. Deshalb hier nichts von außen nutzen.
+// Bewusst ein eigener Block: Die $-Helfer weiter oben sind nur in ihrem eigenen
+// IIFE sichtbar. Deshalb hier nichts von außen nutzen.
 (()=>{"use strict";
 const kbCount=document.getElementById("kbCount");
 if(!kbCount)return;
