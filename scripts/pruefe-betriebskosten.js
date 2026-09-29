@@ -654,7 +654,9 @@ async function main() {
     { zeile: "Aufzug 410,00", verdikt: "im-katalog", nr: 7, art: "katalog" },
     { zeile: "Verwaltervergütung 240,00", verdikt: "nicht-umlagefaehig", nr: 1, art: "ausschluss" },
     { zeile: "Reparatur Heizung 890,00", verdikt: "nicht-umlagefaehig", nr: 2, art: "ausschluss" },
-    { zeile: "Hausmeister 620,00", verdikt: "mietvertrag-erforderlich", nr: 14, art: "katalog" },
+    // Nr. 14 hat ihr eigenes Urteil - "Mietvertrag erforderlich" ist der Vorbehalt von Nr. 17.
+    { zeile: "Hausmeister 620,00", verdikt: "im-katalog-anteilig", nr: 14, art: "katalog" },
+    { zeile: "Hauswart", verdikt: "im-katalog-anteilig", nr: 14, art: "katalog" },
     { zeile: "Sonstige Betriebskosten 95,00", verdikt: "mietvertrag-erforderlich", nr: 17, art: "katalog" },
   ];
 
@@ -682,6 +684,64 @@ async function main() {
     }
     if (p.fundstellen[0].art !== "ausschluss") return "der Ausschluss steht nicht vorn";
     if (p.fundstellen[1].art !== "katalog") return "der Katalogtreffer fehlt";
+    return true;
+  });
+
+  // -------------------------------------------------------------------------
+  const P_UMFANG = "Begriffe mit engem Umfang";
+  // -------------------------------------------------------------------------
+  // Kopf von kern/katalog.mjs: Ein Begriff, den seine Nummer nur eng deckt, zaehlt
+  // nur am Wortanfang. "Rechtsschutzversicherung" hat bis 1.1.0 gruen "Im Katalog,
+  // Nr. 13" gezeigt - ueber das Wort "Versicherung".
+
+  // Kein Urteil, keine Fundstelle, aber ein Hinweis auf genau diese Nummer.
+  for (const [zeile, nr] of [
+    ["Rechtsschutzversicherung 120,00", 13], ["Mietausfallversicherung", 13],
+    ["Kindergarten", 10], ["Fassadenreinigung", 9], ["Weihnachtsbeleuchtung", 11],
+  ]) {
+    pruefe(P_UMFANG, zeile, () => {
+      const p = ordne(zeile);
+      if (!p) return "keine Position erzeugt";
+      const v = gleich(p.verdikt, "nicht-zuordenbar", "Urteil");
+      if (v !== true) return v;
+      if (p.fundstellen.length !== 0) {
+        return "Fundstelle trotz eingebettetem Begriff: " + p.fundstellen.map((f) => f.bezeichnung).join(", ");
+      }
+      const h = p.umfangHinweise || [];
+      if (h.length !== 1 || h[0].nr !== nr) return "Hinweis erwartet auf Nr. " + nr + ", bekommen: " + JSON.stringify(h);
+      return true;
+    });
+  }
+
+  // Der Hinweis zaehlt als beruehrte Nummer: sonst wuerde die Zeile still zu "Aufzug".
+  pruefe(P_UMFANG, "Aufzugshaftpflichtversicherung bleibt mehrere Positionen", () => {
+    const p = ordne("Aufzugshaftpflichtversicherung");
+    return gleich(p.verdikt, "mehrere-positionen", "Urteil");
+  });
+
+  // Am Wortanfang und als eigener Begriff aendert sich nichts.
+  for (const [zeile, nr] of [
+    ["Versicherung 830,00", 13], ["Versicherungen", 13], ["Gebäudeversicherung", 13],
+    ["Treppenhausreinigung", 9], ["Heizkosten", 4], ["Gartenpflege", 10],
+  ]) {
+    pruefe(P_UMFANG, zeile + " bleibt im Katalog", () => {
+      const p = ordne(zeile);
+      const v = gleich(p.verdikt, "im-katalog", "Urteil");
+      if (v !== true) return v;
+      if ((p.umfangHinweise || []).length !== 0) return "unnoetiger Umfang-Hinweis";
+      return gleich(p.fundstellen[0] && p.fundstellen[0].nr, nr, "Nummer");
+    });
+  }
+
+  // Das Zitat im Hinweis muss woertlich im Text der Nummer stehen - und die Quelle amtlich sein.
+  pruefe(P_UMFANG, "Hinweis zitiert den Wortlaut der Nummer", () => {
+    const e = Katalog.pruefePositionen({ text: "Rechtsschutzversicherung" }, korpus, begriffsdatei);
+    const h = e.positionen[0].umfangHinweise[0];
+    if (!h || !h.wortlaut) return "kein Wortlaut im Hinweis";
+    const item = e.katalog.items.find((i) => i.nr === h.nr);
+    if (!item.text.includes(h.wortlaut)) return "Wortlaut steht nicht im Text von Nr. " + h.nr + ": " + h.wortlaut;
+    if (!h.hinweis.includes(h.wortlaut)) return "Hinweistext nennt den Wortlaut nicht";
+    if (!String(h.quelle).startsWith(QUELLE_PRAEFIX)) return "keine amtliche Quelle: " + h.quelle;
     return true;
   });
 

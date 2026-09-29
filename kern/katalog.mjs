@@ -57,6 +57,27 @@
 //   - Jede Position traegt "abdeckung": welche Woerter der Zeile KEIN Treffer abdeckt.
 //     Ein Ergebnis, das nur einen Teil der Zeile bewertet hat, muss als solches
 //     erkennbar sein. Die Abdeckung aendert nie das Urteil.
+//
+// ---------------------------------------------------------------------------
+// BEGRIFFE MIT ENGEM UMFANG (einschraenkungen, art "umfang")
+// ---------------------------------------------------------------------------
+// Manche Suchbegriffe deckt ihre Nummer nur in einer engen Bedeutung: § 2 Nr. 13
+// nennt nicht jede Versicherung, sondern "die Kosten der Sach- und
+// Haftpflichtversicherung". Steht ein solcher Begriff am Wortanfang ("Versicherung",
+// "Versicherungen"), gilt er wie bisher. Steckt er HINTER einem anderen Wortteil
+// ("Rechtsschutz|versicherung", "Kinder|garten", "Fassaden|reinigung"), bestimmt
+// dieser Wortteil, welche Art gemeint ist - und das steht nicht im Gesetz.
+//
+// Frueher trafen solche Zeilen trotzdem, mit gruenem "Im Katalog" und nur dem
+// Zusatz "teilweise bewertet". Jetzt ergibt der eingebettete Begriff KEINE
+// Fundstelle, sondern einen umfangHinweis mit dem Wortlaut, den die Nummer nennt.
+// Er zaehlt aber als beruehrte Nummer: "Aufzugshaftpflichtversicherung" bleibt
+// "mehrere Positionen" und wird nicht still zu "Aufzug, Nr. 7".
+//
+// Der Preis: Auch Zeilen, die der Wortlaut deckt ("Zentralheizung"), kommen jetzt
+// als "nicht zuordenbar" heraus, solange sie nicht selbst als Begriff in der Datei
+// stehen. Die Anzeige ist dann weniger sicher als der Befund, nie sicherer - dieselbe
+// Richtung wie bei stehtAlsWort. Die Liste steht in docs/recherche-2026-09.md.
 
 "use strict";
 
@@ -72,6 +93,11 @@ export const VERDIKT = {
   KATALOG: "im-katalog",
   AUSGESCHLOSSEN: "nicht-umlagefaehig",
   MIETVERTRAG: "mietvertrag-erforderlich",
+  // Nr. 14 (Hauswart): im Katalog, aber nur soweit die Arbeiten nicht Instandhaltung,
+  // Erneuerung, Schoenheitsreparaturen oder Hausverwaltung betreffen. Frueher trug
+  // Nr. 14 das Etikett von Nr. 17 ("Mietvertrag erforderlich") - das ist dort der
+  // Vorbehalt, hier aber nicht.
+  ANTEILIG: "im-katalog-anteilig",
   // Bekannte Position, die im Wortlaut des § 2 nicht vorkommt. Der Unterschied zu
   // UNBEKANNT ist inhaltlich: Dort kennt das Werkzeug das Wort nicht, hier kennt
   // es das Wort - und weiss, dass das Gesetz es nicht nennt.
@@ -91,6 +117,12 @@ export const IMMER_MIT_VORBEHALT = {
     + "Wie die Aufteilung im Einzelfall aussieht, steht nicht im Gesetz.",
   17: "Sonstige Betriebskosten sind nur umlagefähig, wenn sie im Mietvertrag ausdrücklich "
     + "vereinbart sind. Ob das der Fall ist, steht nicht im Gesetz, sondern in Ihrem Vertrag.",
+};
+
+// Welches Urteil eine Zeile bekommt, deren einzige Nummer 14 oder 17 ist.
+const VORBEHALT_VERDIKT = {
+  14: VERDIKT.ANTEILIG,
+  17: VERDIKT.MIETVERTRAG,
 };
 
 // ---------------------------------------------------------------------------
@@ -307,15 +339,25 @@ export function nichtPositionGrund(rohzeile, bezeichnung) {
 // Treffer faellt nur weg, wenn er vollstaendig in einem schon behaltenen, laengeren
 // Treffer liegt - dann ist er Teil desselben Wortes und keine eigene Position.
 // Teilweise Ueberlappungen bleiben beide stehen: Dort waere jede Auswahl eine Vermutung.
-function sucheTreffer(gefaltet, eintraege) {
+//
+// Begriffe mit engem Umfang (Kopf der Datei) zaehlen nur am Wortanfang. Steckt einer
+// hinter einem anderen Wortteil, wird er nicht Treffer, sondern landet in
+// "eingebettet" - sofern ihn kein laengerer Treffer ohnehin abdeckt: In
+// "Treppenhausreinigung" steckt "reinigung", aber der ganze Begriff steht selbst in
+// der Datei.
+function sucheTreffer(gefaltet, eintraege, eingebettet = null) {
   const alle = [];
+  const kandidaten = [];
   for (const eintrag of eintraege) {
     for (const begriff of eintrag.begriffe) {
       const gefalteterBegriff = falte(begriff);
       if (!gefalteterBegriff) continue;
+      const eng = eintrag.umfang && eintrag.umfang.has(begriff);
       for (let start = gefaltet.indexOf(gefalteterBegriff); start !== -1;
         start = gefaltet.indexOf(gefalteterBegriff, start + 1)) {
-        alle.push({ eintrag, begriff, start, ende: start + gefalteterBegriff.length });
+        const t = { eintrag, begriff, start, ende: start + gefalteterBegriff.length };
+        if (eng && start > 0 && gefaltet[start - 1] !== " ") kandidaten.push(t);
+        else alle.push(t);
       }
     }
   }
@@ -327,6 +369,14 @@ function sucheTreffer(gefaltet, eintraege) {
   for (const t of alle) {
     const enthalten = behalten.some((b) => b.start <= t.start && t.ende <= b.ende);
     if (!enthalten) behalten.push(t);
+  }
+
+  if (eingebettet) {
+    kandidaten.sort((a, b) => (b.ende - b.start) - (a.ende - a.start) || a.start - b.start);
+    for (const t of kandidaten) {
+      const drin = (b) => b.start <= t.start && t.ende <= b.ende;
+      if (!behalten.some(drin) && !eingebettet.some(drin)) eingebettet.push(t);
+    }
   }
   return behalten;
 }
@@ -438,12 +488,52 @@ function luecke(eintrag, begriff) {
   };
 }
 
+// Das Wort der Zeile, in dem die gefaltete Stelle "start" liegt - so, wie der Nutzer
+// es geschrieben hat. Dieselbe Zuordnung wie in berechneAbdeckung.
+function wortAnStelle(bezeichnung, gefaltet, start) {
+  let cursor = 0;
+  for (const wort of String(bezeichnung).match(/[\p{L}\p{N}]+/gu) || []) {
+    const gefaltetesWort = falte(wort);
+    if (!gefaltetesWort) continue;
+    const anfang = gefaltet.indexOf(gefaltetesWort, cursor);
+    if (anfang === -1) break;
+    cursor = anfang + gefaltetesWort.length;
+    if (anfang <= start && start < cursor) return wort;
+  }
+  return bezeichnung;
+}
+
+// Hinweis zu einem Begriff mit engem Umfang, der hinter einem anderen Wortteil steckt
+// (Kopf der Datei). KEIN Urteil und KEINE Fundstelle: Er sagt nur, was die Nummer
+// woertlich nennt. Der Wortlaut stammt aus der Begriffsdatei und wird dort von
+// scripts/pruefe-betriebskosten.js gegen den Gesetzestext geprueft; hier wird er
+// zusaetzlich gegen den Text der Nummer gehalten - passt er nicht, entfaellt nur das
+// Zitat, nie der Hinweis selbst.
+function umfangHinweis(t, item, wort, beleg) {
+  const wortlaut = t.eintrag.umfang.get(t.begriff);
+  const zitierbar = item && falte(item.text).includes(falte(wortlaut));
+  return {
+    nr: t.eintrag.nr,
+    bezeichnung: `§ 2 Nr. ${t.eintrag.nr} BetrKV`,
+    begriff: t.begriff,
+    wort,
+    wortlaut: zitierbar ? wortlaut : "",
+    quelle: beleg.quelle,
+    hinweis: `„${t.begriff}“ steckt in „${wort}“. `
+      + (zitierbar
+        ? `§ 2 Nr. ${t.eintrag.nr} BetrKV nennt davon nur: „${wortlaut}“. `
+        : `§ 2 Nr. ${t.eintrag.nr} BetrKV nennt davon nur eine engere Bedeutung. `)
+      + "Welche Art gemeint ist, bestimmt der Wortteil davor – das entscheidet dieses "
+      + "Werkzeug nicht.",
+  };
+}
+
 export function ordneZeileZu(bezeichnung, katalog, ausschluesse, begriffe, belege) {
   const gefaltet = falte(bezeichnung);
   if (gefaltet === "") {
     return {
       verdikt: VERDIKT.UNBEKANNT, fundstellen: [], luecken: [], vorbehalte: [],
-      abdeckung: { vollstaendig: false, unbewertet: [] },
+      umfangHinweise: [], abdeckung: { vollstaendig: false, unbewertet: [] },
     };
   }
 
@@ -462,7 +552,8 @@ export function ordneZeileZu(bezeichnung, katalog, ausschluesse, begriffe, beleg
   // Getrennte Durchlaeufe waeren hier ein Fehler mit Ansage: "Dachrinnenreinigung"
   // enthaelt "reinigung" und wuerde sonst als § 2 Nr. 9 durchgehen - eine
   // dokumentierte Luecke, ausgegeben mit echtem Paragraphen und echtem Link.
-  const trefferKatalogUndLuecke = sucheTreffer(gefaltet, [...katalogEintraege, ...lueckenEintraege]);
+  const eingebettet = [];
+  const trefferKatalogUndLuecke = sucheTreffer(gefaltet, [...katalogEintraege, ...lueckenEintraege], eingebettet);
 
   // Ausschluesse zuerst - Begruendung im Kopf dieser Datei. Jeder getroffene
   // Ausschluss wird genannt, nicht nur der erste.
@@ -488,8 +579,21 @@ export function ordneZeileZu(bezeichnung, katalog, ausschluesse, begriffe, beleg
     fundstellenKatalog.push(fundstelleKatalog(item, gruppe.begriff, wortlaut, belege["betrkv-2"]));
   }
 
-  // Wie viele verschiedene Nummern (Katalog oder Luecke) die Zeile beruehrt.
-  const ziele = fundstellenKatalog.length + luecken.length;
+  // Eingebettete Begriffe mit engem Umfang: je Nummer ein Hinweis, und nur, wenn kein
+  // Treffer - auch kein Ausschluss - dieselbe Stelle schon abdeckt.
+  const umfangHinweise = [];
+  for (const t of eingebettet.sort((a, b) => a.start - b.start)) {
+    if (ausschlussTreffer.some((b) => b.start <= t.start && t.ende <= b.ende)) continue;
+    if (umfangHinweise.some((h) => h.nr === t.eintrag.nr)) continue;
+    const item = katalog.items.find((it) => it.nr === t.eintrag.nr);
+    umfangHinweise.push(umfangHinweis(t, item, wortAnStelle(bezeichnung, gefaltet, t.start), belege["betrkv-2"]));
+  }
+
+  // Wie viele verschiedene Nummern (Katalog, Luecke oder eingebetteter Begriff mit
+  // engem Umfang) die Zeile beruehrt. Ein Umfang-Hinweis zaehlt mit, sonst wuerde
+  // "Aufzugshaftpflichtversicherung" still zu "Aufzug, Nr. 7".
+  const ziele = fundstellenKatalog.length + luecken.length
+    + umfangHinweise.filter((h) => !fundstellenKatalog.some((f) => f.nr === h.nr)).length;
 
   let verdikt = null;
   // Zwei oder mehr Nummern: Die Aufteilung geht aus der Zeile nicht hervor, also wird
@@ -497,8 +601,9 @@ export function ordneZeileZu(bezeichnung, katalog, ausschluesse, begriffe, beleg
   if (ziele >= 2) verdikt = VERDIKT.MEHRERE;
   if (verdikt === null && fundstellenAusschluss.length > 0) verdikt = VERDIKT.AUSGESCHLOSSEN;
   if (verdikt === null && luecken.length === 1) verdikt = VERDIKT.LUECKE;
+  // Steht nur ein Umfang-Hinweis da, bleibt verdikt null -> "nicht zuordenbar".
   if (fundstellenKatalog.length === 1 && ziele === 1 && verdikt === null) {
-    verdikt = IMMER_MIT_VORBEHALT[fundstellenKatalog[0].nr] ? VERDIKT.MIETVERTRAG : VERDIKT.KATALOG;
+    verdikt = VORBEHALT_VERDIKT[fundstellenKatalog[0].nr] || VERDIKT.KATALOG;
   }
   if (verdikt === null) verdikt = VERDIKT.UNBEKANNT;
 
@@ -513,7 +618,7 @@ export function ordneZeileZu(bezeichnung, katalog, ausschluesse, begriffe, beleg
   const abdeckung = berechneAbdeckung(
     bezeichnung, gefaltet, [...ausschlussTreffer, ...trefferKatalogUndLuecke], verdikt);
 
-  return { verdikt, fundstellen, luecken, vorbehalte, abdeckung };
+  return { verdikt, fundstellen, luecken, vorbehalte, umfangHinweise, abdeckung };
 }
 
 // ---------------------------------------------------------------------------
@@ -562,6 +667,7 @@ export function pruefePositionen(eingabe, korpus, begriffsdatei) {
       fundstellen: zuordnung.fundstellen,
       luecken: zuordnung.luecken || [],
       vorbehalte: zuordnung.vorbehalte || [],
+      umfangHinweise: zuordnung.umfangHinweise || [],
       abdeckung: zuordnung.abdeckung,
     });
   }
@@ -581,6 +687,7 @@ export function pruefePositionen(eingabe, korpus, begriffsdatei) {
       imKatalog: zaehle(VERDIKT.KATALOG),
       nichtUmlagefaehig: zaehle(VERDIKT.AUSGESCHLOSSEN),
       mietvertrag: zaehle(VERDIKT.MIETVERTRAG),
+      imKatalogAnteilig: zaehle(VERDIKT.ANTEILIG),
       nichtGenannt: zaehle(VERDIKT.LUECKE),
       nichtZuordenbar: zaehle(VERDIKT.UNBEKANNT),
       mehrerePositionen: zaehle(VERDIKT.MEHRERE),
@@ -608,12 +715,15 @@ export function pruefePositionen(eingabe, korpus, begriffsdatei) {
 // Gemeinsames Ergebnisformat
 // ---------------------------------------------------------------------------
 
-export const MODUL = { id: "nebenkosten-positionen", version: "1.0.0" };
+// 1.1.0: Begriffe mit engem Umfang zaehlen nur am Wortanfang; Nr. 14 hat ein eigenes Urteil.
+export const MODUL = { id: "nebenkosten-positionen", version: "1.1.0" };
 
 export const GRENZEN = [
   "Zugeordnet wird nur nach dem Wortlaut der §§ 1 und 2 BetrKV – nicht nach Rechtsprechung "
     + "und nicht nach dem Mietvertrag.",
   "Ob eine Position im Einzelfall umgelegt werden darf, hängt zusätzlich vom Mietvertrag ab.",
+  "Steht vor einem Begriff, den der Katalog nur eng fasst (etwa „Versicherung“), ein weiterer "
+    + "Wortteil, ordnet das Werkzeug die Position nicht zu.",
   "Beträge werden nicht geprüft und nicht summiert.",
   "Keine Rechtsberatung.",
 ];
@@ -633,6 +743,9 @@ function alsSchritte(p) {
   }));
   for (const l of p.luecken || []) {
     schritte.push({ beleg: "betrkv-2", bezeichnung: "§ 2 BetrKV", erklaerung: l.hinweis });
+  }
+  for (const h of p.umfangHinweise || []) {
+    schritte.push({ beleg: "betrkv-2", bezeichnung: h.bezeichnung, erklaerung: h.hinweis });
   }
   return schritte;
 }
@@ -666,12 +779,22 @@ export function begriffeAufbereiten(datei) {
 
     const treffer = /^betrkv-(1|2)-(\d{1,2})$/.exec(schluessel);
     if (!treffer) continue;
+    // Begriffe mit engem Umfang (Kopf der Datei): Begriff -> Wortlaut der Nummer.
+    // Nur im Katalog - an Ausschluessen gibt es die Art "umfang" nicht.
+    const umfang = new Map();
+    if (treffer[1] === "2" && Array.isArray(wert.einschraenkungen)) {
+      for (const e of wert.einschraenkungen) {
+        if (!e || e.art !== "umfang" || !Array.isArray(e.begriffe)) continue;
+        for (const b of e.begriffe) umfang.set(b, e.wortlaut || "");
+      }
+    }
     eintraege.push({
       schluessel,
       art: treffer[1] === "2" ? "katalog" : "ausschluss",
       nr: Number(treffer[2]),
       titel_pruefung: wert.titel_pruefung || "",
       begriffe: wert.begriffe,
+      umfang,
     });
   }
   return eintraege;

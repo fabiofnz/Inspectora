@@ -89,8 +89,8 @@ function abbruch(text) {
   process.exit(1);
 }
 
-// Liest "einschraenkungen" direkt aus der Begriffsdatei - die Engine uebernimmt das Feld
-// nicht. Unbekannte Arten und Begriffe, die nicht im Eintrag stehen, brechen ab: Eine neue
+// Liest "einschraenkungen" direkt aus der Begriffsdatei - die Engine uebernimmt davon
+// nur die Art "umfang" (fuer ihre eigene Zuordnung), die Arten hier nicht. Unbekannte Arten und Begriffe, die nicht im Eintrag stehen, brechen ab: Eine neue
 // Art darf nicht still als "nicht ausschliessend" durchgehen.
 function artenJeBegriff(begriffsdatei, eintrag) {
   const roh = begriffsdatei[eintrag.schluessel]?.einschraenkungen;

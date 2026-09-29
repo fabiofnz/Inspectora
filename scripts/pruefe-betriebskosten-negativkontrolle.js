@@ -178,6 +178,35 @@ const MUTATIONEN = [
     ersetzen: "export const IMMER_MIT_VORBEHALT = {\n  914:",
   },
   {
+    name: "Nr. 14 traegt wieder das Etikett von Nr. 17 (Mietvertrag erforderlich)",
+    erwartet: "Zuordnung der Positionen",
+    datei: "katalog.mjs",
+    suchen: "  14: VERDIKT.ANTEILIG,",
+    ersetzen: "  14: VERDIKT.MIETVERTRAG,",
+  },
+  {
+    name: "Engine ignoriert den engen Umfang (Rechtsschutzversicherung wird Nr. 13)",
+    erwartet: "Begriffe mit engem Umfang",
+    datei: "katalog.mjs",
+    suchen: "        if (eng && start > 0 && gefaltet[start - 1] !== \" \") kandidaten.push(t);",
+    ersetzen: "        if (false) kandidaten.push(t);",
+  },
+  {
+    name: "Umfang-Hinweis wird zusaetzlich als Fundstelle ausgegeben",
+    erwartet: "Begriffe mit engem Umfang",
+    datei: "katalog.mjs",
+    suchen: "    umfangHinweise.push(umfangHinweis(",
+    ersetzen: "    fundstellenKatalog.push(fundstelleKatalog(item, t.begriff, false, belege[\"betrkv-2\"]));\n"
+      + "    umfangHinweise.push(umfangHinweis(",
+  },
+  {
+    name: "Umfang-Hinweis zaehlt nicht als beruehrte Nummer (Aufzugshaftpflicht wird Aufzug)",
+    erwartet: "Begriffe mit engem Umfang",
+    datei: "katalog.mjs",
+    suchen: "    + umfangHinweise.filter((h) => !fundstellenKatalog.some((f) => f.nr === h.nr)).length;",
+    ersetzen: "    + 0;",
+  },
+  {
     name: "Aussortierte Zeile wird weggeworfen statt gemeldet",
     erwartet: "Nichts verschwindet",
     datei: "katalog.mjs",
@@ -251,9 +280,9 @@ const MUTATIONEN = [
     datei: "katalog.mjs",
     // Nach dem Umbau dieselbe Mutation wie vorher: Katalog und Luecken werden getrennt
     // durchsucht, "reinigung" in "Dachrinnenreinigung" ueberlebt als Katalogtreffer.
-    suchen: "  const trefferKatalogUndLuecke = sucheTreffer(gefaltet, [...katalogEintraege, ...lueckenEintraege]);",
-    ersetzen: "  const trefferKatalogUndLuecke = sucheTreffer(gefaltet, katalogEintraege)\n"
-      + "    .concat(sucheTreffer(gefaltet, lueckenEintraege));",
+    suchen: "  const trefferKatalogUndLuecke = sucheTreffer(gefaltet, [...katalogEintraege, ...lueckenEintraege], eingebettet);",
+    ersetzen: "  const trefferKatalogUndLuecke = sucheTreffer(gefaltet, katalogEintraege, eingebettet)\n"
+      + "    .concat(sucheTreffer(gefaltet, lueckenEintraege, eingebettet));",
   },
   {
     name: "Listenreihenfolge statt laengster Begriff (Warmwasserversorgung trifft Nr. 2)",

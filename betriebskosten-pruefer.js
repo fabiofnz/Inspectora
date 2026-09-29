@@ -483,7 +483,8 @@ function berechne() {
 const URTEIL = {
   [VERDIKT.KATALOG]: { klasse: "ist-katalog", text: "Im Katalog" },
   [VERDIKT.AUSGESCHLOSSEN]: { klasse: "ist-ausschluss", text: "Nicht umlagefähig" },
-  [VERDIKT.MIETVERTRAG]: { klasse: "ist-vertrag", text: "Mietvertrag erforderlich" },
+  [VERDIKT.MIETVERTRAG]: { klasse: "ist-vorbehalt", text: "Mietvertrag erforderlich" },
+  [VERDIKT.ANTEILIG]: { klasse: "ist-vorbehalt", text: "Im Katalog, nur anteilig" },
   [VERDIKT.LUECKE]: { klasse: "ist-luecke", text: "Im Gesetz nicht genannt" },
   [VERDIKT.UNBEKANNT]: { klasse: "ist-unbekannt", text: "Nicht zuordenbar" },
   // Kein Urteil ueber die Zeile - deshalb neutral, siehe Regel im Kopf.
@@ -580,6 +581,16 @@ function bauePosition(position) {
     karte.appendChild(kasten);
   }
 
+  // Begriff mit engem Umfang hinter einem anderen Wortteil ("Rechtsschutzversicherung").
+  // Kein Urteil - deshalb neutral (Regel im Kopf). Der Wortlaut ist ein echtes Zitat
+  // aus § 2 und traegt deshalb den Link; eine Fundstelle fuer die Zeile ist er nicht.
+  for (const hinweis of position.umfangHinweise || []) {
+    const kasten = el("div", "bk-umfang");
+    kasten.appendChild(document.createTextNode(hinweis.hinweis + " "));
+    kasten.appendChild(link(hinweis.quelle, hinweis.bezeichnung + " öffnen"));
+    karte.appendChild(kasten);
+  }
+
   for (const vorbehalt of position.vorbehalte) {
     const kasten = el("div", "bk-vorbehalt");
     kasten.appendChild(el("strong", null, `Nr. ${vorbehalt.nr} ist nicht allein aus dem Gesetz zu entscheiden: `));
@@ -609,7 +620,8 @@ function baueZaehler(z) {
   };
   zeige("ist-katalog", z.imKatalog, "im Katalog");
   zeige("ist-ausschluss", z.nichtUmlagefaehig, "nicht umlagefähig");
-  zeige("ist-vertrag", z.mietvertrag, "Mietvertrag erforderlich");
+  zeige("ist-vorbehalt", z.imKatalogAnteilig, "im Katalog, nur anteilig");
+  zeige("ist-vorbehalt", z.mietvertrag, "Mietvertrag erforderlich");
   zeige("ist-luecke", z.nichtGenannt, "im Gesetz nicht genannt");
   // Neutral wie "nicht zuordenbar" - kein Urteil, siehe Regel im Kopf.
   zeige(null, z.mehrerePositionen || 0, "mehrere Positionen");

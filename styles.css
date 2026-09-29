@@ -1197,7 +1197,7 @@ main{padding-top:0}
 .bk-zaehler span b{color:var(--text);font-size:13px;font-weight:900}
 .bk-zaehler span.ist-katalog b{color:var(--success)}
 .bk-zaehler span.ist-ausschluss b{color:var(--danger)}
-.bk-zaehler span.ist-vertrag b{color:var(--warning)}
+.bk-zaehler span.ist-vorbehalt b{color:var(--warning)}
 .bk-zaehler span.ist-luecke b{color:#0369A1}
 
 .bk-position{
@@ -1207,7 +1207,7 @@ main{padding-top:0}
 }
 .bk-position.ist-katalog{border-left-color:var(--success)}
 .bk-position.ist-ausschluss{border-left-color:var(--danger)}
-.bk-position.ist-vertrag{border-left-color:var(--warning)}
+.bk-position.ist-vorbehalt{border-left-color:var(--warning)}
 .bk-position.ist-luecke{border-left-color:var(--cyan)}
 .bk-position.ist-unbekannt{border-left-color:var(--muted)}
 
@@ -1220,7 +1220,7 @@ main{padding-top:0}
 }
 .bk-position-urteil.ist-katalog{border-color:rgba(5,150,105,.28);background:var(--success-soft);color:var(--success)}
 .bk-position-urteil.ist-ausschluss{border-color:rgba(220,38,38,.28);background:var(--danger-soft);color:var(--danger)}
-.bk-position-urteil.ist-vertrag{border-color:rgba(217,119,6,.28);background:var(--warning-soft);color:var(--warning)}
+.bk-position-urteil.ist-vorbehalt{border-color:rgba(217,119,6,.28);background:var(--warning-soft);color:var(--warning)}
 /* Fuenfter Zustand: bekannte Position, im Gesetzestext nicht genannt. Cyan ist
    auf dieser Seite sonst nirgends im Einsatz - der Zustand muss sich sowohl von
    "Im Katalog" (gruen) als auch von "Nicht zuordenbar" (grau) unterscheiden. */
@@ -1258,6 +1258,13 @@ main{padding-top:0}
   font-size:12px;line-height:1.65;
 }
 .bk-luecke strong{display:block;margin-bottom:3px;color:#0369A1;font-size:11px}
+
+/* Begriff mit engem Umfang, hinter einem anderen Wortteil. Kein Urteil - neutral. */
+.bk-umfang{
+  margin-top:10px;padding:11px 13px;
+  border:1px solid var(--line);border-radius:var(--radius);
+  background:var(--surface-soft);color:var(--text);font-size:12px;line-height:1.65;
+}
 
 .bk-unbekannt-text{margin-top:8px;color:var(--muted);font-size:12px;line-height:1.65}
 
