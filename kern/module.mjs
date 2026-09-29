@@ -46,6 +46,14 @@ export const MODULE = [
       },
     },
     beispiel: { zeitraumEndeIso: "2025-12-31", zugangIso: "2026-06-15" },
+    // Wo das Modul fuer Menschen erreichbar ist. Daraus erzeugt scripts/baue-wissen.mjs
+    // die Liste "Was es heute gibt" auf der Startseite - ein neues Modul mit diesem
+    // Feld steht dort, ohne dass jemand die Seite umschreibt. Ohne das Feld: noch nicht
+    // oeffentlich, steht nicht da.
+    oeffentlich: {
+      titel: "Nebenkostenabrechnung: Frist nach § 556 Abs. 3 BGB – für Vermieter und Mieter",
+      url: "nebenkostenabrechnung-frist-pruefen.html",
+    },
     rechne: (eingabe, daten) => pruefeFristen(eingabe, daten.korpus),
     benchmark: {
       kategorie: "fristen",
@@ -70,6 +78,10 @@ export const MODULE = [
       },
     },
     beispiel: { text: "Grundsteuer 245,80\nReparatur Heizung\nWinterdienst" },
+    oeffentlich: {
+      titel: "Nebenkostenabrechnung: Positionen gegen den Katalog der Betriebskostenverordnung",
+      url: "nebenkostenabrechnung-frist-pruefen.html#positionen",
+    },
     rechne: (eingabe, daten) => pruefePositionen(eingabe, daten.korpus, daten.begriffe),
     benchmark: {
       kategorie: "umlage",

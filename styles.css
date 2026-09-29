@@ -1303,3 +1303,28 @@ main{padding-top:0}
   .bk-karte{padding:20px 16px}
   .bk-abschnitt{font-size:19px}
 }
+
+/* ==========================================================================
+   15 · Frageseiten (wissen/, erzeugt von scripts/baue-wissen.mjs)
+   Nutzt die Karten und Zustandsklassen des Pruefers (Abschnitt 14). Hier nur,
+   was es dort nicht gibt - ausschliesslich mit vorhandenen Variablen.
+   ========================================================================== */
+
+/* Die Seite ist hell (.assistant-body: --surface-soft) - nur der Kopf ist dunkel. */
+.wissen-pfad{margin-bottom:18px;color:var(--muted);font-size:12px}
+.wissen-pfad a{color:var(--primary);text-decoration:none;font-weight:700}
+.wissen-pfad a:hover{text-decoration:underline}
+
+.wissen-liste{margin-top:12px;padding-left:20px;color:var(--text);font-size:13px;line-height:1.75}
+.wissen-liste a{color:var(--primary);font-weight:700;text-decoration:none}
+.wissen-liste a:hover{text-decoration:underline}
+.wissen-liste strong{color:var(--primary-dark)}
+
+/* Annahme-Kasten in der zentrierten Einleitung: so breit und linksbuendig wie der Text darueber. */
+.assistant-intro .hg-hint-box{max-width:640px;margin:0 auto 14px;text-align:left}
+
+/* Wortlaut einer Nummer direkt an der Fundstelle - wie im aufgeklappten Beleg. */
+.wissen-zitat{margin-top:10px;padding:0}
+
+/* Startseite, "Was es heute gibt" - die Liste wird erzeugt, nicht von Hand gepflegt. */
+.bestand-liste{display:grid;gap:8px;padding-left:18px}

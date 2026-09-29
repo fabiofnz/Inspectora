@@ -49,6 +49,12 @@ Website: inspectora.tech · Hosting: Netlify · Repo: fabiofnz/Inspectora (öffe
 - `kern/fristbausteine.mjs` – §§ 187, 188, 193 BGB für alle Fristen; `kern/region.mjs` – die 16 Länder (Sätze erst mit bestätigtem Beleg).
 - `npm run pruefe-kern` – prüft das alles, inkl. Benchmark-Fragedateien byte-gleich neu erzeugt; mit Negativkontrolle.
 
+**Frageseiten** (`wissen/`, z. B. „Nebenkostenabrechnung 2025 – bis wann?", „Rauchmelder umlagefähig?")
+- **Erzeugt, nie von Hand ändern:** `npm run baue-wissen` schreibt `wissen/*.html`, `sitemap.xml` und die Liste „Was es heute gibt" in `index.html` (zwischen den `@@BESTAND`-Marken).
+- Was gebaut wird, steht in `scripts/wissen/konfig.mjs` (Jahre, Begriffe, Titel, Beschreibungen); jede Zahl und jedes Urteil kommt aus der Engine (`scripts/wissen/daten.mjs`).
+- Neues Modul auf der Startseite: Feld `oeffentlich` im Eintrag in `kern/module.mjs`, dann neu bauen.
+- Wächter: `npm run pruefe-wissen` (+ `:negativkontrolle`). Hintergrund und Begriffsreihenfolge: `docs/recherche-2026-09.md`.
+
 ---
 
 ## Konventionen

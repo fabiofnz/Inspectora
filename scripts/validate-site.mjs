@@ -52,7 +52,24 @@ for (const datei of pflicht) {
 if (fehlerZahl) process.exit(1);
 pass(`Pflichtdateien vorhanden (${pflicht.join(", ")})`);
 
-const seitenNamen = fs.readdirSync(root).filter((f) => f.endsWith(".html")).sort();
+// Alle Seiten, auch in Unterordnern (wissen/). Frueher nur die Wurzel - die
+// erzeugten Frageseiten waren damit ungeprueft, auch auf externe Einbindungen.
+// Ausgenommen: versteckte Ordner, node_modules und die Vorlage der Benchmark-Seite
+// (die ist keine Seite, sie wird unten in Abschnitt 7 eigens geprueft).
+function seitenSammeln(ordner) {
+  const funde = [];
+  for (const e of fs.readdirSync(path.join(root, ordner), { withFileTypes: true })) {
+    const rel = ordner ? `${ordner}/${e.name}` : e.name;
+    if (e.isDirectory()) {
+      if (e.name.startsWith(".") || e.name === "node_modules") continue;
+      funde.push(...seitenSammeln(rel));
+    } else if (e.name.endsWith(".html") && rel !== "benchmark/seite-vorlage.html") {
+      funde.push(rel);
+    }
+  }
+  return funde;
+}
+const seitenNamen = seitenSammeln("").sort();
 const seiten = new Map(
   seitenNamen.map((f) => [f, fs.readFileSync(path.join(root, f), "utf8")])
 );
@@ -89,16 +106,31 @@ if (!fehlerZahl) pass(`Alle Sprungmarken haben ein Ziel (${ankerGesamt} geprueft
 
 // --- 3 · Lokale Dateien, je Seite -----------------------------------------
 
+// Ein Verweis zeigt auf eine Datei, wenn es sie gibt - oder, wie Netlify ausliefert,
+// dieselbe Adresse mit .html oder als Ordner mit index.html ("/wissen/",
+// "/nebenkostenabrechnung-frist-pruefen"). "/x" gilt ab der Wurzel, "x" ab dem Ordner
+// der Seite. Frueher wurden nur Links auf ".html" geprueft - "wissen/" waere durchgerutscht.
+function aufloesbar(seite, ziel) {
+  const ohne = ziel.split(/[?#]/)[0];
+  if (ohne === "") return true;
+  const basis = ohne.startsWith("/") ? ohne.slice(1) : path.posix.join(path.posix.dirname(seite), ohne);
+  const istDatei = (rel) => {
+    const voll = path.join(root, rel);
+    return fs.existsSync(voll) && fs.statSync(voll).isFile();
+  };
+  return [basis, basis + ".html", basis.replace(/\/?$/, "/") + "index.html"].some((k) => k && istDatei(k));
+}
+
 let verweise = 0;
 for (const [name, html] of seiten) {
   const lokal = [
     ...alle(html, /<link[^>]+href=["']([^"']+\.css)["'][^>]*>/g),
     ...alle(html, /<script[^>]+src=["']([^"']+\.js)["'][^>]*>/g),
-    ...alle(html, /\bhref=["'](?!https?:|mailto:|#)([^"']+\.html)["']/g),
+    ...alle(html, /<a\b[^>]*\bhref=["'](?!https?:|mailto:|tel:|#)([^"']+)["']/g),
   ].filter((p) => !/^https?:/i.test(p));
   for (const ziel of new Set(lokal)) {
     verweise++;
-    if (!fs.existsSync(path.join(root, ziel.split("#")[0]))) {
+    if (!aufloesbar(name, ziel)) {
       fail(`${name}: verweist auf fehlende Datei: ${ziel}`);
     }
   }

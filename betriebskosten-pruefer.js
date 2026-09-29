@@ -39,8 +39,8 @@
 "use strict";
 
 import { pruefeFristen } from "./kern/frist.mjs";
-import { formatiereMitWochentag } from "./kern/datum.mjs";
-import { pruefePositionen, VERDIKT } from "./kern/katalog.mjs";
+import { formatiereMitWochentag, istGueltigesDatum } from "./kern/datum.mjs";
+import { pruefePositionen, VERDIKT, VERDIKT_ANZEIGE } from "./kern/katalog.mjs";
 
 const LOG = "[betriebskosten-pruefer]";
 const WISSENSBASIS = "wissensbasis/gesetze.json";
@@ -481,14 +481,14 @@ function berechne() {
 // ---------------------------------------------------------------------------
 
 const URTEIL = {
-  [VERDIKT.KATALOG]: { klasse: "ist-katalog", text: "Im Katalog" },
-  [VERDIKT.AUSGESCHLOSSEN]: { klasse: "ist-ausschluss", text: "Nicht umlagefähig" },
-  [VERDIKT.MIETVERTRAG]: { klasse: "ist-vorbehalt", text: "Mietvertrag erforderlich" },
-  [VERDIKT.ANTEILIG]: { klasse: "ist-vorbehalt", text: "Im Katalog, nur anteilig" },
-  [VERDIKT.LUECKE]: { klasse: "ist-luecke", text: "Im Gesetz nicht genannt" },
-  [VERDIKT.UNBEKANNT]: { klasse: "ist-unbekannt", text: "Nicht zuordenbar" },
+  [VERDIKT.KATALOG]: { klasse: "ist-katalog", text: VERDIKT_ANZEIGE[VERDIKT.KATALOG] },
+  [VERDIKT.AUSGESCHLOSSEN]: { klasse: "ist-ausschluss", text: VERDIKT_ANZEIGE[VERDIKT.AUSGESCHLOSSEN] },
+  [VERDIKT.MIETVERTRAG]: { klasse: "ist-vorbehalt", text: VERDIKT_ANZEIGE[VERDIKT.MIETVERTRAG] },
+  [VERDIKT.ANTEILIG]: { klasse: "ist-vorbehalt", text: VERDIKT_ANZEIGE[VERDIKT.ANTEILIG] },
+  [VERDIKT.LUECKE]: { klasse: "ist-luecke", text: VERDIKT_ANZEIGE[VERDIKT.LUECKE] },
+  [VERDIKT.UNBEKANNT]: { klasse: "ist-unbekannt", text: VERDIKT_ANZEIGE[VERDIKT.UNBEKANNT] },
   // Kein Urteil ueber die Zeile - deshalb neutral, siehe Regel im Kopf.
-  [VERDIKT.MEHRERE]: { klasse: "ist-mehrere", text: "Mehrere Positionen" },
+  [VERDIKT.MEHRERE]: { klasse: "ist-mehrere", text: VERDIKT_ANZEIGE[VERDIKT.MEHRERE] },
 };
 
 function baueFundstelle(fundstelle) {
@@ -753,5 +753,11 @@ knopfPositionenLeeren.addEventListener("click", () => {
   eingabePositionen.value = "";
   leere(positionenErgebnis);
 });
+
+// Vorbelegung aus der Adresse (?ende=2025-12-31) - die Frageseiten unter /wissen/
+// verlinken so hierher. Uebernommen wird nur ein gueltiges Datum, gerechnet wird
+// erst auf Knopfdruck: Die Seite soll nichts ausgeben, wonach niemand gefragt hat.
+const vorbelegung = new URLSearchParams(location.search).get("ende");
+if (vorbelegung && istGueltigesDatum(vorbelegung)) eingabeEnde.value = vorbelegung;
 
 ladeWissensbasis();

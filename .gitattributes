@@ -21,3 +21,11 @@ benchmark/seite-vorlage.html -text
 # dieselben Bytes haben, sonst laesst sich die Herkunft nicht mehr nachpruefen.
 vendor/**                    -text
 fonts/**                     -text
+
+# Erzeugte Seiten (scripts/baue-wissen.mjs): pruefe-wissen.mjs vergleicht sie Byte
+# fuer Byte mit einem frischen Bau. Mit CRLF nach dem Klonen schluege der Waechter
+# an, ohne dass etwas falsch ist. index.html gehoert dazu wegen der erzeugten Liste
+# "Was es heute gibt".
+wissen/**                    -text
+sitemap.xml                  -text
+index.html                   -text

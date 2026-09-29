@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- Erzeugt von scripts/baue-wissen.mjs - nicht von Hand aendern. -->
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://inspectora.tech/</loc>
@@ -14,5 +15,50 @@
     <loc>https://inspectora.tech/mietrecht-benchmark</loc>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://inspectora.tech/wissen/</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://inspectora.tech/wissen/nebenkostenabrechnung-2024-frist</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://inspectora.tech/wissen/nebenkostenabrechnung-2025-frist</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://inspectora.tech/wissen/nebenkostenabrechnung-2026-frist</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://inspectora.tech/wissen/rauchmelder-nebenkosten</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://inspectora.tech/wissen/grundsteuer-nebenkosten</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://inspectora.tech/wissen/hausmeister-nebenkosten</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://inspectora.tech/wissen/winterdienst-nebenkosten</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  <url>
+    <loc>https://inspectora.tech/wissen/verwaltungskosten-nebenkosten</loc>
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
   </url>
 </urlset>

@@ -119,6 +119,19 @@ export const IMMER_MIT_VORBEHALT = {
     + "vereinbart sind. Ob das der Fall ist, steht nicht im Gesetz, sondern in Ihrem Vertrag.",
 };
 
+// Wie ein Urteil auf der Seite heisst. Hier und nicht in der Oberflaeche, weil zwei
+// Stellen es anzeigen: der Pruefer im Browser und die erzeugten Frageseiten unter
+// wissen/ (scripts/baue-wissen.mjs). Zwei Listen liefen auseinander.
+export const VERDIKT_ANZEIGE = {
+  [VERDIKT.KATALOG]: "Im Katalog",
+  [VERDIKT.AUSGESCHLOSSEN]: "Nicht umlagefähig",
+  [VERDIKT.MIETVERTRAG]: "Mietvertrag erforderlich",
+  [VERDIKT.ANTEILIG]: "Im Katalog, nur anteilig",
+  [VERDIKT.LUECKE]: "Im Gesetz nicht genannt",
+  [VERDIKT.UNBEKANNT]: "Nicht zuordenbar",
+  [VERDIKT.MEHRERE]: "Mehrere Positionen",
+};
+
 // Welches Urteil eine Zeile bekommt, deren einzige Nummer 14 oder 17 ist.
 const VORBEHALT_VERDIKT = {
   14: VERDIKT.ANTEILIG,

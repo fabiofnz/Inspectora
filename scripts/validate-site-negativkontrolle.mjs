@@ -43,7 +43,10 @@ const MITNEHMEN = fs
 // Seit die Schrift und die Bibliotheken selbst gehostet sind, verweisen Seiten
 // und styles.css auch in Unterordner. Ohne sie schlaegt schon der Vorlauf an.
 // Die Vorlage der Benchmark-Seite gehoert zur Pruefung auf externe Einbindungen.
-const ORDNER_MITNEHMEN = ["fonts", "vendor", "kern"];
+// wissen/: die erzeugten Frageseiten - seit validate-site auch Unterordner liest.
+// benchmark/: Die Benchmark-Seite verlinkt ihre Rohdaten zum Herunterladen, und seit
+// validate-site jeden lokalen Link prueft, muessen sie in der Kopie liegen.
+const ORDNER_MITNEHMEN = ["fonts", "vendor", "kern", "wissen", "benchmark"];
 const EINZELN_MITNEHMEN = ["benchmark/seite-vorlage.html"];
 
 // Jede Mutation bricht genau eine Pruefung. "erwartet" ist ein Textstueck, das
@@ -163,6 +166,20 @@ const MUTATIONEN = [
     name: "Schriftdatei, auf die styles.css zeigt, fehlt",
     erwartet: "styles.css: verweist auf fehlende Datei",
     mutiere: (dir) => fs.rmSync(path.join(dir, "fonts", "plus-jakarta-sans-latin.woff2")),
+  },
+  {
+    // Die Seiten in wissen/ lagen frueher ausserhalb der Pruefung.
+    name: "Seite im Unterordner laedt ein fremdes Skript",
+    erwartet: "externe Einbindung: wissen/index.html",
+    mutiere: (dir) => ersetze(dir, "wissen/index.html", "</head>",
+      '<script src="https://cdn.example.com/x.js"></script></head>'),
+  },
+  {
+    // Link ohne .html auf eine Seite, die es nicht gibt - frueher nie geprueft.
+    name: "Adresse ohne .html zeigt ins Leere",
+    erwartet: "verweist auf fehlende Datei: /wissen/gibt-es-nicht",
+    mutiere: (dir) => ersetze(dir, "wissen/index.html", 'href="/wissen/rauchmelder-nebenkosten"',
+      'href="/wissen/gibt-es-nicht"'),
   },
 ];
 
